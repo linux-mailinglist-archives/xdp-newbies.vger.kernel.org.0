@@ -2,28 +2,51 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADA3115494
-	for <lists+xdp-newbies@lfdr.de>; Mon,  6 May 2019 21:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ADEF1552F
+	for <lists+xdp-newbies@lfdr.de>; Mon,  6 May 2019 23:00:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEFTsZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 6 May 2019 15:48:25 -0400
-Received: from vulcan.natalenko.name ([104.207.131.136]:35728 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfEFTsZ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 6 May 2019 15:48:25 -0400
-X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 15:48:23 EDT
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id A9DEC53D2A2;
-        Mon,  6 May 2019 21:40:07 +0200 (CEST)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 06 May 2019 21:40:07 +0200
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+        id S1726593AbfEFVAb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 6 May 2019 17:00:31 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:42868 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfEFVAb (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 6 May 2019 17:00:31 -0400
+Received: by mail-qt1-f174.google.com with SMTP id p20so16539613qtc.9
+        for <xdp-newbies@vger.kernel.org>; Mon, 06 May 2019 14:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=3wJRQ6VKWRxL27a5QxEQoOQCJUnNTmSip3XDWhvdBaQ=;
+        b=A/lSskv2O+Uy1ln/4WsjLObJSCsYlFzGzAWfWBpCgQp9nJ+T99/ChlO5vaAVXQQYq1
+         kDaLE662WickGYjmxtVJdcvsq7kbFg4eC4W16FIdZCN7C2VGClGEdQDMahn3ZhHRkxpz
+         xIiZn7TZq4GQZTSQxsdL3I9hj6RlHCaA9RvYcxeBBfDIV/gJAtL4IGK1GyNFw5ACccvr
+         cZ2eUhhH0dV8ZgUOM7Un1kQSqKXNjDsZnpU1zGcN0N71PRXpRelhx4MLGkHG5W9T6Npv
+         y9Wtzcv1SgLUUVHhBJVhRcCciD8eRu8h4dAs/HDyUMOPXIM1H+KtNqfsI1DVDUYMxByn
+         pMyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=3wJRQ6VKWRxL27a5QxEQoOQCJUnNTmSip3XDWhvdBaQ=;
+        b=E8zPs9dctz8ew3sSDtd8MZkzPDMt+DS1Z6RnH+tZFKBQ3GUpScMQVMyWVh1ZV0Tejv
+         LfF4Wh0hesHceDdtw5/jBIJ2QJ4KtlkywDdrs5s0VcZ1OjPoxkpjTPvh0pwvytIfaWlA
+         1tNBvSmq2dTGRaeAPK8NpcYvawNYx/o75aHg0A9kM/M5bIhxG6Sd2kFeaoJRsXdL+PXV
+         lg2ZNNbAaw6K44JjdkJ4jwph6BOKoNx81DEg8Exl+/xBGjPkmyBWDkPXa/agCqMFaHCq
+         OXtO5kOoMcF/M2K96rh2L529Z3o4cEfTxRr6EeC7UtaBFL3xt6oyOxDXVHTFYatmphFX
+         F3dA==
+X-Gm-Message-State: APjAAAWhCD+qWkOcdCfEgKSpSrnsjQPBxNpn/csK4W5DC112b7LKY71i
+        Rpvw55yPIaGVhC7DWVN+htWtYw==
+X-Google-Smtp-Source: APXvYqx/0CijmHQT5nAegd8Iq3bmLEJ/dSOVuelYyGhdUDs4JSPE3rCKI5bh09sk4kBRUcTwpfs8uA==
+X-Received: by 2002:ac8:743:: with SMTP id k3mr20214481qth.207.1557176430476;
+        Mon, 06 May 2019 14:00:30 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 67sm5934254qtc.29.2019.05.06.14.00.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 06 May 2019 14:00:30 -0700 (PDT)
+Date:   Mon, 6 May 2019 14:00:22 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Oleksandr Natalenko <oleksandr@natalenko.name>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -34,94 +57,29 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
         xdp-newbies@vger.kernel.org, valdis@vt.edu
-Subject: netronome/nfp/bpf/jit.c cannot be build with -O3
-Message-ID: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-User-Agent: Roundcube Webmail/1.3.9
+Subject: Re: netronome/nfp/bpf/jit.c cannot be build with -O3
+Message-ID: <20190506140022.188d2b84@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
+References: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
+Organization: Netronome Systems, Ltd.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi.
+On Mon, 06 May 2019 21:40:07 +0200, Oleksandr Natalenko wrote:
+> Hi.
+> 
+> Obligatory disclaimer: building the kernel with -O3 is a non-standard 
+> thing done via this patch [1], but I've asked people in #kernelnewbies, 
+> and it was suggested that the issue should be still investigated.
+> 
+> So, with v5.1 kernel release I cannot build the kernel with -O3 anymore. 
+> It fails as shown below:
 
-Obligatory disclaimer: building the kernel with -O3 is a non-standard 
-thing done via this patch [1], but I've asked people in #kernelnewbies, 
-and it was suggested that the issue should be still investigated.
-
-So, with v5.1 kernel release I cannot build the kernel with -O3 anymore. 
-It fails as shown below:
-
-===
-   CC      drivers/net/ethernet/netronome/nfp/bpf/jit.o
-In file included from ./include/asm-generic/bug.h:5,
-                  from ./arch/x86/include/asm/bug.h:83,
-                  from ./include/linux/bug.h:5,
-                  from drivers/net/ethernet/netronome/nfp/bpf/jit.c:6:
-In function ‘__emit_shf’,
-     inlined from ‘emit_shf.constprop’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:364:2,
-     inlined from ‘shl_reg64_lt32_low’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:379:2,
-     inlined from ‘shl_reg’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:2506:2:
-./include/linux/compiler.h:344:38: error: call to 
-‘__compiletime_assert_341’ declared with attribute error: BUILD_BUG_ON 
-failed: (((0x001f0000000ULL) + (1ULL << 
-(__builtin_ffsll(0x001f0000000ULL) - 1))) & (((0x001f0000000ULL) + (1ULL 
-<< (__builtin_ffsll(0x001f0000000ULL) - 1))) - 1)) != 0
-   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                       ^
-./include/linux/compiler.h:325:4: note: in definition of macro 
-‘__compiletime_assert’
-     prefix ## suffix();    \
-     ^~~~~~
-./include/linux/compiler.h:344:2: note: in expansion of macro 
-‘_compiletime_assert’
-   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-   ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro 
-‘compiletime_assert’
-  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                      ^~~~~~~~~~~~~~~~~~
-./include/linux/bitfield.h:57:3: note: in expansion of macro 
-‘BUILD_BUG_ON_MSG’
-    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-    ^~~~~~~~~~~~~~~~
-./include/linux/bitfield.h:89:3: note: in expansion of macro 
-‘__BF_FIELD_CHECK’
-    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-    ^~~~~~~~~~~~~~~~
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:341:3: note: in expansion 
-of macro ‘FIELD_PREP’
-    FIELD_PREP(OP_SHF_SHIFT, shift) |
-    ^~~~~~~~~~
-make[1]: *** [scripts/Makefile.build:276: 
-drivers/net/ethernet/netronome/nfp/bpf/jit.o] Error 1
-make: *** [Makefile:1726: drivers/net/ethernet/netronome/nfp/bpf/jit.o] 
-Error 2
-===
-
-Needless to say, with -O2 this file is built just fine. My compiler is:
-
-===
-$ gcc --version
-gcc (GCC) 8.3.0
-Copyright (C) 2018 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is 
-NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-PURPOSE.
-===
-
-I had no issues with -O3 before, so, maybe, this deserves a peek.
-
-I'm open to testing patches and providing more info if needed.
-
-Thanks.
-
-[1] 
-https://gitlab.com/post-factum/pf-kernel/commit/7fef93015ff1776d08119ef3d057a9e9433954a9
-
--- 
-   Oleksandr Natalenko (post-factum)
+Any chance you could try different compiler versions?  The code in
+question does not look too unusual.  Could you try if removing
+FIELD_FIT() on line 326 makes a difference?
