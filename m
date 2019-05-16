@@ -2,78 +2,81 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F44020EE0
-	for <lists+xdp-newbies@lfdr.de>; Thu, 16 May 2019 20:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7B6721055
+	for <lists+xdp-newbies@lfdr.de>; Thu, 16 May 2019 23:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbfEPSnR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 16 May 2019 14:43:17 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37014 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfEPSnQ (ORCPT
+        id S1728874AbfEPVy1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 16 May 2019 17:54:27 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45540 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfEPVy1 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 16 May 2019 14:43:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h19so4054600ljj.4;
-        Thu, 16 May 2019 11:43:15 -0700 (PDT)
+        Thu, 16 May 2019 17:54:27 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i21so2187714pgi.12
+        for <xdp-newbies@vger.kernel.org>; Thu, 16 May 2019 14:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=unVG59VzBSYO4iOVXWL7fSEnwAhYhvevqAGHSVFtITs=;
-        b=JzXCeX1bZ1ONHAEBSxYaRxUvqfPdgB39LOqzBGggD1p4Y7zZFtKKJoFFiDoun3nS3c
-         1V3qUE/ds+HnbVRGYOWzTArmY9yvKrCT1q4aSK27OJLN1MtvREOrKrj/PjiGyc+xZ09/
-         sGsMWCWtB/6kdzX/1kTY5K5vHLpMRa3qWUtkpb7290pgZF+Ehn93gzVtH1G1GBhfUko8
-         0tXIhenPwkO6Oa4FK7Qzu08vuZ6AlKSXTO5igrr/8nA7/W2sF4Gk6qmwyrPpOqR4JIvZ
-         RwAFK8PmfXQWHLs/C33C1JIL9MAQCrpu6kGpcZPDFb0wgv3y1uEXLGybFFRYF890hX5U
-         wbGw==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dV/b0Qwbf8GVpXLrVD68yCDd7N1yRx9xZr9MIrQ8ZV4=;
+        b=LcKpG7Y/wnv0ZfplT8mAqT4rajsEPcoDUYSXZRpi3eIWNBIj0o5n93bgtdItB6yc98
+         71RVKKS79lTfZzn6A0POzCXtE8TDW/arTU0CSXsIAU5PHs4SPnc1fYeTHcIp5estVMH0
+         Ho5KdDJ308LGIddoX+bVmIBA0pdGLE8kBbt6OoAuvEgUTB+9hbAouar1L3sfCV5y1Xjh
+         OTAjN6qYYp/hQ0KlgEFGAsDBjSbPjo8Evfzmj6OAuY+/tO9qXNtnl5rf1x8c+fXKVGcA
+         L+T5OFVz/JgEOrYCkC53qzMKzi8LPpjxW5OtkU4gGYiugGQis0hUoEx4b7I/oCT/6upn
+         rF3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=unVG59VzBSYO4iOVXWL7fSEnwAhYhvevqAGHSVFtITs=;
-        b=g6JbNr9rSQoJL4nSbkwXUvNQGxNa6SxutRi+cU0DexETnDLw74j4mJQfop3d4NbrFK
-         F3o01pSizuqb89CzxkT7Q/krkTuYz9bwOKJM5teZxnVaU+4ILBw1IMBqZevv0MQHmAMp
-         IE+NXOjqLfSKOGJC0rW23gds/iTtiri8yubV2T+YLO2vgpA30nVCUnNpKnRJtLuZ/CJ9
-         P36NpFYYmybgeRAYCo32LDw5oXvgfO71Z5LQ6wA29ob5A3M1M/plV9agboXnFhpAxbMF
-         WOFutqCxI7TMFqo7/XtwWEkpX9oX2lYJz6EvxwNspxH/gd4sSWJ1MvbOptWaUuc3L/xI
-         CPVw==
-X-Gm-Message-State: APjAAAVsLMdKmZtOn3JX491s4JzzJgPAsk1wtYMvQtXsGC45DPFnFvSm
-        nM+y74lxfa1ol8YZPRoQWF6/W8j9zhQczAOQ9d4=
-X-Google-Smtp-Source: APXvYqxBDW9EwLKEM/loJ6ILDsGQzYnaLEazK9HiGiufleeEQCm+KRHOQSULmCZ4eO6rpb5lcU85bhL9Y8KiDYPaGX4=
-X-Received: by 2002:a2e:9f44:: with SMTP id v4mr3078676ljk.85.1558032194378;
- Thu, 16 May 2019 11:43:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dV/b0Qwbf8GVpXLrVD68yCDd7N1yRx9xZr9MIrQ8ZV4=;
+        b=D4Jv61Pd1DsDWFbHW4e/mGg+Y7yjG3ZHzaedtsAz9sJV636P8uKvVm/XQx5orwmdJS
+         zPNK3bjUYboDRCTEMNkeEkYu47cUeIOnEU2/BM00vF+7k6FiNnZvUcK3i4lxnHSmRLGE
+         RPpJL0JcfOxfjeh3hAfGSad23UGrZ49PHp7ndrtzvnRKn8v1/+MoBWQNyDvAg1rmATS7
+         dudmFUDUxD3YkxwFASRI5bDjE3yjmsqbonWra6vSxpIJN/bWBiR/5/xlryj3ab7A7Oim
+         hl6ZZ5aPNA08TEfG9YMI2O25SGxt01jbu1xnW/hoXHlGUNhMSIJYr89FEqKv5mo18u/1
+         4cBw==
+X-Gm-Message-State: APjAAAUbvqFeQGwIweq/7bnzQQjiUm1BH/3GuuH7aFvXlpzXg8DpEfKD
+        LbVPTbdWR7LwH9OleWLhFymgNg==
+X-Google-Smtp-Source: APXvYqzNml/yINEOj+EkVBYAxZnhih8cosJmtNOBH9Q8dr/XrqjHhUGwQnj4/KLTT3m8ExIjT0XyVQ==
+X-Received: by 2002:a62:470e:: with SMTP id u14mr57232563pfa.31.1558043666345;
+        Thu, 16 May 2019 14:54:26 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id d15sm19842506pfm.186.2019.05.16.14.54.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 14:54:25 -0700 (PDT)
+From:   Stephen Hemminger <stephen@networkplumber.org>
+X-Google-Original-From: Stephen Hemminger <sthemmin@microsoft.com>
+To:     netdev@vger.kernel.org, davem@davemloft.net
+Cc:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: [PATCH net 0/3] XDP generic related fixes
+Date:   Thu, 16 May 2019 14:54:20 -0700
+Message-Id: <20190516215423.14185-1-sthemmin@microsoft.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190516112105.12887-1-mrostecki@opensuse.org>
-In-Reply-To: <20190516112105.12887-1-mrostecki@opensuse.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 16 May 2019 11:43:03 -0700
-Message-ID: <CAADnVQLFrZyjbFb6o0YezLyqGBKcsiT=jVGfwDaupGLvgLp31A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/2] Move bpf_printk to bpf_helpers.h
-To:     Michal Rostecki <mrostecki@opensuse.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Mathieu Xhonneux <m.xhonneux@gmail.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:21 AM Michal Rostecki <mrostecki@opensuse.org> wrote:
->
-> This series of patches move the commonly used bpf_printk macro to
-> bpf_helpers.h which is already included in all BPF programs which
-> defined that macro on their own.
+This set of patches came about while investigating XDP
+generic on Azure. The split brain nature of the accelerated
+networking exposed issues with the stack device model.
 
-makes sense, but it needs to wait until bpf-next reopens.
+The real fix is in the second patch which is a redo
+of earlier patch from Jason Wang.
+
+Stephen Hemminger (3):
+  netvsc: unshare skb in VF rx handler
+  net: core: generic XDP support for stacked device
+  netdevice: clarify meaning of rx_handler_result
+
+ drivers/net/hyperv/netvsc_drv.c |  6 ++++++
+ include/linux/netdevice.h       | 16 ++++++++--------
+ net/core/dev.c                  | 10 ++++++++++
+ 3 files changed, 24 insertions(+), 8 deletions(-)
+
+-- 
+2.20.1
