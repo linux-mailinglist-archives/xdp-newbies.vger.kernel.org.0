@@ -2,23 +2,54 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99FD020DA7
-	for <lists+xdp-newbies@lfdr.de>; Thu, 16 May 2019 19:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F44020EE0
+	for <lists+xdp-newbies@lfdr.de>; Thu, 16 May 2019 20:43:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfEPRC0 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 16 May 2019 13:02:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44918 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728747AbfEPRCY (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 16 May 2019 13:02:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 61B7FAF25;
-        Thu, 16 May 2019 17:02:22 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@opensuse.org>
-Cc:     Michal Rostecki <mrostecki@opensuse.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
+        id S1727855AbfEPSnR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 16 May 2019 14:43:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37014 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfEPSnQ (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 16 May 2019 14:43:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h19so4054600ljj.4;
+        Thu, 16 May 2019 11:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=unVG59VzBSYO4iOVXWL7fSEnwAhYhvevqAGHSVFtITs=;
+        b=JzXCeX1bZ1ONHAEBSxYaRxUvqfPdgB39LOqzBGggD1p4Y7zZFtKKJoFFiDoun3nS3c
+         1V3qUE/ds+HnbVRGYOWzTArmY9yvKrCT1q4aSK27OJLN1MtvREOrKrj/PjiGyc+xZ09/
+         sGsMWCWtB/6kdzX/1kTY5K5vHLpMRa3qWUtkpb7290pgZF+Ehn93gzVtH1G1GBhfUko8
+         0tXIhenPwkO6Oa4FK7Qzu08vuZ6AlKSXTO5igrr/8nA7/W2sF4Gk6qmwyrPpOqR4JIvZ
+         RwAFK8PmfXQWHLs/C33C1JIL9MAQCrpu6kGpcZPDFb0wgv3y1uEXLGybFFRYF890hX5U
+         wbGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=unVG59VzBSYO4iOVXWL7fSEnwAhYhvevqAGHSVFtITs=;
+        b=g6JbNr9rSQoJL4nSbkwXUvNQGxNa6SxutRi+cU0DexETnDLw74j4mJQfop3d4NbrFK
+         F3o01pSizuqb89CzxkT7Q/krkTuYz9bwOKJM5teZxnVaU+4ILBw1IMBqZevv0MQHmAMp
+         IE+NXOjqLfSKOGJC0rW23gds/iTtiri8yubV2T+YLO2vgpA30nVCUnNpKnRJtLuZ/CJ9
+         P36NpFYYmybgeRAYCo32LDw5oXvgfO71Z5LQ6wA29ob5A3M1M/plV9agboXnFhpAxbMF
+         WOFutqCxI7TMFqo7/XtwWEkpX9oX2lYJz6EvxwNspxH/gd4sSWJ1MvbOptWaUuc3L/xI
+         CPVw==
+X-Gm-Message-State: APjAAAVsLMdKmZtOn3JX491s4JzzJgPAsk1wtYMvQtXsGC45DPFnFvSm
+        nM+y74lxfa1ol8YZPRoQWF6/W8j9zhQczAOQ9d4=
+X-Google-Smtp-Source: APXvYqxBDW9EwLKEM/loJ6ILDsGQzYnaLEazK9HiGiufleeEQCm+KRHOQSULmCZ4eO6rpb5lcU85bhL9Y8KiDYPaGX4=
+X-Received: by 2002:a2e:9f44:: with SMTP id v4mr3078676ljk.85.1558032194378;
+ Thu, 16 May 2019 11:43:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190516112105.12887-1-mrostecki@opensuse.org>
+In-Reply-To: <20190516112105.12887-1-mrostecki@opensuse.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 16 May 2019 11:43:03 -0700
+Message-ID: <CAADnVQLFrZyjbFb6o0YezLyqGBKcsiT=jVGfwDaupGLvgLp31A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/2] Move bpf_printk to bpf_helpers.h
+To:     Michal Rostecki <mrostecki@opensuse.org>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Martin KaFai Lau <kafai@fb.com>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
@@ -26,224 +57,23 @@ Cc:     Michal Rostecki <mrostecki@opensuse.org>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org
-Subject: [PATCH bpf-next v2 2/2] samples: bpf: Do not define bpf_printk macro
-Date:   Thu, 16 May 2019 19:01:53 +0200
-Message-Id: <20190516170152.24542-3-mrostecki@opensuse.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190516170152.24542-1-mrostecki@opensuse.org>
-References: <20190516170152.24542-1-mrostecki@opensuse.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Jiong Wang <jiong.wang@netronome.com>,
+        Mathieu Xhonneux <m.xhonneux@gmail.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-The bpf_printk macro was moved to bpf_helpers.h which is included in all
-example programs.
+On Thu, May 16, 2019 at 4:21 AM Michal Rostecki <mrostecki@opensuse.org> wrote:
+>
+> This series of patches move the commonly used bpf_printk macro to
+> bpf_helpers.h which is already included in all BPF programs which
+> defined that macro on their own.
 
-Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
----
- samples/bpf/hbm_kern.h             | 11 ++---------
- samples/bpf/tcp_basertt_kern.c     |  7 -------
- samples/bpf/tcp_bufs_kern.c        |  7 -------
- samples/bpf/tcp_clamp_kern.c       |  7 -------
- samples/bpf/tcp_cong_kern.c        |  7 -------
- samples/bpf/tcp_iw_kern.c          |  7 -------
- samples/bpf/tcp_rwnd_kern.c        |  7 -------
- samples/bpf/tcp_synrto_kern.c      |  7 -------
- samples/bpf/tcp_tos_reflect_kern.c |  7 -------
- samples/bpf/xdp_sample_pkts_kern.c |  7 -------
- 10 files changed, 2 insertions(+), 72 deletions(-)
-
-diff --git a/samples/bpf/hbm_kern.h b/samples/bpf/hbm_kern.h
-index c5635d924193..41384be233b9 100644
---- a/samples/bpf/hbm_kern.h
-+++ b/samples/bpf/hbm_kern.h
-@@ -30,15 +30,8 @@
- #define ALLOW_PKT	1
- #define TCP_ECN_OK	1
- 
--#define HBM_DEBUG 0  // Set to 1 to enable debugging
--#if HBM_DEBUG
--#define bpf_printk(fmt, ...)					\
--({								\
--	char ____fmt[] = fmt;					\
--	bpf_trace_printk(____fmt, sizeof(____fmt),		\
--			 ##__VA_ARGS__);			\
--})
--#else
-+#ifndef HBM_DEBUG  // Define HBM_DEBUG to enable debugging
-+#undef bpf_printk
- #define bpf_printk(fmt, ...)
- #endif
- 
-diff --git a/samples/bpf/tcp_basertt_kern.c b/samples/bpf/tcp_basertt_kern.c
-index 6ef1625e8b2c..9dba48c2b920 100644
---- a/samples/bpf/tcp_basertt_kern.c
-+++ b/samples/bpf/tcp_basertt_kern.c
-@@ -21,13 +21,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_basertt(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_bufs_kern.c b/samples/bpf/tcp_bufs_kern.c
-index e03e204739fa..af8486f33771 100644
---- a/samples/bpf/tcp_bufs_kern.c
-+++ b/samples/bpf/tcp_bufs_kern.c
-@@ -22,13 +22,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_bufs(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_clamp_kern.c b/samples/bpf/tcp_clamp_kern.c
-index a0dc2d254aca..26c0fd091f3c 100644
---- a/samples/bpf/tcp_clamp_kern.c
-+++ b/samples/bpf/tcp_clamp_kern.c
-@@ -22,13 +22,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_clamp(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_cong_kern.c b/samples/bpf/tcp_cong_kern.c
-index 4fd3ca979a06..6d4dc4c7dd1e 100644
---- a/samples/bpf/tcp_cong_kern.c
-+++ b/samples/bpf/tcp_cong_kern.c
-@@ -21,13 +21,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_cong(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_iw_kern.c b/samples/bpf/tcp_iw_kern.c
-index 9b139ec69560..da61d53378b3 100644
---- a/samples/bpf/tcp_iw_kern.c
-+++ b/samples/bpf/tcp_iw_kern.c
-@@ -22,13 +22,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_iw(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_rwnd_kern.c b/samples/bpf/tcp_rwnd_kern.c
-index cc71ee96e044..d011e38b80d2 100644
---- a/samples/bpf/tcp_rwnd_kern.c
-+++ b/samples/bpf/tcp_rwnd_kern.c
-@@ -21,13 +21,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_rwnd(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_synrto_kern.c b/samples/bpf/tcp_synrto_kern.c
-index ca87ed34f896..720d1950322d 100644
---- a/samples/bpf/tcp_synrto_kern.c
-+++ b/samples/bpf/tcp_synrto_kern.c
-@@ -21,13 +21,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_synrto(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/tcp_tos_reflect_kern.c b/samples/bpf/tcp_tos_reflect_kern.c
-index de788be6f862..369faca70a15 100644
---- a/samples/bpf/tcp_tos_reflect_kern.c
-+++ b/samples/bpf/tcp_tos_reflect_kern.c
-@@ -20,13 +20,6 @@
- 
- #define DEBUG 1
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- SEC("sockops")
- int bpf_basertt(struct bpf_sock_ops *skops)
- {
-diff --git a/samples/bpf/xdp_sample_pkts_kern.c b/samples/bpf/xdp_sample_pkts_kern.c
-index f7ca8b850978..6c7c7e0aaeda 100644
---- a/samples/bpf/xdp_sample_pkts_kern.c
-+++ b/samples/bpf/xdp_sample_pkts_kern.c
-@@ -7,13 +7,6 @@
- #define SAMPLE_SIZE 64ul
- #define MAX_CPUS 128
- 
--#define bpf_printk(fmt, ...)					\
--({								\
--	       char ____fmt[] = fmt;				\
--	       bpf_trace_printk(____fmt, sizeof(____fmt),	\
--				##__VA_ARGS__);			\
--})
--
- struct bpf_map_def SEC("maps") my_map = {
- 	.type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
- 	.key_size = sizeof(int),
--- 
-2.21.0
-
+makes sense, but it needs to wait until bpf-next reopens.
