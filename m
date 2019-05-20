@@ -2,104 +2,65 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A918123F4E
-	for <lists+xdp-newbies@lfdr.de>; Mon, 20 May 2019 19:44:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAC1123F5C
+	for <lists+xdp-newbies@lfdr.de>; Mon, 20 May 2019 19:47:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393031AbfETRoQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Mon, 20 May 2019 13:44:16 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40790 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393023AbfETRoP (ORCPT
+        id S1725902AbfETRrF (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 20 May 2019 13:47:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43640 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfETRrF (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 20 May 2019 13:44:15 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h13so10978202lfc.7
-        for <xdp-newbies@vger.kernel.org>; Mon, 20 May 2019 10:44:14 -0700 (PDT)
+        Mon, 20 May 2019 13:47:05 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so13284308lji.10
+        for <xdp-newbies@vger.kernel.org>; Mon, 20 May 2019 10:47:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YCwqCrxUh2bH8XiEOdKZb9nS1aVmthT0KjuGZ5SGeWg=;
-        b=E3VL4C7EBEmQHNUXuU3rZOoSq0oEwFyB+dI7/mxb5Q15jYG6kUnvVqmrAk2R7E/MSW
-         PZvAqBV6RKUtGVHzA/nn5TgayRY5s5kzUbRxKSwuyjNHAoRc9Zp0V8fkuVxspwjxPnM7
-         rIxx2m3roZ9xQrEjB47WyOXFIHv6RQwzyNzuAAHflKcRqKez5KNeT91E5AzewbCwYDJZ
-         S43YsJzdtHfHjkjkP5pvsXv0PbrCr+Ogku72AGABVJODN6Dc1/o9yfRJBL0EarFRc5ZA
-         SUchM6cVlJjNKM/zjL/Aa+//KDwYHMZble8UuQYl0k1X4hZYphoGwud+jsu+2/8OUkj6
-         TbDg==
-X-Gm-Message-State: APjAAAXwfVZCv2JychuulxHGaN1MKxwTVbggdpV6qKDq5m1iuYZHL5Tj
-        P5HUnmK8/fGfbHWJviJLqFgBeqyoSP4jpm/8KOLqrQ==
-X-Google-Smtp-Source: APXvYqxard7MWA/VNY2/t3WSS/ZAIm1KiPrRmTxGnTYRhlf2mlBOygWYKOFtWov73xjWrfasfr7Un7lha75I7XvLYCg=
-X-Received: by 2002:a19:d612:: with SMTP id n18mr24957983lfg.162.1558374253977;
- Mon, 20 May 2019 10:44:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=GyTJpL1BHuLaRSZ/rqTHzZ6DUBpP18SUBBGFoSOcny8=;
+        b=LlS78IZEOqdzM1swxcopZJkFr5imujk+Ylg/2Fsu5vWFHJpIIRFTphwrvGpBxrO/Lw
+         WfqeWY7dWICDoI6jtasStnafehIVtNtWmC6cOGSZFLzJtbjfwDISCvmXdVh33MyROJfn
+         FYw9NL7A8WbwyEu2OZPvMkWMZWessqlx1lDNNCCq19NmAqqTNeP1k1CsPNbYt56R8hCw
+         NJZUKlBcsAINs4SS20HMmGn0PNGiPDOnYzHRU5ahMzA5yVEhPQ5FItZh991F5HrbNgnT
+         DendtE19XVYEUhlTghoBnVOYaZDG/EurpXcbCcn1LGEXvv8iSNnv+sk9EtZbsuh8dcW+
+         d4Vw==
+X-Gm-Message-State: APjAAAW0rCRzzS6/Wp3JZMuoKQ9dhMwKErPyUdfPk9trJsFIkVKK5YMj
+        o95dgKrS1RR3YNz9RZ99xEJv4VzQS0qO4oOtxqiOYlaf
+X-Google-Smtp-Source: APXvYqy3i8sepeeUBj1Jv7zSFSVFg/7+UvwGF5/OmKEWwccotlb1NKSO/wXNPyHb3czO1wZpyt4wnf9VlD16bxAiD00=
+X-Received: by 2002:a2e:4701:: with SMTP id u1mr32888626lja.38.1558374423668;
+ Mon, 20 May 2019 10:47:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190518004639.20648-1-mcroce@redhat.com> <20190518004639.20648-2-mcroce@redhat.com>
- <20190520165322.GH10244@mini-arch>
-In-Reply-To: <20190520165322.GH10244@mini-arch>
+References: <20190518004639.20648-1-mcroce@redhat.com>
+In-Reply-To: <20190518004639.20648-1-mcroce@redhat.com>
 From:   Matteo Croce <mcroce@redhat.com>
-Date:   Mon, 20 May 2019 19:43:37 +0200
-Message-ID: <CAGnkfhzEZokRWMtTdbHzy1JZVVEzEPuY2oWL-9LzjRVgG0Y05Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] libbpf: add missing typedef
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
+Date:   Mon, 20 May 2019 19:46:27 +0200
+Message-ID: <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
+To:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         netdev <netdev@vger.kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, May 20, 2019 at 6:53 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
+On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wrote:
 >
-> On 05/18, Matteo Croce wrote:
-> > Sync tools/include/linux/types.h with the UAPI one to fix this build error:
-> >
-> > make -C samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=samples/bpf/../../ O=
-> >   HOSTCC  samples/bpf/sock_example
-> > In file included from samples/bpf/sock_example.c:27:
-> > /usr/include/linux/ip.h:102:2: error: unknown type name ‘__sum16’
-> >   102 |  __sum16 check;
-> >       |  ^~~~~~~
-> > make[2]: *** [scripts/Makefile.host:92: samples/bpf/sock_example] Error 1
-> > make[1]: *** [Makefile:1763: samples/bpf/] Error 2
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > ---
-> >  tools/include/linux/types.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/tools/include/linux/types.h b/tools/include/linux/types.h
-> > index 154eb4e3ca7c..5266dbfee945 100644
-> > --- a/tools/include/linux/types.h
-> > +++ b/tools/include/linux/types.h
-> > @@ -58,6 +58,9 @@ typedef __u32 __bitwise __be32;
-> >  typedef __u64 __bitwise __le64;
-> >  typedef __u64 __bitwise __be64;
-> >
-> > +typedef __u16 __bitwise __sum16;
-> > +typedef __u32 __bitwise __wsum;
-> If you do that, you should probably remove 'typedef __u16 __sum16;'
-> from test_progs.h:
+> Fix the following error by removing a duplicate struct definition:
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/tree/tools/testing/selftests/bpf/test_progs.h#n13
->
-> > +
-> >  typedef struct {
-> >       int counter;
-> >  } atomic_t;
-> > --
-> > 2.21.0
-> >
 
-Hi,
+Hi all,
 
-I see test_progs.h only included in tools/testing/selftests/bpf/prog_tests/*,
-so maybe it's unreladed to my change in samples/bpf/.
-Maybe in a different patchset.
+I forget to send a cover letter for this series, but basically what I
+wanted to say is that while patches 1-3 are very straightforward,
+patches 4-5 are a bit rough and I accept suggstions to make a cleaner
+work.
 
-Bye,
+Regards,
 -- 
 Matteo Croce
 per aspera ad upstream
