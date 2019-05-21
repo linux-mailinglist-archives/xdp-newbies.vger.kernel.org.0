@@ -2,227 +2,88 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A542247DC
-	for <lists+xdp-newbies@lfdr.de>; Tue, 21 May 2019 08:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0B82527A
+	for <lists+xdp-newbies@lfdr.de>; Tue, 21 May 2019 16:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfEUGPk (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 21 May 2019 02:15:40 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51688 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbfEUGPk (ORCPT
+        id S1728295AbfEUOqC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 21 May 2019 10:46:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42061 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728067AbfEUOqC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 21 May 2019 02:15:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c77so1561670wmd.1
-        for <xdp-newbies@vger.kernel.org>; Mon, 20 May 2019 23:15:37 -0700 (PDT)
+        Tue, 21 May 2019 10:46:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id go2so38619plb.9
+        for <xdp-newbies@vger.kernel.org>; Tue, 21 May 2019 07:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wVURcngxHaUKK2/6DcO63462w2MMfQtg1uggxqLYhQw=;
-        b=dEUklpcSZJw0JKdU1qOtpFIq2HjB90fX/plfKjqUeat+/giiCHodVyp/Z1mw23OH6S
-         aOSs2njV6rbNgWJnxwjlGJkXDbNb5q4WWJetyHRVEbmJD68d0K3NteaH+L5XSBibmaGb
-         xbu4cHE+H9CRpnI5uKtMEVYmVRTJaMiwQc/qi9AxQsw5g+ZrLfYAJQFbOE36O6Q7zgrw
-         fn3E4uq/VlR13yQFfML58qqB4m1989AOXRi0SWVPwLb4t1//Ahcz1F3PNjQckfgH11tj
-         JaqQJv2HuxFMrJ9mxazFaJSriCE+9mFFFHemZHfkIBSkeWxKfdhPasGJ3aRzBC7w5Q1f
-         dwoA==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=de3y25UgGac49MbnsF0R7E+4373Q0F2/TDUFzvPVXAQ=;
+        b=L8ycAEtULq2ubg26UmaLuj4uEu9FAeWattAev83ZQ2i4zEQtnAhGDcPbC5O04DlPdW
+         L+kLP9LaUOoJTJQ+DeqQVXcRmzG6sH7p3qS5Suxre+uO9lkoACfmuiN6MbvSNHyT0ErO
+         pI8hy0AauF6trTVMRLRfgf9UjUTwHyx1q4uVPID9NeWYiW4C0L9reFbO/szdOe6L9++B
+         9R86QOmDu/h25eHiKHEovIHNA3j1dRmbaRoG9unkVNqmPv4gmlXHSwWcD/PID6+Y4EXY
+         e6FiclMqCtIJ50e/qHZEbd8RRGnWm0zg46IevhewkTAs4jBjaPcwwJK0cC3jTsp8K3EN
+         cLEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wVURcngxHaUKK2/6DcO63462w2MMfQtg1uggxqLYhQw=;
-        b=M7XuZ7dpb0KOnPsBJOyEVHaK80ZX3SXsr3m0RXtRjX+VV5Nediu8Q+0RgxJU1fxqdg
-         09gJd9hFHqzL+kZ8Vb0S1IlZ16uwK9WpEolsKg4Miudtn2K6DGrfv/IwVRG3YxjhQlaf
-         umCEL7U3V15Y/9cbgij8/8QOzLeYImSN5I+KgaIeXSS0F6k683jPYxoj44HdQBdUBqLt
-         u4t8LM8Y+Bq7QvCDs0ALrr8pZ2ij3P5wGsb7VwNKJHYF0Y2BAJOkCi4Xf7uPTkO058PV
-         LEBu674YsrgNYrM4hmqqS/mDdfjHYD0cwqOLNHJUlWVdohXGheo3Dw7qLKPYbbXPyhMM
-         bP+Q==
-X-Gm-Message-State: APjAAAVLJaN3urY++vP3NR/wXPxmUfOnj3YvXepcBAL8IuDF5OODuRP4
-        mAR4E3tyPnRDJveGGnzqNIhmXg==
-X-Google-Smtp-Source: APXvYqx0iy748Edu6ClBYQEDwgmMkaq7Im/sFwn2kAs5W3W6NItdo3My9kmAFcXEZSwBc2FCIG8f8Q==
-X-Received: by 2002:a1c:6342:: with SMTP id x63mr2082200wmb.58.1558419337178;
-        Mon, 20 May 2019 23:15:37 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id t13sm43781124wra.81.2019.05.20.23.15.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=de3y25UgGac49MbnsF0R7E+4373Q0F2/TDUFzvPVXAQ=;
+        b=hPbiZjtduvm/nJAyy2jpeUs7I5STtMyJaCsv6kq5OQUaZR2yKm4VBEPvHJOCafaEm3
+         VfDtKCIM/dhQQ4Cc5o7o2WfmF7ADaF7w8ZpK7MdNU6sNWLaP9AZw58TcvulkDQ4p57hL
+         tZoiK5QiNANyeWayl99nlpKKkRJUt5OvRxFwwhaXXeoKvXZyoIq75/Ec/72Gmh04KTgq
+         QOzhKch4OR3QjDKhwEMaZU8kGU3icsNkoFZG5AzvX43ea9Dddx1JiPWQGPNJuu8kt43u
+         4aKFid+K2Um5gbBMF+qsMMQESc7VcSZe/Y3mBOiIc2pwj77oZL+To6AfMpWSPtvZtxvI
+         vx0A==
+X-Gm-Message-State: APjAAAX8IHmoj2fjtjHtn2llZDfva7uiVPGJ7xKAQ21GvTG4uMsifVOd
+        aQ3D0xBhHf5v5OfQ+O8C4G+KbQ==
+X-Google-Smtp-Source: APXvYqxL/kfPI/S/85HWsxZoJyfotngXhLZjk5iXQHZLDkK56y9TdDhMYM5qUophLBH2N2/83N6pNA==
+X-Received: by 2002:a17:902:f24:: with SMTP id 33mr82347752ply.33.1558449961295;
+        Tue, 21 May 2019 07:46:01 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id 7sm1948070pfo.90.2019.05.21.07.46.00
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 23:15:36 -0700 (PDT)
-Date:   Tue, 21 May 2019 08:15:36 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Stephen Hemminger <stephen@networkplumber.org>
+        Tue, 21 May 2019 07:46:01 -0700 (PDT)
+Date:   Tue, 21 May 2019 07:45:53 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Jiri Pirko <jiri@resnulli.us>
 Cc:     netdev@vger.kernel.org, davem@davemloft.net,
         xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Jason Wang <jasowang@redhat.com>
 Subject: Re: [PATCH v2 net 2/2] net: core: generic XDP support for stacked
  device
-Message-ID: <20190521061536.GB2210@nanopsycho.orion>
+Message-ID: <20190521074553.12329dd5@hermes.lan>
+In-Reply-To: <20190521061536.GB2210@nanopsycho.orion>
 References: <20190519031046.4049-1-sthemmin@microsoft.com>
- <20190519031046.4049-3-sthemmin@microsoft.com>
- <20190520091105.GA2142@nanopsycho>
- <20190520090405.69b419e5@hermes.lan>
+        <20190519031046.4049-3-sthemmin@microsoft.com>
+        <20190520091105.GA2142@nanopsycho>
+        <20190520090405.69b419e5@hermes.lan>
+        <20190521061536.GB2210@nanopsycho.orion>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520090405.69b419e5@hermes.lan>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Mon, May 20, 2019 at 06:04:05PM CEST, stephen@networkplumber.org wrote:
->On Mon, 20 May 2019 11:11:05 +0200
->Jiri Pirko <jiri@resnulli.us> wrote:
->
->> Sun, May 19, 2019 at 05:10:46AM CEST, stephen@networkplumber.org wrote:
->> >When a device is stacked like (team, bonding, failsafe or netvsc) the
->> >XDP generic program for the parent device is not called.  In these
->> >cases, the rx handler changes skb->dev to its own in the receive
->> >handler, and returns RX_HANDLER_ANOTHER.  Fix this by calling
->> >do_xdp_generic if necessary before starting another round.
->> >
->> >Review of all the places RX_HANDLER_ANOTHER is returned
->> >show that the current devices do correctly change skb->dev.
->> >
->> >There was an older patch that got abandoned that did the
->> >same thing, this is just a rewrite.
->> >
->> >Suggested-by: Jason Wang <jasowang@redhat.com>
->> >Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
->> >Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
->> >Acked-by: Jason Wang <jasowang@redhat.com>
->> >---
->> > net/core/dev.c | 10 ++++++++++
->> > 1 file changed, 10 insertions(+)
->> >
->> >diff --git a/net/core/dev.c b/net/core/dev.c
->> >index b6b8505cfb3e..240d0b2de1a8 100644
->> >--- a/net/core/dev.c
->> >+++ b/net/core/dev.c
->> >@@ -4921,6 +4921,16 @@ static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
->> > 			ret = NET_RX_SUCCESS;
->> > 			goto out;
->> > 		case RX_HANDLER_ANOTHER:
->> >+			if (static_branch_unlikely(&generic_xdp_needed_key)) {
->> >+				struct bpf_prog *xdp_prog;
->> >+
->> >+				xdp_prog = rcu_dereference(skb->dev->xdp_prog);
->> >+				ret = do_xdp_generic(xdp_prog, skb);
->> >+				if (ret != XDP_PASS) {
->> >+					ret = NET_RX_SUCCESS;
->> >+					goto out;
->> >+				}
->> >+			}  
->> 
->> I'm always scarred of changes like this. The history tells us that this
->> codepaths are very fragile. It took us non-trivial efford to fix bonding
->> here, not to mention vlans (that was pain).
->> 
->> The reason for troubles was often fact that different flows were treated
->> differently (vlan accel/non-accel).
->> 
->> This patch calls do_xdp_generic for master device in different point in
->> the receive patch comparing to lower device. Would it be possible to
->> unify this? E.g. by moving do_xdp_generice() call from
->> netif_rx_internal()/netif_receive_skb_internal() here,
->> to the beginning of __netif_receive_skb_core()?
->> 
->
->I am trying that now. But one problem is that it would break the case
->where XDP was being run on one leg of a bridge. For example if eth1 is
->part of br0; then it would no longer be possible to run XDP on eth1.
+On Tue, 21 May 2019 08:15:36 +0200
+Jiri Pirko <jiri@resnulli.us> wrote:
 
-I don't see why not. The xdp is still run in __netif_receive_skb_core()
-before goto another_round.
+> +	if (static_branch_unlikely(&generic_xdp_needed_key)) {
+> +		int ret2;
+> +
+> +		preempt_disable();
+> +		rcu_read_lock();
+> +		ret2 = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
+> +		rcu_read_unlock();
+> +		preempt_enable();
+> +
+> +		if (ret2 != XDP_PASS)
+> +			return NET_RX_DROP;
+> +	}
+> +
 
-I was thinking about patch similar to this:
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index b6b8505cfb3e..4c3fdda85544 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4502,23 +4502,6 @@ static int netif_rx_internal(struct sk_buff *skb)
- 
- 	trace_netif_rx(skb);
- 
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		int ret;
--
--		preempt_disable();
--		rcu_read_lock();
--		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
--		rcu_read_unlock();
--		preempt_enable();
--
--		/* Consider XDP consuming the packet a success from
--		 * the netdev point of view we do not want to count
--		 * this as an error.
--		 */
--		if (ret != XDP_PASS)
--			return NET_RX_SUCCESS;
--	}
--
- #ifdef CONFIG_RPS
- 	if (static_branch_unlikely(&rps_needed)) {
- 		struct rps_dev_flow voidflow, *rflow = &voidflow;
-@@ -4858,6 +4841,19 @@ static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
- 
- 	__this_cpu_inc(softnet_data.processed);
- 
-+	if (static_branch_unlikely(&generic_xdp_needed_key)) {
-+		int ret2;
-+
-+		preempt_disable();
-+		rcu_read_lock();
-+		ret2 = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
-+		rcu_read_unlock();
-+		preempt_enable();
-+
-+		if (ret2 != XDP_PASS)
-+			return NET_RX_DROP;
-+	}
-+
- 	if (skb->protocol == cpu_to_be16(ETH_P_8021Q) ||
- 	    skb->protocol == cpu_to_be16(ETH_P_8021AD)) {
- 		skb = skb_vlan_untag(skb);
-@@ -5178,19 +5174,6 @@ static int netif_receive_skb_internal(struct sk_buff *skb)
- 	if (skb_defer_rx_timestamp(skb))
- 		return NET_RX_SUCCESS;
- 
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		int ret;
--
--		preempt_disable();
--		rcu_read_lock();
--		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
--		rcu_read_unlock();
--		preempt_enable();
--
--		if (ret != XDP_PASS)
--			return NET_RX_DROP;
--	}
--
- 	rcu_read_lock();
- #ifdef CONFIG_RPS
- 	if (static_branch_unlikely(&rps_needed)) {
-@@ -5224,21 +5207,6 @@ static void netif_receive_skb_list_internal(struct list_head *head)
- 	}
- 	list_splice_init(&sublist, head);
- 
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		preempt_disable();
--		rcu_read_lock();
--		list_for_each_entry_safe(skb, next, head, list) {
--			xdp_prog = rcu_dereference(skb->dev->xdp_prog);
--			skb_list_del_init(skb);
--			if (do_xdp_generic(xdp_prog, skb) == XDP_PASS)
--				list_add_tail(&skb->list, &sublist);
--		}
--		rcu_read_unlock();
--		preempt_enable();
--		/* Put passed packets back on main list */
--		list_splice_init(&sublist, head);
--	}
--
- 	rcu_read_lock();
- #ifdef CONFIG_RPS
- 	if (static_branch_unlikely(&rps_needed)) {
+rcu_read_lock is already held by callers of __netif_receive_skb_core
