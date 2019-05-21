@@ -2,91 +2,127 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9427224324
-	for <lists+xdp-newbies@lfdr.de>; Mon, 20 May 2019 23:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91783246FD
+	for <lists+xdp-newbies@lfdr.de>; Tue, 21 May 2019 06:47:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725763AbfETVtl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 20 May 2019 17:49:41 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36936 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfETVtl (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 20 May 2019 17:49:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id e15so16241746wrs.4
-        for <xdp-newbies@vger.kernel.org>; Mon, 20 May 2019 14:49:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5T1hy/hqtkGt7VlP8D6U9UrQi3KpGadAce8jNWj5ow4=;
-        b=I6OMHDO7ftbnAIwKESsoJ/bOnBSvTkSQdvDY31YrB45B1TMQnsnpln0MylgXZXaZ1E
-         tPrU9pfFuNCtyyff2PR/mEtbTgyVq/TrQ74I/y4DDcaj2YVQiDrnMWv6ozN9ysDuM8tG
-         wa1a9jlH/q8F62Gs0Y+jiYLbCPt47JbO6td6vw6zaFLqLAijuDGWyYXlaqyqMmaIwxB0
-         LUVNMO/ejjEDz3KwVxpIc+SsnDEdZ0ouNBq1NqHoNJWpC4F8F4oENFCt/tt6+58tA+79
-         o0sEZfJJ0lxT+HXdJFvVU3TGrGxoM+Vtv2V88e/ToVfsFFqZvezDp1r/YDKP17LNF9Vz
-         16vg==
-X-Gm-Message-State: APjAAAWGMj/8rygpfvMkue3jw2fsOR45FO+hBemNSzf8xsWlwDnhOcqq
-        PJjS1peJI5yT2hnFYgHrHxnutJqXE4E=
-X-Google-Smtp-Source: APXvYqwwIQVkX6hg7GUI4p5OpVeKp2TfmVkU01Kf4BLyrzgxI4SENAgED1LTN3xlqtVZ4iOr6RWr6w==
-X-Received: by 2002:a5d:4a44:: with SMTP id v4mr2492195wrs.84.1558388979591;
-        Mon, 20 May 2019 14:49:39 -0700 (PDT)
-Received: from raver.teknoraver.net (net-47-53-225-211.cust.vodafonedsl.it. [47.53.225.211])
-        by smtp.gmail.com with ESMTPSA id 197sm1466394wma.36.2019.05.20.14.49.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 14:49:38 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH bpf] samples/bpf: suppress compiler warning
-Date:   Mon, 20 May 2019 23:49:38 +0200
-Message-Id: <20190520214938.16889-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        id S1725999AbfEUErg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 21 May 2019 00:47:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47604 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725982AbfEUErg (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 21 May 2019 00:47:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BE8CB81DEE;
+        Tue, 21 May 2019 04:47:30 +0000 (UTC)
+Received: from [10.72.12.36] (ovpn-12-36.pek2.redhat.com [10.72.12.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC7EE5DA34;
+        Tue, 21 May 2019 04:47:25 +0000 (UTC)
+Subject: Re: [PATCH v2 net 2/2] net: core: generic XDP support for stacked
+ device
+To:     Jiri Pirko <jiri@resnulli.us>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>
+References: <20190519031046.4049-1-sthemmin@microsoft.com>
+ <20190519031046.4049-3-sthemmin@microsoft.com>
+ <20190520091105.GA2142@nanopsycho>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <cdfec194-30f3-f040-3bb2-98bb08add759@redhat.com>
+Date:   Tue, 21 May 2019 12:47:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190520091105.GA2142@nanopsycho>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 21 May 2019 04:47:35 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-GCC 9 fails to calculate the size of local constant strings and produces a
-false positive:
 
-samples/bpf/task_fd_query_user.c: In function ‘test_debug_fs_uprobe’:
-samples/bpf/task_fd_query_user.c:242:67: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 215 [-Wformat-truncation=]
-  242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-      |                                                                   ^~
-  243 |    event_type, event_alias);
-      |                ~~~~~~~~~~~
-samples/bpf/task_fd_query_user.c:242:2: note: ‘snprintf’ output between 45 and 300 bytes into a destination of size 256
-  242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  243 |    event_type, event_alias);
-      |    ~~~~~~~~~~~~~~~~~~~~~~~~
+On 2019/5/20 下午5:11, Jiri Pirko wrote:
+> Sun, May 19, 2019 at 05:10:46AM CEST, stephen@networkplumber.org wrote:
+>> When a device is stacked like (team, bonding, failsafe or netvsc) the
+>> XDP generic program for the parent device is not called.  In these
+>> cases, the rx handler changes skb->dev to its own in the receive
+>> handler, and returns RX_HANDLER_ANOTHER.  Fix this by calling
+>> do_xdp_generic if necessary before starting another round.
+>>
+>> Review of all the places RX_HANDLER_ANOTHER is returned
+>> show that the current devices do correctly change skb->dev.
+>>
+>> There was an older patch that got abandoned that did the
+>> same thing, this is just a rewrite.
+>>
+>> Suggested-by: Jason Wang <jasowang@redhat.com>
+>> Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
+>> Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+>> Acked-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>> net/core/dev.c | 10 ++++++++++
+>> 1 file changed, 10 insertions(+)
+>>
+>> diff --git a/net/core/dev.c b/net/core/dev.c
+>> index b6b8505cfb3e..240d0b2de1a8 100644
+>> --- a/net/core/dev.c
+>> +++ b/net/core/dev.c
+>> @@ -4921,6 +4921,16 @@ static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
+>> 			ret = NET_RX_SUCCESS;
+>> 			goto out;
+>> 		case RX_HANDLER_ANOTHER:
+>> +			if (static_branch_unlikely(&generic_xdp_needed_key)) {
+>> +				struct bpf_prog *xdp_prog;
+>> +
+>> +				xdp_prog = rcu_dereference(skb->dev->xdp_prog);
+>> +				ret = do_xdp_generic(xdp_prog, skb);
+>> +				if (ret != XDP_PASS) {
+>> +					ret = NET_RX_SUCCESS;
+>> +					goto out;
+>> +				}
+>> +			}
+> I'm always scarred of changes like this. The history tells us that this
+> codepaths are very fragile. It took us non-trivial efford to fix bonding
+> here, not to mention vlans (that was pain).
 
-Workaround this by lowering the buffer size to a reasonable value.
-Related GCC Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83431
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- samples/bpf/task_fd_query_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I may miss something, did you see any issue for bonding with this patch?
 
-diff --git a/samples/bpf/task_fd_query_user.c b/samples/bpf/task_fd_query_user.c
-index aff2b4ae914e..e39938058223 100644
---- a/samples/bpf/task_fd_query_user.c
-+++ b/samples/bpf/task_fd_query_user.c
-@@ -216,7 +216,7 @@ static int test_debug_fs_uprobe(char *binary_path, long offset, bool is_return)
- {
- 	const char *event_type = "uprobe";
- 	struct perf_event_attr attr = {};
--	char buf[256], event_alias[256];
-+	char buf[256], event_alias[sizeof("test_1234567890")];
- 	__u64 probe_offset, probe_addr;
- 	__u32 len, prog_id, fd_type;
- 	int err, res, kfd, efd;
--- 
-2.21.0
 
+>
+> The reason for troubles was often fact that different flows were treated
+> differently (vlan accel/non-accel).
+
+
+Do you mean we need do something similar after vlan_do_receive() returns 
+true?
+
+
+> This patch calls do_xdp_generic for master device in different point in
+> the receive patch comparing to lower device. Would it be possible to
+> unify this? E.g. by moving do_xdp_generice() call from
+> netif_rx_internal()/netif_receive_skb_internal() here,
+> to the beginning of __netif_receive_skb_core()?
+
+
+Probably just after another_round label. And this means generic XDP is 
+done after RPS which could be even better.
+
+Thanks
+
+
+>
+>
+>
+>> 			goto another_round;
+>> 		case RX_HANDLER_EXACT:
+>> 			deliver_exact = true;
+>> -- 
+>> 2.20.1
+>>
