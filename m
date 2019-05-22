@@ -2,175 +2,226 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7524125AE6
-	for <lists+xdp-newbies@lfdr.de>; Wed, 22 May 2019 01:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 734522706F
+	for <lists+xdp-newbies@lfdr.de>; Wed, 22 May 2019 22:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfEUXdg convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Tue, 21 May 2019 19:33:36 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46751 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfEUXdg (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 21 May 2019 19:33:36 -0400
-Received: by mail-lf1-f66.google.com with SMTP id l26so201116lfh.13
-        for <xdp-newbies@vger.kernel.org>; Tue, 21 May 2019 16:33:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EWNs7FuLz+EBZGJHO+hMowOuxfAj3IDqhoBMiSjNTxE=;
-        b=YcMdhFuOowVGJ8Je3YY+O6urZgGiIzE63P/gKgPlsg5FtocTrDqsBwGQ1NVwEh8kLC
-         20/P3oCycFbSVoaAmTWPRUYRp4n/bmE/xIBCp5tDYVgvVoDbE8T9eFbMUNR7HOSHFt8O
-         sF5W7zu2p3QOCjiwU799TlrYcRFdg2V82HyMw0I3q8xPvCXgeOo+JgC6lBTG6xAMMuZL
-         CvHVeyO8y/il6ypUa4+ZSs9l0tM5eFKp1b5TF3sK6VLNBBB5k5jq1i2yiPq4CxEU5AFL
-         Qabm3DRN1RyZ3eyJbUlz61OCpCyCYcpxAs4hBhZiiNx4NMCikIdTKPXQVNTEv7sa/867
-         YdgA==
-X-Gm-Message-State: APjAAAWhwVecTs4mMf/4PJyHuAeNtDe43kSm3/3ktd0lxm1iPzWoJZY9
-        MH41lqSpbhoa3ofRPw7A4RcCBfsGqXQpJrR7zUY3Og==
-X-Google-Smtp-Source: APXvYqxFOiQvAinejUQ5bQ+2ojPr4fXIqRhnzNKwRhVX51VwyZMoF/JudQtgNeOShJ06lSXqL67pZtMOqVe6jVwhGe0=
-X-Received: by 2002:a19:a50b:: with SMTP id o11mr28367269lfe.2.1558481613710;
- Tue, 21 May 2019 16:33:33 -0700 (PDT)
+        id S1730547AbfEVUDt (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 22 May 2019 16:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729924AbfEVTVg (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F888217F9;
+        Wed, 22 May 2019 19:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552894;
+        bh=whdbFbObrLaQUo6Qs3yx68b+O/Jeowab+f+vaugHeGA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P8VWT+JpYtWELkWJU+AVXn864aYLMwkzapBWqmxdnTEqWbt8i/smd9Hs0NMgiY8Do
+         GYS93y1EVkCFuInBCogsKFvpC18NG4CRe41OFgkIU/c8qKAK7/kw/FDzcUWse45QQI
+         rAsQfCiJCkhrZPKsgNRdp+lZK+iraQokiWn68Qow=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        William Tu <u9012063@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 014/375] libbpf: fix invalid munmap call
+Date:   Wed, 22 May 2019 15:15:14 -0400
+Message-Id: <20190522192115.22666-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190518004639.20648-1-mcroce@redhat.com> <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
- <20190520133830.1ac11fc8@cakuba.netronome.com> <dfb6cf40-81f4-237e-9a43-646077e020f7@iogearbox.net>
- <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com> <20190521100648.1ce9b5be@cakuba.netronome.com>
-In-Reply-To: <20190521100648.1ce9b5be@cakuba.netronome.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 22 May 2019 01:32:57 +0200
-Message-ID: <CAGnkfhzkRXF6WDYj9W2sffuLSYys_zbv9QekfuZWvc4VBCMKUA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, May 21, 2019 at 7:07 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Tue, 21 May 2019 17:36:17 +0200, Matteo Croce wrote:
-> > On Tue, May 21, 2019 at 5:21 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > >
-> > > On 05/20/2019 10:38 PM, Jakub Kicinski wrote:
-> > > > On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote:
-> > > >> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wrote:
-> > > >>>
-> > > >>> Fix the following error by removing a duplicate struct definition:
-> > > >>
-> > > >> Hi all,
-> > > >>
-> > > >> I forget to send a cover letter for this series, but basically what I
-> > > >> wanted to say is that while patches 1-3 are very straightforward,
-> > > >> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
-> > > >> work.
-> > > >
-> > > > samples depend on headers being locally installed:
-> > > >
-> > > > make headers_install
-> > > >
-> > > > Are you intending to change that?
-> > >
-> > > +1, Matteo, could you elaborate?
-> > >
-> > > On latest bpf tree, everything compiles just fine:
-> > >
-> > > [root@linux bpf]# make headers_install
-> > > [root@linux bpf]# make -C samples/bpf/
-> > > make: Entering directory '/home/darkstar/trees/bpf/samples/bpf'
-> > > make -C ../../ /home/darkstar/trees/bpf/samples/bpf/ BPF_SAMPLES_PATH=/home/darkstar/trees/bpf/samples/bpf
-> > > make[1]: Entering directory '/home/darkstar/trees/bpf'
-> > >   CALL    scripts/checksyscalls.sh
-> > >   CALL    scripts/atomic/check-atomics.sh
-> > >   DESCEND  objtool
-> > > make -C /home/darkstar/trees/bpf/samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=/home/darkstar/trees/bpf/samples/bpf/../../ O=
-> > >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_lru_dist
-> > >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sock_example
-> > >
-> >
-> > Hi all,
-> >
-> > I have kernel-headers installed from master, but yet the samples fail to build:
-> >
-> > matteo@turbo:~/src/linux/samples/bpf$ rpm -q kernel-headers
-> > kernel-headers-5.2.0_rc1-38.x86_64
-> >
-> > matteo@turbo:~/src/linux/samples/bpf$ git describe HEAD
-> > v5.2-rc1-97-g5bdd9ad875b6
-> >
-> > matteo@turbo:~/src/linux/samples/bpf$ make
-> > make -C ../../ /home/matteo/src/linux/samples/bpf/
-> > BPF_SAMPLES_PATH=/home/matteo/src/linux/samples/bpf
-> > make[1]: Entering directory '/home/matteo/src/linux'
-> >   CALL    scripts/checksyscalls.sh
-> >   CALL    scripts/atomic/check-atomics.sh
-> >   DESCEND  objtool
-> > make -C /home/matteo/src/linux/samples/bpf/../../tools/lib/bpf/ RM='rm
-> > -rf' LDFLAGS= srctree=/home/matteo/src/linux/samples/bpf/../../ O=
-> >   HOSTCC  /home/matteo/src/linux/samples/bpf/test_lru_dist
-> > /home/matteo/src/linux/samples/bpf/test_lru_dist.c:39:8: error:
-> > redefinition of ‘struct list_head’
-> >    39 | struct list_head {
-> >       |        ^~~~~~~~~
-> > In file included from /home/matteo/src/linux/samples/bpf/test_lru_dist.c:9:
-> > ./tools/include/linux/types.h:69:8: note: originally defined here
-> >    69 | struct list_head {
-> >       |        ^~~~~~~~~
-> > make[2]: *** [scripts/Makefile.host:90:
-> > /home/matteo/src/linux/samples/bpf/test_lru_dist] Error 1
-> > make[1]: *** [Makefile:1762: /home/matteo/src/linux/samples/bpf/] Error 2
-> > make[1]: Leaving directory '/home/matteo/src/linux'
-> > make: *** [Makefile:231: all] Error 2
-> >
-> > Am I missing something obvious?
->
-> Yes ;)  Samples use a local installation of headers in $objtree/usr (I
-> think, maybe $srctree/usr).  So you need to do make headers_install in
-> your kernel source tree, otherwise the include path from tools/ takes
-> priority over your global /usr/include and causes these issues.  I had
-> this path in my tree for some time, but I don't like enough to post it:
->
-> commit 35fb614049e93d46af708c0eaae6601df54017b3
-> Author: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Date:   Mon Dec 3 15:00:24 2018 -0800
->
->     bpf: maybe warn ppl about hrds_install
->
->     Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 4f0a1cdbfe7c..f79a4ed2f9f7 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -208,6 +208,15 @@ HOSTCC = $(CROSS_COMPILE)gcc
->  CLANG_ARCH_ARGS = -target $(ARCH)
->  endif
->
-> +HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
-> +       gcc $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
-> +       echo okay)
-> +
-> +ifeq ($(HDR_PROBE),)
-> +$(warning Detected possible issues with include path.)
-> +$(warning Please install kernel headers locally (make headers_install))
-> +endif
-> +
->  BTF_LLC_PROBE := $(shell $(LLC) -march=bpf -mattr=help 2>&1 | grep dwarfris)
->  BTF_PAHOLE_PROBE := $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
->  BTF_OBJCOPY_PROBE := $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usage.*llvm')
+From: Björn Töpel <bjorn.topel@intel.com>
 
-Hi Jakub,
+[ Upstream commit 0e6741f092979535d159d5a851f12c88bfb7cb9a ]
 
-I see now, It worked, thanks. This is a bit error prone IMHO, if you
-ever think about sending this patch, consider it ACKed by me.
+When unmapping the AF_XDP memory regions used for the rings, an
+invalid address was passed to the munmap() calls. Instead of passing
+the beginning of the memory region, the descriptor region was passed
+to munmap.
 
-Thanks,
+When the userspace application tried to tear down an AF_XDP socket,
+the operation failed and the application would still have a reference
+to socket it wished to get rid of.
+
+Reported-by: William Tu <u9012063@gmail.com>
+Fixes: 1cad07884239 ("libbpf: add support for using AF_XDP sockets")
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Tested-by: William Tu <u9012063@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/lib/bpf/xsk.c | 77 +++++++++++++++++++++++----------------------
+ 1 file changed, 40 insertions(+), 37 deletions(-)
+
+diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
+index 8d0078b65486f..af5f310ecca1c 100644
+--- a/tools/lib/bpf/xsk.c
++++ b/tools/lib/bpf/xsk.c
+@@ -248,8 +248,7 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, void *umem_area, __u64 size,
+ 	return 0;
+ 
+ out_mmap:
+-	munmap(umem->fill,
+-	       off.fr.desc + umem->config.fill_size * sizeof(__u64));
++	munmap(map, off.fr.desc + umem->config.fill_size * sizeof(__u64));
+ out_socket:
+ 	close(umem->fd);
+ out_umem_alloc:
+@@ -523,11 +522,11 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
+ 		       struct xsk_ring_cons *rx, struct xsk_ring_prod *tx,
+ 		       const struct xsk_socket_config *usr_config)
+ {
++	void *rx_map = NULL, *tx_map = NULL;
+ 	struct sockaddr_xdp sxdp = {};
+ 	struct xdp_mmap_offsets off;
+ 	struct xsk_socket *xsk;
+ 	socklen_t optlen;
+-	void *map;
+ 	int err;
+ 
+ 	if (!umem || !xsk_ptr || !rx || !tx)
+@@ -593,40 +592,40 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
+ 	}
+ 
+ 	if (rx) {
+-		map = xsk_mmap(NULL, off.rx.desc +
+-			       xsk->config.rx_size * sizeof(struct xdp_desc),
+-			       PROT_READ | PROT_WRITE,
+-			       MAP_SHARED | MAP_POPULATE,
+-			       xsk->fd, XDP_PGOFF_RX_RING);
+-		if (map == MAP_FAILED) {
++		rx_map = xsk_mmap(NULL, off.rx.desc +
++				  xsk->config.rx_size * sizeof(struct xdp_desc),
++				  PROT_READ | PROT_WRITE,
++				  MAP_SHARED | MAP_POPULATE,
++				  xsk->fd, XDP_PGOFF_RX_RING);
++		if (rx_map == MAP_FAILED) {
+ 			err = -errno;
+ 			goto out_socket;
+ 		}
+ 
+ 		rx->mask = xsk->config.rx_size - 1;
+ 		rx->size = xsk->config.rx_size;
+-		rx->producer = map + off.rx.producer;
+-		rx->consumer = map + off.rx.consumer;
+-		rx->ring = map + off.rx.desc;
++		rx->producer = rx_map + off.rx.producer;
++		rx->consumer = rx_map + off.rx.consumer;
++		rx->ring = rx_map + off.rx.desc;
+ 	}
+ 	xsk->rx = rx;
+ 
+ 	if (tx) {
+-		map = xsk_mmap(NULL, off.tx.desc +
+-			       xsk->config.tx_size * sizeof(struct xdp_desc),
+-			       PROT_READ | PROT_WRITE,
+-			       MAP_SHARED | MAP_POPULATE,
+-			       xsk->fd, XDP_PGOFF_TX_RING);
+-		if (map == MAP_FAILED) {
++		tx_map = xsk_mmap(NULL, off.tx.desc +
++				  xsk->config.tx_size * sizeof(struct xdp_desc),
++				  PROT_READ | PROT_WRITE,
++				  MAP_SHARED | MAP_POPULATE,
++				  xsk->fd, XDP_PGOFF_TX_RING);
++		if (tx_map == MAP_FAILED) {
+ 			err = -errno;
+ 			goto out_mmap_rx;
+ 		}
+ 
+ 		tx->mask = xsk->config.tx_size - 1;
+ 		tx->size = xsk->config.tx_size;
+-		tx->producer = map + off.tx.producer;
+-		tx->consumer = map + off.tx.consumer;
+-		tx->ring = map + off.tx.desc;
++		tx->producer = tx_map + off.tx.producer;
++		tx->consumer = tx_map + off.tx.consumer;
++		tx->ring = tx_map + off.tx.desc;
+ 		tx->cached_cons = xsk->config.tx_size;
+ 	}
+ 	xsk->tx = tx;
+@@ -653,13 +652,11 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr, const char *ifname,
+ 
+ out_mmap_tx:
+ 	if (tx)
+-		munmap(xsk->tx,
+-		       off.tx.desc +
++		munmap(tx_map, off.tx.desc +
+ 		       xsk->config.tx_size * sizeof(struct xdp_desc));
+ out_mmap_rx:
+ 	if (rx)
+-		munmap(xsk->rx,
+-		       off.rx.desc +
++		munmap(rx_map, off.rx.desc +
+ 		       xsk->config.rx_size * sizeof(struct xdp_desc));
+ out_socket:
+ 	if (--umem->refcount)
+@@ -684,10 +681,12 @@ int xsk_umem__delete(struct xsk_umem *umem)
+ 	optlen = sizeof(off);
+ 	err = getsockopt(umem->fd, SOL_XDP, XDP_MMAP_OFFSETS, &off, &optlen);
+ 	if (!err) {
+-		munmap(umem->fill->ring,
+-		       off.fr.desc + umem->config.fill_size * sizeof(__u64));
+-		munmap(umem->comp->ring,
+-		       off.cr.desc + umem->config.comp_size * sizeof(__u64));
++		(void)munmap(umem->fill->ring - off.fr.desc,
++			     off.fr.desc +
++			     umem->config.fill_size * sizeof(__u64));
++		(void)munmap(umem->comp->ring - off.cr.desc,
++			     off.cr.desc +
++			     umem->config.comp_size * sizeof(__u64));
+ 	}
+ 
+ 	close(umem->fd);
+@@ -698,6 +697,7 @@ int xsk_umem__delete(struct xsk_umem *umem)
+ 
+ void xsk_socket__delete(struct xsk_socket *xsk)
+ {
++	size_t desc_sz = sizeof(struct xdp_desc);
+ 	struct xdp_mmap_offsets off;
+ 	socklen_t optlen;
+ 	int err;
+@@ -710,14 +710,17 @@ void xsk_socket__delete(struct xsk_socket *xsk)
+ 	optlen = sizeof(off);
+ 	err = getsockopt(xsk->fd, SOL_XDP, XDP_MMAP_OFFSETS, &off, &optlen);
+ 	if (!err) {
+-		if (xsk->rx)
+-			munmap(xsk->rx->ring,
+-			       off.rx.desc +
+-			       xsk->config.rx_size * sizeof(struct xdp_desc));
+-		if (xsk->tx)
+-			munmap(xsk->tx->ring,
+-			       off.tx.desc +
+-			       xsk->config.tx_size * sizeof(struct xdp_desc));
++		if (xsk->rx) {
++			(void)munmap(xsk->rx->ring - off.rx.desc,
++				     off.rx.desc +
++				     xsk->config.rx_size * desc_sz);
++		}
++		if (xsk->tx) {
++			(void)munmap(xsk->tx->ring - off.tx.desc,
++				     off.tx.desc +
++				     xsk->config.tx_size * desc_sz);
++		}
++
+ 	}
+ 
+ 	xsk->umem->refcount--;
 -- 
-Matteo Croce
-per aspera ad upstream
+2.20.1
+
