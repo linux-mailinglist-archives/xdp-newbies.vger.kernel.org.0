@@ -2,175 +2,115 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B7329030
-	for <lists+xdp-newbies@lfdr.de>; Fri, 24 May 2019 06:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B78F29501
+	for <lists+xdp-newbies@lfdr.de>; Fri, 24 May 2019 11:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfEXEyn (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 24 May 2019 00:54:43 -0400
-Received: from tama500.ecl.ntt.co.jp ([129.60.39.148]:36499 "EHLO
-        tama500.ecl.ntt.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfEXEyn (ORCPT
+        id S2390058AbfEXJlv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 24 May 2019 05:41:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38878 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390074AbfEXJlu (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 24 May 2019 00:54:43 -0400
-Received: from vc1.ecl.ntt.co.jp (vc1.ecl.ntt.co.jp [129.60.86.153])
-        by tama500.ecl.ntt.co.jp (8.13.8/8.13.8) with ESMTP id x4O4sCOR003200;
-        Fri, 24 May 2019 13:54:12 +0900
-Received: from vc1.ecl.ntt.co.jp (localhost [127.0.0.1])
-        by vc1.ecl.ntt.co.jp (Postfix) with ESMTP id 90D65EA7F56;
-        Fri, 24 May 2019 13:54:12 +0900 (JST)
-Received: from jcms-pop21.ecl.ntt.co.jp (jcms-pop21.ecl.ntt.co.jp [129.60.87.134])
-        by vc1.ecl.ntt.co.jp (Postfix) with ESMTP id 85EAEEA7F04;
-        Fri, 24 May 2019 13:54:12 +0900 (JST)
-Received: from [IPv6:::1] (eb8460w-makita.sic.ecl.ntt.co.jp [129.60.241.47])
-        by jcms-pop21.ecl.ntt.co.jp (Postfix) with ESMTPSA id 7A2B4400870;
-        Fri, 24 May 2019 13:54:12 +0900 (JST)
-Subject: Re: [PATCH bpf-next 3/3] veth: Support bulk XDP_TX
-References: <1558609008-2590-1-git-send-email-makita.toshiaki@lab.ntt.co.jp>
- <1558609008-2590-4-git-send-email-makita.toshiaki@lab.ntt.co.jp>
- <87zhnd1kg9.fsf@toke.dk> <599302b2-96d2-b571-01ee-f4914acaf765@lab.ntt.co.jp>
- <20190523152927.14bf7ed1@carbon>
- <c902c0f4-947b-ba9e-7baa-628ba87a8f01@gmail.com>
- <94046143-f05d-77db-88c4-7bd62f2c98d4@redhat.com>
- <c560baa0-8a71-4ab3-7107-c831d6ef8bb8@lab.ntt.co.jp>
- <1035faf0-3fd2-4986-540e-b76ab53fe99b@redhat.com>
-From:   Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
-Message-ID: <3a3217f2-89d0-fc1e-bca8-953cf83f5e57@lab.ntt.co.jp>
-Date:   Fri, 24 May 2019 13:52:46 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 24 May 2019 05:41:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d18so9285747wrs.5
+        for <xdp-newbies@vger.kernel.org>; Fri, 24 May 2019 02:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
+        b=A3eoary35mP/ldGozEDAvNCMcz//E5Pp2NMOTYth62qhOZRHuBL/1IULlsfXC0iE9P
+         2U0gHdxYDJUaj4/6vWvRNMk5HbYNmIhmOG5NAYpgm3RxPw/J/9h8cmhnbF+Cey7mkEbG
+         ccMh7n93p3TomLg1SElpLdEG6psgy5ls35POE7RF/bxByT7tjwKwdXvhdPmpWY0gf3O7
+         OtZsfHFApGsWlB1Rnobgx9Pxe8YvME0Af3Da4OtTI/6CIJtdOY4QyTRafmL1vqAuDiFa
+         BzxusJ/C1QxGVMQzSZsPcl8j+TmsdyWxL3P+T5qGGixYakACt/r6OdNpNGJAvo2oZI61
+         SFlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y5N3blBOF57aEuNrqnxupdWMUAa8sEMVdsUI1rflzSQ=;
+        b=RYYPqE1JY5HHY9mhNKr2ygC8vD+HKxUNOB9exALdLzFFTY1Mi4nOJBbzKWQu8t7O7c
+         28Lx3TBiY1pHDrfyamnFK38KBo+iuFA7bUqGAjec0Qx7byqR2PaV9bw4gnR/OZie4w0H
+         kHJ1pYYaVGSbJOl9GwJ9EhLIbwOijwRlcTSgU+2qNI4rtnlxR44f7SrEDW6qnX/T66nQ
+         WqWRwL/gj3rgZaM4whopD0qkJcy0CTXE6WVWQmXWSwCD7Iqd1wFV2bDbE1ttU8YCyraU
+         yFswPJvcnZYpjxr66KjFhDeNbW9aonEeswvkpw2gTeset/CdrGr/dXDB0rfhyNZEtDC6
+         OSgA==
+X-Gm-Message-State: APjAAAV50uUDlZpbGCw/IR9tURhZYKrdKyC3qswX+HEUX5sdKCR1KTip
+        03EOc8y824h/7I+yj/t3YjnTnw==
+X-Google-Smtp-Source: APXvYqwPRO4pFpxSPn86THLU1S+1gsKxZpAqGiQDN/sY0wzkykgkTLwXk57Z0fyJ2AQwWnT5Lmk4kQ==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr9813762wrd.59.1558690909082;
+        Fri, 24 May 2019 02:41:49 -0700 (PDT)
+Received: from apalos (ppp-94-66-229-5.home.otenet.gr. [94.66.229.5])
+        by smtp.gmail.com with ESMTPSA id o23sm247011wro.13.2019.05.24.02.41.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 May 2019 02:41:48 -0700 (PDT)
+Date:   Fri, 24 May 2019 12:41:45 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH net-next 0/3] net: ethernet: ti: cpsw: Add XDP support
+Message-ID: <20190524094145.GA24675@apalos>
+References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1035faf0-3fd2-4986-540e-b76ab53fe99b@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CC-Mail-RelayStamp: 1
-To:     Jason Wang <jasowang@redhat.com>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 2019/05/24 12:54, Jason Wang wrote:
-> On 2019/5/24 上午11:28, Toshiaki Makita wrote:
->> On 2019/05/24 12:13, Jason Wang wrote:
->>> On 2019/5/23 下午9:51, Toshiaki Makita wrote:
->>>> On 19/05/23 (木) 22:29:27, Jesper Dangaard Brouer wrote:
->>>>> On Thu, 23 May 2019 20:35:50 +0900
->>>>> Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp> wrote:
->>>>>
->>>>>> On 2019/05/23 20:25, Toke Høiland-Jørgensen wrote:
->>>>>>> Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp> writes:
->>>>>>>> This improves XDP_TX performance by about 8%.
->>>>>>>>
->>>>>>>> Here are single core XDP_TX test results. CPU consumptions are
->>>>>>>> taken
->>>>>>>> from "perf report --no-child".
->>>>>>>>
->>>>>>>> - Before:
->>>>>>>>
->>>>>>>>     7.26 Mpps
->>>>>>>>
->>>>>>>>     _raw_spin_lock  7.83%
->>>>>>>>     veth_xdp_xmit  12.23%
->>>>>>>>
->>>>>>>> - After:
->>>>>>>>
->>>>>>>>     7.84 Mpps
->>>>>>>>
->>>>>>>>     _raw_spin_lock  1.17%
->>>>>>>>     veth_xdp_xmit   6.45%
->>>>>>>>
->>>>>>>> Signed-off-by: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
->>>>>>>> ---
->>>>>>>>    drivers/net/veth.c | 26 +++++++++++++++++++++++++-
->>>>>>>>    1 file changed, 25 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/net/veth.c b/drivers/net/veth.c
->>>>>>>> index 52110e5..4edc75f 100644
->>>>>>>> --- a/drivers/net/veth.c
->>>>>>>> +++ b/drivers/net/veth.c
->>>>>>>> @@ -442,6 +442,23 @@ static int veth_xdp_xmit(struct net_device
->>>>>>>> *dev, int n,
->>>>>>>>        return ret;
->>>>>>>>    }
->>>>>>>>    +static void veth_xdp_flush_bq(struct net_device *dev)
->>>>>>>> +{
->>>>>>>> +    struct xdp_tx_bulk_queue *bq = this_cpu_ptr(&xdp_tx_bq);
->>>>>>>> +    int sent, i, err = 0;
->>>>>>>> +
->>>>>>>> +    sent = veth_xdp_xmit(dev, bq->count, bq->q, 0);
->>>>>>> Wait, veth_xdp_xmit() is just putting frames on a pointer ring. So
->>>>>>> you're introducing an additional per-cpu bulk queue, only to avoid
->>>>>>> lock
->>>>>>> contention around the existing pointer ring. But the pointer ring is
->>>>>>> per-rq, so if you have lock contention, this means you must have
->>>>>>> multiple CPUs servicing the same rq, no?
->>>>>> Yes, it's possible. Not recommended though.
->>>>>>
->>>>> I think the general per-cpu TX bulk queue is overkill.  There is a
->>>>> loop
->>>>> over packets in veth_xdp_rcv(struct veth_rq *rq, budget, *status), and
->>>>> the caller veth_poll() will call veth_xdp_flush(rq->dev).
->>>>>
->>>>> Why can't you store this "temp" bulk array in struct veth_rq ?
->>>> Of course I can. But I thought tun has the same problem and we can
->>>> decrease memory footprint by sharing the same storage between devices.
->>>
->>> For TUN and for its fast path where vhost passes a bulk of XDP frames
->>> (through msg_control) to us, we probably just need a temporary bulk
->>> array in tun_xdp_one() instead of a global one. I can post patch or
->>> maybe you if you're interested in this.
->> Of course you/I can. What I'm concerned is that could be waste of cache
->> line when softirq runs veth napi handler and then tun napi handler.
->>
-> 
-> Well, technically the bulk queue passed to TUN could be reused. I admit
-> it may save cacheline in ideal case but I wonder how much we could gain
-> on real workload.
+Hi Ivan,
 
-I see veth_rq ptr_ring suffering from cacheline miss, which makes me
-conservative about adding more buffers for xdp_frames.
-I'll wait for some more feedback from others.
-
-> (Note TUN doesn't use napi handler to do XDP, it has a
-> NAPI mode but it was mainly used for hardening and XDP was not
-> implemented there, maybe we should fix this).
-
-Ah, that's true. Sorry for confusion.
-
+More XDP drivers, that's good!
+> This patchset add XDP support for TI cpsw driver and base it on
+> page_pool allocator. It was verified on af_xdp socket drop,
+> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 > 
-> Thanks
+> It was verified with following configs enabled:
+> CONFIG_JIT=y
+> CONFIG_BPFILTER=y
+> CONFIG_BPF_SYSCALL=y
+> CONFIG_XDP_SOCKETS=y
+> CONFIG_BPF_EVENTS=y
+> CONFIG_HAVE_EBPF_JIT=y
+> CONFIG_BPF_JIT=y
+> CONFIG_CGROUP_BPF=y
 > 
+> Link on previous RFC:
+> https://lkml.org/lkml/2019/4/17/861
 > 
->>> Thanks
->>>
->>>
->>>> Or if other devices want to reduce queues so that we can use XDP on
->>>> many-cpu servers and introduce locks, we can use this storage for that
->>>> case as well.
->>>>
->>>> Still do you prefer veth-specific solution?
->>>>
->>>>> You could even alloc/create it on the stack of veth_poll() and send it
->>>>> along via a pointer to veth_xdp_rcv).
->>>>>
->>>> Toshiaki Makita
->>>
+The recycling pattern has changed i'll have a closer look in the weekend and let
+you know
+> Also regular tests with iperf2 were done in order to verify impact on
+> regular netstack performance, compared with base commit:
+> https://pastebin.com/JSMT0iZ4
+Do you have any XDP related numbers?
 > 
+> Based on net-next/master
 > 
-
--- 
-Toshiaki Makita
-
+> Ivan Khoronzhuk (3):
+>   net: ethernet: ti: davinci_cpdma: add dma mapped submit
+>   net: ethernet: ti: davinci_cpdma: return handler status
+>   net: ethernet: ti: cpsw: add XDP support
+> 
+>  drivers/net/ethernet/ti/Kconfig         |   1 +
+>  drivers/net/ethernet/ti/cpsw.c          | 570 +++++++++++++++++++++---
+>  drivers/net/ethernet/ti/cpsw_ethtool.c  |  55 ++-
+>  drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
+>  drivers/net/ethernet/ti/davinci_cpdma.c | 122 +++--
+>  drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
+>  drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
+>  7 files changed, 675 insertions(+), 106 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
+Thanks
+/Ilias
