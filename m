@@ -2,191 +2,117 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D17D31463
-	for <lists+xdp-newbies@lfdr.de>; Fri, 31 May 2019 20:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB47D316D6
+	for <lists+xdp-newbies@lfdr.de>; Fri, 31 May 2019 23:58:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfEaSGH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 31 May 2019 14:06:07 -0400
-Received: from mail-eopbgr150075.outbound.protection.outlook.com ([40.107.15.75]:46404
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726638AbfEaSGH (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 31 May 2019 14:06:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9xXE3nRzRq3jTkFw1I1ANMevCBaQ2gVJtmV473ejyMs=;
- b=TKtJ0zvwze3+BFuVHT1RyS80gKGAEgVkPiEkN2RrcVCbZm/tlutvVETqgl4Z4za2LjP17ZSDt15UCCQKdKfvTiqTtOVSmVv3qW57kOkzxJHhwaMMqpDG3APO1hpwC7wT/ClsFJp7GLOijCRr7Ei5dsJjH3Uf/5CCrL9nz/f2VHY=
-Received: from VI1PR05MB5902.eurprd05.prod.outlook.com (20.178.125.223) by
- VI1PR05MB5837.eurprd05.prod.outlook.com (20.178.123.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.18; Fri, 31 May 2019 18:06:01 +0000
-Received: from VI1PR05MB5902.eurprd05.prod.outlook.com
- ([fe80::dd31:2532:9adf:9b38]) by VI1PR05MB5902.eurprd05.prod.outlook.com
- ([fe80::dd31:2532:9adf:9b38%6]) with mapi id 15.20.1922.021; Fri, 31 May 2019
- 18:06:01 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "barbette@kth.se" <barbette@kth.se>,
-        "brouer@redhat.com" <brouer@redhat.com>
-CC:     "toke@redhat.com" <toke@redhat.com>,
+        id S1726719AbfEaV6D (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 31 May 2019 17:58:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfEaV6C (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 31 May 2019 17:58:02 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 636DC3084298;
+        Fri, 31 May 2019 21:58:02 +0000 (UTC)
+Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4649D1001DCD;
+        Fri, 31 May 2019 21:57:55 +0000 (UTC)
+Date:   Fri, 31 May 2019 23:57:53 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "barbette@kth.se" <barbette@kth.se>,
+        "toke@redhat.com" <toke@redhat.com>,
         "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Leon Romanovsky <leonro@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>
+        Tariq Toukan <tariqt@mellanox.com>, brouer@redhat.com
 Subject: Re: Bad XDP performance with mlx5
-Thread-Topic: Bad XDP performance with mlx5
-Thread-Index: AQHVF31SvxJdkDKYhE6W4OKABWlB96aFae6AgAAeF4A=
-Date:   Fri, 31 May 2019 18:06:01 +0000
-Message-ID: <19ca7cd9a878b2ecc593cd2838b8ae0412463593.camel@mellanox.com>
+Message-ID: <20190531235753.3cf8b199@carbon>
+In-Reply-To: <19ca7cd9a878b2ecc593cd2838b8ae0412463593.camel@mellanox.com>
 References: <d7968b89-7218-1e76-86bf-c452b2f8d0c2@kth.se>
-         <20190529191602.71eb6c87@carbon>
-         <0836bd30-828a-9126-5d99-1d35b931e3ab@kth.se>
-         <20190530094053.364b1147@carbon>
-         <d695d08a-9ee1-0228-2cbb-4b2538a1d2f8@kth.se>
-         <2218141a-7026-1cb8-c594-37e38eef7b15@kth.se>
-         <20190531181817.34039c9f@carbon>
-In-Reply-To: <20190531181817.34039c9f@carbon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.2 (3.32.2-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ea84694-a730-40e0-629a-08d6e5f2a402
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB5837;
-x-ms-traffictypediagnostic: VI1PR05MB5837:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR05MB5837D77920752683C8D19F23BE190@VI1PR05MB5837.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00540983E2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(366004)(39860400002)(136003)(376002)(396003)(346002)(199004)(54094003)(189003)(186003)(5660300002)(64756008)(91956017)(508600001)(26005)(73956011)(316002)(66066001)(6436002)(66946007)(3846002)(66556008)(36756003)(66446008)(6512007)(6116002)(81166006)(76116006)(66476007)(8936002)(6486002)(305945005)(229853002)(6306002)(86362001)(6506007)(11346002)(54906003)(966005)(53936002)(110136005)(446003)(99286004)(58126008)(76176011)(102836004)(486006)(7736002)(107886003)(8676002)(4326008)(25786009)(2501003)(2616005)(118296001)(256004)(14444005)(71190400001)(476003)(68736007)(71200400001)(2906002)(6246003)(14454004)(81156014)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5837;H:VI1PR05MB5902.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: stdUi8J9N9FhADDX3IZlZWG94yC0xMdki2+7xMtHaGdwWBdhVFkyBRgRuWj4kJ8h5Y4E7jdR+BZzNwY0Cyag/YaiS83wOKiNidreqwUilshW8rT1QgBv2eR7F8ay5ceboKb2j1xi72ck1iy8OYb3qtAborMoCEjzrsSFod/FF119A4NozgQhpoRQhFdSkVLeumSRCEw7tqKFqnFvRPhIUz4/S+1TSF7jZTk7wAExXs8c1osWdTNt4JHvFZ5emVs17GMHAfu8c9ixpz3eD2+nhHE4tK3GOVCk84l8Um2e8v8JHPWzRQEJ0Aci45BJlQL8LAFI1+IC2lhYLzYLw0dH0q+gqSEMXiTmhLPlskhvLkzd8qXn7/NAeoq2zdC7akJ2+OZCWg7F6cb+1WLHV3trK8kT64PCg2KOTZQShV/2L2k=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <91A5594091C044419B6A825FB17E7AFB@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        <20190529191602.71eb6c87@carbon>
+        <0836bd30-828a-9126-5d99-1d35b931e3ab@kth.se>
+        <20190530094053.364b1147@carbon>
+        <d695d08a-9ee1-0228-2cbb-4b2538a1d2f8@kth.se>
+        <2218141a-7026-1cb8-c594-37e38eef7b15@kth.se>
+        <20190531181817.34039c9f@carbon>
+        <19ca7cd9a878b2ecc593cd2838b8ae0412463593.camel@mellanox.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ea84694-a730-40e0-629a-08d6e5f2a402
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2019 18:06:01.4720
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5837
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 31 May 2019 21:58:02 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA1LTMxIGF0IDE4OjE4ICswMjAwLCBKZXNwZXIgRGFuZ2FhcmQgQnJvdWVy
-IHdyb3RlOg0KPiBPbiBGcmksIDMxIE1heSAyMDE5IDA4OjUxOjQzICswMjAwIFRvbSBCYXJiZXR0
-ZSA8YmFyYmV0dGVAa3RoLnNlPg0KPiB3cm90ZToNCj4gDQo+ID4gQ0NpbmcgbWx4NSBtYWludGFp
-bmVycyBhbmQgY29tbWl0ZXJzIG9mIGJjZTJiMmIuIFRMREs6IHRoZXJlIGlzIGENCj4gPiBodWdl
-IA0KPiA+IENQVSBpbmNyZWFzZSBvbiBDWDUgd2hlbiBpbnRyb2R1Y2luZyBhIFhEUCBwcm9ncmFt
-Lg0KPiA+IA0KPiA+IFNlZSBodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PW81aGxKWmJO
-NFRrJmZlYXR1cmU9eW91dHUuYmUNCj4gPiBhcm91bmQgMDo0MC4gV2UncmUgdGFsa2luZyBzb21l
-dGhpbmcgbGlrZSAxNSUgd2hpbGUgaXQncyBuZWFyIDAgZm9yDQo+ID4gb3RoZXIgZHJpdmVycy4g
-VGhlIG1hY2hpbmUgaXMgYSByZWNlbnQgU2t5bGFrZS4gRm9yIHVzIGl0IG1ha2VzIFhEUA0KPiA+
-IHVudXNhYmxlLiBJcyB0aGF0IGEga25vd24gcHJvYmxlbT8NCj4gDQoNClRoZSBxdWVzdGlvbiBp
-cywgT24gdGhlIHNhbWUgcGFja2V0IHJhdGUvYmFuZHdpZHRoIGRvIHlvdSBzZWUgaGlnaGVyDQpj
-cHUgdXRpbGl6YXRpb24gb24gbWx4NSBjb21wYXJlZCB0byBvdGhlciBkcml2ZXJzPyB5b3UgaGF2
-ZSB0byBjb21wYXJlDQphcHBsZXMgdG8gYXBwbGVzLg0KDQoNCj4gSSBoYXZlIGEgc2ltaWxhciB0
-ZXN0IHNldHVwLCBhbmQgSSBjYW4gcmVwcm9kdWNlLiBJIGhhdmUgZm91bmQgdGhlDQo+IHJvb3Qt
-Y2F1c2Ugc2VlIGJlbG93LiAgQnV0IG9uIG15IHN5c3RlbSBpdCB3YXMgZXZlbiB3b3JzZSwgd2l0
-aCBhbg0KPiBYRFBfUEFTUyBwcm9ncmFtIGxvYWRlZCwgYW5kIGlwZXJmICg2IHBhcmFsbGVsIFRD
-UCBmbG93cykgSSB3b3VsZCBzZWUNCj4gMTAwJSBDUFUgdXNhZ2UgYW5kIHRvdGFsIDgzLjMgR2Jp
-dHMvc2VjLiBXaXRoIG5vbi1YRFAgY2FzZSwgSSBzYXcgNTglDQo+IENQVSAoNDMlIGlkbGUpIGFu
-ZCB0b3RhbCA4OS43IEdiaXRzL3NlYy4NCj4gDQo+ICANCj4gPiBJIHdvbmRlciBpZiBpdCBkb2Vz
-bid0IHNpbXBseSBjb21lIGZyb20gbWx4NS9lbl9tYWluLmM6DQo+ID4gcnEtPmJ1ZmYubWFwX2Rp
-ciA9IHJxLT54ZHBfcHJvZyA/IERNQV9CSURJUkVDVElPTkFMIDoNCj4gPiBETUFfRlJPTV9ERVZJ
-Q0U7DQo+ID4gDQo+IA0KPiBOb3BlLCB0aGF0IGlzIG5vdCB0aGUgcHJvYmxlbS4NCj4gDQo+ID4g
-V2hpY2ggd291bGQgYmUgaW5saW5lIGZyb20gbXkgb2JzZXJ2YXRpb24gdGhhdCBtZW1vcnkgYWNj
-ZXNzIHNlZW1zIA0KPiA+IGhlYXZpZXIuIEkgZ3Vlc3MgdGhpcyBpcyBmb3IgdGhlIFhEUF9UWCBj
-YXNlLg0KPiA+IA0KPiA+IElmIHRoaXMgaXMgaW5kZWVkIHRoZSBwcm9ibGVtLiBBbnkgY2hhbmNl
-IHdlIGNhbjoNCj4gPiBhKSBkZXRlY3QgYXV0b21hdGljYWxseSB0aGF0IGEgcHJvZ3JhbSB3aWxs
-IG5vdCByZXR1cm4gWERQX1RYIChJJ20NCj4gPiBub3QgDQo+ID4gcXVpdGUgc3VyZSBhYm91dCB3
-aGF0IHRoZSBCUEYgbGltaXRhdGlvbnMgYWxsb3cgdG8gZ3Vlc3MgaW4NCj4gPiBhZHZhbmNlKSBv
-cg0KPiA+IGIpIGFkZCBhIGZsYWcgdG8gc3VjaCBhcyBYRFBfRkxBR1NfTk9fVFggdG8gYXZvaWQg
-c3VjaCBoaXQgaW4gDQo+ID4gcGVyZm9ybWFuY2Ugd2hlbiBub3QgbmVlZGVkPw0KPiANCj4gVGhp
-cyB3YXMga2luZCBvZiBoYXJkIHRvIHJvb3QtY2F1c2UsIGJ1dCBJIHNvbHZlZCBpdCBieSBpbmNy
-ZWFzaW5nDQo+IHRoZSBUQ1ANCj4gc29ja2V0IHNpemUgdXNlZCBieSB0aGUgaXBlcmYgdG9vbCwg
-bGlrZSB0aGlzIChwbGVhc2UgcmVwcm9kdWNlKToNCj4gDQo+ICQgaXBlcmYgLXMgLS13aW5kb3cg
-NE0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQo+IFNlcnZlciBsaXN0ZW5pbmcgb24gVENQIHBvcnQgNTAwMQ0KPiBUQ1Agd2lu
-ZG93IHNpemU6ICA0MTYgS0J5dGUgKFdBUk5JTkc6IHJlcXVlc3RlZCA0LjAwIE1CeXRlKQ0KPiAt
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0NCj4gDQo+IEdpdmVuIEkgY291bGQgcmVwcm9kdWNlLCBJIHRvb2sgYXQgY2xvc2VyIGxvb2sg
-YXQgcGVyZiByZWNvcmQvcmVwb3J0DQo+IHN0YXRzLA0KPiBhbmQgaXQgd2FzIGFjdHVhbGx5IHF1
-aXRlIGNsZWFyIHRoYXQgdGhpcyB3YXMgcmVsYXRlZCB0byBzdGFsbGluZyBvbg0KPiBnZXR0aW5n
-DQo+IHBhZ2VzIGZyb20gdGhlIHBhZ2UgYWxsb2NhdG9yIChmdW5jdGlvbiBjYWxscyB0b3AjNg0K
-PiBnZXRfcGFnZV9mcm9tX2ZyZWVsaXN0DQo+IGFuZCBmcmVlX3BjcHBhZ2VzX2J1bGspLg0KPiAN
-Cj4gVXNpbmcgbXkgdG9vbDogZXRodG9vbF9zdGF0cy5wbA0KPiAgDQo+IGh0dHBzOi8vZ2l0aHVi
-LmNvbS9uZXRvcHRpbWl6ZXIvbmV0d29yay10ZXN0aW5nL2Jsb2IvbWFzdGVyL2Jpbi9ldGh0b29s
-X3N0YXRzLnBsDQo+IA0KPiBJdCB3YXMgY2xlYXIgdGhhdCB0aGUgbWx4NSBkcml2ZXIgcGFnZS1j
-YWNoZSB3YXMgbm90IHdvcmtpbmc6DQo+ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgNjY1
-Mzc2MSAoICAgNiw2NTMsNzYxKSA8PSByeF9jYWNoZV9idXN5DQo+IC9zZWMNCj4gIEV0aHRvb2wo
-bWx4NXAxICApIHN0YXQ6ICAgICA2NjUzNzMyICggICA2LDY1Myw3MzIpIDw9IHJ4X2NhY2hlX2Z1
-bGwNCj4gL3NlYw0KPiAgRXRodG9vbChtbHg1cDEgICkgc3RhdDogICAgICA2Njk0ODEgKCAgICAg
-NjY5LDQ4MSkgPD0gcnhfY2FjaGVfcmV1c2UNCj4gL3NlYw0KPiAgRXRodG9vbChtbHg1cDEgICkg
-c3RhdDogICAgICAgICAgIDEgKCAgICAgICAgICAgMSkgPD0gcnhfY29uZ3N0X3Vtcg0KPiAvc2Vj
-DQo+ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgNzMyMzIzMCAoICAgNywzMjMsMjMwKSA8
-PQ0KPiByeF9jc3VtX3VubmVjZXNzYXJ5IC9zZWMNCj4gIEV0aHRvb2wobWx4NXAxICApIHN0YXQ6
-ICAgICAgICAxMDM0ICggICAgICAgMSwwMzQpIDw9DQo+IHJ4X2Rpc2NhcmRzX3BoeSAvc2VjDQo+
-ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgNzMyMzIzMCAoICAgNywzMjMsMjMwKSA8PSBy
-eF9wYWNrZXRzDQo+IC9zZWMNCj4gIEV0aHRvb2wobWx4NXAxICApIHN0YXQ6ICAgICA3MzI0MjQ0
-ICggICA3LDMyNCwyNDQpIDw9IHJ4X3BhY2tldHNfcGh5DQo+IC9zZWMNCj4gDQo+IFdoaWxlIHRo
-ZSBub24tWERQIGNhc2UgbG9va2VkIGxpa2UgdGhpczoNCj4gIEV0aHRvb2wobWx4NXAxICApIHN0
-YXQ6ICAgICAgMjk4OTI5ICggICAgIDI5OCw5MjkpIDw9IHJ4X2NhY2hlX2J1c3kNCj4gL3NlYw0K
-PiAgRXRodG9vbChtbHg1cDEgICkgc3RhdDogICAgICAyOTg5NzEgKCAgICAgMjk4LDk3MSkgPD0g
-cnhfY2FjaGVfZnVsbA0KPiAvc2VjDQo+ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgMzU0
-ODc4OSAoICAgMyw1NDgsNzg5KSA8PSByeF9jYWNoZV9yZXVzZQ0KPiAvc2VjDQo+ICBFdGh0b29s
-KG1seDVwMSAgKSBzdGF0OiAgICAgNzY5NTQ3NiAoICAgNyw2OTUsNDc2KSA8PQ0KPiByeF9jc3Vt
-X2NvbXBsZXRlIC9zZWMNCj4gIEV0aHRvb2wobWx4NXAxICApIHN0YXQ6ICAgICA3Njk1NDc2ICgg
-ICA3LDY5NSw0NzYpIDw9IHJ4X3BhY2tldHMNCj4gL3NlYw0KPiAgRXRodG9vbChtbHg1cDEgICkg
-c3RhdDogICAgIDc2OTUxNjkgKCAgIDcsNjk1LDE2OSkgPD0gcnhfcGFja2V0c19waHkNCj4gL3Nl
-Yw0KPiBNYW51YWwgY29uc2lzdGVuY2UgY2FsYzogNzY5NTQ3Ni0oKDM1NDg3ODkqMikrKDI5ODk3
-MSoyKSkgPSAtNDQNCj4gDQo+IFdpdGggdGhlIGluY3JlYXNlZCBUQ1Agd2luZG93IHNpemUsIHRo
-ZSBtbHg1IGRyaXZlciBjYWNoZSBpcyB3b3JraW5nDQo+IGJldHRlciwNCj4gYnV0IG5vdCBvcHRp
-bWFsbHksIHNlZSBiZWxvdy4gSSdtIGdldHRpbmcgODguMCBHYml0cy9zZWMgd2l0aCA2OCUgQ1BV
-DQo+IHVzYWdlLg0KPiAgRXRodG9vbChtbHg1cDEgICkgc3RhdDogICAgICA4OTQ0MzggKCAgICAg
-ODk0LDQzOCkgPD0gcnhfY2FjaGVfYnVzeQ0KPiAvc2VjDQo+ICBFdGh0b29sKG1seDVwMSAgKSBz
-dGF0OiAgICAgIDg5NDQ1MyAoICAgICA4OTQsNDUzKSA8PSByeF9jYWNoZV9mdWxsDQo+IC9zZWMN
-Cj4gIEV0aHRvb2wobWx4NXAxICApIHN0YXQ6ICAgICA2NjM4NTE4ICggICA2LDYzOCw1MTgpIDw9
-IHJ4X2NhY2hlX3JldXNlDQo+IC9zZWMNCj4gIEV0aHRvb2wobWx4NXAxICApIHN0YXQ6ICAgICAg
-ICAgICA2ICggICAgICAgICAgIDYpIDw9IHJ4X2NvbmdzdF91bXINCj4gL3NlYw0KPiAgRXRodG9v
-bChtbHg1cDEgICkgc3RhdDogICAgIDc1MzI5ODMgKCAgIDcsNTMyLDk4MykgPD0NCj4gcnhfY3N1
-bV91bm5lY2Vzc2FyeSAvc2VjDQo+ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgICAgIDE2
-NCAoICAgICAgICAgMTY0KSA8PQ0KPiByeF9kaXNjYXJkc19waHkgL3NlYw0KPiAgRXRodG9vbCht
-bHg1cDEgICkgc3RhdDogICAgIDc1MzI5ODMgKCAgIDcsNTMyLDk4MykgPD0gcnhfcGFja2V0cw0K
-PiAvc2VjDQo+ICBFdGh0b29sKG1seDVwMSAgKSBzdGF0OiAgICAgNzUzMzE5MyAoICAgNyw1MzMs
-MTkzKSA8PSByeF9wYWNrZXRzX3BoeQ0KPiAvc2VjDQo+IE1hbnVhbCBjb25zaXN0ZW5jZSBjYWxj
-OiA3NTMyOTgzLSg2NjM4NTE4Kzg5NDQ1MykgPSAxMg0KPiANCj4gVG8gdW5kZXJzdGFuZCB3aHkg
-dGhpcyBpcyBoYXBwZW5pbmcsIHlvdSBmaXJzdCBoYXZlIHRvIGtub3cgdGhhdCB0aGUNCj4gZGlm
-ZmVyZW5jZSBpcyBiZXR3ZWVuIHRoZSB0d28gUlgtbWVtb3J5IG1vZGVzIHVzZWQgYnkgbWx4NSBm
-b3Igbm9uLQ0KPiBYRFAgdnMNCj4gWERQLiBXaXRoIG5vbi1YRFAgdHdvIGZyYW1lcyBhcmUgc3Rv
-cmVkIHBlciBtZW1vcnktcGFnZSwgd2hpbGUgZm9yDQo+IFhEUCBvbmx5DQo+IGEgc2luZ2xlIGZy
-YW1lIHBlciBwYWdlIGlzIHVzZWQuICBUaGUgcGFja2V0cyBhdmFpbGFibGUgaW4gdGhlIFJYLQ0K
-PiByaW5ncyBhcmUNCj4gYWN0dWFsbHkgdGhlIHNhbWUsIGFzIHRoZSByaW5nIHNpemVzIGFyZSBu
-b24tWERQPTUxMiB2cy4gWERQPTEwMjQuDQo+IA0KDQpUaGFua3MgSmVzcGVyICEgdGhpcyB3YXMg
-YSB3ZWxsIHB1dCB0b2dldGhlciBleHBsYW5hdGlvbi4NCkkgd2FudCB0byBwb2ludCBvdXQgdGhh
-dCBzb21lIG90aGVyIGRyaXZlcnMgYXJlIHVzaW5nIGFsbG9jX3NrYiBBUElzDQp3aGljaCBwcm92
-aWRlIGEgZ29vZCBjYWNoaW5nIG1lY2hhbmlzbSwgd2hpY2ggaXMgZXZlbiBiZXR0ZXIgdGhhbiB0
-aGUNCm1seDUgaW50ZXJuYWwgb25lICh3aGljaCB1c2VzIHRoZSBhbGxvY19wYWdlIEFQSXMgZGly
-ZWN0bHkpLCB0aGlzIGNhbg0KZXhwbGFpbiB0aGUgZGlmZmVyZW5jZSwgYW5kIHlvdXIgZXhwbGFu
-YXRpb24gc2hvd3MgdGhlIHJvb3QgY2F1c2Ugb2YNCnRoZSBoaWdoZXIgY3B1IHV0aWwgd2l0aCBY
-RFAgb24gbWx4NSwgc2luY2UgdGhlIG1seDUgcGFnZSBjYWNoZSB3b3Jrcw0Kd2l0aCBoYWxmIG9m
-IGl0cyBjYXBhY2l0eSB3aGVuIGVuYWJsaW5nIFhEUC4NCg0KTm93IGRvIHdlIHJlYWxseSBuZWVk
-IHRvIGtlZXAgdGhpcyBwYWdlIHBlciBwYWNrZXQgaW4gbWx4NSB3aGVuIFhEUCBpcw0KZW5hYmxl
-ZCA/IGkgdGhpbmsgaXQgaXMgdGltZSB0byBkcm9wIHRoYXQgLi4gDQoNCj4gSSBiZWxpZXZlLCB0
-aGUgcmVhbCBpc3N1ZSBpcyB0aGF0IFRDUCB1c2UgdGhlIFNLQi0+dHJ1ZXNpemUgKGJhc2VkIG9u
-DQo+IGZyYW1lDQo+IHNpemUpIGZvciBkaWZmZXJlbnQgbWVtb3J5IHByZXNzdXJlIGFuZCB3aW5k
-b3cgY2FsY3VsYXRpb25zLCB3aGljaCBpcw0KPiB3aHkgaXQNCj4gc29sdmVkIHRoZSBpc3N1ZSB0
-byBpbmNyZWFzZSB0aGUgd2luZG93IHNpemUgbWFudWFsbHkuDQo+IA0K
+
+On Fri, 31 May 2019 18:06:01 +0000 Saeed Mahameed <saeedm@mellanox.com> wrote:
+
+> On Fri, 2019-05-31 at 18:18 +0200, Jesper Dangaard Brouer wrote:
+[...]
+> > 
+> > To understand why this is happening, you first have to know that the
+> > difference is between the two RX-memory modes used by mlx5 for non-
+> > XDP vs XDP. With non-XDP two frames are stored per memory-page,
+> > while for XDP only a single frame per page is used.  The packets
+> > available in the RX- rings are  actually the same, as the ring
+> > sizes are non-XDP=512 vs. XDP=1024. 
+> 
+> Thanks Jesper ! this was a well put together explanation.
+> I want to point out that some other drivers are using alloc_skb APIs
+> which provide a good caching mechanism, which is even better than the
+> mlx5 internal one (which uses the alloc_page APIs directly), this can
+> explain the difference, and your explanation shows the root cause of
+> the higher cpu util with XDP on mlx5, since the mlx5 page cache works
+> with half of its capacity when enabling XDP.
+> 
+> Now do we really need to keep this page per packet in mlx5 when XDP is
+> enabled ? i think it is time to drop that .. 
+
+No, we need to keep the page per packet (at least until, I've solved
+some corner-cases with page_pool, which could likely require getting a
+page-flag).
+
+> > I believe, the real issue is that TCP use the SKB->truesize (based
+> > on frame size) for different memory pressure and window
+> > calculations, which is why it solved the issue to increase the
+> > window size manually. 
+
+The TCP performance issue is not solely a SKB->truesize issue, but also
+an issue with how the driver level page-cache works.  It is actually
+very fragile, as single page with elevated refcnt can block the cache
+(see mlx5e_rx_cache_get()).  Which easily happens with TCP packets
+that is waiting to be re-transmitted in-case of loss.  This is
+happening here, as indicated by the rx_cache_busy and rx_cache_full
+being the same.
+
+We (Ilias, Tariq and I) have been planning to remove this small driver
+cache, and instead use the page_pool, and create a page-return path for
+SKBs.  Which should make this problem go away.  I'm going to be working
+on this the next couple of weeks (the tricky part is all the corner
+cases).
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
+On Fri, 31 May 2019 18:18:17 +0200
+Jesper Dangaard Brouer <brouer@redhat.com> wrote:
+
+> It was clear that the mlx5 driver page-cache was not working:
+>  Ethtool(mlx5p1  ) stat:     6653761 (   6,653,761) <= rx_cache_busy /sec
+>  Ethtool(mlx5p1  ) stat:     6653732 (   6,653,732) <= rx_cache_full /sec
+>  Ethtool(mlx5p1  ) stat:      669481 (     669,481) <= rx_cache_reuse /sec
+>  Ethtool(mlx5p1  ) stat:           1 (           1) <= rx_congst_umr /sec
+>  Ethtool(mlx5p1  ) stat:     7323230 (   7,323,230) <= rx_csum_unnecessary /sec
+>  Ethtool(mlx5p1  ) stat:        1034 (       1,034) <= rx_discards_phy /sec
+>  Ethtool(mlx5p1  ) stat:     7323230 (   7,323,230) <= rx_packets /sec
+>  Ethtool(mlx5p1  ) stat:     7324244 (   7,324,244) <= rx_packets_phy /sec
+
+
