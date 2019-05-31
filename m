@@ -2,168 +2,127 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E97731763
-	for <lists+xdp-newbies@lfdr.de>; Sat,  1 Jun 2019 01:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299ED317E7
+	for <lists+xdp-newbies@lfdr.de>; Sat,  1 Jun 2019 01:27:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfEaXAQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 31 May 2019 19:00:16 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35540 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfEaXAQ (ORCPT
+        id S1726535AbfEaX1e (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 31 May 2019 19:27:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33765 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfEaX1d (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 31 May 2019 19:00:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h11so11124750ljb.2
-        for <xdp-newbies@vger.kernel.org>; Fri, 31 May 2019 16:00:14 -0700 (PDT)
+        Fri, 31 May 2019 19:27:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y17so9230071lfe.0
+        for <xdp-newbies@vger.kernel.org>; Fri, 31 May 2019 16:27:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R6AakFEfT07RKGQjtU57G+Mi06fjxrW46LtUHEWscX4=;
-        b=UdqZ6v0xW/ZPZI7rfZNyoQWpFuu/Dvj8IN2xtnDAPTX97Ifm9GE29ZZGLxyqa/iYZ4
-         rcW2doIiMnJjEYD8YHPZeBmeYw+/pF+7ufxy43Ajo6/T1K3jr+2pVZMH3vAfYHucEpi5
-         8KaToYGMYAnolAxiqpavrhqxAujTLEgOy5wYLdGxZU6GLfatAVHJQ2Tg01q8q0X6qGNd
-         cvMdOyIrYD4kp5dHSVPpHRvmnPayZKvtxCSI1aZfKMsjl1X/eLrDLMuyr0pSD8N/+0W1
-         /DJb6GKmvK2DjPvRgAoWeRBJylaxDlUW6HBWawCb3DzMx8wad8MxyX9f6zHog+XwZFvd
-         oQtQ==
+        bh=/CnFI/Gplfb8sUNP8cdDqVeMfZ2XFe8YBzOqCLpB94A=;
+        b=zRB3kJXbFOYoNSwjaQOpmRSldudJn+Df4uOo0m22Btl5w47IUgSF1V3KT9/1YBYqT2
+         oQwMa8lZ8u1ftVKKwEjJSWoMnlGmoYsGw+g5M3W/zbFQvnxeX13U8hIMfcgwhGXYLtj3
+         a4x+sk4uvlBpZvKG4WRkc2vdpY+N/iVAFAMGFeBGW8bWww4AgMd6wECsZe/Vj+ClsQ94
+         LkRpa/iRwq3UCuhIW1BKIfW5E7Y6SE+Z+ibxlllm8+Lju9f67/TsPJ5y3DSY5dK0lK7Y
+         tdEXFDHpC3dWaDw2Z25AarWFlmKDxvgKg01+1gdBP7eMcTnSIwX7WL0QC7vwnc7xCKdz
+         xGDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=R6AakFEfT07RKGQjtU57G+Mi06fjxrW46LtUHEWscX4=;
-        b=UFRPFKkf+BXUQXgfFyaXt1EVD5j9IQrfUD4hOeHU4pijLdiMkAa6fTSP7hNWdbCkg+
-         HeDTvcwvne1rDiQuTBeYQM49tq0njLDL8Nr5E/iOaRgDAQq6hti591sfNhIfsJ1GX4+Q
-         hqzbVzCZRHUlZ5OT95cZ+seyCedzPAaOHn5WASiAzyhU68tXQn7lVN/9VVwRotZbsKmd
-         nI5/mw/MDPUqcum85+jHjj5gDnU/1MWICcC5K7oMGWNkVENQKtDALo7PAyXW4+C5iscr
-         jthtWQ3a3uKa1q7PTL3ll13cmQjJU3qrlNf5Hb7nOuM789ojHwqIlhvGIM4PhsRPf5Be
-         E/BQ==
-X-Gm-Message-State: APjAAAUdhWFaHJwXCx9gPt/xT2b0HndfCw2bwkaJ1eu+Su3UZ9Y8IV28
-        UPDj/MGB1xL8z7mp7CGGNbtn1g==
-X-Google-Smtp-Source: APXvYqwADy+ePnz+6LSmTnDgiozSJUl6IJ2AdwyOS/QcPm0Gp1mY0/Eivedv8uAM3H8DjK98nJn7WQ==
-X-Received: by 2002:a2e:2b8d:: with SMTP id r13mr7429874ljr.162.1559343613223;
-        Fri, 31 May 2019 16:00:13 -0700 (PDT)
+        bh=/CnFI/Gplfb8sUNP8cdDqVeMfZ2XFe8YBzOqCLpB94A=;
+        b=Xxon0caZTkdOAQ3qCLQGZtcNIpdgpg+K2XH+1IDYUEwbCj05Ql/IswwUYlR9xsT5mC
+         sueM8VRdCvPlxZfogMF6JOKYXcwal5/4U24Kz/yjIp7tG37zj9X8g9bMz7KlvofaCVzM
+         RVj7/sYmFVzVTydOyxWPSkfiqjvvvXwCqHfT70MFJpKWpxadg6qRbeTlq1ZSk35TgKTU
+         8fr7TAbP9oGSr0wug+gACl4bcwmYy8eU/XZ8nvtdEvSfIGj24kzS404IPQkxN9tnelEN
+         zh+vTzQoLdEstStWqmGShaL95P/4lW1hawNZi2ydA6HvkZ/cjI9lELAAsxQ1nfPysWH0
+         sxxw==
+X-Gm-Message-State: APjAAAUBrNtEa7tXJHMGzysOkSsubK/U/4iRAqZLAY7pb4dWCDs3TIdW
+        hA7IyKYbgT2nasXyg0lxJGWEiw==
+X-Google-Smtp-Source: APXvYqyW6MyVd0bvo1rYW8SDDxZBjY37O9w7HbIg7ST3VlduimXROlJPkxHLbG8bh/ASOk8YwdBEqw==
+X-Received: by 2002:a19:f806:: with SMTP id a6mr3164054lff.102.1559345251665;
+        Fri, 31 May 2019 16:27:31 -0700 (PDT)
 Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id r14sm1468168lff.44.2019.05.31.16.00.11
+        by smtp.gmail.com with ESMTPSA id y6sm1462951ljj.20.2019.05.31.16.27.30
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 31 May 2019 16:00:12 -0700 (PDT)
-Date:   Sat, 1 Jun 2019 02:00:10 +0300
+        Fri, 31 May 2019 16:27:31 -0700 (PDT)
+Date:   Sat, 1 Jun 2019 02:27:28 +0300
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "brouer@redhat.com" <brouer@redhat.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
 Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
-Message-ID: <20190531230008.GA15675@khorivan>
-Mail-Followup-To: Saeed Mahameed <saeedm@mellanox.com>,
-        "brouer@redhat.com" <brouer@redhat.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "grygorii.strashko@ti.com" <grygorii.strashko@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>
+Message-ID: <20190531232727.GB15675@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
 References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
  <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
  <20190531174643.4be8b27f@carbon>
  <20190531162523.GA3694@khorivan>
  <20190531183241.255293bc@carbon>
  <20190531170332.GB3694@khorivan>
- <a65de3a257ab5ebec83e817c092f074b58b9ae47.camel@mellanox.com>
+ <20190601003736.65cb6a61@carbon>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <a65de3a257ab5ebec83e817c092f074b58b9ae47.camel@mellanox.com>
+In-Reply-To: <20190601003736.65cb6a61@carbon>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, May 31, 2019 at 10:08:03PM +0000, Saeed Mahameed wrote:
->On Fri, 2019-05-31 at 20:03 +0300, Ivan Khoronzhuk wrote:
->> On Fri, May 31, 2019 at 06:32:41PM +0200, Jesper Dangaard Brouer
->> wrote:
->> > On Fri, 31 May 2019 19:25:24 +0300 Ivan Khoronzhuk <
->> > ivan.khoronzhuk@linaro.org> wrote:
->> >
->> > > On Fri, May 31, 2019 at 05:46:43PM +0200, Jesper Dangaard Brouer
->> > > wrote:
->> > > > From below code snippets, it looks like you only allocated 1
->> > > > page_pool
->> > > > and sharing it with several RX-queues, as I don't have the full
->> > > > context
->> > > > and don't know this driver, I might be wrong?
->> > > >
->> > > > To be clear, a page_pool object is needed per RX-queue, as it
->> > > > is
->> > > > accessing a small RX page cache (which protected by
->> > > > NAPI/softirq).
->> > >
->> > > There is one RX interrupt and one RX NAPI for all rx channels.
->> >
->> > So, what are you saying?
->> >
->> > You _are_ sharing the page_pool between several RX-channels, but it
->> > is
->> > safe because this hardware only have one RX interrupt + NAPI
->> > instance??
->>
->> I can miss smth but in case of cpsw technically it means:
->> 1) RX interrupts are disabled while NAPI is scheduled,
->>    not for particular CPU or channel, but at all, for whole cpsw
->> module.
->> 2) RX channels are handled one by one by priority.
+On Sat, Jun 01, 2019 at 12:37:36AM +0200, Jesper Dangaard Brouer wrote:
+>On Fri, 31 May 2019 20:03:33 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 >
->Hi Ivan, I got a silly question..
+>> Probably it's not good example for others how it should be used, not
+>> a big problem to move it to separate pools.., even don't remember why
+>> I decided to use shared pool, there was some more reasons... need
+>> search in history.
 >
->What is the reason behind having multiple RX rings and one CPU/NAPI
->handling all of them ? priority ? how do you priorities ?
-Several.
-One of the reason, from what I know, it can handle for several cpus/napi but
-because of errata on some SoCs or for all of them it was discarded, but idea was
-it can. Second it uses same davinci_cpdma API as tx channels that can be rate
-limited, and it's used not only by cpsw but also by other driver, so can't be
-modified easily and no reason. And third one, h/w has ability to steer some
-filtered traffic to rx queues and can be potentially configured with ethtool
-ntuples or so, but it's not implemented....yet.
+>Using a shared pool is makes it a lot harder to solve the issue I'm
+>currently working on.  That is handling/waiting for in-flight frames to
+>complete, before removing the mem ID from the (r)hashtable lookup.  I
+>have working code, that basically remove page_pool_destroy() from
+>public API, and instead lets xdp_rxq_info_unreg() call it when
+>in-flight count reach zero (and delay fully removing the mem ID).
+
+Frankly, not see reason why it can block smth, it can be considered
+like not shared pool. But Ok, anyway it can look more logical and can be
+reused by another SoC. I will add it per channel not a problem,
+at least for now no blockers. Adding pool per channel will create more
+page_pool_destroy() calls, per each pool, that I can be dropped once
+you decided to remove it form the API.
+
+This API is called along with xdp_rxq_info_unreg(), and seems like not
+a problem to just remove page_pool_destroy(), except one case that
+worries me... cpsw has one interesting feature, share same h/w with 2
+network devices like dual mac, basically it's 3 port switch, but used
+as 2 separate interfaces. So that, both of them share same queues/channels/rings.
+XDP rxq requires network device to be set in rxq info, wich is used in the
+code as a pointer and is shared between xdp buffers, so can't be changed in
+flight. That's why each network interface has it's own instances of rxq, but
+page pools per each network device is common, so when I call
+xdp_rxq_info_unreg() per net device it doesn't mean I want to delete
+page pool....But seems I can avoid it calling xdp_rxq_info_unreg()
+for both when delete page pools...
 
 >
->> 3) After all of them handled and no more in budget - interrupts are
->> enabled.
->> 4) If page is returned to the pool, and it's within NAPI, no races as
->> it's
->>    returned protected by softirq. If it's returned not in softirq
->> it's protected
->>    by producer lock of the ring.
->>
->> Probably it's not good example for others how it should be used, not
->> a big
->> problem to move it to separate pools.., even don't remember why I
->> decided to
->> use shared pool, there was some more reasons... need search in
->> history.
->>
->> > --
->> > Best regards,
->> >  Jesper Dangaard Brouer
->> >  MSc.CS, Principal Kernel Engineer at Red Hat
->> >  LinkedIn: http://www.linkedin.com/in/brouer
+>-- 
+>Best regards,
+>  Jesper Dangaard Brouer
+>  MSc.CS, Principal Kernel Engineer at Red Hat
+>  LinkedIn: http://www.linkedin.com/in/brouer
 
 -- 
 Regards,
