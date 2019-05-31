@@ -2,144 +2,174 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 633ED3121E
-	for <lists+xdp-newbies@lfdr.de>; Fri, 31 May 2019 18:18:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20BC831249
+	for <lists+xdp-newbies@lfdr.de>; Fri, 31 May 2019 18:25:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfEaQS1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 31 May 2019 12:18:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfEaQS0 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 31 May 2019 12:18:26 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 198BF30842A8;
-        Fri, 31 May 2019 16:18:26 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 060925DE89;
-        Fri, 31 May 2019 16:18:18 +0000 (UTC)
-Date:   Fri, 31 May 2019 18:18:17 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Tom Barbette <barbette@kth.se>
-Cc:     xdp-newbies@vger.kernel.org,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNl?= =?UTF-8?B?bg==?= 
-        <toke@redhat.com>, Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>, brouer@redhat.com,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Bad XDP performance with mlx5
-Message-ID: <20190531181817.34039c9f@carbon>
-In-Reply-To: <2218141a-7026-1cb8-c594-37e38eef7b15@kth.se>
-References: <d7968b89-7218-1e76-86bf-c452b2f8d0c2@kth.se>
-        <20190529191602.71eb6c87@carbon>
-        <0836bd30-828a-9126-5d99-1d35b931e3ab@kth.se>
-        <20190530094053.364b1147@carbon>
-        <d695d08a-9ee1-0228-2cbb-4b2538a1d2f8@kth.se>
-        <2218141a-7026-1cb8-c594-37e38eef7b15@kth.se>
+        id S1726908AbfEaQZb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 31 May 2019 12:25:31 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45764 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfEaQZb (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 31 May 2019 12:25:31 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u10so1355937lfm.12
+        for <xdp-newbies@vger.kernel.org>; Fri, 31 May 2019 09:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B2eNH84CQyPYJfD+FLgHh5s2OtUHwmqU+oP9mQ4knKk=;
+        b=jHgduwRkv8cq1Iw2Qr/v0kqjbbSwS85egp1jh5ECiucFpPCkkltnaz8wHcZa1woNfO
+         VRDx2MYbkRVbvQreCVhjyfeQvXFsufQl9qfUoHhtI5nYCQVQEbfH0GKTe+kHlgYR2N83
+         gAYpMrIdwgy/Z8Nra3wGyOs3jQ64BGucjnQbKG8RJS5s+6ALlm3wmSkcdiQgz8BXWsP7
+         OpYhlKp0px0qEAxe3MmN80PLihgE7Hb1pdLZe8DZeibaQHR5lsyT8lJstEhejHnTzgoW
+         +Hw8m3RsBPuJmqjnGPp7YL19BVrclzTB297SFdZb0cq3aJrLwy/9RjbBVXZ2NlMKpijV
+         sbIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=B2eNH84CQyPYJfD+FLgHh5s2OtUHwmqU+oP9mQ4knKk=;
+        b=si09EbM+rRZDjegg7gS1HO8BujK0EwkMtFwETFpytMukm9qWUbkQiIwGdUNy+UiKuX
+         rMyjLmWNMXtF0KkPLONWMEiRupnG/gQmbztNa8KL5nTYRov7dM2an0ZgrXIPMgY14FhZ
+         FGDlXVHPuXMi+/CXrCwqLSMCf7lK/IQqnqMITnQXrcIgY2UoRVn5t+h/Ka9V6njdCnK+
+         jvgPEjnyPSFpHuo+5H1v5XhK5+YtXxusoO2oRKmOBlA56Nfm2ZNU8eJD4gpiQot/gaHH
+         t64vAe4fVHEAWnDLpzpfSb4H32oilzbXQH/tii7QVZWX9zVEVFBnUqb7VTP1OpkFb/j4
+         1CPQ==
+X-Gm-Message-State: APjAAAUS3doBXcF8AIBWKDfK9p6FhPXNlZc0+MyZ2r7Gf8dFljA1Pr/q
+        e+B3O3FsKDIx41pkNmtLUDKG1ysbDrw=
+X-Google-Smtp-Source: APXvYqwBkOdukVGASs4QfUwbU7bk+mmcvhcuTBnDOILOS97xASuRBkP4Wl3zxZi883DoZx+t624GXg==
+X-Received: by 2002:a19:4b4c:: with SMTP id y73mr5969188lfa.129.1559319927370;
+        Fri, 31 May 2019 09:25:27 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id 16sm1126209lfy.21.2019.05.31.09.25.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 31 May 2019 09:25:26 -0700 (PDT)
+Date:   Fri, 31 May 2019 19:25:24 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+Subject: Re: [PATCH v2 net-next 7/7] net: ethernet: ti: cpsw: add XDP support
+Message-ID: <20190531162523.GA3694@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com
+References: <20190530182039.4945-1-ivan.khoronzhuk@linaro.org>
+ <20190530182039.4945-8-ivan.khoronzhuk@linaro.org>
+ <20190531174643.4be8b27f@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 31 May 2019 16:18:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190531174643.4be8b27f@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+On Fri, May 31, 2019 at 05:46:43PM +0200, Jesper Dangaard Brouer wrote:
 
-On Fri, 31 May 2019 08:51:43 +0200 Tom Barbette <barbette@kth.se> wrote:
+Hi Jesper,
 
-> CCing mlx5 maintainers and commiters of bce2b2b. TLDK: there is a huge 
-> CPU increase on CX5 when introducing a XDP program.
 >
-> See https://www.youtube.com/watch?v=o5hlJZbN4Tk&feature=youtu.be
-> around 0:40. We're talking something like 15% while it's near 0 for
-> other drivers. The machine is a recent Skylake. For us it makes XDP
-> unusable. Is that a known problem?
+>Hi Ivan,
+>
+>From below code snippets, it looks like you only allocated 1 page_pool
+>and sharing it with several RX-queues, as I don't have the full context
+>and don't know this driver, I might be wrong?
+>
+>To be clear, a page_pool object is needed per RX-queue, as it is
+>accessing a small RX page cache (which protected by NAPI/softirq).
 
-I have a similar test setup, and I can reproduce. I have found the
-root-cause see below.  But on my system it was even worse, with an
-XDP_PASS program loaded, and iperf (6 parallel TCP flows) I would see
-100% CPU usage and total 83.3 Gbits/sec. With non-XDP case, I saw 58%
-CPU (43% idle) and total 89.7 Gbits/sec.
+There is one RX interrupt and one RX NAPI for all rx channels.
 
- 
-> I wonder if it doesn't simply come from mlx5/en_main.c:
-> rq->buff.map_dir = rq->xdp_prog ? DMA_BIDIRECTIONAL : DMA_FROM_DEVICE;
-> 
-
-Nope, that is not the problem.
-
-> Which would be inline from my observation that memory access seems 
-> heavier. I guess this is for the XDP_TX case.
-> 
-> If this is indeed the problem. Any chance we can:
-> a) detect automatically that a program will not return XDP_TX (I'm not 
-> quite sure about what the BPF limitations allow to guess in advance) or
-> b) add a flag to such as XDP_FLAGS_NO_TX to avoid such hit in 
-> performance when not needed?
-
-This was kind of hard to root-cause, but I solved it by increasing the TCP
-socket size used by the iperf tool, like this (please reproduce):
-
-$ iperf -s --window 4M
-------------------------------------------------------------
-Server listening on TCP port 5001
-TCP window size:  416 KByte (WARNING: requested 4.00 MByte)
-------------------------------------------------------------
-
-Given I could reproduce, I took at closer look at perf record/report stats,
-and it was actually quite clear that this was related to stalling on getting
-pages from the page allocator (function calls top#6 get_page_from_freelist
-and free_pcppages_bulk).
-
-Using my tool: ethtool_stats.pl
- https://github.com/netoptimizer/network-testing/blob/master/bin/ethtool_stats.pl
-
-It was clear that the mlx5 driver page-cache was not working:
- Ethtool(mlx5p1  ) stat:     6653761 (   6,653,761) <= rx_cache_busy /sec
- Ethtool(mlx5p1  ) stat:     6653732 (   6,653,732) <= rx_cache_full /sec
- Ethtool(mlx5p1  ) stat:      669481 (     669,481) <= rx_cache_reuse /sec
- Ethtool(mlx5p1  ) stat:           1 (           1) <= rx_congst_umr /sec
- Ethtool(mlx5p1  ) stat:     7323230 (   7,323,230) <= rx_csum_unnecessary /sec
- Ethtool(mlx5p1  ) stat:        1034 (       1,034) <= rx_discards_phy /sec
- Ethtool(mlx5p1  ) stat:     7323230 (   7,323,230) <= rx_packets /sec
- Ethtool(mlx5p1  ) stat:     7324244 (   7,324,244) <= rx_packets_phy /sec
-
-While the non-XDP case looked like this:
- Ethtool(mlx5p1  ) stat:      298929 (     298,929) <= rx_cache_busy /sec
- Ethtool(mlx5p1  ) stat:      298971 (     298,971) <= rx_cache_full /sec
- Ethtool(mlx5p1  ) stat:     3548789 (   3,548,789) <= rx_cache_reuse /sec
- Ethtool(mlx5p1  ) stat:     7695476 (   7,695,476) <= rx_csum_complete /sec
- Ethtool(mlx5p1  ) stat:     7695476 (   7,695,476) <= rx_packets /sec
- Ethtool(mlx5p1  ) stat:     7695169 (   7,695,169) <= rx_packets_phy /sec
-Manual consistence calc: 7695476-((3548789*2)+(298971*2)) = -44
-
-With the increased TCP window size, the mlx5 driver cache is working better,
-but not optimally, see below. I'm getting 88.0 Gbits/sec with 68% CPU usage.
- Ethtool(mlx5p1  ) stat:      894438 (     894,438) <= rx_cache_busy /sec
- Ethtool(mlx5p1  ) stat:      894453 (     894,453) <= rx_cache_full /sec
- Ethtool(mlx5p1  ) stat:     6638518 (   6,638,518) <= rx_cache_reuse /sec
- Ethtool(mlx5p1  ) stat:           6 (           6) <= rx_congst_umr /sec
- Ethtool(mlx5p1  ) stat:     7532983 (   7,532,983) <= rx_csum_unnecessary /sec
- Ethtool(mlx5p1  ) stat:         164 (         164) <= rx_discards_phy /sec
- Ethtool(mlx5p1  ) stat:     7532983 (   7,532,983) <= rx_packets /sec
- Ethtool(mlx5p1  ) stat:     7533193 (   7,533,193) <= rx_packets_phy /sec
-Manual consistence calc: 7532983-(6638518+894453) = 12
-
-To understand why this is happening, you first have to know that the
-difference is between the two RX-memory modes used by mlx5 for non-XDP vs
-XDP. With non-XDP two frames are stored per memory-page, while for XDP only
-a single frame per page is used.  The packets available in the RX-rings are
-actually the same, as the ring sizes are non-XDP=512 vs. XDP=1024.
-
-I believe, the real issue is that TCP use the SKB->truesize (based on frame
-size) for different memory pressure and window calculations, which is why it
-solved the issue to increase the window size manually.
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> @@ -1404,6 +1711,14 @@ static int cpsw_ndo_open(struct net_device *ndev)
+>>  			enable_irq(cpsw->irqs_table[0]);
+>>  		}
+>>
+>> +		pool_size = cpdma_get_num_rx_descs(cpsw->dma);
+>> +		cpsw->page_pool = cpsw_create_page_pool(cpsw, pool_size);
+>> +		if (IS_ERR(cpsw->page_pool)) {
+>> +			ret = PTR_ERR(cpsw->page_pool);
+>> +			cpsw->page_pool = NULL;
+>> +			goto err_cleanup;
+>> +		}
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> @@ -675,10 +742,33 @@ int cpsw_set_ringparam(struct net_device *ndev,
+>>  	if (cpsw->usage_count)
+>>  		cpdma_chan_split_pool(cpsw->dma);
+>>
+>> +	for (i = 0; i < cpsw->data.slaves; i++) {
+>> +		struct net_device *ndev = cpsw->slaves[i].ndev;
+>> +
+>> +		if (!(ndev && netif_running(ndev)))
+>> +			continue;
+>> +
+>> +		cpsw_xdp_unreg_rxqs(netdev_priv(ndev));
+>> +	}
+>> +
+>> +	page_pool_destroy(cpsw->page_pool);
+>> +	cpsw->page_pool = pool;
+>> +
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> +void cpsw_xdp_unreg_rxqs(struct cpsw_priv *priv)
+>> +{
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < cpsw->rx_ch_num; i++)
+>> +		xdp_rxq_info_unreg(&priv->xdp_rxq[i]);
+>> +}
+>
+>
+>On Thu, 30 May 2019 21:20:39 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> +int cpsw_xdp_reg_rxq(struct cpsw_priv *priv, int ch)
+>> +{
+>> +	struct xdp_rxq_info *xdp_rxq = &priv->xdp_rxq[ch];
+>> +	struct cpsw_common *cpsw = priv->cpsw;
+>> +	int ret;
+>> +
+>> +	ret = xdp_rxq_info_reg(xdp_rxq, priv->ndev, ch);
+>> +	if (ret)
+>> +		goto err_cleanup;
+>> +
+>> +	ret = xdp_rxq_info_reg_mem_model(xdp_rxq, MEM_TYPE_PAGE_POOL,
+>> +					 cpsw->page_pool);
+>> +	if (ret)
+>> +		goto err_cleanup;
+>> +
+>> +	return 0;
+>
+>
+>
+>-- 
+>Best regards,
+>  Jesper Dangaard Brouer
+>  MSc.CS, Principal Kernel Engineer at Red Hat
+>  LinkedIn: http://www.linkedin.com/in/brouer
 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Regards,
+Ivan Khoronzhuk
