@@ -2,147 +2,82 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B96133780
-	for <lists+xdp-newbies@lfdr.de>; Mon,  3 Jun 2019 20:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2703401A
+	for <lists+xdp-newbies@lfdr.de>; Tue,  4 Jun 2019 09:28:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFCSHX (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 3 Jun 2019 14:07:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59072 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfFCSHX (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 3 Jun 2019 14:07:23 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hXrMe-0000O6-Ld; Mon, 03 Jun 2019 18:07:20 +0000
-Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190603170247.9951-1-colin.king@canonical.com>
- <20190603102140.70fee157@cakuba.netronome.com>
- <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
- <20190603104930.466a306b@cakuba.netronome.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
- fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
- +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
- LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
- BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
- dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
- uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
- LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
- zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
- FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
- IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
- CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
- n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
- vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
- nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
- fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
- gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
- 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
- Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
- u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
- Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
- EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
- 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
- v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
- cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
- rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
- 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
- IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
- 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
- 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
- 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
- Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
- t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
- LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
- pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
- KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
- 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
- TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
- WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
- QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
- GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
-Message-ID: <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
-Date:   Mon, 3 Jun 2019 19:07:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S1726697AbfFDH2a (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 4 Jun 2019 03:28:30 -0400
+Received: from smtp-4.sys.kth.se ([130.237.48.193]:43794 "EHLO
+        smtp-4.sys.kth.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfFDH23 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 4 Jun 2019 03:28:29 -0400
+Received: from smtp-4.sys.kth.se (localhost.localdomain [127.0.0.1])
+        by smtp-4.sys.kth.se (Postfix) with ESMTP id 8764F2C23;
+        Tue,  4 Jun 2019 09:28:26 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new at kth.se
+Received: from smtp-4.sys.kth.se ([127.0.0.1])
+        by smtp-4.sys.kth.se (smtp-4.sys.kth.se [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id DV6B6iexAKPG; Tue,  4 Jun 2019 09:28:26 +0200 (CEST)
+X-KTH-Auth: barbette [83.249.19.162]
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kth.se; s=default;
+        t=1559633305; bh=QQYSH7YsNhxK6nlDhpKsA8UQf/oBc/akpNCd/8QxeJg=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To;
+        b=PHo/yKIP/hOVDPefkzumy8yh++IVIIuT/hXJQgvzi+P8v8SYNgv8D0uzSH1kKH0WF
+         UveNbmgUDJ1IFJhb0ImkigrF8TtkG7xGUbA83pmgIwE4NZsnkX3xBxuyYiBLWjzLyp
+         ScpPx3tolS4KJ3ZM/ildr8PteIyEkxaPUwLwiRQQ=
+X-KTH-mail-from: barbette@kth.se
+Received: from [192.168.0.59] (c83-249-19-162.bredband.comhem.se [83.249.19.162])
+        by smtp-4.sys.kth.se (Postfix) with ESMTPSA id 189A229EA;
+        Tue,  4 Jun 2019 09:28:24 +0200 (CEST)
+From:   Tom Barbette <barbette@kth.se>
+Subject: Re: Bad XDP performance with mlx5
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>
+Cc:     "toke@redhat.com" <toke@redhat.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>
+References: <d7968b89-7218-1e76-86bf-c452b2f8d0c2@kth.se>
+ <20190529191602.71eb6c87@carbon>
+ <0836bd30-828a-9126-5d99-1d35b931e3ab@kth.se>
+ <20190530094053.364b1147@carbon>
+ <d695d08a-9ee1-0228-2cbb-4b2538a1d2f8@kth.se>
+ <2218141a-7026-1cb8-c594-37e38eef7b15@kth.se>
+ <20190531181817.34039c9f@carbon>
+ <19ca7cd9a878b2ecc593cd2838b8ae0412463593.camel@mellanox.com>
+Message-ID: <9f116335-0fad-079b-4070-89f24af4ab55@kth.se>
+Date:   Tue, 4 Jun 2019 09:28:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190603104930.466a306b@cakuba.netronome.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <19ca7cd9a878b2ecc593cd2838b8ae0412463593.camel@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 03/06/2019 18:49, Jakub Kicinski wrote:
-> On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
->> On 03/06/2019 18:21, Jakub Kicinski wrote:
->>> On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> The variable err is assigned with the value -EINVAL that is never
->>>> read and it is re-assigned a new value later on.  The assignment is
->>>> redundant and can be removed.
->>>>
->>>> Addresses-Coverity: ("Unused value")
->>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>> ---
->>>>  kernel/bpf/devmap.c | 2 +-
->>>>  kernel/bpf/xskmap.c | 2 +-
->>>>  2 files changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
->>>> index 5ae7cce5ef16..a76cc6412fc4 100644
->>>> --- a/kernel/bpf/devmap.c
->>>> +++ b/kernel/bpf/devmap.c
->>>> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
->>>>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
->>>>  {
->>>>  	struct bpf_dtab *dtab;
->>>> -	int err = -EINVAL;
->>>> +	int err;
->>>>  	u64 cost;  
->>>
->>> Perhaps keep the variables ordered longest to shortest?  
->>
->> Is that a required coding standard?
+Le 31/05/2019 à 20:06, Saeed Mahameed a écrit :
 > 
-> For networking code, yes.  Just look around the files you're changing
-> and see for yourself.
-
-Ah, informal coding standards. Great. Won't this end up with more diff
-churn?
-
+> The question is, On the same packet rate/bandwidth do you see higher
+> cpu utilization on mlx5 compared to other drivers? you have to compare
+> apples to apples.
 > 
->>>>  	if (!capable(CAP_NET_ADMIN))
->>>> diff --git a/kernel/bpf/xskmap.c b/kernel/bpf/xskmap.c
->>>> index 22066c28ba61..26859c6c9491 100644
->>>> --- a/kernel/bpf/xskmap.c
->>>> +++ b/kernel/bpf/xskmap.c
->>>> @@ -17,7 +17,7 @@ struct xsk_map {
->>>>  
->>>>  static struct bpf_map *xsk_map_alloc(union bpf_attr *attr)
->>>>  {
->>>> -	int cpu, err = -EINVAL;
->>>> +	int cpu, err;
->>>>  	struct xsk_map *m;
->>>>  	u64 cost;  
->>>
->>> And here.
+I meant relative increase. Of course at 40G the XL710 is using less CPU, 
+but activating XDP is nearly free. As XDP is purely per packet I would 
+expect the cost of it to be similar. Eg, a few instructions per packet.
 
+
+Thanks Jesper for looking into this!
+
+I don't think I will be of much help further on this matter. My take out 
+would be: as a first-time user looking into XDP after watching a dozen 
+of XDP talks, I would have expected XDP default settings to be identical 
+to SKB, so I don't have to watch out for a set of per-driver parameter 
+checklist to avoid increasing my CPU consumption by 15% when inserting 
+"a super efficient and light BPF program". But I understand it's not 
+that easy...
+
+Tom
