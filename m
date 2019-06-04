@@ -2,28 +2,28 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 816F33460A
-	for <lists+xdp-newbies@lfdr.de>; Tue,  4 Jun 2019 13:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DA134B80
+	for <lists+xdp-newbies@lfdr.de>; Tue,  4 Jun 2019 17:04:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfFDL7T (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 4 Jun 2019 07:59:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53130 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfFDL7T (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 4 Jun 2019 07:59:19 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 961DA3001834;
-        Tue,  4 Jun 2019 11:59:10 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33EA42B6FE;
-        Tue,  4 Jun 2019 11:58:58 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 13:58:57 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        id S1727823AbfFDPEr (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 4 Jun 2019 11:04:47 -0400
+Received: from www62.your-server.de ([213.133.104.62]:56112 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbfFDPEr (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 4 Jun 2019 11:04:47 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYAzO-0007Rt-AO; Tue, 04 Jun 2019 17:04:38 +0200
+Received: from [178.197.249.21] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hYAzO-000MVF-2f; Tue, 04 Jun 2019 17:04:38 +0200
+Subject: Re: [PATCH][next][V2] bpf: remove redundant assignment to err
+To:     Colin King <colin.king@canonical.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
@@ -31,25 +31,27 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
         netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brouer@redhat.com
-Subject: Re: [PATCH][next][V2] bpf: remove redundant assignment to err
-Message-ID: <20190604135857.3f0e6cdc@carbon>
-In-Reply-To: <20190604082146.2049-1-colin.king@canonical.com>
+        bpf@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190604082146.2049-1-colin.king@canonical.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4e971d2b-1143-dd1a-6d2a-a2b75dec815b@iogearbox.net>
+Date:   Tue, 4 Jun 2019 17:04:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190604082146.2049-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 04 Jun 2019 11:59:18 +0000 (UTC)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25470/Tue Jun  4 10:01:16 2019)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue,  4 Jun 2019 09:21:46 +0100
-Colin King <colin.king@canonical.com> wrote:
-
+On 06/04/2019 10:21 AM, Colin King wrote:
 > From: Colin Ian King <colin.king@canonical.com>
 > 
 > The variable err is assigned with the value -EINVAL that is never
@@ -58,18 +60,5 @@ Colin King <colin.king@canonical.com> wrote:
 > 
 > Addresses-Coverity: ("Unused value")
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> ---
-> 
-> V2: reorder variables as recommended by Jakub Kicinski to keep in
->     the networking code style.
 
-Thank you for following the networking coding style.
-
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Applied, thanks!
