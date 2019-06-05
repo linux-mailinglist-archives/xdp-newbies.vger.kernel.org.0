@@ -2,158 +2,123 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 121F43583A
-	for <lists+xdp-newbies@lfdr.de>; Wed,  5 Jun 2019 09:59:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B349835DCC
+	for <lists+xdp-newbies@lfdr.de>; Wed,  5 Jun 2019 15:21:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFEH7o (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 5 Jun 2019 03:59:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47792 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbfFEH7o (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 5 Jun 2019 03:59:44 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8322EB59B1;
-        Wed,  5 Jun 2019 07:59:43 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F7475D9CD;
-        Wed,  5 Jun 2019 07:59:32 +0000 (UTC)
-Date:   Wed, 5 Jun 2019 09:59:31 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Toshiaki Makita <toshiaki.makita1@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, brouer@redhat.com,
-        Brendan Gregg <brendan.d.gregg@gmail.com>
-Subject: Re: [PATCH v2 bpf-next 1/2] xdp: Add tracepoint for bulk XDP_TX
-Message-ID: <20190605095931.5d90b69c@carbon>
-In-Reply-To: <20190605053613.22888-2-toshiaki.makita1@gmail.com>
-References: <20190605053613.22888-1-toshiaki.makita1@gmail.com>
-        <20190605053613.22888-2-toshiaki.makita1@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 05 Jun 2019 07:59:43 +0000 (UTC)
+        id S1728163AbfFENVN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 5 Jun 2019 09:21:13 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:35946 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbfFENUP (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 5 Jun 2019 09:20:15 -0400
+Received: by mail-lf1-f45.google.com with SMTP id q26so19064328lfc.3
+        for <xdp-newbies@vger.kernel.org>; Wed, 05 Jun 2019 06:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DO7D5eGfZPh8QvxGU3q/q3NaNXnYXn2zGQBCFbLpPDQ=;
+        b=beh0BL6GcCR20DqoSBbg1q9zX26ZweZ4cxqvK5XqGFC0YgWE/zUAtf+vzocqFqAIHf
+         +igysvAnFP/0stEjHfGRV72UA6kNEUpVGbCzR3PunExIPEXd6unoE674F+AGlXHFzjt/
+         8NS8uRWNaYDT5IEMzIG4H/1OrTlsYliyj9CMuWA3HV2gmUUm8nkj0WSfjqpm8QvMEYDf
+         ix2UPw83lTFBZPdU+RN6oQSq2xahk63I0at4HboglznNRiRVGqfb0tpfTTbAJFa3W6ie
+         rWnoXpoAqfhBQV0B3Gt9Rmf2ZdMqqT6SxcIjX/TfwnfvKy6cQ6loTHwJFwOZwDI0ayWQ
+         X+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DO7D5eGfZPh8QvxGU3q/q3NaNXnYXn2zGQBCFbLpPDQ=;
+        b=HKun9DXfvak8UtOEvnaFXllPNOhRLZEJFHUjPRvu5P6h61gOOantfZyunnBOeUE+N6
+         gCrtd6eewxfVlNqLLLcMo7mrSzd5O0cloE92REoD4MjXvFtEaQPfF9q+Am3YhuYUWrN2
+         h8jnV18FIZh90qRaQtdcCgUo1DsYQzhx0xXtFf2vq63+b2+H2dAExQkkJTh23tfG6sUA
+         VScpFvET9VfBeioW4qkJqsYOzmG5LXY38KcJSFIeA5qPrjw/226M+CA7XO6t1bYDpUu3
+         PFyM1yPRxtYvaM9OtbpDp2NClPhzNivzOTDKN0r2HGyIVPHq2wL8klvRRjTmqVfJLMxL
+         6EOQ==
+X-Gm-Message-State: APjAAAUsSa6g/Vi17o+4/JxVK4YXnVEWmmrOvUZcfLZ/8/P530rC622b
+        kLKdDNniLAlCRLl2ZzcPeugTmg==
+X-Google-Smtp-Source: APXvYqxnMEac5uvICE+jqkJZ0l9bWQ/ao8lR2Ti7ZO064/CZvxjhrADWlHRjdVyo1QEdZZg6tDX8AA==
+X-Received: by 2002:ac2:59c6:: with SMTP id x6mr17692240lfn.169.1559740813157;
+        Wed, 05 Jun 2019 06:20:13 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id t3sm1893259lfk.59.2019.06.05.06.20.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Jun 2019 06:20:12 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
+Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP support
+Date:   Wed,  5 Jun 2019 16:20:02 +0300
+Message-Id: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed,  5 Jun 2019 14:36:12 +0900
-Toshiaki Makita <toshiaki.makita1@gmail.com> wrote:
+This patchset adds XDP support for TI cpsw driver and base it on
+page_pool allocator. It was verified on af_xdp socket drop,
+af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
 
-> This is introduced for admins to check what is happening on XDP_TX when
-> bulk XDP_TX is in use, which will be first introduced in veth in next
-> commit.
+It was verified with following configs enabled:
+CONFIG_JIT=y
+CONFIG_BPFILTER=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_XDP_SOCKETS=y
+CONFIG_BPF_EVENTS=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_BPF_JIT=y
+CONFIG_CGROUP_BPF=y
 
-Is the plan that this tracepoint 'xdp:xdp_bulk_tx' should be used by
-all drivers?
+Link on previous v2:
+https://lkml.org/lkml/2019/5/30/1315
 
-(more below)
+Also regular tests with iperf2 were done in order to verify impact on
+regular netstack performance, compared with base commit:
+https://pastebin.com/JSMT0iZ4
 
-> Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-> ---
->  include/trace/events/xdp.h | 25 +++++++++++++++++++++++++
->  kernel/bpf/core.c          |  1 +
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
-> index e95cb86..e06ea65 100644
-> --- a/include/trace/events/xdp.h
-> +++ b/include/trace/events/xdp.h
-> @@ -50,6 +50,31 @@
->  		  __entry->ifindex)
->  );
->  
-> +TRACE_EVENT(xdp_bulk_tx,
-> +
-> +	TP_PROTO(const struct net_device *dev,
-> +		 int sent, int drops, int err),
-> +
-> +	TP_ARGS(dev, sent, drops, err),
-> +
-> +	TP_STRUCT__entry(
+v2..v3:
+- each rxq and ndev has its own page pool
 
-All other tracepoints in this file starts with:
-
-		__field(int, prog_id)
-		__field(u32, act)
-or
-		__field(int, map_id)
-		__field(u32, act)
-
-Could you please add those?
-
-> +		__field(int, ifindex)
-> +		__field(int, drops)
-> +		__field(int, sent)
-> +		__field(int, err)
-> +	),
-
-The reason is that this make is easier to attach to multiple
-tracepoints, and extract the same value.
-
-Example with bpftrace oneliner:
-
-$ sudo bpftrace -e 'tracepoint:xdp:xdp_* { @action[args->act] = count(); }'
-Attaching 8 probes...
-^C
-
-@action[4]: 30259246
-@action[0]: 34489024
-
-XDP_ABORTED = 0 	 
-XDP_REDIRECT= 4
+v1..v2:
+- combined xdp_xmit functions
+- used page allocation w/o refcnt juggle
+- unmapped page for skb netstack
+- moved rxq/page pool allocation to open/close pair
+- added several preliminary patches:
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
 
 
-> +
-> +	TP_fast_assign(
+Based on net-next/master
 
-		__entry->act		= XDP_TX;
+Ilias Apalodimas (2):
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
 
-> +		__entry->ifindex	= dev->ifindex;
-> +		__entry->drops		= drops;
-> +		__entry->sent		= sent;
-> +		__entry->err		= err;
-> +	),
-> +
-> +	TP_printk("ifindex=%d sent=%d drops=%d err=%d",
-> +		  __entry->ifindex, __entry->sent, __entry->drops, __entry->err)
-> +);
-> +
+Ivan Khoronzhuk (5):
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
+  net: ethernet: ti: davinci_cpdma: add dma mapped submit
+  net: ethernet: ti: davinci_cpdma: return handler status
+  net: ethernet: ti: cpsw: add XDP support
 
-Other fun bpftrace stuff:
+ drivers/net/ethernet/ti/Kconfig         |   1 +
+ drivers/net/ethernet/ti/cpsw.c          | 555 ++++++++++++++++++++----
+ drivers/net/ethernet/ti/cpsw_ethtool.c  | 100 ++++-
+ drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
+ drivers/net/ethernet/ti/davinci_cpdma.c | 122 ++++--
+ drivers/net/ethernet/ti/davinci_cpdma.h |   6 +-
+ drivers/net/ethernet/ti/davinci_emac.c  |  18 +-
+ include/net/page_pool.h                 |   6 +
+ net/core/page_pool.c                    |   7 +
+ 9 files changed, 685 insertions(+), 139 deletions(-)
 
-sudo bpftrace -e 'tracepoint:xdp:xdp_*map* { @map_id[comm, args->map_id] = count(); }'
-Attaching 5 probes...
-^C
-
-@map_id[swapper/2, 113]: 1428
-@map_id[swapper/0, 113]: 2085
-@map_id[ksoftirqd/4, 113]: 2253491
-@map_id[ksoftirqd/2, 113]: 25677560
-@map_id[ksoftirqd/0, 113]: 29004338
-@map_id[ksoftirqd/3, 113]: 31034885
-
-
-$ bpftool map list id 113
-113: devmap  name tx_port  flags 0x0
-	key 4B  value 4B  max_entries 100  memlock 4096B
-
-
-p.s. People should look out for Brendan Gregg's upcoming book on BPF
-performance tools, from which I learned to use bpftrace :-)
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.17.1
+
