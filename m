@@ -2,142 +2,81 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF95336830
-	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 01:42:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A442036E2C
+	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 10:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfFEXmG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 5 Jun 2019 19:42:06 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:42595 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfFEXmG (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 5 Jun 2019 19:42:06 -0400
-Received: by mail-it1-f197.google.com with SMTP id s18so243500itl.7
-        for <xdp-newbies@vger.kernel.org>; Wed, 05 Jun 2019 16:42:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=If8zYrfgMvREoNxOF+APhy3YFYkcq8XTmIhwfd8Qif4=;
-        b=SBuwETTQXxdiQoxaCyWk1X4xTk6X9iTTwhnxKQ48bjmNCmmZUFPPa9fPVRQ7DpVD4O
-         dBGPBskv7zl5ZZMt4FjRsPH9EvRAaLqWv9WY91/P5ybCiQ57DOqXPy8uMP0gmqa/Zzqo
-         g9dDAp2sk+rxo+Dh3FzassQ/SclFTP19rtJEKL0JADTKSJ6F4MgXS3IUppHNoJLK6Cz+
-         OC3t0cSGAqihP3YeIrtYzh8rO3ZKe2ujilPmcz+BxWY/djw6vhO4ibUmaXedg7Coni7m
-         J8eZLbojasXtttGEmb1Ond1fM2a3dHGqvv0eDx5V0gMKWI3BTU+bLl0L31u+w5UzRfjr
-         Ij8g==
-X-Gm-Message-State: APjAAAXuUErBZVWKFgP2Ek/MXHJKruZOoeVT0iw8OiV32QknhoDWN5Y4
-        Ok2bruaOY6B2lQKS8R1zFB5IdE4/+QYEvxo9AiLW49C3ZCPU
-X-Google-Smtp-Source: APXvYqyv7nsvHNrQ68UBjoE3uareCjq/xghIfL2qvARCjcEuGCVrReipnpbeK7ASMfANvkONy2j3ewcak6QZD9ptXz7gkQVpxpQw
+        id S1726977AbfFFIJE (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 6 Jun 2019 04:09:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53822 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfFFIJD (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 6 Jun 2019 04:09:03 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5CA3A308626C;
+        Thu,  6 Jun 2019 08:09:02 +0000 (UTC)
+Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D1917C40;
+        Thu,  6 Jun 2019 08:08:51 +0000 (UTC)
+Date:   Thu, 6 Jun 2019 10:08:50 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     ivan.khoronzhuk@linaro.org, grygorii.strashko@ti.com,
+        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP
+ support
+Message-ID: <20190606100850.72a48a43@carbon>
+In-Reply-To: <20190605.121450.2198491088032558315.davem@davemloft.net>
+References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
+        <20190605.121450.2198491088032558315.davem@davemloft.net>
 MIME-Version: 1.0
-X-Received: by 2002:a24:7c45:: with SMTP id a66mr8223766itd.139.1559778125448;
- Wed, 05 Jun 2019 16:42:05 -0700 (PDT)
-Date:   Wed, 05 Jun 2019 16:42:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000188da1058a9c25e3@google.com>
-Subject: memory leak in vhost_net_ioctl
-From:   syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 08:09:03 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello,
+On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
+David Miller <davem@davemloft.net> wrote:
 
-syzbot found the following crash on:
+> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Date: Wed,  5 Jun 2019 16:20:02 +0300
+> 
+> > This patchset adds XDP support for TI cpsw driver and base it on
+> > page_pool allocator. It was verified on af_xdp socket drop,
+> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.  
+> 
+> Jesper et al., please give this a good once over.
 
-HEAD commit:    788a0249 Merge tag 'arc-5.2-rc4' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15dc9ea6a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d5c73825cbdc7326
-dashboard link: https://syzkaller.appspot.com/bug?extid=0789f0c7e45efd7bb643
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b31761a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124892c1a00000
+The issue with merging this, is that I recently discovered two bug with
+page_pool API, when using DMA-mappings, which result in missing
+DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
+now with this drivers.  
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com
+The two bugs are:
 
-udit: type=1400 audit(1559768703.229:36): avc:  denied  { map } for   
-pid=7116 comm="syz-executor330" path="/root/syz-executor330334897"  
-dev="sda1" ino=16461 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88812421fe40 (size 64):
-   comm "syz-executor330", pid 7117, jiffies 4294949245 (age 13.030s)
-   hex dump (first 32 bytes):
-     01 00 00 00 20 69 6f 63 00 00 00 00 64 65 76 2f  .... ioc....dev/
-     50 fe 21 24 81 88 ff ff 50 fe 21 24 81 88 ff ff  P.!$....P.!$....
-   backtrace:
-     [<00000000ae0c4ae0>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000079ebab38>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<0000000079ebab38>] vhost_net_set_backend drivers/vhost/net.c:1534  
-[inline]
-     [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1716
-     [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000049c1f547>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+#1: in-flight packet-pages can still be on remote drivers TX queue,
+while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
+period is not enough).
 
-BUG: memory leak
-unreferenced object 0xffff88812421fa80 (size 64):
-   comm "syz-executor330", pid 7130, jiffies 4294949755 (age 7.930s)
-   hex dump (first 32 bytes):
-     01 00 00 00 01 00 00 00 00 00 00 00 2f 76 69 72  ............/vir
-     90 fa 21 24 81 88 ff ff 90 fa 21 24 81 88 ff ff  ..!$......!$....
-   backtrace:
-     [<00000000ae0c4ae0>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<00000000ae0c4ae0>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000ae0c4ae0>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000ae0c4ae0>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<0000000079ebab38>] kmalloc include/linux/slab.h:547 [inline]
-     [<0000000079ebab38>] vhost_net_ubuf_alloc drivers/vhost/net.c:241  
-[inline]
-     [<0000000079ebab38>] vhost_net_set_backend drivers/vhost/net.c:1534  
-[inline]
-     [<0000000079ebab38>] vhost_net_ioctl+0xb43/0xc10  
-drivers/vhost/net.c:1716
-     [<000000009f6204a2>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<000000009f6204a2>] file_ioctl fs/ioctl.c:509 [inline]
-     [<000000009f6204a2>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000b45866de>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000dfb41eb8>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000dfb41eb8>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000dfb41eb8>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<0000000049c1f547>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000029cc8ca7>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+#2: this patchset also introduce page_pool_unmap_page(), which is
+called before an XDP frame travel into networks stack (as no callback
+exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
+"leak"/miss DMA-unmap.
 
+I do have a working prototype, that fixes these two bugs.  I guess, I'm
+under pressure to send this to the list soon...
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
