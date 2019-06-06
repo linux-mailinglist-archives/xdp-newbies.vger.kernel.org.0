@@ -2,132 +2,135 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A7B3751B
-	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 15:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C0A537BC8
+	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 20:03:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfFFNY1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 6 Jun 2019 09:24:27 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:47082 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbfFFNY0 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 6 Jun 2019 09:24:26 -0400
-Received: by mail-lf1-f67.google.com with SMTP id l26so121199lfh.13
-        for <xdp-newbies@vger.kernel.org>; Thu, 06 Jun 2019 06:24:25 -0700 (PDT)
+        id S1729106AbfFFSDl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 6 Jun 2019 14:03:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39646 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbfFFSDk (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 6 Jun 2019 14:03:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j2so1977662pfe.6;
+        Thu, 06 Jun 2019 11:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6VvTa7jh68L3DqECLfvU6eht3kypptvrGe0C/l1sSc4=;
-        b=uiDCHxunpTNbqoX1mCPCc8NRtAIhuavvzV1/rBDjSRtFp905kfqhuGjHe/rUedN9K5
-         0xBIrMo7AGUF0PmrIHJo9fuIvNx1CFaQPXG/lo0aiW4PqJt8AiaHpM+UdhYEuT8A62qs
-         DfSr/4TJlRgV9m47Wi0ybWIZhFhGA41W33F2ZSRxYZoUh8aQPxfUfv1JkThX8oSKVtw4
-         w1ZIwOkswXwQ1Z5xzdPkFKz6ERgWcnllkrH7XvMztVaMfXC1EcLcte6rgJiFyCThf5EB
-         7DM2MW85VFs1QkeVBxZWMjaxjxBt3AOsclZlzBR35bbQ4pwglzLe5yEVnuo94NsghcNq
-         2A5A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=vL/yJFjtKE26N8WppeIL8DymV0OTQcN/8h3vh7inQew=;
+        b=IFN7rlmIbyt4XlgxMONME0XVhDVkFm4/1VckRnhxVZgALeXceWARI58K7ZtGHpKwOy
+         L5Kr/+0Y6h16yPS6wINB6v5GwmzYnv8/ROmq8FDfXI2OChdFeehg5PTa+6E9rn07F1/c
+         86Bjl/RxTuS9675ElTVkQ08H1BugEjAEStdtVAFSEjn0vuy2IL1eeIigSXH53HnEmEiq
+         O6i/7I3Z30JHDLj6OZHCCYg49GCvhr+8x838/5cttfZtDVtgyFT6LKL92FY4YEHRFFAg
+         9NpjqI95GwWz7JrVJ2Vw4C8hvOYaqyfeKSUBWYLP0SIBqpnWSWHbOGeaVCQl9zRtEeDg
+         HQbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=6VvTa7jh68L3DqECLfvU6eht3kypptvrGe0C/l1sSc4=;
-        b=jg8LlrBrrDvgQhanQAMCOWund2qRNuZ0yqqO2VJEb4fKORSX/P2badCfna1PtIEybx
-         T3FuV34WeDsx60SablcYuAUDHz6RoNeZ5kQm6pOH4apVUtg0H2oOPnnRDrH4/d/VZ7Im
-         1PbajdjtlNcYxmlC6LyNvvH4QG6NtBbb1NxEbfo3ZaR/nQL1KaxNyLdJeXpv7nOtTgn7
-         CzzK+xxxYSEcdo9IacHEcIUFZUfDen7KZIcNeCh4WxqUvJHE/i87qNOy5CqmmEVl/r7H
-         ePN5gArVC3MLVCuLr42++9nTum5V0rHg0VX61QHvXi89EDrDNsmFF02GwfbbFCbfd+82
-         bSvA==
-X-Gm-Message-State: APjAAAV9dY38xf1fOVCoytOggBnbM0DDPxtkbz8mDC+CPvqWEiSa2U+K
-        vJfIyKdyd08bxp6NyvNpp2zCAQ==
-X-Google-Smtp-Source: APXvYqzpJq7TzVxEfvmb01lE+tYNlzx0SO/56Qk6uSDDEMENTbe/6nYs+ELEhHe89+3LJcMFQ+tfBA==
-X-Received: by 2002:ac2:569c:: with SMTP id 28mr10407708lfr.147.1559827464872;
-        Thu, 06 Jun 2019 06:24:24 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id w1sm394155ljm.81.2019.06.06.06.24.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Jun 2019 06:24:24 -0700 (PDT)
-Date:   Thu, 6 Jun 2019 16:24:22 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     David Miller <davem@davemloft.net>, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP support
-Message-ID: <20190606132420.GA12429@khorivan>
-Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
-        David Miller <davem@davemloft.net>, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
- <20190605.121450.2198491088032558315.davem@davemloft.net>
- <20190606100850.72a48a43@carbon>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=vL/yJFjtKE26N8WppeIL8DymV0OTQcN/8h3vh7inQew=;
+        b=FfeP4oI6FbzcPEBgNw1/zXbxaI7M26EDyBDJFjgjnrgw5FchJID1TibeUOwMc7/wRm
+         IcA9TGA1lo0sSrdr8C3MOKPUtyBATiXb+IkcljQ10UMaBhGIPDPTCr9A+6poVcLtws/C
+         E0GPyEGzKy+0wFW/gT+VOYVosfls3TKpaEDnApQct7+EbPjsFJFBdb2g6EtAqLKk2zqS
+         bC78E4+4lQaPrA7Xt/T6Z3zKspulqB5DaI8euRiSopxfyxTPkC825lgiQWTB/whPeVi1
+         knUInvh8GaztguXc5MpUuc0Ama+Ii6ZO4EyZwrO64qvhd3CSNbdUbMF/Nd5X2sjfn1Xl
+         pLSg==
+X-Gm-Message-State: APjAAAUkkyzO3E+okDaSeLO3s7uufceCeZuEb38eaOFVrJNfFmHxsmVg
+        Q7A2mmCRVdzXCOefP6DJmEw=
+X-Google-Smtp-Source: APXvYqyfjbd021wZbVjBB+70qJRPXGTgTljHe/nVnBfkUy4Y3ButrRqFGUdwG5ulgCJppMyvpTGiDA==
+X-Received: by 2002:a62:1a93:: with SMTP id a141mr54671966pfa.72.1559844220056;
+        Thu, 06 Jun 2019 11:03:40 -0700 (PDT)
+Received: from [172.26.126.80] ([2620:10d:c090:180::1:627e])
+        by smtp.gmail.com with ESMTPSA id h2sm2125014pgs.17.2019.06.06.11.03.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 11:03:39 -0700 (PDT)
+From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
+To:     "Ilya Maximets" <i.maximets@samsung.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
+        "Magnus Karlsson" <magnus.karlsson@intel.com>
+Subject: Re: [PATCH] net: Fix hang while unregistering device bound to xdp
+ socket
+Date:   Thu, 06 Jun 2019 11:03:38 -0700
+X-Mailer: MailMate (1.12.5r5635)
+Message-ID: <4414B6B6-3FE2-4CF2-A67A-159FCF6B9ECF@gmail.com>
+In-Reply-To: <20190606124014.23231-1-i.maximets@samsung.com>
+References: <CGME20190606124020eucas1p2007396ae8f23a426a17e0e5481636187@eucas1p2.samsung.com>
+ <20190606124014.23231-1-i.maximets@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190606100850.72a48a43@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Jun 06, 2019 at 10:08:50AM +0200, Jesper Dangaard Brouer wrote:
->On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
->David Miller <davem@davemloft.net> wrote:
->
->> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> Date: Wed,  5 Jun 2019 16:20:02 +0300
->>
->> > This patchset adds XDP support for TI cpsw driver and base it on
->> > page_pool allocator. It was verified on af_xdp socket drop,
->> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
->>
->> Jesper et al., please give this a good once over.
->
->The issue with merging this, is that I recently discovered two bug with
->page_pool API, when using DMA-mappings, which result in missing
->DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
->now with this drivers.
->
->The two bugs are:
->
->#1: in-flight packet-pages can still be on remote drivers TX queue,
->while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
->period is not enough).
->
->#2: this patchset also introduce page_pool_unmap_page(), which is
->called before an XDP frame travel into networks stack (as no callback
->exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
->"leak"/miss DMA-unmap.
->
->I do have a working prototype, that fixes these two bugs.  I guess, I'm
->under pressure to send this to the list soon...
+On 6 Jun 2019, at 5:40, Ilya Maximets wrote:
 
-In particular "cpsw" case no dma unmap issue and if no changes in page_pool
-API then no changes to the driver required. page_pool_unmap_page() is
-used here for consistency reasons with attention that it can be
-inherited/reused by other SoCs for what it can be relevant.
+> Device that bound to XDP socket will not have zero refcount until the
+> userspace application will not close it. This leads to hang inside
+> 'netdev_wait_allrefs()' if device unregistering requested:
+>
+>   # ip link del p1
+>   < hang on recvmsg on netlink socket >
+>
+>   # ps -x | grep ip
+>   5126  pts/0    D+   0:00 ip link del p1
+>
+>   # journalctl -b
+>
+>   Jun 05 07:19:16 kernel:
+>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>
+>   Jun 05 07:19:27 kernel:
+>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
+>   ...
+>
+> Fix that by counting XDP references for the device and failing
+> RTM_DELLINK with EBUSY if device is still in use by any XDP socket.
+>
+> With this change:
+>
+>   # ip link del p1
+>   RTNETLINK answers: Device or resource busy
+>
+> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> ---
+>
+> Another option could be to force closing all the corresponding AF_XDP
+> sockets, but I didn't figure out how to do this properly yet.
+>
+>  include/linux/netdevice.h | 25 +++++++++++++++++++++++++
+>  net/core/dev.c            | 10 ++++++++++
+>  net/core/rtnetlink.c      |  6 ++++++
+>  net/xdp/xsk.c             |  7 ++++++-
+>  4 files changed, 47 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 44b47e9df94a..24451cfc5590 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1705,6 +1705,7 @@ enum netdev_priv_flags {
+>   *	@watchdog_timer:	List of timers
+>   *
+>   *	@pcpu_refcnt:		Number of references to this device
+> + *	@pcpu_xdp_refcnt:	Number of XDP socket references to this device
+>   *	@todo_list:		Delayed register/unregister
+>   *	@link_watch_list:	XXX: need comments on this one
+>   *
+> @@ -1966,6 +1967,7 @@ struct net_device {
+>  	struct timer_list	watchdog_timer;
+>
+>  	int __percpu		*pcpu_refcnt;
+> +	int __percpu		*pcpu_xdp_refcnt;
+>  	struct list_head	todo_list;
 
-One potential change as you mentioned is with dropping page_pool_destroy() that,
-now, can look like:
 
-@@ -571,7 +571,6 @@ static void cpsw_destroy_rx_pool(struct cpsw_priv *priv, int ch)
-                return;
- 
-        xdp_rxq_info_unreg(&priv->xdp_rxq[ch]);
--       page_pool_destroy(priv->page_pool[ch]);
-        priv->page_pool[ch] = NULL;
- }
-
-From what I know there is ongoing change for adding switchdev to cpsw that can
-change a lot and can require more work to rebase / test this patchset, so I want
-to believe it can be merged before this.
-
+I understand the intention here, but don't think that putting a XDP reference
+into the generic netdev structure is the right way of doing this.  Likely the
+NETDEV_UNREGISTER notifier should be used so the socket and umem unbinds from
+the device.
 -- 
-Regards,
-Ivan Khoronzhuk
+Jonathan
