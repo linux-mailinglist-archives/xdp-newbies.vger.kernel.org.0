@@ -2,81 +2,128 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A442036E2C
-	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 10:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DBB4371F6
+	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 12:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfFFIJE (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 6 Jun 2019 04:09:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfFFIJD (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 6 Jun 2019 04:09:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5CA3A308626C;
-        Thu,  6 Jun 2019 08:09:02 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23D1917C40;
-        Thu,  6 Jun 2019 08:08:51 +0000 (UTC)
-Date:   Thu, 6 Jun 2019 10:08:50 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     ivan.khoronzhuk@linaro.org, grygorii.strashko@ti.com,
-        hawk@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, brouer@redhat.com
-Subject: Re: [PATCH v3 net-next 0/7] net: ethernet: ti: cpsw: Add XDP
- support
-Message-ID: <20190606100850.72a48a43@carbon>
-In-Reply-To: <20190605.121450.2198491088032558315.davem@davemloft.net>
-References: <20190605132009.10734-1-ivan.khoronzhuk@linaro.org>
-        <20190605.121450.2198491088032558315.davem@davemloft.net>
+        id S1727104AbfFFKpQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 6 Jun 2019 06:45:16 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44654 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFKpQ (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 6 Jun 2019 06:45:16 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56AdBIo121846;
+        Thu, 6 Jun 2019 10:44:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=rlTNItZ+vRzH1C5J9n3DIzZYXoQt0JFY3F5NEZCvtS8=;
+ b=oWdP9WZFGCHw1qxWUhunX2JomZIVQPQhXJ2qwjvgRnbfY6feGLqv4FAbh8QZTqO9x2Lv
+ GnyEYOdVNPpZYKVuC18tIW66GsQL6erL2HQrQj7ewltvSjVh93QhEEWh+D+N1Cxm/Qd5
+ okGibrOrohrLg+bAMOd7POOERxAJ818UIs8/sQ5GYRMgtcU98fkMWnDBfFKQQmYfP/dQ
+ AM+PnfG0Wzru10foVzr8RFpORFxWERTa8rIpEmYfwG+8Fad3tpZUYMme6iheDeaS3Gud
+ eJJOotZ8HZcAh8A7NNppd9IllLw/YGG2GNSN2eflBbPmoizY+KDlF7SfhC/NpoeFVOmk Tg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2suevdqw7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:44:42 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Aifb8006245;
+        Thu, 6 Jun 2019 10:44:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2swnhcmdqm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Jun 2019 10:44:41 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56AidWx000959;
+        Thu, 6 Jun 2019 10:44:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Jun 2019 03:44:38 -0700
+Date:   Thu, 6 Jun 2019 13:44:28 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
+Message-ID: <20190606104428.GK31203@kadam>
+References: <20190603170247.9951-1-colin.king@canonical.com>
+ <20190603102140.70fee157@cakuba.netronome.com>
+ <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
+ <20190603104930.466a306b@cakuba.netronome.com>
+ <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 06 Jun 2019 08:09:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906060078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906060078
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 05 Jun 2019 12:14:50 -0700 (PDT)
-David Miller <davem@davemloft.net> wrote:
-
-> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> Date: Wed,  5 Jun 2019 16:20:02 +0300
+On Mon, Jun 03, 2019 at 07:07:20PM +0100, Colin Ian King wrote:
+> On 03/06/2019 18:49, Jakub Kicinski wrote:
+> > On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
+> >> On 03/06/2019 18:21, Jakub Kicinski wrote:
+> >>> On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
+> >>>> From: Colin Ian King <colin.king@canonical.com>
+> >>>>
+> >>>> The variable err is assigned with the value -EINVAL that is never
+> >>>> read and it is re-assigned a new value later on.  The assignment is
+> >>>> redundant and can be removed.
+> >>>>
+> >>>> Addresses-Coverity: ("Unused value")
+> >>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >>>> ---
+> >>>>  kernel/bpf/devmap.c | 2 +-
+> >>>>  kernel/bpf/xskmap.c | 2 +-
+> >>>>  2 files changed, 2 insertions(+), 2 deletions(-)
+> >>>>
+> >>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+> >>>> index 5ae7cce5ef16..a76cc6412fc4 100644
+> >>>> --- a/kernel/bpf/devmap.c
+> >>>> +++ b/kernel/bpf/devmap.c
+> >>>> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
+> >>>>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+> >>>>  {
+> >>>>  	struct bpf_dtab *dtab;
+> >>>> -	int err = -EINVAL;
+> >>>> +	int err;
+> >>>>  	u64 cost;  
+> >>>
+> >>> Perhaps keep the variables ordered longest to shortest?  
+> >>
+> >> Is that a required coding standard?
+> > 
+> > For networking code, yes.  Just look around the files you're changing
+> > and see for yourself.
 > 
-> > This patchset adds XDP support for TI cpsw driver and base it on
-> > page_pool allocator. It was verified on af_xdp socket drop,
-> > af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.  
-> 
-> Jesper et al., please give this a good once over.
+> Ah, informal coding standards. Great. Won't this end up with more diff
+> churn?
 
-The issue with merging this, is that I recently discovered two bug with
-page_pool API, when using DMA-mappings, which result in missing
-DMA-unmap's.  These bugs are not "exposed" yet, but will get exposed
-now with this drivers.  
+Everyone knows that netdev uses reverse Christmas tree declarations...
 
-The two bugs are:
+regards,
+dan carpenter
 
-#1: in-flight packet-pages can still be on remote drivers TX queue,
-while XDP RX driver manage to unregister the page_pool (waiting 1 RCU
-period is not enough).
-
-#2: this patchset also introduce page_pool_unmap_page(), which is
-called before an XDP frame travel into networks stack (as no callback
-exist, yet).  But the CPUMAP redirect *also* needs to call this, else we
-"leak"/miss DMA-unmap.
-
-I do have a working prototype, that fixes these two bugs.  I guess, I'm
-under pressure to send this to the list soon...
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
