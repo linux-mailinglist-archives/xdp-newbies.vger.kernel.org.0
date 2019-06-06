@@ -2,128 +2,206 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DBB4371F6
-	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 12:45:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E518837261
+	for <lists+xdp-newbies@lfdr.de>; Thu,  6 Jun 2019 13:04:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfFFKpQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 6 Jun 2019 06:45:16 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44654 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFFKpQ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 6 Jun 2019 06:45:16 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56AdBIo121846;
-        Thu, 6 Jun 2019 10:44:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=rlTNItZ+vRzH1C5J9n3DIzZYXoQt0JFY3F5NEZCvtS8=;
- b=oWdP9WZFGCHw1qxWUhunX2JomZIVQPQhXJ2qwjvgRnbfY6feGLqv4FAbh8QZTqO9x2Lv
- GnyEYOdVNPpZYKVuC18tIW66GsQL6erL2HQrQj7ewltvSjVh93QhEEWh+D+N1Cxm/Qd5
- okGibrOrohrLg+bAMOd7POOERxAJ818UIs8/sQ5GYRMgtcU98fkMWnDBfFKQQmYfP/dQ
- AM+PnfG0Wzru10foVzr8RFpORFxWERTa8rIpEmYfwG+8Fad3tpZUYMme6iheDeaS3Gud
- eJJOotZ8HZcAh8A7NNppd9IllLw/YGG2GNSN2eflBbPmoizY+KDlF7SfhC/NpoeFVOmk Tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2suevdqw7u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 10:44:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x56Aifb8006245;
-        Thu, 6 Jun 2019 10:44:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2swnhcmdqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Jun 2019 10:44:41 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x56AidWx000959;
-        Thu, 6 Jun 2019 10:44:39 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Jun 2019 03:44:38 -0700
-Date:   Thu, 6 Jun 2019 13:44:28 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        id S1726719AbfFFLE2 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 6 Jun 2019 07:04:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33952 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFLE1 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 6 Jun 2019 07:04:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h2so1170722pgg.1;
+        Thu, 06 Jun 2019 04:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eAj3SnZRkW/hXNaSdkScPU0gjqHplVwGdOnKTnZJG2k=;
+        b=FOzoj+uFS7UehWdhfR6caDG/Q/BS+VKaqYdw27JVx7yDvG2AW0FLiIDPG6zltyLsY2
+         6BQ5p/dSFZ061NPJok7WN8nnpYuIMkBN8GEHiS7xor08t3XkhZ5RhIvgCqvIR1YHvCFM
+         VHqH/pg2+l52dPahAJIsMs/f+AMV4oiDKH6TwE18Fy/gQInVFDg5MrD9Z9DNMpdN8PO3
+         MbTavQnLbbngW0YeaUZxXRlaxwoyS2zyesnnhdlbK0DtDlf/OQ0od/5OzDfe4VkxbMDL
+         ZuIJbMZRzgp/bGxNwDDFhxSEm/ooEDhHBqdfkB66pFG26Fb7tZFRRnjKumEj3aiUJE0D
+         Wwgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eAj3SnZRkW/hXNaSdkScPU0gjqHplVwGdOnKTnZJG2k=;
+        b=Mu0iVajVGRrhFHsm6PHTBgP+Qb4X4Mk2pzbM8iEvk5ti+J/jOF+zxQvPWxO634I1dC
+         TlnF484Q04xlMJPrvm8JUf7ccUyHeTQYKN9M9DICBPfig2CEnHZfzjO8BEATiOJ9W+Hx
+         yTa76IcQTOo6Ji5o22pH/QTFMHkb0YZL/cBtMCb8IKKUcHRM/R4Q0CbLyx4LHYKRFFdw
+         C84iz35somcu9g4z3FfC7//9IlukOsRaw0dy5RrfTrowvuojyBdeLcj8TZfaE8UqJCPz
+         EoZcGu2cLrvB+gyjeNpa5WsgWgz6/U0nIKc87m7LLf/xcbqaJZeaP/tVq2tnXsdqpbk5
+         6uJg==
+X-Gm-Message-State: APjAAAWwdN9r9bkQqO32u0CroTvuhw/MTjH14ZADELoXlER763KPoFP6
+        UCFpwNhcxO7WBigBJ3KUmYk=
+X-Google-Smtp-Source: APXvYqw9v3ZVhjYSDVWSg1mMuSD87K1bpEtsLwy70Mgsd3A0NfAGE4satNKSc2YfU3/xV9ZOMRWPOw==
+X-Received: by 2002:a65:638e:: with SMTP id h14mr2823334pgv.209.1559819066466;
+        Thu, 06 Jun 2019 04:04:26 -0700 (PDT)
+Received: from [172.20.20.103] ([222.151.198.97])
+        by smtp.gmail.com with ESMTPSA id t124sm2116575pfb.80.2019.06.06.04.04.23
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 04:04:25 -0700 (PDT)
+Subject: Re: [PATCH v2 bpf-next 1/2] xdp: Add tracepoint for bulk XDP_TX
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
         netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] bpf: remove redundant assignment to err
-Message-ID: <20190606104428.GK31203@kadam>
-References: <20190603170247.9951-1-colin.king@canonical.com>
- <20190603102140.70fee157@cakuba.netronome.com>
- <276525bd-dd79-052e-7663-9acc92621853@canonical.com>
- <20190603104930.466a306b@cakuba.netronome.com>
- <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
+        bpf@vger.kernel.org,
+        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>
+References: <20190605053613.22888-1-toshiaki.makita1@gmail.com>
+ <20190605053613.22888-2-toshiaki.makita1@gmail.com>
+ <20190605095931.5d90b69c@carbon>
+From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
+Message-ID: <abd43c39-afb7-acd4-688a-553cec76f55c@gmail.com>
+Date:   Thu, 6 Jun 2019 20:04:20 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e351d18c-21cd-6617-2a59-31a48be54b7e@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906060078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9279 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906060078
+In-Reply-To: <20190605095931.5d90b69c@carbon>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 07:07:20PM +0100, Colin Ian King wrote:
-> On 03/06/2019 18:49, Jakub Kicinski wrote:
-> > On Mon, 3 Jun 2019 18:39:16 +0100, Colin Ian King wrote:
-> >> On 03/06/2019 18:21, Jakub Kicinski wrote:
-> >>> On Mon,  3 Jun 2019 18:02:47 +0100, Colin King wrote:  
-> >>>> From: Colin Ian King <colin.king@canonical.com>
-> >>>>
-> >>>> The variable err is assigned with the value -EINVAL that is never
-> >>>> read and it is re-assigned a new value later on.  The assignment is
-> >>>> redundant and can be removed.
-> >>>>
-> >>>> Addresses-Coverity: ("Unused value")
-> >>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >>>> ---
-> >>>>  kernel/bpf/devmap.c | 2 +-
-> >>>>  kernel/bpf/xskmap.c | 2 +-
-> >>>>  2 files changed, 2 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-> >>>> index 5ae7cce5ef16..a76cc6412fc4 100644
-> >>>> --- a/kernel/bpf/devmap.c
-> >>>> +++ b/kernel/bpf/devmap.c
-> >>>> @@ -88,7 +88,7 @@ static u64 dev_map_bitmap_size(const union bpf_attr *attr)
-> >>>>  static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
-> >>>>  {
-> >>>>  	struct bpf_dtab *dtab;
-> >>>> -	int err = -EINVAL;
-> >>>> +	int err;
-> >>>>  	u64 cost;  
-> >>>
-> >>> Perhaps keep the variables ordered longest to shortest?  
-> >>
-> >> Is that a required coding standard?
-> > 
-> > For networking code, yes.  Just look around the files you're changing
-> > and see for yourself.
+On 2019/06/05 16:59, Jesper Dangaard Brouer wrote:
+> On Wed,  5 Jun 2019 14:36:12 +0900
+> Toshiaki Makita <toshiaki.makita1@gmail.com> wrote:
 > 
-> Ah, informal coding standards. Great. Won't this end up with more diff
-> churn?
+>> This is introduced for admins to check what is happening on XDP_TX when
+>> bulk XDP_TX is in use, which will be first introduced in veth in next
+>> commit.
+> 
+> Is the plan that this tracepoint 'xdp:xdp_bulk_tx' should be used by
+> all drivers?
 
-Everyone knows that netdev uses reverse Christmas tree declarations...
+I guess you mean all drivers that implement similar mechanism should use 
+this? Then yes.
+(I don't think all drivers needs bulk tx mechanism though)
 
-regards,
-dan carpenter
+> (more below)
+> 
+>> Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+>> ---
+>>   include/trace/events/xdp.h | 25 +++++++++++++++++++++++++
+>>   kernel/bpf/core.c          |  1 +
+>>   2 files changed, 26 insertions(+)
+>>
+>> diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+>> index e95cb86..e06ea65 100644
+>> --- a/include/trace/events/xdp.h
+>> +++ b/include/trace/events/xdp.h
+>> @@ -50,6 +50,31 @@
+>>   		  __entry->ifindex)
+>>   );
+>>   
+>> +TRACE_EVENT(xdp_bulk_tx,
+>> +
+>> +	TP_PROTO(const struct net_device *dev,
+>> +		 int sent, int drops, int err),
+>> +
+>> +	TP_ARGS(dev, sent, drops, err),
+>> +
+>> +	TP_STRUCT__entry(
+> 
+> All other tracepoints in this file starts with:
+> 
+> 		__field(int, prog_id)
+> 		__field(u32, act)
+> or
+> 		__field(int, map_id)
+> 		__field(u32, act)
+> 
+> Could you please add those?
 
+So... prog_id is the problem. The program can be changed while we are 
+enqueueing packets to the bulk queue, so the prog_id at flush may be an 
+unexpected one.
+
+It can be fixed by disabling NAPI when changing XDP programs. This stops 
+packet processing while changing XDP programs, but I guess it is an 
+acceptable compromise. Having said that, I'm honestly not so eager to 
+make this change, since this will require refurbishment of one of the 
+most delicate part of veth XDP, NAPI disabling/enabling mechanism.
+
+WDYT?
+
+>> +		__field(int, ifindex)
+>> +		__field(int, drops)
+>> +		__field(int, sent)
+>> +		__field(int, err)
+>> +	),
+> 
+> The reason is that this make is easier to attach to multiple
+> tracepoints, and extract the same value.
+> 
+> Example with bpftrace oneliner:
+> 
+> $ sudo bpftrace -e 'tracepoint:xdp:xdp_* { @action[args->act] = count(); }'
+> Attaching 8 probes...
+> ^C
+> 
+> @action[4]: 30259246
+> @action[0]: 34489024
+> 
+> XDP_ABORTED = 0 	
+> XDP_REDIRECT= 4
+> 
+> 
+>> +
+>> +	TP_fast_assign(
+> 
+> 		__entry->act		= XDP_TX;
+
+OK
+
+> 
+>> +		__entry->ifindex	= dev->ifindex;
+>> +		__entry->drops		= drops;
+>> +		__entry->sent		= sent;
+>> +		__entry->err		= err;
+>> +	),
+>> +
+>> +	TP_printk("ifindex=%d sent=%d drops=%d err=%d",
+>> +		  __entry->ifindex, __entry->sent, __entry->drops, __entry->err)
+>> +);
+>> +
+> 
+> Other fun bpftrace stuff:
+> 
+> sudo bpftrace -e 'tracepoint:xdp:xdp_*map* { @map_id[comm, args->map_id] = count(); }'
+> Attaching 5 probes...
+> ^C
+> 
+> @map_id[swapper/2, 113]: 1428
+> @map_id[swapper/0, 113]: 2085
+> @map_id[ksoftirqd/4, 113]: 2253491
+> @map_id[ksoftirqd/2, 113]: 25677560
+> @map_id[ksoftirqd/0, 113]: 29004338
+> @map_id[ksoftirqd/3, 113]: 31034885
+> 
+> 
+> $ bpftool map list id 113
+> 113: devmap  name tx_port  flags 0x0
+> 	key 4B  value 4B  max_entries 100  memlock 4096B
+> 
+> 
+> p.s. People should look out for Brendan Gregg's upcoming book on BPF
+> performance tools, from which I learned to use bpftrace :-)
+
+Where can I get information on the book?
+
+--
+Toshiaki Makita
