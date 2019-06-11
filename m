@@ -2,215 +2,207 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BFC13C707
-	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 11:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A56733C719
+	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 11:18:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404156AbfFKJIe (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 11 Jun 2019 05:08:34 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:33932 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbfFKJId (ORCPT
+        id S2404327AbfFKJS4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 11 Jun 2019 05:18:56 -0400
+Received: from mail-io1-f47.google.com ([209.85.166.47]:38202 "EHLO
+        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404428AbfFKJS4 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 11 Jun 2019 05:08:33 -0400
-Received: by mail-it1-f194.google.com with SMTP id k134so1692948ith.1
-        for <xdp-newbies@vger.kernel.org>; Tue, 11 Jun 2019 02:08:33 -0700 (PDT)
+        Tue, 11 Jun 2019 05:18:56 -0400
+Received: by mail-io1-f47.google.com with SMTP id k13so9265939iop.5
+        for <xdp-newbies@vger.kernel.org>; Tue, 11 Jun 2019 02:18:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=zeMo4vTTCMRQCh1UcUab1tdVwXAnUYKlGDYFR9grHg4=;
-        b=sTDQ+Nw/Rp7k19rWC1nXdKBn4Zt4yD+Obps9mOrJ2VZb678zQnt61Pt/daBBugdRBx
-         1Be7e3yMMhsZC219NQy2SQ8l8xkYsb8dMihUFKkDs8u1udbRT5GNNcmo5z9brTCF+fR9
-         U7/CgKgwUsb5AiwLAOfpw65ZTu56YDum15n8JDfv0wjLp8Dg5XpJSukLSN7GhS+Bj2AW
-         59aXQ+Ap0FYSdBlfOySQD7gyUg2FvXiCw8sV0j39aCtXnOPTjlYVa5rDxu10x0EZzY9M
-         85zxap2CvS5MN70zvIkj7QwdyfuS8w/f4D+Ugpk5fAcJREIFZtDpXWiQ62+OwdZ6zlPc
-         QGxw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=74U0tTlupcownqdFmumOW/MgKDnub6NJDz3joLIe4uI=;
+        b=Xzbv1cTzlkXUfGB533bNgCQzESgaOIwul/6ePJ8t/CZzIWeMTW3za+IcozdSLZ+3El
+         58QrFQjmbteYwOBNbv52fuAFgwhs2boLBuaJdO2NDp1eGwmbf6uOcWIXliOYxRhR7pty
+         VYCo0gW431HqkTeMoEIjbsJgWFmrtffx+anK3LUiWOgCxjJqp/K/tUzO3vYmQ2R9lYu2
+         dmzoFZb4fGNycMs27Aky3HDbMXqteY6c5ibNe3uTBaH5/yBmg+le2h9SX3DIFQ/d6LYN
+         iyDt3N6bkDZQblVXL8BZCdaE56oEsnRXGPUcntnkhgR9YGSxlzTkGbAHfRHxdJmwh9ty
+         onrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=zeMo4vTTCMRQCh1UcUab1tdVwXAnUYKlGDYFR9grHg4=;
-        b=FMgsalfovBU1/za8R+4RnWPTIMDqpO/ZcLhhQREQpoebb6uvj2fnEFn99iOXu4LD+y
-         ZcCDdMisy1L7uLiPy3X+80tlrT4sEe2tm7XDPj6PudxwCpi756hO6aObL3glv+bNKbxS
-         1XR6iKYmRbNdNwvtaU1D0svuQadOn2aTs4kWv9IHHFg4kDtpF3SiZn0Sf41Srqv/ZlAk
-         uG6YuBFS2VyEVf5kd8KAwKiruqc7lIU5T8miR+3BCMU1V2EwVmMjoqHPA3HI51IdjOdO
-         gIthAZFwfTyhpjSpQf/rxpo3r6qR76dCjjKIaWcPyZlOvt53L7UPX4YAxvV6+ifYnIRZ
-         762w==
-X-Gm-Message-State: APjAAAV8bydAePGE+9aoHfSIaeosEj/oTXepJ7bjW8gUMNNi0JAFplKm
-        Yq0AjEWbdxczTWkUyLbEHVVybLfZkKQlcgcuvUFIvw==
-X-Google-Smtp-Source: APXvYqwB5sap2qRNSgYlEuZQOK82FyMZ6aKds+0MFL2fxX75MoOnEnRDLoCj9S4IMxuR7RQMpeFuZMAWlazYZbSTPk8=
-X-Received: by 2002:a24:4417:: with SMTP id o23mr18165667ita.88.1560244112421;
- Tue, 11 Jun 2019 02:08:32 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=74U0tTlupcownqdFmumOW/MgKDnub6NJDz3joLIe4uI=;
+        b=V1ivExk6u5nzByPwtwknBqT1tLz8zEOB4mDiIt+iQ3PbGAViCfsYkA/JI6ie6McbR+
+         ViA9PsPx+lEtHPvNxJWhQvTcFuLxUK4LfK9hLvX+yWLamgNSjnwiiP3G5kOdrhC4n+0n
+         0glfmHVTgdMm26a+YcjbJsTg8VRP7RTiFewDrWWmc0hxn7VfLx7K6hruYnSBCiTW152x
+         m/rSkY87lcCQ/bbusasCoDZ8eeGwSKuTVsVa/zHI9K1qwfAbrw1FF/q66WGqYMTRwcfj
+         qhKpJPgE8SCYFFOqzZ8JPJ4ORmCJe/mHKrHEli07SO3PzWVNveozZG/9xA2zpNPuQA+/
+         cu1g==
+X-Gm-Message-State: APjAAAVEIXs1wcCGK33e9wJ9ybmmfmgHlHpIAuapU125wp+ZtJZqQGeA
+        4Kbgq/h7yNHodrWr7S/mAaTWFLtzqhczIl3TX173IyhuOv4=
+X-Google-Smtp-Source: APXvYqxzuvx79iLllb3ypEJKr1Q3kfdHHIGtu89SSCP0Byh8n3LYiJDaR8tTLNhvDdDHvLUDbMgit80UqrUNhRng6Mw=
+X-Received: by 2002:a5d:8508:: with SMTP id q8mr31933604ion.31.1560244735296;
+ Tue, 11 Jun 2019 02:18:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000e92d1805711f5552@google.com> <000000000000381684058ace28e5@google.com>
- <20190611080431.GP21222@phenom.ffwll.local> <CACT4Y+YMFKe1cq_XpP0o5fd+XLD_8qMVjqnVX5rx1UCWyCR5eg@mail.gmail.com>
- <20190611085123.GU21222@phenom.ffwll.local> <20190611090110.GY21222@phenom.ffwll.local>
-In-Reply-To: <20190611090110.GY21222@phenom.ffwll.local>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 11 Jun 2019 11:08:21 +0200
-Message-ID: <CACT4Y+bPq6rcKCT-O8_TLUA9FTF6U0HumNcrfMLskvbX13NhsQ@mail.gmail.com>
-Subject: Re: WARNING in bpf_jit_free
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        DRI <dri-devel@lists.freedesktop.org>, hawk@kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, maxime.ripard@bootlin.com,
-        netdev <netdev@vger.kernel.org>, paul.kocialkowski@bootlin.com,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, wens@csie.org,
-        xdp-newbies@vger.kernel.org, Yonghong Song <yhs@fb.com>
+References: <CAK6Qs9=ig3-PWKtSk7UJfm1gcWz9cSGYU7uDxxUw=xju5TtP9w@mail.gmail.com>
+ <20190610121540.36391dc3@carbon>
+In-Reply-To: <20190610121540.36391dc3@carbon>
+From:   =?UTF-8?Q?=C4=B0brahim_Ercan?= <ibrahim.metu@gmail.com>
+Date:   Tue, 11 Jun 2019 12:18:44 +0300
+Message-ID: <CAK6Qs9mdViRXL5BhafcUdv06inVF0ZuciBX1zPNasRYw3We9-g@mail.gmail.com>
+Subject: Re: ethtool isn't showing xdp statistics
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org, David Ahern <dsahern@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 11:01 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Tue, Jun 11, 2019 at 10:51:23AM +0200, Daniel Vetter wrote:
-> > On Tue, Jun 11, 2019 at 10:33:21AM +0200, Dmitry Vyukov wrote:
-> > > On Tue, Jun 11, 2019 at 10:04 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > >
-> > > > On Sat, Jun 08, 2019 at 04:22:06AM -0700, syzbot wrote:
-> > > > > syzbot has found a reproducer for the following crash on:
-> > > > >
-> > > > > HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
-> > > > > git tree:       upstream
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
-> > > >
-> > > > Looking at the reproducer I don't see any calls to ioctl which could end
-> > > > up anywhere in drm.
-> > > > >
-> > > > > The bug was bisected to:
-> > > > >
-> > > > > commit 0fff724a33917ac581b5825375d0b57affedee76
-> > > > > Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > > Date:   Fri Jan 18 14:51:13 2019 +0000
-> > > > >
-> > > > >     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
-> > > >
-> > > > And most definitely not in drm/sun4i. You can only hit this if you have
-> > > > sun4i and run on arm, which per your config isn't the case.
-> > > >
-> > > > tldr; smells like bisect gone wrong.
-> > > > -Daniel
-> > >
-> > > From the bisection log it looks like the bug is too hard to trigger
-> > > for reliable bisection. So it probably classified one bad commit as
-> > > good. But it should got quite close to the right one.
-> >
-> > Well statistically it'll get close, since there's a fair chance that it's
-> > one of the later bisect results that got mischaracterized.
-> >
-> > But you can be equally unlucky, and if it's one of the earliers, then it
-> > can easily be a few thousand commits of. Looking at the log it's mostly
-> > bad, with a few good sprinkled in, which could just be reproduction
-> > failures. So might very well be that the very first "good" result is
-> > wrong. And that very first "good" decision cuts away a big pile of bpf
-> > related commits. The next "good" decision then only cuts away a pile of
-> > drm commits, but at that point you're already off the rails most likely.
-> >
-> > I'd say re-test on f90d64483ebd394958841f67f8794ab203b319a7 a few times,
-> > I'm willing to bet that one is actually bad.
->
-> btw if this theory is right, we have a 1-in-4 chance of a spurious "good"
-> with your test. If you get 10 repeated "good" then that should be good
-> enough to make playing the lottery a better endeavor :-)
+Thanks for the clarification.
+I used ethtool_stats.pl script and realized total dropped packets are
+sum of fdir_miss and rx_missed_errors.
+Here I observed sometimes fdir_miss increase to 1-2m and
+rx_missed_errors drop about same amount but their total not change.
+
+Show adapter(s) (enp7s0f0) statistics (ONLY that changed!)
+Ethtool(enp7s0f0) stat:       153818 (        153,818) <=3D fdir_miss /sec
+Ethtool(enp7s0f0) stat:      9060176 (      9,060,176) <=3D rx_bytes /sec
+Ethtool(enp7s0f0) stat:    946625059 (    946,625,059) <=3D rx_bytes_nic /s=
+ec
+Ethtool(enp7s0f0) stat:     14694930 (     14,694,930) <=3D rx_missed_error=
+s /sec
+
+As you can see, In my tests I dropped about 15m packets successfully.
+After that I did some latency tests and get some bad results.
+I loaded a xdp code that drops only udp packets. I connected 2 packet
+sender through a switch. One of them I sent flood udp ddos. From other
+one I just send ping and observed latency.
+Here is results.
+latency when there is no attack.
+
+# ping -c 10 10.0.0.213
+PING 10.0.0.213 (10.0.0.213) 56(84) bytes of data.
+64 bytes from 10.0.0.213: icmp_seq=3D1 ttl=3D64 time=3D0.794 ms
+64 bytes from 10.0.0.213: icmp_seq=3D2 ttl=3D64 time=3D0.435 ms
+64 bytes from 10.0.0.213: icmp_seq=3D3 ttl=3D64 time=3D0.394 ms
+64 bytes from 10.0.0.213: icmp_seq=3D4 ttl=3D64 time=3D0.387 ms
+64 bytes from 10.0.0.213: icmp_seq=3D5 ttl=3D64 time=3D0.479 ms
+64 bytes from 10.0.0.213: icmp_seq=3D6 ttl=3D64 time=3D0.487 ms
+64 bytes from 10.0.0.213: icmp_seq=3D7 ttl=3D64 time=3D0.458 ms
+64 bytes from 10.0.0.213: icmp_seq=3D8 ttl=3D64 time=3D0.536 ms
+64 bytes from 10.0.0.213: icmp_seq=3D9 ttl=3D64 time=3D0.499 ms
+64 bytes from 10.0.0.213: icmp_seq=3D10 ttl=3D64 time=3D0.391 ms
+
+--- 10.0.0.213 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9202ms
+rtt min/avg/max/mdev =3D 0.387/0.486/0.794/0.113 ms
 
 
-Yes, unfortunately.
-We could do more tests, but if bug reproduction chances are lower, we
-still the same lottery. And the more tests we do, the higher chances
-that we hit and get distracted by unrelated kernel bugs.
-When syzbot started bisecting bugs, I analyzed 120 bisections for
-correct/not correct and some classification of root causes:
-https://groups.google.com/forum/#!msg/syzkaller/sR8aAXaWEF4/tTWYRgvmAwAJ
-https://docs.google.com/spreadsheets/d/1WdBAN54-csaZpD3LgmTcIMR7NDFuQoOZZqPZ-CUqQgA/edit#gid=348315157
-https://docs.google.com/spreadsheets/d/1WdBAN54-csaZpD3LgmTcIMR7NDFuQoOZZqPZ-CUqQgA/edit#gid=0
-Hard to trigger bugs are a problem, but unrelated kernel bugs is even
-bigger problem...
+latency when there is 150k attack
 
+# ping -c 10 10.0.0.213
+PING 10.0.0.213 (10.0.0.213) 56(84) bytes of data.
+64 bytes from 10.0.0.213: icmp_seq=3D1 ttl=3D64 time=3D43.4 ms
+64 bytes from 10.0.0.213: icmp_seq=3D2 ttl=3D64 time=3D8.26 ms
+64 bytes from 10.0.0.213: icmp_seq=3D4 ttl=3D64 time=3D47.1 ms
+64 bytes from 10.0.0.213: icmp_seq=3D5 ttl=3D64 time=3D2.51 ms
+64 bytes from 10.0.0.213: icmp_seq=3D6 ttl=3D64 time=3D1.43 ms
+64 bytes from 10.0.0.213: icmp_seq=3D7 ttl=3D64 time=3D40.6 ms
+64 bytes from 10.0.0.213: icmp_seq=3D8 ttl=3D64 time=3D44.2 ms
+64 bytes from 10.0.0.213: icmp_seq=3D9 ttl=3D64 time=3D38.0 ms
+64 bytes from 10.0.0.213: icmp_seq=3D10 ttl=3D64 time=3D50.5 ms
 
+--- 10.0.0.213 ping statistics ---
+10 packets transmitted, 9 received, 10% packet loss, time 9060ms
 
-> -Daniel
+latency when there is 800k attack
+
+# ping -c 10 10.0.0.213
+PING 10.0.0.213 (10.0.0.213) 56(84) bytes of data.
+64 bytes from 10.0.0.213: icmp_seq=3D4 ttl=3D64 time=3D0.395 ms
+64 bytes from 10.0.0.213: icmp_seq=3D5 ttl=3D64 time=3D0.359 ms
+64 bytes from 10.0.0.213: icmp_seq=3D8 ttl=3D64 time=3D30.3 ms
+
+--- 10.0.0.213 ping statistics ---
+10 packets transmitted, 3 received, 70% packet loss, time 9246ms
+rtt min/avg/max/mdev =3D 0.359/10.376/30.376/14.142 ms
+
+latency when there is 1.6m attack
+
+# ping -c 10 10.0.0.213
+PING 10.0.0.213 (10.0.0.213) 56(84) bytes of data.
+64 bytes from 10.0.0.213: icmp_seq=3D2 ttl=3D64 time=3D34.7 ms
+
+--- 10.0.0.213 ping statistics ---
+10 packets transmitted, 1 received, 90% packet loss, time 9205ms
+rtt min/avg/max/mdev =3D 34.756/34.756/34.756/0.000 ms
+
+latency when there is 2.4m attack
+
+# ping -c 10 10.0.0.213
+PING 10.0.0.213 (10.0.0.213) 56(84) bytes of data.
+From 10.0.0.214 icmp_seq=3D10 Destination Host Unreachable
+
+--- 10.0.0.213 ping statistics ---
+10 packets transmitted, 0 received, +1 errors, 100% packet loss, time 9229m=
+s
+
+After that all ping stop as you can see. I don't know how to debug
+that latency. I believe I need to do some tuning but I don't know what
+it is. I tried to enable jit but nothing changed.
+If xdp cause this latency, than it is useless for me. Can you help me
+to understand its cause?
+
+On Mon, Jun 10, 2019 at 1:15 PM Jesper Dangaard Brouer
+<brouer@redhat.com> wrote:
+>
+> On Mon, 10 Jun 2019 12:55:07 +0300
+> =C4=B0brahim Ercan <ibrahim.metu@gmail.com> wrote:
+>
+> > Hi.
+> > I'm trying to do a xdp performance test on redhat based environment.
+> > To do so, I compiled kernel 5.0.13 and iproute 4.6.0
+> > Then I loaded compiled code to interface with below command.
+> > #ip -force link set dev enp7s0f0 xdp object xdptest.o
+> >
+> > After that packets dropped as expected but I can not see statistics
+> > with ethtool command like below.
+> > #ethtool -S enp7s0f0 | grep xdp
+> >
+> > ethtool version is 4.8
+> > I did my test with that NIC
+> > Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 0=
+1)
+> >
+> > I wonder why I can't see statistics. Did I miss something while
+> > compiling kernel or iproute? Should I also compile ethtool too?
+>
+> You did nothing wrong. Consistency for statistics with XDP is a known
+> issue, see [1].  The behavior varies per driver, which obviously is bad
+> from a user perspective.  You NIC is based on ixgbe driver, which don't
+> have ethtool stats counters for XDP, instead it actually updates
+> ifconfig counters correctly. While for mlx5 it's opposite (p.s. I use
+> this[2] ethtool stats tool).
+>
+> We want to bring consistency in this area, but there are performance
+> concerns.  As any stat counter will bring overhead, and XDP is all
+> about maximum performance.  Thus, we want this counter overhead to be
+> opt-in (that is not on as default).
+>
+> Currently you have to add the stats your want to the XDP/BPF program
+> itself.  That is the current opt-in mechanism.  To help you coded this,
+> we have an example here[3].
 >
 >
-> >
-> > Cheers, Daniel
-> >
-> > >
-> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
-> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
-> > > > > Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for
-> > > > > packed YUV422 check")
-> > > > >
-> > > > > WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
-> > > > > Kernel panic - not syncing: panic_on_warn set ...
-> > > > > CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > Workqueue: events bpf_prog_free_deferred
-> > > > > Call Trace:
-> > > > >  __dump_stack lib/dump_stack.c:77 [inline]
-> > > > >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > > >  panic+0x2cb/0x744 kernel/panic.c:219
-> > > > >  __warn.cold+0x20/0x4d kernel/panic.c:576
-> > > > >  report_bug+0x263/0x2b0 lib/bug.c:186
-> > > > >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> > > > >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> > > > >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-> > > > >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-> > > > >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> > > > > RIP: 0010:bpf_jit_free+0x157/0x1b0
-> > > > > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
-> > > > > 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe ff
-> > > > > ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
-> > > > > RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
-> > > > > RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
-> > > > > RDX: 00000000> >
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > > >
-> > > > --
-> > > > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > > > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > > > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190611080431.GP21222%40phenom.ffwll.local.
-> > > > For more options, visit https://groups.google.com/d/optout.00000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
-> > > > > RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
-> > > > > R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
-> > > > > R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
-> > > > >  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
-> > > > >  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-> > > > >  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-> > > > >  kthread+0x354/0x420 kernel/kthread.c:255
-> > > > >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > > > > Kernel Offset: disabled
-> > > > > Rebooting in 86400 seconds..
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
->
+> [1] https://github.com/xdp-project/xdp-project/blob/master/xdp-project.or=
+g#consistency-for-statistics-with-xdp
+> [2] https://github.com/netoptimizer/network-testing/blob/master/bin/ethto=
+ol_stats.pl
+> [3] https://github.com/xdp-project/xdp-tutorial/blob/master/common/xdp_st=
+ats_kern.h
 > --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
+>
