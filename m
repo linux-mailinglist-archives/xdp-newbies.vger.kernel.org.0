@@ -2,258 +2,161 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B46483C59D
-	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 10:10:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0708E3C5FE
+	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 10:34:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404599AbfFKIJ7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 11 Jun 2019 04:09:59 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44400 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404073AbfFKIJ7 (ORCPT
+        id S2404695AbfFKIde (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 11 Jun 2019 04:33:34 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38044 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404723AbfFKIdd (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:09:59 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w187so7053865qkb.11;
-        Tue, 11 Jun 2019 01:09:58 -0700 (PDT)
+        Tue, 11 Jun 2019 04:33:33 -0400
+Received: by mail-it1-f195.google.com with SMTP id e25so3412422itk.3
+        for <xdp-newbies@vger.kernel.org>; Tue, 11 Jun 2019 01:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cQ5mlxHCKg9OWIUg8k5qLquru5ZSr1owt2OS/5BIqsQ=;
-        b=DTxjXUxcNj0hqtB0aDUcGm05f2wZiEdKbAJwjjEOnP8kdB2nRXIIumXO3BTfQYPNIT
-         oSLM+QukntvA6HTPP4zO91ZtrqvBLUCtNz2fiQzzCv28ITo+m/nxVONriJildMjTW8CI
-         a81IJMxr7Z3prsjcs8lZxXPkjvdDQf1vntEQ0kw416/BbcjC5KjWrixfSgG9NMODUPyi
-         1q2Wc3OhdwauvwA67rntdIfTGDKHkzLH14rKE9Hsn8iaNWrNATsxwCA2p7NIqGPzpQx0
-         LzrXTR8TeMUHsG12NIkewitWegKssb1oKSwz1RfaFsAH0ZHmpzR+Os3frr7DSw6syCnW
-         OyrQ==
+        bh=B0Y3O12b1qmvyGKzErKcY2Z6E2KbcdPjV20vlFJhMxU=;
+        b=BWg5U1gGfLRkwLfoAu8lH9SB/QqDRw4tOVtYw9KE2xrqLmWXWeT3EWucG3TlNuSZLh
+         feVg/qrMTHbxZ05E/dm9fYUvbCebg649vufzVyPN1/o2Bp6O9Lbe8/AVXvPmGDYvcfa3
+         DGG/Qr/QfYVB3sdoS0gBoSyr8zFkRcPwjpWI++OOemeeyu3OY+enYTEjHc+tUGK4nbMo
+         Q1XnPEaFlSqO64tHLERIuUqZh/0TRbw4tkZxURrRyPKP0Ib2PLAnNc1MTSpv+WytPNP3
+         nCfZM55QcZmCfXhdWa0tKZKg30VbCxlpp7Zt97K4EasEvGmn0zRfpY4rBAtfLrAzQ3r4
+         Jt6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cQ5mlxHCKg9OWIUg8k5qLquru5ZSr1owt2OS/5BIqsQ=;
-        b=qqDy1+O7v37+WVZ63o5ntZdcbLk4RYOJpLuu4WfMBM0BaFMawvOH9ldCTxyqHBKOrL
-         dcQ1EFZSyy+f5aLpJyIvQyXYKoun88fQnP+ULdbVRsTqrY3BheduI/5KEfzx/MJeiB/d
-         0Fnc6AMGqPehCJc+gZWMY29BETwIU88Z2s+IFXTKvo27QOL1f5jrodWE0dXa3zSE8E9V
-         yfqmhKirog9ZoeQFNy+RIaY68hN5p6JRAEkJzwlJkr1woXbLNflsN/GD3RZoCSylhkER
-         7m9e39xRPZ4rDrAvoX/N02oq0o1i7HrAH6gtYBGMNBwRx4UY0xkOdR15Ep0MI0cRLYP9
-         cEoQ==
-X-Gm-Message-State: APjAAAV85ZIdS970xE8DkI6iOAqNWJ5tNUCZWTeHQ6WUcHAdFQ3UUt2c
-        YdssoFr2JTHxRKI5+wcY9UruLeH8jGbgBE9ivUw=
-X-Google-Smtp-Source: APXvYqx8a+xivpqNL+2FXmKPvQZ/Rj69SbjVWCoN9zXkojc00njOQtIIluyRue3jP7vqQSI9PCgr7fNeUiq8QC69cuk=
-X-Received: by 2002:a05:620a:12c4:: with SMTP id e4mr8973515qkl.81.1560240597647;
- Tue, 11 Jun 2019 01:09:57 -0700 (PDT)
+        bh=B0Y3O12b1qmvyGKzErKcY2Z6E2KbcdPjV20vlFJhMxU=;
+        b=qQ4hiBw9XUa2/+5CjswuuU3Ul/m2mqcszJzMt/D8L0KwMEjRJByiWk0zkAyxIzWjht
+         a14aQvtnqQvVTtf7ToKsHq5AuzlI3EtVxquK69aVsPWhqRwFvnd5c/VWQyzuG3bbrcNG
+         ALgaE/xXGgUD1bodBGzkzMOm3nP59/D8549rFDNvh8SsmQOgXB6IeQgLBFVyqZEWqV2s
+         H+D3QZ1mOx64ga/DvMtJnB6WVti9rhIKTMosx/kX2xpaw1pDzNjYJpjxT9gP2Kp6aTwm
+         2XOD5U2UcTzKq2BesEuShS4I2KMUS+b0wh8WtqFodsv6kQP4IQ2aNeA4E3iyO7G5h/W0
+         M1fQ==
+X-Gm-Message-State: APjAAAWbCjCHDzOnZem3GMTw7VAbaPKakJdKjWuX+6bV8Zg4/izYjDQD
+        GjhoNeMyn7ltdmTZruFn2dNlwfIJBQROl+lH8772+A==
+X-Google-Smtp-Source: APXvYqyGRDEj+hGsvqMHlWAjCWLbR/yrf8USivwF+7Z+wkIgiAWU3j8sWSApndzgxwsYkARvyri0os2lim9tlenh+kI=
+X-Received: by 2002:a02:22c6:: with SMTP id o189mr35904824jao.35.1560242012205;
+ Tue, 11 Jun 2019 01:33:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
- <20190610161546.30569-1-i.maximets@samsung.com> <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
-In-Reply-To: <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Tue, 11 Jun 2019 10:09:45 +0200
-Message-ID: <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
-Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound to
- xdp socket
-To:     Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Ilya Maximets <i.maximets@samsung.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
+References: <000000000000e92d1805711f5552@google.com> <000000000000381684058ace28e5@google.com>
+ <20190611080431.GP21222@phenom.ffwll.local>
+In-Reply-To: <20190611080431.GP21222@phenom.ffwll.local>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 11 Jun 2019 10:33:21 +0200
+Message-ID: <CACT4Y+YMFKe1cq_XpP0o5fd+XLD_8qMVjqnVX5rx1UCWyCR5eg@mail.gmail.com>
+Subject: Re: WARNING in bpf_jit_free
+To:     syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        DRI <dri-devel@lists.freedesktop.org>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, maxime.ripard@bootlin.com,
+        netdev <netdev@vger.kernel.org>, paul.kocialkowski@bootlin.com,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, wens@csie.org,
+        xdp-newbies@vger.kernel.org, Yonghong Song <yhs@fb.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 22:49, Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
+On Tue, Jun 11, 2019 at 10:04 AM Daniel Vetter <daniel@ffwll.ch> wrote:
 >
-> On 10 Jun 2019, at 9:15, Ilya Maximets wrote:
+> On Sat, Jun 08, 2019 at 04:22:06AM -0700, syzbot wrote:
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
 >
-> > Device that bound to XDP socket will not have zero refcount until the
-> > userspace application will not close it. This leads to hang inside
-> > 'netdev_wait_allrefs()' if device unregistering requested:
+> Looking at the reproducer I don't see any calls to ioctl which could end
+> up anywhere in drm.
 > >
-> >   # ip link del p1
-> >   < hang on recvmsg on netlink socket >
+> > The bug was bisected to:
 > >
-> >   # ps -x | grep ip
-> >   5126  pts/0    D+   0:00 ip link del p1
+> > commit 0fff724a33917ac581b5825375d0b57affedee76
+> > Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > Date:   Fri Jan 18 14:51:13 2019 +0000
 > >
-> >   # journalctl -b
-> >
-> >   Jun 05 07:19:16 kernel:
-> >   unregister_netdevice: waiting for p1 to become free. Usage count = 1
-> >
-> >   Jun 05 07:19:27 kernel:
-> >   unregister_netdevice: waiting for p1 to become free. Usage count = 1
-> >   ...
-> >
-> > Fix that by implementing NETDEV_UNREGISTER event notification handler
-> > to properly clean up all the resources and unref device.
-> >
-> > This should also allow socket killing via ss(8) utility.
-> >
-> > Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-> > Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> > ---
-> >
-> > Version 3:
-> >
-> >     * Declaration lines ordered from longest to shortest.
-> >     * Checking of event type moved to the top to avoid unnecessary
-> >       locking.
-> >
-> > Version 2:
-> >
-> >     * Completely re-implemented using netdev event handler.
-> >
-> >  net/xdp/xsk.c | 65
-> > ++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 64 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> > index a14e8864e4fa..273a419a8c4d 100644
-> > --- a/net/xdp/xsk.c
-> > +++ b/net/xdp/xsk.c
-> > @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct
-> > socket *sock,
-> >                              size, vma->vm_page_prot);
-> >  }
-> >
-> > +static int xsk_notifier(struct notifier_block *this,
-> > +                     unsigned long msg, void *ptr)
-> > +{
-> > +     struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> > +     struct net *net = dev_net(dev);
-> > +     int i, unregister_count = 0;
-> > +     struct sock *sk;
-> > +
-> > +     switch (msg) {
-> > +     case NETDEV_UNREGISTER:
-> > +             mutex_lock(&net->xdp.lock);
+> >     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
 >
-> The call is under the rtnl lock, and we're not modifying
-> the list, so this mutex shouldn't be needed.
+> And most definitely not in drm/sun4i. You can only hit this if you have
+> sun4i and run on arm, which per your config isn't the case.
 >
+> tldr; smells like bisect gone wrong.
+> -Daniel
 
-The list can, however, be modified outside the rtnl lock (e.g. at
-socket creation). AFAIK the hlist cannot be traversed lock-less,
-right?
+From the bisection log it looks like the bug is too hard to trigger
+for reliable bisection. So it probably classified one bad commit as
+good. But it should got quite close to the right one.
 
->
-> > +             sk_for_each(sk, &net->xdp.list) {
-> > +                     struct xdp_sock *xs = xdp_sk(sk);
-> > +
-> > +                     mutex_lock(&xs->mutex);
-> > +                     if (dev != xs->dev) {
-> > +                             mutex_unlock(&xs->mutex);
-> > +                             continue;
-> > +                     }
-> > +
-> > +                     sk->sk_err = ENETDOWN;
-> > +                     if (!sock_flag(sk, SOCK_DEAD))
-> > +                             sk->sk_error_report(sk);
-> > +
-> > +                     /* Wait for driver to stop using the xdp socket. */
-> > +                     xdp_del_sk_umem(xs->umem, xs);
-> > +                     xs->dev = NULL;
-> > +                     synchronize_net();
-> Isn't this by handled by the unregister_count case below?
->
-
-To clarify, setting dev to NULL and xdp_del_sk_umem() + sync makes
-sure that a driver doesn't touch the Tx and Rx rings. Nothing can be
-assumed about completion + fill ring (umem), until zero-copy has been
-disabled via ndo_bpf.
-
-> > +
-> > +                     /* Clear device references in umem. */
-> > +                     xdp_put_umem(xs->umem);
-> > +                     xs->umem = NULL;
->
-> This makes me uneasy.  We need to unregister the umem from
-> the device (xdp_umem_clear_dev()) but this can remove the umem
-> pages out from underneath the xsk.
->
-
-Yes, this is scary. The socket is alive, and userland typically has
-the fill/completion rings mmapped. Then the umem refcount is decreased
-and can potentially free the umem (fill rings etc.), as Jonathan says,
-underneath the xsk. Also, setting the xs umem/dev to zero, while the
-socket is alive, would allow a user to re-setup the socket, which we
-don't want to allow.
-
-> Perhaps what's needed here is the equivalent of an unbind()
-> call that just detaches the umem/sk from the device, but does
-> not otherwise tear them down.
->
-
-Yeah, I agree. A detached/zombie state is needed during the socket lifetime.
-
->
-> > +                     mutex_unlock(&xs->mutex);
-> > +                     unregister_count++;
-> > +             }
-> > +             mutex_unlock(&net->xdp.lock);
-> > +
-> > +             if (unregister_count) {
-> > +                     /* Wait for umem clearing completion. */
-> > +                     synchronize_net();
-> > +                     for (i = 0; i < unregister_count; i++)
-> > +                             dev_put(dev);
-> > +             }
-> > +
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_DONE;
-> > +}
-> > +
-> >  static struct proto xsk_proto = {
-> >       .name =         "XDP",
-> >       .owner =        THIS_MODULE,
-> > @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
-> >       if (!sock_flag(sk, SOCK_DEAD))
-> >               return;
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
 > >
-> > -     xdp_put_umem(xs->umem);
-> > +     if (xs->umem)
-> > +             xdp_put_umem(xs->umem);
-> Not needed - xdp_put_umem() already does a null check.
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+> > Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for
+> > packed YUV422 check")
+> >
+> > WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: events bpf_prog_free_deferred
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >  panic+0x2cb/0x744 kernel/panic.c:219
+> >  __warn.cold+0x20/0x4d kernel/panic.c:576
+> >  report_bug+0x263/0x2b0 lib/bug.c:186
+> >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > RIP: 0010:bpf_jit_free+0x157/0x1b0
+> > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
+> > 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe ff
+> > ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
+> > RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
+> > RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
+> > RDX: 00000000> >
+>
 > --
-> Jonathan
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 >
->
-> >
-> >       sk_refcnt_debug_dec(sk);
-> >  }
-> > @@ -784,6 +836,10 @@ static const struct net_proto_family
-> > xsk_family_ops = {
-> >       .owner  = THIS_MODULE,
-> >  };
-> >
-> > +static struct notifier_block xsk_netdev_notifier = {
-> > +     .notifier_call  = xsk_notifier,
-> > +};
-> > +
-> >  static int __net_init xsk_net_init(struct net *net)
-> >  {
-> >       mutex_init(&net->xdp.lock);
-> > @@ -816,8 +872,15 @@ static int __init xsk_init(void)
-> >       err = register_pernet_subsys(&xsk_net_ops);
-> >       if (err)
-> >               goto out_sk;
-> > +
-> > +     err = register_netdevice_notifier(&xsk_netdev_notifier);
-> > +     if (err)
-> > +             goto out_pernet;
-> > +
-> >       return 0;
-> >
-> > +out_pernet:
-> > +     unregister_pernet_subsys(&xsk_net_ops);
-> >  out_sk:
-> >       sock_unregister(PF_XDP);
-> >  out_proto:
-> > --
-> > 2.17.1
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190611080431.GP21222%40phenom.ffwll.local.
+> For more options, visit https://groups.google.com/d/optout.00000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
+> > RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
+> > R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
+> > R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
+> >  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
+> >  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+> >  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+> >  kthread+0x354/0x420 kernel/kthread.c:255
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
