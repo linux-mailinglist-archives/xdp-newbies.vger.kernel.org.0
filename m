@@ -2,324 +2,208 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DC1E3C61F
-	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 10:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB39A3C687
+	for <lists+xdp-newbies@lfdr.de>; Tue, 11 Jun 2019 10:51:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391436AbfFKIme (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 11 Jun 2019 04:42:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57576 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391359AbfFKIme (ORCPT
+        id S2404278AbfFKIv3 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 11 Jun 2019 04:51:29 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36702 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403860AbfFKIv2 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 11 Jun 2019 04:42:34 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190611084232euoutp024747a38f13fd472cf8949bc82812b052~nGFWrTZPv1478114781euoutp027
-        for <xdp-newbies@vger.kernel.org>; Tue, 11 Jun 2019 08:42:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190611084232euoutp024747a38f13fd472cf8949bc82812b052~nGFWrTZPv1478114781euoutp027
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560242552;
-        bh=zrXpkmfwxTwSrQsAQj3bDtr4OFMDsuSR1EhAI4V5gOo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FNYsJ2sDxJtsjDnopRbT5M9D0La/HNwsJ0w+nVcs3mk/sUymlK1Oi2Wnuan7VAVMV
-         +w5dLf1ehgJ9XsFPlrCQ7XjDp7CAk6qTnpOHJvcUH8QXDXusQEc3A8gzxkDDz7vduu
-         DMc9NGuJdd+TFXN2Z6rv1x+evgAAyg2sbHZ0C3z4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190611084231eucas1p19f40a5345f3bba9117d0081b65d4eec4~nGFV2XG6A2792027920eucas1p1C;
-        Tue, 11 Jun 2019 08:42:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id F9.8A.04298.6796FFC5; Tue, 11
-        Jun 2019 09:42:30 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190611084230eucas1p2a2370397051346a87c8b1fc3a83cedea~nGFU-NtUH2722727227eucas1p2n;
-        Tue, 11 Jun 2019 08:42:30 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190611084230eusmtrp22ed78b9db7cd5aa7f35dbea536c9815c~nGFUvjCjw2927729277eusmtrp2U;
-        Tue, 11 Jun 2019 08:42:30 +0000 (GMT)
-X-AuditID: cbfec7f2-3615e9c0000010ca-83-5cff6976a939
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F2.CA.04146.5796FFC5; Tue, 11
-        Jun 2019 09:42:29 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190611084229eusmtip13f54f1e3e1cb19745494f9dfd6d27055~nGFUDnkDK2720627206eusmtip1p;
-        Tue, 11 Jun 2019 08:42:29 +0000 (GMT)
-Subject: Re: [PATCH bpf v3] xdp: fix hang while unregistering device bound
- to xdp socket
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-From:   Ilya Maximets <i.maximets@samsung.com>
-Message-ID: <e2313edb-6617-cd52-1a40-4712c9f20127@samsung.com>
-Date:   Tue, 11 Jun 2019 11:42:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Tue, 11 Jun 2019 04:51:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k21so15516040edq.3
+        for <xdp-newbies@vger.kernel.org>; Tue, 11 Jun 2019 01:51:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=omJ/gQVCRHiP1mzn5vFGNqzD3Ej8FBhph57vNj7+2+U=;
+        b=kUJTjpQuyMbXk93njpHM3k6QoX8RPZogTfl+8U8433P85C0qtQkomi2N3Ta3NwYpK8
+         d3jnprLPROJiR7CcBOpw1oEakKM+siBt3nrXieW7Qy9wvruNhWOrjOC3JYbnqtOFXcUK
+         s0BiQJn8siLUOn65av3Tjt06i6k0QCRN4LLPU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=omJ/gQVCRHiP1mzn5vFGNqzD3Ej8FBhph57vNj7+2+U=;
+        b=szemfPmxn79po4gK+ahS9AbcKfuAwTta5MhV9uc0Q/YDbSqB4bF57mHyLruKuLgX90
+         uCEFhCy6z7ABO3kEiE5nit7LARYKWTdNbeqAUtX9kMOU0t4DHEpQeQBc878XXoUSxs8m
+         YvNMG/Sy9bMqGXPRakmz4QVos8SkOM125mkbMwVJmo4WVqIJF0ZqyYO4a3s6FLcfyt6q
+         VycCwAOZyhDZqUIczCeaYukdcdLSfLa0HBbXxK6MQkOUrb/Cl14QFUA7lGSoipqML1nl
+         XkdZ1iYFzPuay4LpOMoAK6BKUtk9QR27TeC+VTDQWXP9ElpQjundsluUeMt1urGbwq4a
+         FtNA==
+X-Gm-Message-State: APjAAAV50EfXsoX/lPhqfNSm/7oElJSb0zWIDDF4ee4ZaV8zRUGb+QZb
+        Hdoof+lcBFHfO0X39/lrIvPwWg==
+X-Google-Smtp-Source: APXvYqw3/aAUmVHCu0mGixW6kqJWcVN5+tdHtfvax9kpwDGm5hXz6VB7nLZ5jD0lSOSvFoX71EN+7w==
+X-Received: by 2002:a17:906:9410:: with SMTP id q16mr28289475ejx.90.1560243086366;
+        Tue, 11 Jun 2019 01:51:26 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id q11sm3583175edd.51.2019.06.11.01.51.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 01:51:25 -0700 (PDT)
+Date:   Tue, 11 Jun 2019 10:51:23 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        DRI <dri-devel@lists.freedesktop.org>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, maxime.ripard@bootlin.com,
+        netdev <netdev@vger.kernel.org>, paul.kocialkowski@bootlin.com,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, wens@csie.org,
+        xdp-newbies@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: WARNING in bpf_jit_free
+Message-ID: <20190611085123.GU21222@phenom.ffwll.local>
+Mail-Followup-To: Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        DRI <dri-devel@lists.freedesktop.org>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, maxime.ripard@bootlin.com,
+        netdev <netdev@vger.kernel.org>, paul.kocialkowski@bootlin.com,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>, wens@csie.org,
+        xdp-newbies@vger.kernel.org, Yonghong Song <yhs@fb.com>
+References: <000000000000e92d1805711f5552@google.com>
+ <000000000000381684058ace28e5@google.com>
+ <20190611080431.GP21222@phenom.ffwll.local>
+ <CACT4Y+YMFKe1cq_XpP0o5fd+XLD_8qMVjqnVX5rx1UCWyCR5eg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djP87plmf9jDO6ctrI4P+0Um8Wftg2M
-        Fp+PHGezmHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
-        nbPusnss3vOSyWN690Nmj74tqxg9Pm+SC2CL4rJJSc3JLEst0rdL4Mr4tC2nYLdFxet3i5ga
-        GLs1uhg5OSQETCR2vtrB0sXIxSEksIJR4v/Mh6wQzhdGiXsLpzJBOJ8ZJabN/swO09K3bD8b
-        RGI5o0T7tOPsEM5HRokFs+4zglQJC0RJbD58nhnEFhHIlLjd8J0ZpIhZ4CyTxPuZHUwgCTYB
-        HYlTq4+ANfAK2Els/nECaDkHB4uAqsTdSUEgYVGBCIkvOzdBlQhKnJz5hAXE5hQIlFj//gjY
-        RcwC4hJNX1ayQtjyEs1bZzNDXHqJXeLlj0II20Xi08xVUB8IS7w6vgXKlpH4v3M+E4RdL3G/
-        5SUjyJ0SAh2MEtMP/YNK2EtseX2OHeQ2ZgFNifW79EFMCQFHiU1v1CBMPokbbwUhLuCTmLRt
-        OjNEmFeio00IYoaKxO+Dy6EOk5K4+e4z+wRGpVlI/pqF5JdZSH6ZhbB2ASPLKkbx1NLi3PTU
-        YsO81HK94sTc4tK8dL3k/NxNjMB0dfrf8U87GL9eSjrEKMDBqMTDGxH9L0aINbGsuDL3EKME
-        B7OSCG/Xd6AQb0piZVVqUX58UWlOavEhRmkOFiVx3mqGB9FCAumJJanZqakFqUUwWSYOTqkG
-        xgPuRwoWndi38tiyjy9YDn3vubym3u4aD5dO5Pqty90SHi6T+Wb3YMrTorUzZ29fVLeDT7Tj
-        X5rm7xhfz/zzXOob9198M8czwsn8XZ58b9+P3/88j8WfE3y0KOLk1YMd96YbbWdPvRnncqvS
-        Jd48fumceWdT/f6dyUtaX/pYc6NqnOPzKdKXxPmUWIozEg21mIuKEwFbq/mFUwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsVy+t/xu7qlmf9jDHpn2licn3aKzeJP2wZG
-        i89HjrNZzDnfwmJxpf0nu8WxFy1sFrvWzWS2uLxrDpvFikMngGILxCy29+9jdOD22LLyJpPH
-        zll32T0W73nJ5DG9+yGzR9+WVYwenzfJBbBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjq
-        GRqbx1oZmSrp29mkpOZklqUW6dsl6GV82pZTsNui4vW7RUwNjN0aXYycHBICJhJ9y/azdTFy
-        cQgJLGWU2Lu0kxkiISXx49cFVghbWOLPtS6ooveMErN6P7J0MXJwCAtESVxv5gGpERHIlNi4
-        8TdYL7PAWSaJoxONIeo7mSRm7J3OBJJgE9CROLX6CCOIzStgJ7H5xwlWkDksAqoSdycFgYRF
-        BSIkZu9qYIEoEZQ4OfMJmM0pECix/v0Rdoj56hJ/5l2C2iUu0fRlJSuELS/RvHU28wRGoVlI
-        2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiN027Gfm3cwXtoYfIhR
-        gINRiYc3IvpfjBBrYllxZe4hRgkOZiUR3q7vQCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3O
-        ByaPvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjCKvlOVca6aK
-        bvjTWByYmBN3S/3T+7YJH0K23Fv12fSGxgO/q69/pjWErisoXKyhPOVfrNjGYoVcLp+9f37J
-        zvwe8TJ3c6XS4sN3V96353w1I/x3uHM1gzPTsa+NTpP9j0y+ISQkLM+3voz52cdqzesXmKM2
-        r39teC+tM8Df/tbvvBf/vblXhCuxFGckGmoxFxUnAgB8x+2T5gIAAA==
-X-CMS-MailID: 20190611084230eucas1p2a2370397051346a87c8b1fc3a83cedea
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df
-References: <CGME20190610161551eucas1p1f370190ee6d0d5e921de1a21f3da72df@eucas1p1.samsung.com>
-        <20190610161546.30569-1-i.maximets@samsung.com>
-        <06C99519-64B9-4A91-96B9-0F99731E3857@gmail.com>
-        <CAJ+HfNgdiutAwpnc3LDDEGXs2SFCu3UtMnao79sFNyZZpQ2ETw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YMFKe1cq_XpP0o5fd+XLD_8qMVjqnVX5rx1UCWyCR5eg@mail.gmail.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 11.06.2019 11:09, Björn Töpel wrote:
-> On Mon, 10 Jun 2019 at 22:49, Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
->>
->> On 10 Jun 2019, at 9:15, Ilya Maximets wrote:
->>
->>> Device that bound to XDP socket will not have zero refcount until the
->>> userspace application will not close it. This leads to hang inside
->>> 'netdev_wait_allrefs()' if device unregistering requested:
->>>
->>>   # ip link del p1
->>>   < hang on recvmsg on netlink socket >
->>>
->>>   # ps -x | grep ip
->>>   5126  pts/0    D+   0:00 ip link del p1
->>>
->>>   # journalctl -b
->>>
->>>   Jun 05 07:19:16 kernel:
->>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->>>
->>>   Jun 05 07:19:27 kernel:
->>>   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->>>   ...
->>>
->>> Fix that by implementing NETDEV_UNREGISTER event notification handler
->>> to properly clean up all the resources and unref device.
->>>
->>> This should also allow socket killing via ss(8) utility.
->>>
->>> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
->>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
->>> ---
->>>
->>> Version 3:
->>>
->>>     * Declaration lines ordered from longest to shortest.
->>>     * Checking of event type moved to the top to avoid unnecessary
->>>       locking.
->>>
->>> Version 2:
->>>
->>>     * Completely re-implemented using netdev event handler.
->>>
->>>  net/xdp/xsk.c | 65
->>> ++++++++++++++++++++++++++++++++++++++++++++++++++-
->>>  1 file changed, 64 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
->>> index a14e8864e4fa..273a419a8c4d 100644
->>> --- a/net/xdp/xsk.c
->>> +++ b/net/xdp/xsk.c
->>> @@ -693,6 +693,57 @@ static int xsk_mmap(struct file *file, struct
->>> socket *sock,
->>>                              size, vma->vm_page_prot);
->>>  }
->>>
->>> +static int xsk_notifier(struct notifier_block *this,
->>> +                     unsigned long msg, void *ptr)
->>> +{
->>> +     struct net_device *dev = netdev_notifier_info_to_dev(ptr);
->>> +     struct net *net = dev_net(dev);
->>> +     int i, unregister_count = 0;
->>> +     struct sock *sk;
->>> +
->>> +     switch (msg) {
->>> +     case NETDEV_UNREGISTER:
->>> +             mutex_lock(&net->xdp.lock);
->>
->> The call is under the rtnl lock, and we're not modifying
->> the list, so this mutex shouldn't be needed.
->>
+On Tue, Jun 11, 2019 at 10:33:21AM +0200, Dmitry Vyukov wrote:
+> On Tue, Jun 11, 2019 at 10:04 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Sat, Jun 08, 2019 at 04:22:06AM -0700, syzbot wrote:
+> > > syzbot has found a reproducer for the following crash on:
+> > >
+> > > HEAD commit:    79c3ba32 Merge tag 'drm-fixes-2019-06-07-1' of git://anong..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1201b971a00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=60564cb52ab29d5b
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=2ff1e7cb738fd3c41113
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a3bf51a00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120d19f2a00000
+> >
+> > Looking at the reproducer I don't see any calls to ioctl which could end
+> > up anywhere in drm.
+> > >
+> > > The bug was bisected to:
+> > >
+> > > commit 0fff724a33917ac581b5825375d0b57affedee76
+> > > Author: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > Date:   Fri Jan 18 14:51:13 2019 +0000
+> > >
+> > >     drm/sun4i: backend: Use explicit fourcc helpers for packed YUV422 check
+> >
+> > And most definitely not in drm/sun4i. You can only hit this if you have
+> > sun4i and run on arm, which per your config isn't the case.
+> >
+> > tldr; smells like bisect gone wrong.
+> > -Daniel
 > 
-> The list can, however, be modified outside the rtnl lock (e.g. at
-> socket creation). AFAIK the hlist cannot be traversed lock-less,
-> right?
+> From the bisection log it looks like the bug is too hard to trigger
+> for reliable bisection. So it probably classified one bad commit as
+> good. But it should got quite close to the right one.
 
-We could use 'rcu_read_lock' instead and iterate with 'sk_for_each_rcu',
-but we'll not be able to synchronize inside.
+Well statistically it'll get close, since there's a fair chance that it's
+one of the later bisect results that got mischaracterized.
+
+But you can be equally unlucky, and if it's one of the earliers, then it
+can easily be a few thousand commits of. Looking at the log it's mostly
+bad, with a few good sprinkled in, which could just be reproduction
+failures. So might very well be that the very first "good" result is
+wrong. And that very first "good" decision cuts away a big pile of bpf
+related commits. The next "good" decision then only cuts away a pile of
+drm commits, but at that point you're already off the rails most likely.
+
+I'd say re-test on f90d64483ebd394958841f67f8794ab203b319a7 a few times,
+I'm willing to bet that one is actually bad.
+
+Cheers, Daniel
 
 > 
->>
->>> +             sk_for_each(sk, &net->xdp.list) {
->>> +                     struct xdp_sock *xs = xdp_sk(sk);
->>> +
->>> +                     mutex_lock(&xs->mutex);
->>> +                     if (dev != xs->dev) {
->>> +                             mutex_unlock(&xs->mutex);
->>> +                             continue;
->>> +                     }
->>> +
->>> +                     sk->sk_err = ENETDOWN;
->>> +                     if (!sock_flag(sk, SOCK_DEAD))
->>> +                             sk->sk_error_report(sk);
->>> +
->>> +                     /* Wait for driver to stop using the xdp socket. */
->>> +                     xdp_del_sk_umem(xs->umem, xs);
->>> +                     xs->dev = NULL;
->>> +                     synchronize_net();
->> Isn't this by handled by the unregister_count case below?
->>
-> 
-> To clarify, setting dev to NULL and xdp_del_sk_umem() + sync makes
-> sure that a driver doesn't touch the Tx and Rx rings. Nothing can be
-> assumed about completion + fill ring (umem), until zero-copy has been
-> disabled via ndo_bpf.
-> 
->>> +
->>> +                     /* Clear device references in umem. */
->>> +                     xdp_put_umem(xs->umem);
->>> +                     xs->umem = NULL;
->>
->> This makes me uneasy.  We need to unregister the umem from
->> the device (xdp_umem_clear_dev()) but this can remove the umem
->> pages out from underneath the xsk.
->>
-> 
-> Yes, this is scary. The socket is alive, and userland typically has
-> the fill/completion rings mmapped. Then the umem refcount is decreased
-> and can potentially free the umem (fill rings etc.), as Jonathan says,
-> underneath the xsk. Also, setting the xs umem/dev to zero, while the
-> socket is alive, would allow a user to re-setup the socket, which we
-> don't want to allow.
-> 
->> Perhaps what's needed here is the equivalent of an unbind()
->> call that just detaches the umem/sk from the device, but does
->> not otherwise tear them down.
->>
-> 
-> Yeah, I agree. A detached/zombie state is needed during the socket lifetime.
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1467550f200000
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1667550f200000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1267550f200000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+2ff1e7cb738fd3c41113@syzkaller.appspotmail.com
+> > > Fixes: 0fff724a3391 ("drm/sun4i: backend: Use explicit fourcc helpers for
+> > > packed YUV422 check")
+> > >
+> > > WARNING: CPU: 0 PID: 8951 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+> > > Kernel panic - not syncing: panic_on_warn set ...
+> > > CPU: 0 PID: 8951 Comm: kworker/0:0 Not tainted 5.2.0-rc3+ #23
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Workqueue: events bpf_prog_free_deferred
+> > > Call Trace:
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> > >  panic+0x2cb/0x744 kernel/panic.c:219
+> > >  __warn.cold+0x20/0x4d kernel/panic.c:576
+> > >  report_bug+0x263/0x2b0 lib/bug.c:186
+> > >  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> > >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> > >  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> > >  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> > >  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > > RIP: 0010:bpf_jit_free+0x157/0x1b0
+> > > Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00
+> > > 00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 f9 b5 f4 ff <0f> 0b e9 f9 fe ff
+> > > ff e8 bd 53 2d 00 e9 d9 fe ff ff 48 89 7d e0 e8
+> > > RSP: 0018:ffff88808886fcb0 EFLAGS: 00010293
+> > > RAX: ffff88808cb6c480 RBX: ffff88809051d280 RCX: ffffffff817ae68d
+> > > RDX: 00000000> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20190611080431.GP21222%40phenom.ffwll.local.
+> > For more options, visit https://groups.google.com/d/optout.00000000 RSI: ffffffff817bf0f7 RDI: ffff88809051d2f0
+> > > RBP: ffff88808886fcd0 R08: 1ffffffff14ccaa8 R09: fffffbfff14ccaa9
+> > > R10: fffffbfff14ccaa8 R11: ffffffff8a665547 R12: ffffc90001925000
+> > > R13: ffff88809051d2e8 R14: ffff8880a0e43900 R15: ffff8880ae834840
+> > >  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1984
+> > >  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+> > >  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+> > >  kthread+0x354/0x420 kernel/kthread.c:255
+> > >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > > Kernel Offset: disabled
+> > > Rebooting in 86400 seconds..
 
-
-I could try to rip the 'xdp_umem_release()' apart so the 'xdp_umem_clear_dev()'
-could be called separately. This will allow to not tear down the 'umem'.
-However, it seems that it'll not be easy to synchronize all parts.
-Any suggestions are welcome.
-
-Also, there is no way to not clear the 'dev' as we have to put the reference.
-Maybe we could add the additional check to 'xsk_bind()' for current device
-state (dev->reg_state == NETREG_REGISTERED). This will allow us to avoid
-re-setup of the socket.
-
-> 
->>
->>> +                     mutex_unlock(&xs->mutex);
->>> +                     unregister_count++;
->>> +             }
->>> +             mutex_unlock(&net->xdp.lock);
->>> +
->>> +             if (unregister_count) {
->>> +                     /* Wait for umem clearing completion. */
->>> +                     synchronize_net();
->>> +                     for (i = 0; i < unregister_count; i++)
->>> +                             dev_put(dev);
->>> +             }
->>> +
->>> +             break;
->>> +     }
->>> +
->>> +     return NOTIFY_DONE;
->>> +}
->>> +
->>>  static struct proto xsk_proto = {
->>>       .name =         "XDP",
->>>       .owner =        THIS_MODULE,
->>> @@ -727,7 +778,8 @@ static void xsk_destruct(struct sock *sk)
->>>       if (!sock_flag(sk, SOCK_DEAD))
->>>               return;
->>>
->>> -     xdp_put_umem(xs->umem);
->>> +     if (xs->umem)
->>> +             xdp_put_umem(xs->umem);
->> Not needed - xdp_put_umem() already does a null check.
-
-Indeed. Thanks.
-
->> --
->> Jonathan
->>
->>
->>>
->>>       sk_refcnt_debug_dec(sk);
->>>  }
->>> @@ -784,6 +836,10 @@ static const struct net_proto_family
->>> xsk_family_ops = {
->>>       .owner  = THIS_MODULE,
->>>  };
->>>
->>> +static struct notifier_block xsk_netdev_notifier = {
->>> +     .notifier_call  = xsk_notifier,
->>> +};
->>> +
->>>  static int __net_init xsk_net_init(struct net *net)
->>>  {
->>>       mutex_init(&net->xdp.lock);
->>> @@ -816,8 +872,15 @@ static int __init xsk_init(void)
->>>       err = register_pernet_subsys(&xsk_net_ops);
->>>       if (err)
->>>               goto out_sk;
->>> +
->>> +     err = register_netdevice_notifier(&xsk_netdev_notifier);
->>> +     if (err)
->>> +             goto out_pernet;
->>> +
->>>       return 0;
->>>
->>> +out_pernet:
->>> +     unregister_pernet_subsys(&xsk_net_ops);
->>>  out_sk:
->>>       sock_unregister(PF_XDP);
->>>  out_proto:
->>> --
->>> 2.17.1
-> 
-> 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
