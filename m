@@ -2,79 +2,56 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3275042921
-	for <lists+xdp-newbies@lfdr.de>; Wed, 12 Jun 2019 16:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06C38429E0
+	for <lists+xdp-newbies@lfdr.de>; Wed, 12 Jun 2019 16:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437471AbfFLO3Q (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 12 Jun 2019 10:29:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42017 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437144AbfFLO3Q (ORCPT
+        id S1732540AbfFLOtA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 12 Jun 2019 10:49:00 -0400
+Received: from www62.your-server.de ([213.133.104.62]:45262 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbfFLOs7 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:29:16 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so9759675pff.9;
-        Wed, 12 Jun 2019 07:29:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=i2lHhyHM9Am5ZKv4ZERVjIYftF/2/pl8FBg2eVYcKHk=;
-        b=JLmcSe+wAzzpnKkgwvo/T1DJShHK+8zUW4xmw1zWJyEFwLFoR2TFoW6jDWzWVft820
-         iHjVOXhjGBw7OEiJyAN66RZdasUZcnvtNYqA+30QJDCD17RJEU+VTAmcbnbFDvKaT8cY
-         HpPXZJn9Emvrt9lGfQfpeG0f3Wr/e8u0blJVePSPGWQBbuX5BbV+xrl1tvOpuelSJBo4
-         wzXHtk0BZ60Bkf0cDdY2oHZ0ZdLf0F6A7bO7lNdYHwU6rraAtlN8qqe9M+fRmu6t5XmK
-         NkqpoSB7t5Ld9ElLjyfDnbMm48It11x2lQpFhvnccQIgrBUxaHc8SM8cfjCwihiUptik
-         Na9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=i2lHhyHM9Am5ZKv4ZERVjIYftF/2/pl8FBg2eVYcKHk=;
-        b=B5GITcWw77BwKDPPC287cexNQqlU60Lw7ySRQ4NS4OFL+IEGBXVc59OPNQcwgFJKy+
-         H+X9dIPIo57ClSefgs5xZWgdtuZnpb8hsmAAXBvZ2gtWVhgnCapnDsteX28G/Af8LmBb
-         +/sRmrq+HdCERyR1Or8NPjiMS6qrhOAIcKTBtPgi1zlHw25TGA4iH2lhiu8eCW+GbtnE
-         URvADwYSKYUZbz37woyLU+8HVsTYvoGBJUb1t9R8E6EcW+O7qGKnVYFjGOP2euBxtviV
-         uZFbXR7Tu6pPVBZRnFQy3zfwTxqSvbtd+nzt4KXYErnJRq3wIP+a+NJY0i1OZ+5Gz0hp
-         Omnw==
-X-Gm-Message-State: APjAAAVtdXmp7P/NXySI/Z44J74wzk7uDUdXX+Nb7c1/l4EwSZSHGldE
-        i0PtcbRBUauSqMETqPviCZk=
-X-Google-Smtp-Source: APXvYqzFwERzMYTKTt+QXS/AxrGBHTzZgwv6lP7jSb9Fw8afo+Zi0xwYKJxnHkZ21IaK/DjcWBIeCQ==
-X-Received: by 2002:a17:90a:2e87:: with SMTP id r7mr33021706pjd.121.1560349755472;
-        Wed, 12 Jun 2019 07:29:15 -0700 (PDT)
-Received: from [172.26.107.103] ([2620:10d:c090:180::1:1d4d])
-        by smtp.gmail.com with ESMTPSA id j14sm19519914pfe.10.2019.06.12.07.29.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2019 07:29:14 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, davem@davemloft.net,
-        jakub.kicinski@netronome.com, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH bpf-next] bpf: Fix build error without CONFIG_INET
-Date:   Wed, 12 Jun 2019 07:29:13 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <CFE96009-1D3A-4D99-8A96-86C281772396@gmail.com>
-In-Reply-To: <20190612091847.23708-1-yuehaibing@huawei.com>
-References: <20190612091847.23708-1-yuehaibing@huawei.com>
+        Wed, 12 Jun 2019 10:48:59 -0400
+Received: from [88.198.220.132] (helo=sslproxy03.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hb4YT-0007ga-Sh; Wed, 12 Jun 2019 16:48:49 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hb4YT-0001m9-Hf; Wed, 12 Jun 2019 16:48:49 +0200
+Subject: Re: [PATCH bpf] xdp: check device pointer before clearing
+To:     Ilya Maximets <i.maximets@samsung.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>
+References: <CGME20190607172737eucas1p28508d5e198907695bc77f9fd18ce233e@eucas1p2.samsung.com>
+ <20190607172732.4710-1-i.maximets@samsung.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <d7957438-2f69-44de-c999-1e1568ef6d74@iogearbox.net>
+Date:   Wed, 12 Jun 2019 16:48:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190607172732.4710-1-i.maximets@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25478/Wed Jun 12 10:14:54 2019)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 12 Jun 2019, at 2:18, YueHaibing wrote:
+On 06/07/2019 07:27 PM, Ilya Maximets wrote:
+> We should not call 'ndo_bpf()' or 'dev_put()' with NULL argument.
+> 
+> Fixes: c9b47cc1fabc ("xsk: fix bug when trying to use both copy and zero-copy on one queue id")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 
-> If CONFIG_INET is not set, building fails:
->
-> kernel/bpf/verifier.o: In function `check_mem_access':
-> verifier.c: undefined reference to `bpf_xdp_sock_is_valid_access'
-> kernel/bpf/verifier.o: In function `convert_ctx_accesses':
-> verifier.c: undefined reference to `bpf_xdp_sock_convert_ctx_access'
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: fada7fdc83c0 ("bpf: Allow bpf_map_lookup_elem() on an xskmap")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Applied, thanks!
