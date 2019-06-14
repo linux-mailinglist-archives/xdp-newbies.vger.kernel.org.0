@@ -2,51 +2,43 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B63945761
-	for <lists+xdp-newbies@lfdr.de>; Fri, 14 Jun 2019 10:20:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A3D45B16
+	for <lists+xdp-newbies@lfdr.de>; Fri, 14 Jun 2019 13:05:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFNIUk (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 14 Jun 2019 04:20:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43336 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfFNIUh (ORCPT
+        id S1727209AbfFNLE4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 14 Jun 2019 07:04:56 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39000 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfFNLE4 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:20:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so1107529pgv.10;
-        Fri, 14 Jun 2019 01:20:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8qHhibZPtQ7Gu7/olGLfM6ZKwz0g2uJPETyalb8BGDY=;
-        b=PvPXwxHtSi2X+SHN7HOb2h9oiAi3X+dtgGr4LGlL6w/ZoiR3fFc/TTcMUtqmmVqTxv
-         M2zHUY9hyPjgtqr16Vn0Mxk/Gx9B3sGiN7NHb8osulGFXGpTm+1DYCVx4u9inWl2/gl0
-         DzLE4Atzam/qTVBfWos7rj3rqPolGM8z62qMEpTxM/uOeqsQ6NG1I+nZ0NjJZF/yqcwf
-         VghDd/4l1Rq3dVXz6oYuaaOclIP/v1FFJ4kDoUbXxGv+Lm/GWRJCH6lk+08WTsjad5kA
-         WizivxzWG1UDdIxJGMyVAea568VWP8Rf9fveM5YBSHjKziqGIwMAZ2naol6FtGGgXLa5
-         k/OA==
+        Fri, 14 Jun 2019 07:04:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m10so2923281edv.6
+        for <xdp-newbies@vger.kernel.org>; Fri, 14 Jun 2019 04:04:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8qHhibZPtQ7Gu7/olGLfM6ZKwz0g2uJPETyalb8BGDY=;
-        b=SdYcvIo4ByupVkQdMvurz9a7+4EZLc5rFu3K5daN5boIuMf6y4nvcs0Mdcim/qCawI
-         fOvrfjXWa+iEy+K93kVbnZH/8qcexL2K9F+LCftL25GJMAVGcFy6kB0b/prby1k7OiMB
-         +GV2Zup0RG1lg8nkpavUdVUk5IrwXB5/ycjZe/Fhp3T3Tc2QBy8YYJQ4mur2o1Ea0kVw
-         Oa5OdVF8DE4H3KrZjqHv26LAi0a4KlV2jlDw+fuxxYbi+ANq+BGenpyDqeTnR8XJBU3N
-         NS9B/0wLvsQdFX8L91EpVRfKobD0xwapKA7Yvw3KOdjLKw6+BIcSu6WwfLMaxtg3Xb9k
-         3bog==
-X-Gm-Message-State: APjAAAVBtvUsrHeqvLMAVXmA9pnhmKsg6F9DRL0pE0Tu68yS3UZfHJ0+
-        AYChnYunU+knWBNSNFZApSo=
-X-Google-Smtp-Source: APXvYqxa5lSv6MbyuN3w6u8/9qOHc1kXb15XNTlcw6E4F4L/Q3nHEH5n/44xhn17QFtDJ2YPCg5ZOw==
-X-Received: by 2002:a17:90a:8d86:: with SMTP id d6mr9387075pjo.127.1560500436830;
-        Fri, 14 Jun 2019 01:20:36 -0700 (PDT)
-Received: from z400-fedora29.kern.oss.ntt.co.jp ([222.151.198.97])
-        by smtp.gmail.com with ESMTPSA id t18sm3352343pgm.69.2019.06.14.01.20.33
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=gDQHdoJkjMyWAWD6F86RlCqtG6jM6BlmY2sdnAminyQ=;
+        b=osDsXL2qro0pvUpzNjsTlPB6IHXnQQEakaWcYhlA8kYdKcjj9XIYqEkqVHhKUIFCzk
+         HouZWLdlzFYsx0HbrwE3MktLdczRsAvq261m0CSNUeMjPZr9CACs7QtuM+sfQyWZmqkf
+         /9ya45sXR+whwbXrGH6VsQ/nOIWaqC1LF3b0vVjmQEi2yuF1PRr4cuxzBLXTX8SuOKwb
+         uRaOFu5gtGKke52WaQrOqHthxRlQD3Fgpg217J+OkfrPKF4R/ojZ9VJ7jESlCSP7/W7n
+         fk9mdjB6B+000/cy0fAsrYXSWDJ16xEDOnibiKSFwqQfYnyyQs8O7vECSI5PeSZYHjCp
+         sCTw==
+X-Gm-Message-State: APjAAAUlXLxf0lKygfSxbLPClA5htYKFX1iAT4mDwKPd4SySH8p5QZS7
+        5nI9Uc6kiaF1S/qIGg9m412Ajg==
+X-Google-Smtp-Source: APXvYqwcvUZZvnmPYJu0xr+xVEs3aP1mvppxJWYLXCIQnzHZQ1D15PovB5fBDPlCB74snV6Ng/xtsA==
+X-Received: by 2002:a50:f982:: with SMTP id q2mr31569019edn.270.1560510294552;
+        Fri, 14 Jun 2019 04:04:54 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id o93sm790721edd.46.2019.06.14.04.04.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 01:20:36 -0700 (PDT)
-From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
+        Fri, 14 Jun 2019 04:04:53 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 3AF921804AF; Fri, 14 Jun 2019 13:04:53 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
@@ -57,66 +49,42 @@ Cc:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
         bpf@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         David Ahern <dsahern@gmail.com>
-Subject: [PATCH bpf 3/3] devmap: Add missing RCU read lock on flush
-Date:   Fri, 14 Jun 2019 17:20:15 +0900
-Message-Id: <20190614082015.23336-4-toshiaki.makita1@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614082015.23336-1-toshiaki.makita1@gmail.com>
-References: <20190614082015.23336-1-toshiaki.makita1@gmail.com>
+Subject: Re: [PATCH bpf 1/3] devmap: Fix premature entry free on destroying map
+In-Reply-To: <20190614082015.23336-2-toshiaki.makita1@gmail.com>
+References: <20190614082015.23336-1-toshiaki.makita1@gmail.com> <20190614082015.23336-2-toshiaki.makita1@gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 14 Jun 2019 13:04:53 +0200
+Message-ID: <877e9octre.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-.ndo_xdp_xmit() assumes it is called under RCU. For example virtio_net
-uses RCU to detect it has setup the resources for tx. The assumption
-accidentally broke when introducing bulk queue in devmap.
+Toshiaki Makita <toshiaki.makita1@gmail.com> writes:
 
-Fixes: 5d053f9da431 ("bpf: devmap prepare xdp frames for bulking")
-Reported-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
----
- kernel/bpf/devmap.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> dev_map_free() waits for flush_needed bitmap to be empty in order to
+> ensure all flush operations have completed before freeing its entries.
+> However the corresponding clear_bit() was called before using the
+> entries, so the entries could be used after free.
+>
+> All access to the entries needs to be done before clearing the bit.
+> It seems commit a5e2da6e9787 ("bpf: netdev is never null in
+> __dev_map_flush") accidentally changed the clear_bit() and memory access
+> order.
+>
+> Note that the problem happens only in __dev_map_flush(), not in
+> dev_map_flush_old(). dev_map_flush_old() is called only after nulling
+> out the corresponding netdev_map entry, so dev_map_free() never frees
+> the entry thus no such race happens there.
+>
+> Fixes: a5e2da6e9787 ("bpf: netdev is never null in __dev_map_flush")
+> Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index a126d95..1defea4 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -282,6 +282,7 @@ void __dev_map_flush(struct bpf_map *map)
- 	unsigned long *bitmap = this_cpu_ptr(dtab->flush_needed);
- 	u32 bit;
- 
-+	rcu_read_lock();
- 	for_each_set_bit(bit, bitmap, map->max_entries) {
- 		struct bpf_dtab_netdev *dev = READ_ONCE(dtab->netdev_map[bit]);
- 		struct xdp_bulk_queue *bq;
-@@ -297,6 +298,7 @@ void __dev_map_flush(struct bpf_map *map)
- 
- 		__clear_bit(bit, bitmap);
- 	}
-+	rcu_read_unlock();
- }
- 
- /* rcu_read_lock (from syscall and BPF contexts) ensures that if a delete and/or
-@@ -389,6 +391,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
- 
- 		int cpu;
- 
-+		rcu_read_lock();
- 		for_each_online_cpu(cpu) {
- 			bitmap = per_cpu_ptr(dev->dtab->flush_needed, cpu);
- 			__clear_bit(dev->bit, bitmap);
-@@ -396,6 +399,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
- 			bq = per_cpu_ptr(dev->bulkq, cpu);
- 			bq_xmit_all(dev, bq, XDP_XMIT_FLUSH, false);
- 		}
-+		rcu_read_unlock();
- 	}
- }
- 
--- 
-1.8.3.1
+I recently posted a patch[0] that gets rid of the bitmap entirely, so I
+think you can drop this one...
 
+-Toke
+
+[0] https://lore.kernel.org/netdev/156042464148.25684.11881534392137955942.stgit@alrua-x1/
