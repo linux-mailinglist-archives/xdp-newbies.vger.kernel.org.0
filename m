@@ -2,90 +2,87 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FC0346F74
-	for <lists+xdp-newbies@lfdr.de>; Sat, 15 Jun 2019 12:10:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BCDF4729F
+	for <lists+xdp-newbies@lfdr.de>; Sun, 16 Jun 2019 02:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfFOKKE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Sat, 15 Jun 2019 06:10:04 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39637 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfFOKKE (ORCPT
+        id S1726490AbfFPAHZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 15 Jun 2019 20:07:25 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:40309 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfFPAHZ (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 15 Jun 2019 06:10:04 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m10so7424342edv.6
-        for <xdp-newbies@vger.kernel.org>; Sat, 15 Jun 2019 03:10:03 -0700 (PDT)
+        Sat, 15 Jun 2019 20:07:25 -0400
+Received: by mail-vs1-f66.google.com with SMTP id a186so4018220vsd.7
+        for <xdp-newbies@vger.kernel.org>; Sat, 15 Jun 2019 17:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=wW7IztE4QMEWHS4HlHmRfNrBnf+ofJKoJQgV50/G/K8=;
+        b=JukhM8WhPZ/UTP1Tz21D1TvljFtD0pNKrBZf1CS6NqdP+RKqFXtp8mRUlVvou4C6ul
+         kuhsJJFL7O/ybR/gP5tUg1v2Ny9kgp2+KHYSJ4cYcIECJdBk7Ct3jIT8ZRMygYWd+2vt
+         rFvCmLJ/2vESs3CRrdrGncCfkcTF+HRGKYYRXQVEMMJdjHPYqtj77v4mA4+6MOPClTaQ
+         uZYn+ZDnrZGwkqnW/0fP0oRlkQs4E4i7ngREfieSuJNl9WYp6VKzaUI/Ut6qA4x3IyKc
+         KW7BDsXRfTPNFeGqkO6asl1pRc32B+AmczeGMGo5ECsTGRPIbafPnRa885teWPx9pj7H
+         7EjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=E5g/m2oNw0FmOnRwBHRfp/fjjyfTq1G4GJO9NWyBiak=;
-        b=L5IGD133uhGTiKMY7NVTumt/UCYHlFefLh55YThTCWpcuQTEYEW5+0stNLuLz/7cBt
-         gJ/cTcZoTPH+mhG3yLtSAbrm8H5a9Vjc0yl0eTav68KDd5a0m8Am570BbZ8g1Lc1EvnY
-         T7rx2FYVlZwDCCY6/l0T4MYmeobY0wT+jRlYjnzrQB0cA5RgMTMTzCHt3zIJE3gJgGSO
-         uQRGFBZrB/TqfvrP3xzAQkF0wW/jzeoauHTUzNSSaPuop+NdA2JgiKKZEf4tzm8bksuI
-         noxeeoXfuDVf9/thugqEDWMlr95zCZF+ZASQ5slrJ/7vn/6pYMAaeSR3UY8B6yFjmdx2
-         612w==
-X-Gm-Message-State: APjAAAWb6KGVYRMHoYMbUjB3a7a6bmIMuKYRhA48dh09Hf9aXVaMeh58
-        4DddCtpxVp2EdC70QwttUvQw6g==
-X-Google-Smtp-Source: APXvYqzCPAU0G5SPBb3xNUalstBRFbSLtXj+BEgB2SaVj0rv4Pog5MGdF0GDUelBpwAAa2JHfqQ8Qg==
-X-Received: by 2002:a50:8974:: with SMTP id f49mr52230644edf.95.1560593402393;
-        Sat, 15 Jun 2019 03:10:02 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id k51sm1753562edb.7.2019.06.15.03.10.01
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 03:10:01 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 013981804AF; Sat, 15 Jun 2019 12:10:00 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        David Ahern <dsahern@gmail.com>
-Subject: Re: [PATCH bpf 1/3] devmap: Fix premature entry free on destroying map
-In-Reply-To: <5f6efec8-87f8-4ac5-46ee-47788dbf1d44@iogearbox.net>
-References: <20190614082015.23336-1-toshiaki.makita1@gmail.com> <20190614082015.23336-2-toshiaki.makita1@gmail.com> <877e9octre.fsf@toke.dk> <87sgscbc5d.fsf@toke.dk> <fb895684-c863-e580-f36a-30722c480b41@gmail.com> <87muikb9ev.fsf@toke.dk> <5f6efec8-87f8-4ac5-46ee-47788dbf1d44@iogearbox.net>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Sat, 15 Jun 2019 12:10:00 +0200
-Message-ID: <87r27v9n2f.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=wW7IztE4QMEWHS4HlHmRfNrBnf+ofJKoJQgV50/G/K8=;
+        b=bXihjYjakfdJ9v9WzkrtUf3NFQfXR4lVWlNOK2f7Cl84R4PnLDvkFkrFYFBWy8X3QW
+         ZDxDXd7EgqJY2fhak+w6hzPKaCycd9i6PhFlN4mBImLgq0lhjkmrL7K3snH77CGEydpf
+         XpB4nFZigYEF+Oh5pDdFioms6UUVJ1suWgXW8ovdWNchojJZFH6bEObnJPvnbfC5mkru
+         XTwiDLAN53urbsZW1vIKhCTPSgxZJgyvUAFG4Kwc10Xp/YOsan+i0aCGapD6xe5orl6c
+         E3ZtZ7tA316rMIs8KYp4KW/2Z6q0gCGmZxYFbwBeFGf4lsMK6UXjybw8bqZa5myNwo9s
+         PUOA==
+X-Gm-Message-State: APjAAAVk6blxlLK7BxvsOmokF4X1x2PudsOA9xEyc2mgfg2ZIRhzVJQZ
+        qrqfYOzbqKIn6/sqaFljgHpQb13Vs6e4eS2TNP82plUN
+X-Google-Smtp-Source: APXvYqwgpdHD0lUybhAqYSrKebXBusJL0hMJIBh0UrjvA4JP5t7+HftrQCLjH9aOK2kF0UFlgokrRGpu6PGk5YEIzs8=
+X-Received: by 2002:a67:1a81:: with SMTP id a123mr24571522vsa.162.1560643644098;
+ Sat, 15 Jun 2019 17:07:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From:   Elerion <elerion1000@gmail.com>
+Date:   Sat, 15 Jun 2019 17:07:14 -0700
+Message-ID: <CAMDScmn0Mge9mK14AS+y=JY-hGoXZGYo+Q-yG3VsrCXiYc9eDg@mail.gmail.com>
+Subject: Still need to inline functions?
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> writes:
+What version of Linux is required so I can use functions without
+__always_inline in the xdp kernel object?
 
-> On 06/14/2019 03:09 PM, Toke Høiland-Jørgensen wrote:
->> Toshiaki Makita <toshiaki.makita1@gmail.com> writes:
-> [...]
->>>> Alternatively, since this entire series should probably go to stable, I
->>>> can respin mine on top of it?
->>>
->>> Indeed conflict will happen, as this is for 'bpf' not 'bpf-next'.
->>> Sorry for disturbing your work.
->> 
->> Oh, no worries!
->> 
->>> I'm also not sure how to proceed in this case.
->> 
->> I guess we'll leave that up to the maintainers :)
->
-> So all three look good to me, I've applied them to bpf tree. Fixes to
-> bpf do have precedence over patches to bpf-next given they need to
-> land in the current release. I'll get bpf out later tonight and ask
-> David to merge net into net-next after that since rebase is also
-> needed for Stanislav's cgroup series. We'll then flush out bpf-next so
-> we can fast-fwd to net-next to pull in all the dependencies.
+I read here https://lwn.net/Articles/741773/ it was supposed to be
+allowed a long time ago.
 
-Right, I'll wait for that, then rebase my series and resubmit
+When I remove __always_inline on a medium sized function,
+bpf_load_program() will say:
 
--Toke
+"jump out of range from insn 5 to 796"
+
+Is this possible to fix, or do you still need to put __always_inline
+on every function?
+
+Software versions:
+
+Ubuntu 18.04.02 LTS x64
+4.18.0-20-generic
+5.0.0-16-generic
+
+clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
+
+LLVM (http://llvm.org/):
+  LLVM version 6.0.0
+
+  Optimized build.
+  Default target: x86_64-pc-linux-gnu
+  Host CPU: broadwell
+
+Compile flags:
+
+clang -O2 -target bpf -I/usr/include/x86_64-linux-gnu -c kern.c -o kern.o
