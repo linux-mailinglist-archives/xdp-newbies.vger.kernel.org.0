@@ -2,95 +2,80 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA844800D
-	for <lists+xdp-newbies@lfdr.de>; Mon, 17 Jun 2019 12:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87FAC48021
+	for <lists+xdp-newbies@lfdr.de>; Mon, 17 Jun 2019 13:03:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfFQK5O (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 17 Jun 2019 06:57:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45224 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfFQK5O (ORCPT
+        id S1726174AbfFQLDR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 17 Jun 2019 07:03:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36666 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfFQLDR (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:57:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so9383503wre.12
-        for <xdp-newbies@vger.kernel.org>; Mon, 17 Jun 2019 03:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Oux/URqtLnCQz0hykKTkssrS1+fpFZHSJIx+RX8G2GQ=;
-        b=woWBv1RXqXXHBEQ2kf8e2DZPxwrUfx5k/e/ISXi9lZ6He1N7LRwUjrvxqScxwGKd3o
-         4OycgIpGpAi5c1xogO3KzWCexPePrzLlrwCq3CSVEYhuSRrWTLLLRzMkEe+NvDbRa2Oz
-         ah7gQ9zJp29xYL5jA4bCK05fMVTUjLGBiW04J4qENx+kNeDyp/QB9LuWHL1m0m+pM3Jc
-         m4QHqKGaZGV+sL3PH0j6+86+EyphPjGJJfOzQAHlgyB3LqKUxGn3qRBGdSjwnPp+1te9
-         67cDRwBn43SvwKV69OTUIr08hiVd+eYwuMa4qqsB+lLEoWbIuNup1NEIBdOzZon2C3ul
-         jf8w==
+        Mon, 17 Jun 2019 07:03:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k21so15579057edq.3
+        for <xdp-newbies@vger.kernel.org>; Mon, 17 Jun 2019 04:03:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Oux/URqtLnCQz0hykKTkssrS1+fpFZHSJIx+RX8G2GQ=;
-        b=NuOuPYlGGzUtctFpSSEYoW6vAiGrWD4P+rWkDaHxrBsJfDmRN6LeB5ijSyUL3BVA6K
-         fv6JUStFw5URW/wZWFe9aDgEyUNhHyAkQH8qHurThvnP7PUiwalaZXEojcJCTQcPnG6E
-         QPdude4YtD6tllx5YdJDQBPnbyQemFQP5yZXE5evDfnGFCzhvfMA4qgLmX8Pg532O4TG
-         2CDGc1SyLb4KqyoFJr88uzdmHOwt8xGC7eyeu11eMVf9MAKq04J6Almmkc1UdiyGhtJ0
-         attX76LSk7etpeprAG0wejBMDJqWqf+4dQf8a45ewyc7Do/vgxfyf0Qa2TCcLgst5an2
-         2q3A==
-X-Gm-Message-State: APjAAAU+9sA8t3LfT1W6zoxKkrfAn55HPTUcI7IppwGBqRKYsr3SbfiP
-        kNlrsTMnsbcycNiUmZwFvwjqoloslzM=
-X-Google-Smtp-Source: APXvYqzSZkIn0gcYcq0qS9jJgUE++a1PcnxamM6yGuvyXofsWa9cEoLY4IWOWY6E1PtukP71GOgtCQ==
-X-Received: by 2002:adf:c541:: with SMTP id s1mr60865126wrf.44.1560769032254;
-        Mon, 17 Jun 2019 03:57:12 -0700 (PDT)
-Received: from apalos (athedsl-4461147.home.otenet.gr. [94.71.2.75])
-        by smtp.gmail.com with ESMTPSA id y184sm9411205wmg.14.2019.06.17.03.57.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 03:57:11 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 13:57:09 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Eric Leblond <eric@regit.org>
-Cc:     xdp-newbies@vger.kernel.org
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=W+3z4k89Cojm593snB0gDXnwAiJwZIM4rH4iwY7g/v0=;
+        b=aT9eIovKfP5aj8MyeGFaGhGxeVePs9Uu+8C1BaThcY/Vpw+JenkisNsALBVwrktaLt
+         1jQ8B2H34hsnIkp3Xm7XsyNw5GUhjO6JDaDoZaIoae3mFFqgAWpScNuaUXy9QWvQ5obf
+         WUl7nGDsptSDaX9j8l5NQfy47nQRT0XiINkwEK+WaQHyRDJkdiarIMfv0ucrFc2IRbTz
+         De1ZmdmTzENCZ02QGHZ35jmu9Cu4V05NBldD9klb//I2qWjVvaKSvQlRTwRp8P0OgqCY
+         rc/Kka3hTa2wGQhHEOWl+mmttRxJeYeOreFl9jkWdDt2R77T8nc5aYF61T/jdh8v/lIF
+         tSig==
+X-Gm-Message-State: APjAAAXBuinkNTgutDaQpLT/34A7o1TTwCk65Or0gTeef+ID02VvMeQI
+        0EdZodnwPbLU5P3AuksOfmr7ZURej0E=
+X-Google-Smtp-Source: APXvYqzPTRqUWlYFRFpuq2I8rWwCG4/OpfhMdAbvJOxLJipoP88L1YYZ1raJxLpYJrsBXeJxHVSh7A==
+X-Received: by 2002:a50:fa83:: with SMTP id w3mr40256711edr.47.1560769395848;
+        Mon, 17 Jun 2019 04:03:15 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id m31sm3697551edd.42.2019.06.17.04.03.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 04:03:15 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 7E6F71804AF; Mon, 17 Jun 2019 13:03:14 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Eric Leblond <eric@regit.org>, xdp-newbies@vger.kernel.org
 Subject: Re: AF_XDP and packet timestamp
-Message-ID: <20190617105709.GA7734@apalos>
-References: <86f135475a7820adadb05e7ac9a05c71846bebd6.camel@regit.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <86f135475a7820adadb05e7ac9a05c71846bebd6.camel@regit.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <86f135475a7820adadb05e7ac9a05c71846bebd6.camel@regit.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Mon, 17 Jun 2019 13:03:14 +0200
+Message-ID: <87d0jca2z1.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Eric, 
+Eric Leblond <eric@regit.org> writes:
 
 > Hello,
-> 
+>
 > I did start to work on AF_XDP support for Suricata. API was really easy
 > to use via libbpf.
-> 
+>
 > From Suricata point of view, the current system with default
 > configuration is lacking an important information. I don't have access
 > to the timestamp of the packet. I'm in particular interested by the
 > hardware timestamp as it would allow to do reordering in some capture
 > cases.
-There's no timestamp available to my knowledge
-> 
+>
 > Is there a way to get the information via AF_XDP. I've seen the
 > discussion on hardware hints but there was no code example I was able
-> to find. 
-This is an awful hack i did when i needed similar information [1]
-Essentially i am copying a software 'timestamp' (in my case rdtsc() since i
-needed to measure packet timings from AF_XDP -> userspace), into the meta_data
-of XDP.
-The way i did it is obviously wrong since it has to be added per driver.
-> 
-> BR,
-> -- 
-> Eric Leblond <eric@regit.org>
-> 
+> to find.
 
-[1] https://github.com/xdp-project/xdp-project/blob/master/areas/arm64/xdp_for_tsn.org
+Making more information from the hardware available to XDP is currently
+on our list of things we plan to enable in the future:
+https://github.com/xdp-project/xdp-project/blob/master/xdp-project.org#metadata-available-to-programs
 
-Cheers
-/Ilias
+I just added timestamps as a field we want in there (so we don't
+forget).
+
+I.e., no, there is no way to get this information from XDP (and thus not
+from AF_XDP either) yet...
+
+-Toke
