@@ -2,87 +2,63 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCDF4729F
-	for <lists+xdp-newbies@lfdr.de>; Sun, 16 Jun 2019 02:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B0647F98
+	for <lists+xdp-newbies@lfdr.de>; Mon, 17 Jun 2019 12:25:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfFPAHZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 15 Jun 2019 20:07:25 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:40309 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfFPAHZ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 15 Jun 2019 20:07:25 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a186so4018220vsd.7
-        for <xdp-newbies@vger.kernel.org>; Sat, 15 Jun 2019 17:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=wW7IztE4QMEWHS4HlHmRfNrBnf+ofJKoJQgV50/G/K8=;
-        b=JukhM8WhPZ/UTP1Tz21D1TvljFtD0pNKrBZf1CS6NqdP+RKqFXtp8mRUlVvou4C6ul
-         kuhsJJFL7O/ybR/gP5tUg1v2Ny9kgp2+KHYSJ4cYcIECJdBk7Ct3jIT8ZRMygYWd+2vt
-         rFvCmLJ/2vESs3CRrdrGncCfkcTF+HRGKYYRXQVEMMJdjHPYqtj77v4mA4+6MOPClTaQ
-         uZYn+ZDnrZGwkqnW/0fP0oRlkQs4E4i7ngREfieSuJNl9WYp6VKzaUI/Ut6qA4x3IyKc
-         KW7BDsXRfTPNFeGqkO6asl1pRc32B+AmczeGMGo5ECsTGRPIbafPnRa885teWPx9pj7H
-         7EjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=wW7IztE4QMEWHS4HlHmRfNrBnf+ofJKoJQgV50/G/K8=;
-        b=bXihjYjakfdJ9v9WzkrtUf3NFQfXR4lVWlNOK2f7Cl84R4PnLDvkFkrFYFBWy8X3QW
-         ZDxDXd7EgqJY2fhak+w6hzPKaCycd9i6PhFlN4mBImLgq0lhjkmrL7K3snH77CGEydpf
-         XpB4nFZigYEF+Oh5pDdFioms6UUVJ1suWgXW8ovdWNchojJZFH6bEObnJPvnbfC5mkru
-         XTwiDLAN53urbsZW1vIKhCTPSgxZJgyvUAFG4Kwc10Xp/YOsan+i0aCGapD6xe5orl6c
-         E3ZtZ7tA316rMIs8KYp4KW/2Z6q0gCGmZxYFbwBeFGf4lsMK6UXjybw8bqZa5myNwo9s
-         PUOA==
-X-Gm-Message-State: APjAAAVk6blxlLK7BxvsOmokF4X1x2PudsOA9xEyc2mgfg2ZIRhzVJQZ
-        qrqfYOzbqKIn6/sqaFljgHpQb13Vs6e4eS2TNP82plUN
-X-Google-Smtp-Source: APXvYqwgpdHD0lUybhAqYSrKebXBusJL0hMJIBh0UrjvA4JP5t7+HftrQCLjH9aOK2kF0UFlgokrRGpu6PGk5YEIzs8=
-X-Received: by 2002:a67:1a81:: with SMTP id a123mr24571522vsa.162.1560643644098;
- Sat, 15 Jun 2019 17:07:24 -0700 (PDT)
-MIME-Version: 1.0
-From:   Elerion <elerion1000@gmail.com>
-Date:   Sat, 15 Jun 2019 17:07:14 -0700
-Message-ID: <CAMDScmn0Mge9mK14AS+y=JY-hGoXZGYo+Q-yG3VsrCXiYc9eDg@mail.gmail.com>
-Subject: Still need to inline functions?
+        id S1726781AbfFQKZS (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 17 Jun 2019 06:25:18 -0400
+Received: from home.regit.org ([37.187.126.138]:55598 "EHLO home.regit.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbfFQKZS (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 17 Jun 2019 06:25:18 -0400
+X-Greylist: delayed 1511 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jun 2019 06:25:17 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=regit.org};
+         s=home; h=Content-Transfer-Encoding:MIME-Version:Content-Type:Date:To:From:
+        Subject:Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AN3oSZfLoMeCAv8FxbZfN/AI3VoNT7qbrWbkSqcIaO0=; b=C8Nq2wu4SzcaLO2FNW/So1Ljcq
+        t5bZ39ddFrKTZCUx85qoPybv4184Kdb6gtWKlXEhSpmVrV8HHNNF25T89p0wl4KE96Lxm1oAihM02
+        7rv2uaSNnJuYPoePEALOfW77T;
+Received: from infra1.stamus-networks.com ([91.121.107.192] helo=[10.24.24.5])
+        by home.regit.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <eric@regit.org>)
+        id 1hcoQl-0004Rm-Vp
+        for xdp-newbies@vger.kernel.org; Mon, 17 Jun 2019 12:00:05 +0200
+Message-ID: <86f135475a7820adadb05e7ac9a05c71846bebd6.camel@regit.org>
+Subject: AF_XDP and packet timestamp
+From:   Eric Leblond <eric@regit.org>
 To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 17 Jun 2019 12:00:02 +0200
+Organization: INL
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0 (-)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-What version of Linux is required so I can use functions without
-__always_inline in the xdp kernel object?
+Hello,
 
-I read here https://lwn.net/Articles/741773/ it was supposed to be
-allowed a long time ago.
+I did start to work on AF_XDP support for Suricata. API was really easy
+to use via libbpf.
 
-When I remove __always_inline on a medium sized function,
-bpf_load_program() will say:
+From Suricata point of view, the current system with default
+configuration is lacking an important information. I don't have access
+to the timestamp of the packet. I'm in particular interested by the
+hardware timestamp as it would allow to do reordering in some capture
+cases.
 
-"jump out of range from insn 5 to 796"
+Is there a way to get the information via AF_XDP. I've seen the
+discussion on hardware hints but there was no code example I was able
+to find. 
 
-Is this possible to fix, or do you still need to put __always_inline
-on every function?
+BR,
+-- 
+Eric Leblond <eric@regit.org>
 
-Software versions:
-
-Ubuntu 18.04.02 LTS x64
-4.18.0-20-generic
-5.0.0-16-generic
-
-clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
-Target: x86_64-pc-linux-gnu
-Thread model: posix
-InstalledDir: /usr/bin
-
-LLVM (http://llvm.org/):
-  LLVM version 6.0.0
-
-  Optimized build.
-  Default target: x86_64-pc-linux-gnu
-  Host CPU: broadwell
-
-Compile flags:
-
-clang -O2 -target bpf -I/usr/include/x86_64-linux-gnu -c kern.c -o kern.o
