@@ -2,126 +2,127 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2720B55372
-	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 17:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7AB553EC
+	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 18:04:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfFYPcC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 11:32:02 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:46965 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732385AbfFYPcC (ORCPT
+        id S1728422AbfFYQEr (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 12:04:47 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]:37731 "EHLO
+        mail-qk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfFYQEr (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:32:02 -0400
-Received: by mail-io1-f50.google.com with SMTP id i10so1789969iol.13
-        for <xdp-newbies@vger.kernel.org>; Tue, 25 Jun 2019 08:32:01 -0700 (PDT)
+        Tue, 25 Jun 2019 12:04:47 -0400
+Received: by mail-qk1-f181.google.com with SMTP id d15so13029105qkl.4
+        for <xdp-newbies@vger.kernel.org>; Tue, 25 Jun 2019 09:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pl6j18xP2teXBCXiFz1+ekHc82RO1v4dtHxUKcwmnSI=;
-        b=xYnG3hJyz4khT/uJKxphyWjZQFQ//q3hlVe230M5KEJnEbld76vZxH0dhqV8TKmWJo
-         8zg7zuJTixxzeq6fETCF+7hxbRsPwcKAEkCZab4RmBRlN5IMuVc3B4C7pXw2hM4IWaoE
-         +viBxP25ebZesMJgXEzosY21FqBH7jtJfUlmzSk9Xqaf1KVqMPvFeGw9qYdI1FAyqUaT
-         zo13+vCCbXRgCJrm0BskV1m1GDyXrPUMogAFwWyI+mpp5Lh2zh74nwwVqsWMctY04xV2
-         VGsgpcQXYd/nJHwJT/YRiRjkz9nda3bfc/nAg3kYnlZZYJDQVbNjlIO8uYcb4Ckl6opv
-         hz6Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ekHbLIPlpJ9Say619fuOxIYTfAxeg+rP9jkDD16cC4g=;
+        b=Vq957lE9ciG0GNcxyI5g6hkHGGkPYTQPs35vzzF545dXW2T9V4SVj6THIgwkVOBCsm
+         6TWgyg8hNug/Gw7q1YylA2mbVSDUqmkaSk/BFIwfgplbhssQhpLKcM1AGRfivYroH1Wj
+         ssDmIr8hu58wXzRfdXz3477eNw+0CqjzVW6wkrR6qLGx0wQ2I0P+ksOVXe1E+Geasz90
+         MpdwYPQm9k5VwwrLg+M2oCiyl1nV5gNLqgtm2Q6CT0/RuX6NjTZ0fo9ITbGfapBjctgo
+         /i7o6u2W6DQBr+wc6p9AdEo3M1+zT20Ds3fiI7MKFrM30CwlMUGkgaegL8oQfnHC5D/r
+         8l6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pl6j18xP2teXBCXiFz1+ekHc82RO1v4dtHxUKcwmnSI=;
-        b=q8ARHoRxc9iTluiGkyQVoGCcPqvUUw71fXI07x4TBtWLeQxyoZH2FIXb0/FPOgxK3I
-         Od3Z1RDH4vUgmeJdMb+YSRXmdDMjc6HpiTF3FOR/9gxRfJHKz9+Be+IE29fxMY/kjOna
-         fXi6mcBhzGP4BxHA1CjFigAO4omFf70XMRmE8+y9oJn6985NE0CmZCnP9obFv7NaBCdW
-         YcdjFePphwe8Z6noXRgE1ba575hBqP9X6zowTuPL2Zz/wFKJlH9SxwLnfMuFQEfRhaHD
-         hy0IcXD71mDROY1YlBbWNWMpsXbiUdPq+ytu4qPJ/ZD1Cx71DbIOBzTVZgCOMFQV9ug0
-         REYw==
-X-Gm-Message-State: APjAAAWvYVQJaqime2+iRvxMFxeygJPSxMBva94iMtoXVW9uL+pjgOzx
-        70B3Wo9/08U03MHeF1DdR1SeD83Iuqk=
-X-Google-Smtp-Source: APXvYqyYSRUYb1ugPr+PA2M18DdrwhkX5IV3FjKk+sfHRCpVUDQ/fPnQ7D2WX3PZI8HQcUgp3KoyyA==
-X-Received: by 2002:a02:bb05:: with SMTP id y5mr25232740jan.93.1561476721092;
-        Tue, 25 Jun 2019 08:32:01 -0700 (PDT)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id c2sm11755771iok.53.2019.06.25.08.32.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 08:32:00 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 10:31:59 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>, Martin Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
-Message-ID: <20190625153159.5utnn36dgku5545n@xps.therub.org>
-References: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
- <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
- <20190621161752.d7d7n4m5q67uivys@xps.therub.org>
- <CAEf4BzaSoKA5H5rN=w+OAtUz4bD30-VOjjjY+Qv9tTAnhMweiA@mail.gmail.com>
- <20190624195336.nubi7n2np5vfjutr@xps.therub.org>
- <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ekHbLIPlpJ9Say619fuOxIYTfAxeg+rP9jkDD16cC4g=;
+        b=sL+yqwDDfOBoDBBjpN5JM6GPhGiJPno68bU5wRQdnzpWPHz7HUytXpCT0g2FN/aAtp
+         usCcAbMFRibTBKBCpeFy3ZeK63Irmrc66dMm7SzOmEbQ5TQTfz9yt24nQi6xhMZe7uCY
+         QacMY89WLu/oyj26oxPX6jZKSK8W6A2DqCLFDE5qZ253SXsPZuYmI1A834J7eIfrMNxQ
+         zONljinbEpgd9Xbb3rAVG5I2prmPh2LEbze+UU31dhPE90UwPB6Hb8KgidgjeGp8hnAB
+         fkYPecP7vbRoeNt0cggoPpbeCqYxpjRsObMvY7ZrP/2qTIzidZuDnDf6btS8VHKSYusN
+         UfaQ==
+X-Gm-Message-State: APjAAAXCpUw40DuUwlxdy3hUpomRLD4v/cRjVXVVEC1b/W3jjovoWwCi
+        Qf2z19Y4LjjJd5vQX5NqC/8NO8Oj9WPF/+ieIl0=
+X-Google-Smtp-Source: APXvYqwh0Iw1hhKDF1DbabIHAkdBeGDnUHYzm8cgKv1SkutB/BBnPTFPHMuLWRKkS1aATeb74kuYnEONuRvvdgLqjXg=
+X-Received: by 2002:a05:620a:5b1:: with SMTP id q17mr61368188qkq.174.1561478686088;
+ Tue, 25 Jun 2019 09:04:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <CAJ8uoz2o5jxnUbtKjCbYe+QGffgCtLO05qXHFVfUHFiN3FXvvA@mail.gmail.com>
+In-Reply-To: <CAJ8uoz2o5jxnUbtKjCbYe+QGffgCtLO05qXHFVfUHFiN3FXvvA@mail.gmail.com>
+From:   William Tu <u9012063@gmail.com>
+Date:   Tue, 25 Jun 2019 09:04:07 -0700
+Message-ID: <CALDO+SbBfevJi1AD9bRWMcyhSae2TusT=xdEmpqoq0Mk8Tx=Ug@mail.gmail.com>
+Subject: Re: Question/Bug about AF_XDP idx_cq from xsk_ring_cons__peek?
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>
+Cc:     Xdp <xdp-newbies@vger.kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 12:58:15PM -0700, Alexei Starovoitov wrote:
-> On Mon, Jun 24, 2019 at 12:53 PM Dan Rue <dan.rue@linaro.org> wrote:
+On Mon, Jun 24, 2019 at 2:51 AM Magnus Karlsson
+<magnus.karlsson@gmail.com> wrote:
+>
+> On Sat, 15 Jun 2019 at 01:25, William Tu <u9012063@xxxxxxxxx> wrote:
 > >
-> > I would say if it's not possible to check at runtime, and it requires
-> > clang 9.0, that this test should not be enabled by default.
-> 
-> The latest clang is the requirement.
-> If environment has old clang or no clang at all these tests will be failing.
+> > Hi,
+> >
+> > In my implementation[1], I'm doing s.t like
+> >     tx_done = xsk_ring_cons__peek(&xsk->umem->cq, BATCH_SIZE, &idx_cq);
+> >     if (tx_done > 0) {
+> >         xsk_ring_cons__release(&xsk->umem->cq, tx_done);
+> >         xsk->outstanding_tx -= tx_done;
+> >     }
+> >
+> > I expect if tx_done returns 32, then after calling xsk_ring_cons__release,
+> > the next time I call xsk_ring_cons__peek, I should get idx_cq + 32.
+> > However, sometimes I see the same value of idx_cq is returned as previous, even
+> > when tx_done > 0. Is this the expected behavior?
+> >
+> > I experiment with xdpsock_user.c with the patch below and run
+> > ~/bpf-next/samples/bpf# ./xdpsock -l -N -z -i eth3
+> > using bpf-next commit 5e2ac390fbd08b2a462db66cef2663e4db0d5191
+> >
+> > --- a/samples/bpf/xdpsock_user.c
+> > +++ b/samples/bpf/xdpsock_user.c
+> > @@ -444,6 +443,8 @@ static void kick_tx(struct xsk_socket_info *xsk)
+> >         exit_with_error(errno);
+> >  }
+> >
+> > +static int prev_idx_cq;
+> > +
+> >  static inline void complete_tx_l2fwd(struct xsk_socket_info *xsk)
+> >  {
+> >         u32 idx_cq = 0, idx_fq = 0;
+> > @@ -463,6 +464,15 @@ static inline void complete_tx_l2fwd(struct
+> > xsk_socket_info *xsk)
+> >                 unsigned int i;
+> >                 int ret;
+> >
+> > +        if (idx_cq == prev_idx_cq) {
+> > +            printf("\n\n ERROR \n\n");
+> > +        }
+> > +        if (idx_cq - prev_idx_cq != rcvd) {
+>
+> William,
+>
+> You need to compare with prev_rcvd (and introduce that variable) here
+> as the difference in index should be the same as the amount you
+> received last time. If you do this change, you will get no errors. You
+> can also see this pattern in your printouts. The diff is always equal
+> to rcvd during the previous iteration.
+>
+> /Magnus
+>
 
-Hi Alexei!
+Hi Magnus,
 
-I'm not certain if I'm interpreting you as you intended, but it sounds
-like you're telling me that if the test build environment does not use
-'latest clang' (i guess latest as of today?), that these tests will
-fail, and that is how it is going to be. If I have that wrong, please
-correct me and disregard the rest of my message.
+Thanks for the clarification! Now I understand it's my mistake.
+So:
+ rcvd1 = xsk_ring_cons__peek(&xsk->umem->cq, ndescs, &idx1_cq);
+ ...
+ rcvd2 = xsk_ring_cons__peek(&xsk->umem->cq, ndescs, &idx2_cq);
 
-Please understand where we are coming from. We (and many others) run
-thousands of tests from a lot of test frameworks, and so our environment
-often has mutually exclusive requirements when it comes to things like
-toolchain selection.
+and idx2_cq - idx1_cq == rcvd1.
 
-We believe, strongly, that a test should not emit a "fail" for a missing
-requirement. Fail is a serious thing, and should be reserved for an
-actual issue that needs to be investigated, reported, and fixed.
-
-This is how we treat test failures - we investigate, report, and fix
-them when possible. When they're not real failures, we waste our time
-(and yours, in this case).
-
-By adding the tests to TEST_GEN_PROGS, you're adding them to the general
-test set that those of us running test farms try to run continuously
-across a wide range of hardware environments and kernel branches.
-
-My suggestion is that if you do not want us running them, don't add them
-to TEST_GEN_PROGS. I thought the suggestion of testing for adequate
-clang support and adding them conditionally at build-time was an idea
-worth consideration.
-
-Thanks,
-Dan
-
--- 
-Linaro - Kernel Validation
+--William
