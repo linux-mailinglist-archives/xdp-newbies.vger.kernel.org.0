@@ -2,77 +2,126 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF6254ED9
-	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 14:29:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2720B55372
+	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 17:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfFYM3N (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 08:29:13 -0400
-Received: from www62.your-server.de ([213.133.104.62]:58856 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbfFYM3N (ORCPT
+        id S1732399AbfFYPcC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 11:32:02 -0400
+Received: from mail-io1-f50.google.com ([209.85.166.50]:46965 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732385AbfFYPcC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:29:13 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hfkZO-0005rK-Fn; Tue, 25 Jun 2019 14:29:06 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hfkZO-000RXE-7h; Tue, 25 Jun 2019 14:29:06 +0200
-Subject: Re: [PATCH v3 bpf-next 0/2] veth: Bulk XDP_TX
-To:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        Tue, 25 Jun 2019 11:32:02 -0400
+Received: by mail-io1-f50.google.com with SMTP id i10so1789969iol.13
+        for <xdp-newbies@vger.kernel.org>; Tue, 25 Jun 2019 08:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pl6j18xP2teXBCXiFz1+ekHc82RO1v4dtHxUKcwmnSI=;
+        b=xYnG3hJyz4khT/uJKxphyWjZQFQ//q3hlVe230M5KEJnEbld76vZxH0dhqV8TKmWJo
+         8zg7zuJTixxzeq6fETCF+7hxbRsPwcKAEkCZab4RmBRlN5IMuVc3B4C7pXw2hM4IWaoE
+         +viBxP25ebZesMJgXEzosY21FqBH7jtJfUlmzSk9Xqaf1KVqMPvFeGw9qYdI1FAyqUaT
+         zo13+vCCbXRgCJrm0BskV1m1GDyXrPUMogAFwWyI+mpp5Lh2zh74nwwVqsWMctY04xV2
+         VGsgpcQXYd/nJHwJT/YRiRjkz9nda3bfc/nAg3kYnlZZYJDQVbNjlIO8uYcb4Ckl6opv
+         hz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pl6j18xP2teXBCXiFz1+ekHc82RO1v4dtHxUKcwmnSI=;
+        b=q8ARHoRxc9iTluiGkyQVoGCcPqvUUw71fXI07x4TBtWLeQxyoZH2FIXb0/FPOgxK3I
+         Od3Z1RDH4vUgmeJdMb+YSRXmdDMjc6HpiTF3FOR/9gxRfJHKz9+Be+IE29fxMY/kjOna
+         fXi6mcBhzGP4BxHA1CjFigAO4omFf70XMRmE8+y9oJn6985NE0CmZCnP9obFv7NaBCdW
+         YcdjFePphwe8Z6noXRgE1ba575hBqP9X6zowTuPL2Zz/wFKJlH9SxwLnfMuFQEfRhaHD
+         hy0IcXD71mDROY1YlBbWNWMpsXbiUdPq+ytu4qPJ/ZD1Cx71DbIOBzTVZgCOMFQV9ug0
+         REYw==
+X-Gm-Message-State: APjAAAWvYVQJaqime2+iRvxMFxeygJPSxMBva94iMtoXVW9uL+pjgOzx
+        70B3Wo9/08U03MHeF1DdR1SeD83Iuqk=
+X-Google-Smtp-Source: APXvYqyYSRUYb1ugPr+PA2M18DdrwhkX5IV3FjKk+sfHRCpVUDQ/fPnQ7D2WX3PZI8HQcUgp3KoyyA==
+X-Received: by 2002:a02:bb05:: with SMTP id y5mr25232740jan.93.1561476721092;
+        Tue, 25 Jun 2019 08:32:01 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id c2sm11755771iok.53.2019.06.25.08.32.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 08:32:00 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 10:31:59 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>, Martin Lau <kafai@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-References: <20190613093959.2796-1-toshiaki.makita1@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <2ee794bc-403b-84c5-da8f-3cbabf52dff7@iogearbox.net>
-Date:   Tue, 25 Jun 2019 14:29:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
+Message-ID: <20190625153159.5utnn36dgku5545n@xps.therub.org>
+References: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
+ <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
+ <20190621161752.d7d7n4m5q67uivys@xps.therub.org>
+ <CAEf4BzaSoKA5H5rN=w+OAtUz4bD30-VOjjjY+Qv9tTAnhMweiA@mail.gmail.com>
+ <20190624195336.nubi7n2np5vfjutr@xps.therub.org>
+ <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613093959.2796-1-toshiaki.makita1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25491/Tue Jun 25 10:02:48 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 06/13/2019 11:39 AM, Toshiaki Makita wrote:
-> This introduces bulk XDP_TX in veth.
-> Improves XDP_TX performance by approximately 9%. The detailed
-> explanation and performance numbers are shown in patch 2.
+On Mon, Jun 24, 2019 at 12:58:15PM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 24, 2019 at 12:53 PM Dan Rue <dan.rue@linaro.org> wrote:
+> >
+> > I would say if it's not possible to check at runtime, and it requires
+> > clang 9.0, that this test should not be enabled by default.
 > 
-> v2:
-> - Use stack for bulk queue instead of a global variable.
-> 
-> v3:
-> - Add act field to xdp_bulk_tx tracepoint to be in line with other XDP
->   tracepoints.
-> 
-> Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
-> 
-> Toshiaki Makita (2):
->   xdp: Add tracepoint for bulk XDP_TX
->   veth: Support bulk XDP_TX
-> 
->  drivers/net/veth.c         | 60 ++++++++++++++++++++++++++++++++++++----------
->  include/trace/events/xdp.h | 29 ++++++++++++++++++++++
->  kernel/bpf/core.c          |  1 +
->  3 files changed, 78 insertions(+), 12 deletions(-)
-> 
+> The latest clang is the requirement.
+> If environment has old clang or no clang at all these tests will be failing.
 
-Applied, thanks!
+Hi Alexei!
+
+I'm not certain if I'm interpreting you as you intended, but it sounds
+like you're telling me that if the test build environment does not use
+'latest clang' (i guess latest as of today?), that these tests will
+fail, and that is how it is going to be. If I have that wrong, please
+correct me and disregard the rest of my message.
+
+Please understand where we are coming from. We (and many others) run
+thousands of tests from a lot of test frameworks, and so our environment
+often has mutually exclusive requirements when it comes to things like
+toolchain selection.
+
+We believe, strongly, that a test should not emit a "fail" for a missing
+requirement. Fail is a serious thing, and should be reserved for an
+actual issue that needs to be investigated, reported, and fixed.
+
+This is how we treat test failures - we investigate, report, and fix
+them when possible. When they're not real failures, we waste our time
+(and yours, in this case).
+
+By adding the tests to TEST_GEN_PROGS, you're adding them to the general
+test set that those of us running test farms try to run continuously
+across a wide range of hardware environments and kernel branches.
+
+My suggestion is that if you do not want us running them, don't add them
+to TEST_GEN_PROGS. I thought the suggestion of testing for adequate
+clang support and adding them conditionally at build-time was an idea
+worth consideration.
+
+Thanks,
+Dan
+
+-- 
+Linaro - Kernel Validation
