@@ -2,81 +2,77 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9288554DDB
-	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 13:42:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABF6254ED9
+	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 14:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfFYLmx (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 07:42:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36336 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728703AbfFYLmw (ORCPT
+        id S1727622AbfFYM3N (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 08:29:13 -0400
+Received: from www62.your-server.de ([213.133.104.62]:58856 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbfFYM3N (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:42:52 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q26so12419684lfc.3
-        for <xdp-newbies@vger.kernel.org>; Tue, 25 Jun 2019 04:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KC6UqMNqqkqf945o5TbzjnUd7iFuYFfkkwWAw6cVa+A=;
-        b=dRpoMSrornZ5+U7nptq/uktaa04UFIo/QAPLaDjRnueu6KFQvvbSC6ea/xIkrZ1H+I
-         Je7LPWkHilJBcantQI2hVUlxVqRs1rx96wT1pMz6dMOJHhnnGQlCkxVOepvxEeCOShTL
-         Yk4beULHTY/vTur12Zdo9Cktt4Ag8Xlo1DSjye7uzhgOi6xbe0mMRHDoIUsYjhCT9JDP
-         B6XZNeVqaYT95yRVDq8vrsv4Oi62dfsZacGbbZRDRztCjG8Ep7/SB33ub9e+WQ0Ep7vt
-         6UyJgyu/fZjIQRTiLMN6bJdHGOJtcz9XOJutcYpEA+DsJl38eDuJcLtKImIBfeVyUsIX
-         89pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KC6UqMNqqkqf945o5TbzjnUd7iFuYFfkkwWAw6cVa+A=;
-        b=Lt/35V6ciAEfwfY8JXc+KdQB/k6B8NpFNSjnJlv3m/sn3qOsF6G8IjoH9g2hDnejvx
-         LQF+UU9Io/x/5YN2T+hAUPCqjqIICrLBqBgvebinbozU3KyrfxS5m0DwDlKCrL8luY3f
-         QsVR8yy6RHTBOnrnAS64/feUmKkqnprHrxbV8HjcwS1VHmSzjO+N8lK6TkFBTv6xVjOk
-         2KQXhSCdP+EfTsVE+wlV1rHgwBTfLMZEwS9QNu92eADMg7znYmOqo/5kIhE/dyUH6c90
-         WVkOl4fuPdPYL52RsrXUG6IkBO1w+Bk3Jo2JWHGjZqCNFKhudc0ktOcZuSxO/yZkAE4F
-         Y/OA==
-X-Gm-Message-State: APjAAAX4uqbQfe+3XzEjmuIeZug3Auw0bkQj2w9aQEAArqIP840zATWe
-        O8RFkGOMEbopc95X+YgFgRwaAA==
-X-Google-Smtp-Source: APXvYqxt2HqTpJfaSIXqLD+CeTVC95mRSNEVCNRSHi4rSCLqw8RN7sSne6onoOM39tgDEByte/9mFg==
-X-Received: by 2002:a19:3804:: with SMTP id f4mr6841525lfa.69.1561462970776;
-        Tue, 25 Jun 2019 04:42:50 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id r2sm1913675lfi.51.2019.06.25.04.42.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 04:42:50 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     netdev@vger.kernel.org, davem@davemloft.net
-Cc:     xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ast@kernel.org, hawk@kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [[PATCH net-next]] net: core: xdp: make __mem_id_disconnect to be static
-Date:   Tue, 25 Jun 2019 14:42:46 +0300
-Message-Id: <20190625114246.14726-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Jun 2019 08:29:13 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hfkZO-0005rK-Fn; Tue, 25 Jun 2019 14:29:06 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hfkZO-000RXE-7h; Tue, 25 Jun 2019 14:29:06 +0200
+Subject: Re: [PATCH v3 bpf-next 0/2] veth: Bulk XDP_TX
+To:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Cc:     netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org,
+        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <20190613093959.2796-1-toshiaki.makita1@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2ee794bc-403b-84c5-da8f-3cbabf52dff7@iogearbox.net>
+Date:   Tue, 25 Jun 2019 14:29:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
+MIME-Version: 1.0
+In-Reply-To: <20190613093959.2796-1-toshiaki.makita1@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25491/Tue Jun 25 10:02:48 2019)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Add missed static for local __mem_id_disconnect().
+On 06/13/2019 11:39 AM, Toshiaki Makita wrote:
+> This introduces bulk XDP_TX in veth.
+> Improves XDP_TX performance by approximately 9%. The detailed
+> explanation and performance numbers are shown in patch 2.
+> 
+> v2:
+> - Use stack for bulk queue instead of a global variable.
+> 
+> v3:
+> - Add act field to xdp_bulk_tx tracepoint to be in line with other XDP
+>   tracepoints.
+> 
+> Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+> 
+> Toshiaki Makita (2):
+>   xdp: Add tracepoint for bulk XDP_TX
+>   veth: Support bulk XDP_TX
+> 
+>  drivers/net/veth.c         | 60 ++++++++++++++++++++++++++++++++++++----------
+>  include/trace/events/xdp.h | 29 ++++++++++++++++++++++
+>  kernel/bpf/core.c          |  1 +
+>  3 files changed, 78 insertions(+), 12 deletions(-)
+> 
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- net/core/xdp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index b29d7b513a18..829377cc83db 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -85,7 +85,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
- 	kfree(xa);
- }
- 
--bool __mem_id_disconnect(int id, bool force)
-+static bool __mem_id_disconnect(int id, bool force)
- {
- 	struct xdp_mem_allocator *xa;
- 	bool safe_to_remove = true;
--- 
-2.17.1
-
+Applied, thanks!
