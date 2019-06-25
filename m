@@ -2,75 +2,82 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2019055744
-	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 20:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5066A55815
+	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 21:46:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732998AbfFYScz (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 14:32:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40512 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729106AbfFYScz (ORCPT
+        id S1727768AbfFYTqE (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 15:46:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32913 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbfFYTqE (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:32:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so9358954pgj.7
-        for <xdp-newbies@vger.kernel.org>; Tue, 25 Jun 2019 11:32:54 -0700 (PDT)
+        Tue, 25 Jun 2019 15:46:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so10036006pfq.0;
+        Tue, 25 Jun 2019 12:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D1yWkLuPQ28KWW7K7QdlJ9HbJ+2HGPcbZ0bmcIG8Xo0=;
-        b=moU2u1V3Qh8J1hPlHaZz1CymCnc1sa24lshPcARXEL6urfTJZhOxDuV4nfrO8mjbVs
-         yugdY3l66uhheDa8r4QbmMwexq/mmHKgsAvf0R4EmF5zsxPsXq8HVASzWwXnepJuPSmi
-         e/spoalsDXQgxxTJ+zY6UbGtmagTbQ4KQ+9F+skLXdblT9s/6tRp3nHfzZXsIaXD8NIv
-         slmLmG4/Tjkm1ZbBGy2Ya/4anlhlR/+oPenq9+YlNR1RdxOtP7N68M+XQUiebj/IwRmE
-         Kv5u6IwxmRZH0N5P+tEseNu2K94msKftEYgJebGbUi/1U2frF4bavWJ+w5KXGClYpT1D
-         nsAQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=CvpGRQIfyA4kHAw6O6Qm/lsMzBb8T0R2UCjutO7iey0=;
+        b=o+aJk9f2CxqvUgKZvbf5ajY+7guRRvKlqLWkhdQ7mXYjuusbCSXWsMdm6Li1wiQL2B
+         rzsNK2NEDBvMcsqbycYMZ/lI0AAXMLnX+ZPMp3xMRtiEraYIv6sI18zlGzACRMtjTsOO
+         3UnnBDNA1twSyoWr3r9PwGm5IGtp2hYOG+VB8cAOIjIoGs001qOBb3TQAno0pGjDyEx9
+         f/28iSWq9i05wGwiqD025BC/fovzAVEeCiBzVu3UQ570iS1vnTx3nnAizQeTG2TKf2MS
+         tGHUHl7DyfYkokex0VoE4Ec4LCZK4AQy2hmM/xxcAemMIZ8eq6EXtLwPS90kPmvH4YIg
+         Qq6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D1yWkLuPQ28KWW7K7QdlJ9HbJ+2HGPcbZ0bmcIG8Xo0=;
-        b=CsdmkbfTt6xNmxpe6rJCTwZHAC5pffzpbw29jZcARaRFZncU+VKNwkERth599dJiyM
-         XLZ/Wj2OOMYPBTDdw5+ZXsn2pHbd6QSFAFEUJFahjkKFMBxj0d0OmoyFegCTSrLhoksN
-         2T/oleNT5gba1rlZ9XeZAlHFrDuMjK5EC31kRJGRlDa8lUhSw8CFlot4BujdmiRfYwdQ
-         aBZKCijETSSDCc2LHA07idFDDwfGRle4UaweI2Ifc+Z+99QU9eJlTyIzw+HRtBRS4SQL
-         4aQDjm9yyILLRQbIDCyKdYsTcyj7HKw78WgmWKqkI5zNCwwR8BOJ5aCK1Wvod0BtLsWy
-         ARqg==
-X-Gm-Message-State: APjAAAUcdvMhLThCRXR9Iclc8bS4sOR7A7mkJ3FT9yN7M7PN04/FMW0L
-        wcmUQ7ySrVXnHs3JWssbCq9GtI8uzOy9/C+O1StRTg==
-X-Google-Smtp-Source: APXvYqyKjZ/WKdRGYvvfMtHRGXNfsMEhqydqLgglBcUWoW+MIQpM+Bv1t6eGKozRx5tmkn3zgYBW6uQjx7xYhNKsGns=
-X-Received: by 2002:a63:52:: with SMTP id 79mr39875246pga.381.1561487574002;
- Tue, 25 Jun 2019 11:32:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190625182352.13918-1-natechancellor@gmail.com>
-In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Jun 2019 11:32:42 -0700
-Message-ID: <CAKwvOdkdXRRrTSukQ4mJ6FfjqD-GJeBzOK34e+=jJzaQ3qOaiw@mail.gmail.com>
-Subject: Re: [PATCH] xsk: Properly terminate assignment in xskq_produce_flush_desc
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=CvpGRQIfyA4kHAw6O6Qm/lsMzBb8T0R2UCjutO7iey0=;
+        b=lnCL80EUrwetP9u12n9pWBzCo6Rk1BtKsG4qmRvwCOCbeBgXCGRvzp28m19Sluv6lW
+         tEH6bPR6IeRAq/DNCUdjBHHZ8dymJQHSJTnfz+KH8vWgzAVFxGPVgmQkvJ+XArkIoTGH
+         rUXOqt5rrL4WzVe2L4ORBlv00E5EL31ejlwHpHVA7JiXnfDlEkdWbwA9AljcbObr2qy8
+         cNOsxzAQRyein4C59G6LRw4qs69kzOE1CdYNwqIE2/GlGQjfWShsDa/E6DrJRYYQ6TDg
+         8CKbdeLWubdrfb27A3JtgEi7kJicgsQDtPvq/SpqIJESHsKQ/mIF/MxMpb6/to04b+zH
+         W5BA==
+X-Gm-Message-State: APjAAAWYA7j0m2rbnHINEPT4cg8vCPskOM3IIfBlGnNCtMYyiwlywTQy
+        I1fu2YrIt8lHPkHcqAHhvkM=
+X-Google-Smtp-Source: APXvYqx8sY3iFA0v3H9RPqWYjbhv8UDOaU+yy0WLBP2zSAq6krunuMWOTMLZpAKJ35iE6riRZqKQTg==
+X-Received: by 2002:a17:90a:2163:: with SMTP id a90mr575441pje.3.1561491964038;
+        Tue, 25 Jun 2019 12:46:04 -0700 (PDT)
+Received: from [172.20.52.61] ([2620:10d:c090:200::3:e848])
+        by smtp.gmail.com with ESMTPSA id 133sm17098349pfa.92.2019.06.25.12.46.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 12:46:03 -0700 (PDT)
+From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
+To:     "Nathan Chancellor" <natechancellor@gmail.com>
+Cc:     "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
+        "Magnus Karlsson" <magnus.karlsson@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        "Jesper Dangaard Brouer" <hawk@kernel.org>,
+        "John Fastabend" <john.fastabend@gmail.com>,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        "Nathan Huckleberry" <nhuck@google.com>
+Subject: Re: [PATCH] xsk: Properly terminate assignment in
+ xskq_produce_flush_desc
+Date:   Tue, 25 Jun 2019 12:46:02 -0700
+X-Mailer: MailMate (1.12.5r5635)
+Message-ID: <34F07894-FDE7-44F8-B7F2-E2003D550AD2@gmail.com>
+In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
+References: <20190625182352.13918-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:24 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
+
+
+On 25 Jun 2019, at 11:23, Nathan Chancellor wrote:
+
 > Clang warns:
 >
 > In file included from net/xdp/xsk_queue.c:10:
@@ -85,21 +92,16 @@ On Tue, Jun 25, 2019 at 11:24 AM Nathan Chancellor
 >
 > The q->prod_tail assignment has a comma at the end, not a semi-colon.
 > Fix that so clang no longer warns and everything works as expected.
-
-oh no! -Wunderhanded-C-contest-style-use-of-comma-operator strikes again!
-Great find and thanks for the fix.
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Bj=C3=B6rn and Alexei should carefully review.  Because WRITE_ONCE is a
-macro that expands to a GNU C statement expression, which returns the
-last statement, this code was previously assigning q->prod_tail to
-itself, now it's assigning it to q->prod_head.  I assume that was not
-intentional, but am unfamiliar with the code.
-
 >
 > Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
 > Link: https://github.com/ClangBuiltLinux/linux/issues/544
 > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Nice find.
+
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+
+
 > ---
 >  net/xdp/xsk_queue.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -108,21 +110,15 @@ intentional, but am unfamiliar with the code.
 > index 88b9ae24658d..cba4a640d5e8 100644
 > --- a/net/xdp/xsk_queue.h
 > +++ b/net/xdp/xsk_queue.h
-> @@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk=
-_queue *q)
->         /* Order producer and data */
->         smp_wmb(); /* B, matches C */
+> @@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct 
+> xsk_queue *q)
+>  	/* Order producer and data */
+>  	smp_wmb(); /* B, matches C */
 >
-> -       q->prod_tail =3D q->prod_head,
-> +       q->prod_tail =3D q->prod_head;
->         WRITE_ONCE(q->ring->producer, q->prod_tail);
+> -	q->prod_tail = q->prod_head,
+> +	q->prod_tail = q->prod_head;
+>  	WRITE_ONCE(q->ring->producer, q->prod_tail);
 >  }
 >
-> --
+> -- 
 > 2.22.0
->
-
-
---=20
-Thanks,
-~Nick Desaulniers
