@@ -2,123 +2,128 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5066A55815
-	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 21:46:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DD7B558C8
+	for <lists+xdp-newbies@lfdr.de>; Tue, 25 Jun 2019 22:27:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfFYTqE (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 15:46:04 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32913 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbfFYTqE (ORCPT
+        id S1726545AbfFYU14 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 16:27:56 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:35732 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFYU14 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:46:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x15so10036006pfq.0;
-        Tue, 25 Jun 2019 12:46:04 -0700 (PDT)
+        Tue, 25 Jun 2019 16:27:56 -0400
+Received: by mail-lj1-f175.google.com with SMTP id x25so17609174ljh.2;
+        Tue, 25 Jun 2019 13:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=CvpGRQIfyA4kHAw6O6Qm/lsMzBb8T0R2UCjutO7iey0=;
-        b=o+aJk9f2CxqvUgKZvbf5ajY+7guRRvKlqLWkhdQ7mXYjuusbCSXWsMdm6Li1wiQL2B
-         rzsNK2NEDBvMcsqbycYMZ/lI0AAXMLnX+ZPMp3xMRtiEraYIv6sI18zlGzACRMtjTsOO
-         3UnnBDNA1twSyoWr3r9PwGm5IGtp2hYOG+VB8cAOIjIoGs001qOBb3TQAno0pGjDyEx9
-         f/28iSWq9i05wGwiqD025BC/fovzAVEeCiBzVu3UQ570iS1vnTx3nnAizQeTG2TKf2MS
-         tGHUHl7DyfYkokex0VoE4Ec4LCZK4AQy2hmM/xxcAemMIZ8eq6EXtLwPS90kPmvH4YIg
-         Qq6Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oRmYeVOh7NfY6hKbB5eNWP52w4vJxcXS9GCkFHd3G74=;
+        b=eVeBnR+XAL2j5u3GGVsg3yWUIGA7z+jVikp+Bs7gMu1/yELD3OcstPMxguwV1tVjUI
+         ECS6brRWHFnW+o/AKFNIFVvrAf9herve2aaUwPXanEsGEp5Wf7BuWmT2PiFJzlSZo/3F
+         BI3NL9Akq09pK9GVK7uOugYJZ1fN57wvBf8A/850IhI+ZeE2z5NFL4Qc54Y/RB51ZdEb
+         WM9M0qiOriFpM+Gvxa0QatwFUkcY7Ho04nHAN7rEfmyoerS6pw3eto6ZF1e9apHwzFJo
+         ZXLjm/MkGvvaKkyOfEqfNnFqDx2VqLgQJcB4d1LUqsjVzb3aifJFB+//RgI1Ks0ioQWj
+         Ffsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=CvpGRQIfyA4kHAw6O6Qm/lsMzBb8T0R2UCjutO7iey0=;
-        b=lnCL80EUrwetP9u12n9pWBzCo6Rk1BtKsG4qmRvwCOCbeBgXCGRvzp28m19Sluv6lW
-         tEH6bPR6IeRAq/DNCUdjBHHZ8dymJQHSJTnfz+KH8vWgzAVFxGPVgmQkvJ+XArkIoTGH
-         rUXOqt5rrL4WzVe2L4ORBlv00E5EL31ejlwHpHVA7JiXnfDlEkdWbwA9AljcbObr2qy8
-         cNOsxzAQRyein4C59G6LRw4qs69kzOE1CdYNwqIE2/GlGQjfWShsDa/E6DrJRYYQ6TDg
-         8CKbdeLWubdrfb27A3JtgEi7kJicgsQDtPvq/SpqIJESHsKQ/mIF/MxMpb6/to04b+zH
-         W5BA==
-X-Gm-Message-State: APjAAAWYA7j0m2rbnHINEPT4cg8vCPskOM3IIfBlGnNCtMYyiwlywTQy
-        I1fu2YrIt8lHPkHcqAHhvkM=
-X-Google-Smtp-Source: APXvYqx8sY3iFA0v3H9RPqWYjbhv8UDOaU+yy0WLBP2zSAq6krunuMWOTMLZpAKJ35iE6riRZqKQTg==
-X-Received: by 2002:a17:90a:2163:: with SMTP id a90mr575441pje.3.1561491964038;
-        Tue, 25 Jun 2019 12:46:04 -0700 (PDT)
-Received: from [172.20.52.61] ([2620:10d:c090:200::3:e848])
-        by smtp.gmail.com with ESMTPSA id 133sm17098349pfa.92.2019.06.25.12.46.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 12:46:03 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Nathan Chancellor" <natechancellor@gmail.com>
-Cc:     "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        "Jesper Dangaard Brouer" <hawk@kernel.org>,
-        "John Fastabend" <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Nathan Huckleberry" <nhuck@google.com>
-Subject: Re: [PATCH] xsk: Properly terminate assignment in
- xskq_produce_flush_desc
-Date:   Tue, 25 Jun 2019 12:46:02 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <34F07894-FDE7-44F8-B7F2-E2003D550AD2@gmail.com>
-In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
-References: <20190625182352.13918-1-natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oRmYeVOh7NfY6hKbB5eNWP52w4vJxcXS9GCkFHd3G74=;
+        b=H8vb8O3GtUY5nkbTcnsv4OvIafOZ4wZMS0Vuts4K9Yz9aKH/556/MR85ygAqWf2iQP
+         q10EHI4yBWB8II+5Q0gFZhNHXerJ3S5ZZ7pGzqfJW/09YDbndKg7BLkUQSLS1/zEdQug
+         kCTUas928QWk5gzyZBlXMe4ijLo8vKJwq5IjSPz8Vi9oZ0ntnimcVkAFYmw0hO0T5IXp
+         Vr4dQkA3Y/48F6qbKBQAx/ofO39lTZ2jFx/Q+5NFMKSx0ZHJYbUmLJqsRqNqKAhkDNG9
+         e0c9P7DMa0pjldaaS2LhZ+ywuvA6V1lp4wUb5ArKWz9f3TEmEZkICGD2pN8V6mvomKMM
+         N8gg==
+X-Gm-Message-State: APjAAAUPKHtedOF2FuhMff/BpkIYspp8RGg3s8J76HeWpREhtYLph0cY
+        Xo92TuQfqbr/8HuIsPbmQGV9VeVYD5yussrJXUo=
+X-Google-Smtp-Source: APXvYqyPbC29JdNWnZqiP3xde3zVIFnuhIOwlmPXNm+MesPHdP6UZWYfygK3ni7PqzwYZ8irnFTkkjFxUp3S1X4VZxo=
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr273099ljj.17.1561494472994;
+ Tue, 25 Jun 2019 13:27:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+References: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
+ <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
+ <20190621161752.d7d7n4m5q67uivys@xps.therub.org> <CAEf4BzaSoKA5H5rN=w+OAtUz4bD30-VOjjjY+Qv9tTAnhMweiA@mail.gmail.com>
+ <20190624195336.nubi7n2np5vfjutr@xps.therub.org> <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
+ <20190625153159.5utnn36dgku5545n@xps.therub.org>
+In-Reply-To: <20190625153159.5utnn36dgku5545n@xps.therub.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 25 Jun 2019 13:27:41 -0700
+Message-ID: <CAADnVQLoSc=PsKj=KdCsqMLfHO-sP_Bijgy63zROos6Cy=k+dw@mail.gmail.com>
+Subject: Re: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
+To:     Dan Rue <dan.rue@linaro.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>, Martin Lau <kafai@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-
-
-On 25 Jun 2019, at 11:23, Nathan Chancellor wrote:
-
-> Clang warns:
+On Tue, Jun 25, 2019 at 8:32 AM Dan Rue <dan.rue@linaro.org> wrote:
 >
-> In file included from net/xdp/xsk_queue.c:10:
-> net/xdp/xsk_queue.h:292:2: warning: expression result unused
-> [-Wunused-value]
->         WRITE_ONCE(q->ring->producer, q->prod_tail);
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
->         __u.__val;                                      \
->         ~~~ ^~~~~
-> 1 warning generated.
+> On Mon, Jun 24, 2019 at 12:58:15PM -0700, Alexei Starovoitov wrote:
+> > On Mon, Jun 24, 2019 at 12:53 PM Dan Rue <dan.rue@linaro.org> wrote:
+> > >
+> > > I would say if it's not possible to check at runtime, and it requires
+> > > clang 9.0, that this test should not be enabled by default.
+> >
+> > The latest clang is the requirement.
+> > If environment has old clang or no clang at all these tests will be failing.
 >
-> The q->prod_tail assignment has a comma at the end, not a semi-colon.
-> Fix that so clang no longer warns and everything works as expected.
+> Hi Alexei!
 >
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/544
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> I'm not certain if I'm interpreting you as you intended, but it sounds
+> like you're telling me that if the test build environment does not use
+> 'latest clang' (i guess latest as of today?), that these tests will
+> fail, and that is how it is going to be. If I have that wrong, please
+> correct me and disregard the rest of my message.
+>
+> Please understand where we are coming from. We (and many others) run
+> thousands of tests from a lot of test frameworks, and so our environment
+> often has mutually exclusive requirements when it comes to things like
+> toolchain selection.
+>
+> We believe, strongly, that a test should not emit a "fail" for a missing
+> requirement. Fail is a serious thing, and should be reserved for an
+> actual issue that needs to be investigated, reported, and fixed.
+>
+> This is how we treat test failures - we investigate, report, and fix
+> them when possible. When they're not real failures, we waste our time
+> (and yours, in this case).
+>
+> By adding the tests to TEST_GEN_PROGS, you're adding them to the general
+> test set that those of us running test farms try to run continuously
+> across a wide range of hardware environments and kernel branches.
 
-Nice find.
+you run the latest selftests/bpf on the latest kernel, right?
+If not than selftests/bpf is not for your setup.
 
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-
-
-> ---
->  net/xdp/xsk_queue.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-> index 88b9ae24658d..cba4a640d5e8 100644
-> --- a/net/xdp/xsk_queue.h
-> +++ b/net/xdp/xsk_queue.h
-> @@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct 
-> xsk_queue *q)
->  	/* Order producer and data */
->  	smp_wmb(); /* B, matches C */
->
-> -	q->prod_tail = q->prod_head,
-> +	q->prod_tail = q->prod_head;
->  	WRITE_ONCE(q->ring->producer, q->prod_tail);
->  }
->
-> -- 
-> 2.22.0
+In the past people argued that selftests/bpf should check
+features of the kernel and skip when features are not found.
+My answer to that was always the same: such changes to selftests
+for older kernels need to live out of tree.
+selftests/bpf are one to one to the latest kernel.
+Often kernel commit X will break selftests and they're fixed
+in the commit X+1.
+clang, pahole, bpftool, iproute2 provide those features for the kernel.
+In other words new kernel features rely on new clang and
+other tools and selftests are testing those latest kernel features.
+Without new clang many new features cannot be tested exhaustively.
+datasec and btf are just few examples.
+Hence if your test farm cannot install the latest clang, pahole, etc then
+I recommend not to run selftest/bpf.
