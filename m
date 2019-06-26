@@ -2,40 +2,40 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02D8F56D05
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 17:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35EE656D70
+	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 17:14:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfFZPBp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Wed, 26 Jun 2019 11:01:45 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43579 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfFZPBp (ORCPT
+        id S1727959AbfFZPOg convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Wed, 26 Jun 2019 11:14:36 -0400
+Received: from mail-ed1-f54.google.com ([209.85.208.54]:36286 "EHLO
+        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbfFZPOf (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:01:45 -0400
-Received: by mail-ed1-f67.google.com with SMTP id e3so3778899edr.10
-        for <xdp-newbies@vger.kernel.org>; Wed, 26 Jun 2019 08:01:43 -0700 (PDT)
+        Wed, 26 Jun 2019 11:14:35 -0400
+Received: by mail-ed1-f54.google.com with SMTP id k21so3878002edq.3
+        for <xdp-newbies@vger.kernel.org>; Wed, 26 Jun 2019 08:14:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version:content-transfer-encoding;
-        bh=bgh/nqnjA4HfgsMLeIeCKd+kq52HpveFznoNeJNbMxM=;
-        b=ssuW0u8HKKaYtLxqOc0h+rK7I6vCgtiu6pA6x3by5LAyXXPAf3Fl/cy8BZIw5/VV5Y
-         jOFxDeMGdEinidSqMiKx+KgSvXxDkQFC3xsE7lgfnTEVkPUKd44/SRhxVm6ekdd5nlAM
-         abwV4cNv+WlveD8vMBC2+7V2GkOwPFBHCLNgWlXZO+ptGneFEWVPVpOLPfE7G9mi3MZs
-         qwjT4AjIwndpzLp+hC60rG7C1x7aRirqPrVGl/b6UqR9xePsfrjDcpG8d/atPCV3UTJm
-         A2XWw3UM3E2lkQH6tlZ+blka0gJ1pc7xyoqT7iZMaarrhEnZiUcRwBKDYP5A1oT0dh8u
-         47Gw==
-X-Gm-Message-State: APjAAAXBFuE2R4DPT/MZKGo50Xsc8O/IDpwkJmzYhd0L581I+TqWsGrT
-        CzL5qU+FQtrLq0Q6VJM96MceZg==
-X-Google-Smtp-Source: APXvYqxVDFEDspErcW7V3X7CB4dV8YfWOvyjtyvd+Ooy0iUpIIw9+wpT18UPpOc9Rf2MheEhs7e0iQ==
-X-Received: by 2002:a17:906:2d4a:: with SMTP id e10mr4466898eji.263.1561561303057;
-        Wed, 26 Jun 2019 08:01:43 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
-        by smtp.gmail.com with ESMTPSA id o18sm5633512edq.18.2019.06.26.08.01.42
+        bh=M366rKkt5ha/CiMBZW0a1OAroYMcNQ6gNLU/efFnQ+o=;
+        b=e23Ry5A0YngonUXDMFWH6Mg4WGbsU4i5eyPoSX3qT39zsmRid6QbJr6d8U7V+k9vAL
+         wspWQF5t2UogAegK6DoMe6vuq7BNdhjyObVMngyQ8OVdB3zYhp+XBOK66KYPtihIaU02
+         lpe2tU7XFfWsxfSWFoshZhCx+a/36LUUcAQYvZQQzp5vyLyqXmR/IQNdPxWmSROUFped
+         mvfrwRTsGn1bmvonn1EtxtWOR4dHYzyjoR9VA1HBPTI0s2hrih3sKtcXTWFCddrnXiqo
+         2F4mFmcL6ZQShtt4BN2XPBnb9mjoTaqTh7WGY6VR7dDqshY5sv3Da2bEbJbWNfsJv0I+
+         xFvA==
+X-Gm-Message-State: APjAAAXBycZVXzu2D8xj2jKhfbQznNtUb3XXPzR34oHcvdtuI2YheIOK
+        WFB226oVNpYRzeuD2yX2Lb1qCA==
+X-Google-Smtp-Source: APXvYqzxBdIpc3m2/QPoftwdKMrnnV+q0z+awsUupPb6zDzM7D1dgNWUc5ziQYAei4JFOEbLnmRXHw==
+X-Received: by 2002:a05:6402:1557:: with SMTP id p23mr5840280edx.207.1561562073581;
+        Wed, 26 Jun 2019 08:14:33 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id b6sm342797ejk.27.2019.06.26.08.14.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 08:01:42 -0700 (PDT)
+        Wed, 26 Jun 2019 08:14:32 -0700 (PDT)
 Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id D7D6D181CA7; Wed, 26 Jun 2019 17:01:41 +0200 (CEST)
+        id 6051F181CA7; Wed, 26 Jun 2019 17:14:32 +0200 (CEST)
 From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
 To:     Jesper Dangaard Brouer <brouer@redhat.com>
 Cc:     "Machulsky\, Zorik" <zorik@amazon.com>,
@@ -63,8 +63,8 @@ Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1] net
 In-Reply-To: <20190626164059.4a9511cf@carbon>
 References: <20190623070649.18447-1-sameehj@amazon.com> <20190623070649.18447-2-sameehj@amazon.com> <20190623162133.6b7f24e1@carbon> <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com> <20190626103829.5360ef2d@carbon> <87a7e4d0nj.fsf@toke.dk> <20190626164059.4a9511cf@carbon>
 X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 26 Jun 2019 17:01:41 +0200
-Message-ID: <87h88cbdbe.fsf@toke.dk>
+Date:   Wed, 26 Jun 2019 17:14:32 +0200
+Message-ID: <87ef3gbcpz.fsf@toke.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
@@ -138,10 +138,7 @@ Jesper Dangaard Brouer <brouer@redhat.com> writes:
 >
 > 1. It is valuable for XDP bpf_prog to know "full" length?
 >    (if so, then we need to extend xdp ctx with info)
-
-Valuable, quite likely. A hard requirement, probably not (for all use
-cases).
-
+>
 >  But if we need to know the full length, when the first-buffer is
 >  processed. Then realize that this affect the drivers RX-loop, because
 >  then we need to "collect" all the buffers before we can know the
@@ -151,26 +148,15 @@ cases).
 >  XDP_REDIRECT will also need to "collect" all buffers before the packet
 >  can be forwarded. (Although this could potentially happen later in
 >  driver loop when it meet/find the End-Of-Packet descriptor bit).
->  
->
-> 2. Can we even allow helper bpf_xdp_adjust_tail() ?
->
->  Wouldn't it be easier to disallow a BPF-prog with this helper, when
->  driver have configured multi-buffer?
 
-Easier, certainly. But then it's even easier to not implement this at
-all ;)
+A few more points (mostly thinking out loud here):
 
->  Or will it be too restrictive, if jumbo-frame is very uncommon and
->  only enabled because switch infra could not be changed (like Amazon
->  case).
+- In any case we probably need to loop through the subsequent
+  descriptors in all cases, right? (i.e., if we run XDP on first
+  segment, and that returns DROP, the rest that are part of the packet
+  still need to be discarded). So we may as well delay XDP execution
+  until we have the whole packet?
 
-I think it would be preferable to support it; but maybe we can let that
-depend on how difficult it actually turns out to be to allow it?
-
->  Perhaps it is better to let bpf_xdp_adjust_tail() fail runtime?
-
-If we do disallow it, I think I'd lean towards failing the call at
-runtime...
+- Will this allow us to run XDP on hardware-assembled GRO super-packets?
 
 -Toke
