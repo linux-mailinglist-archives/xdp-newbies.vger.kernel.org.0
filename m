@@ -2,107 +2,179 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33E3C56E2F
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 17:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E5E856EE6
+	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 18:36:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfFZP7S (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 26 Jun 2019 11:59:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33245 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZP7S (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:59:18 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so1964707lfe.0
-        for <xdp-newbies@vger.kernel.org>; Wed, 26 Jun 2019 08:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=w3F+tqbuCaIkVEmb3xZOgqKho6J48v4zfZ9zqPryVN8=;
-        b=g9V3FeUtFTWjdbosHMyZt4xm7w+kP7xwYdEacmzFkudE1y+O7N4jJ0o1485yPZ2KkV
-         nE+9UENFAt22ikKN4VKWQsipR+VEnTM7ixoyzwPP0V6SnB1WMndNPVu0YtEYpWTyiSxW
-         aDDIJ+QdEVHzhEbSwqWwItJ1ePptdzA73s771bAn8LtrY1GVRVbI5jK7isj2UJjeM01x
-         pZXuRDiQpNPRezH1rd5nGe2EDGLrPqomN9gmggQCsn6kydp+UC530gotK5JtrcUOZPTv
-         Z5narCZ1IsA10kj13uHoOyheyRkC638s8UVM6Nwguobhli26k3OUWn5HLVpXt/iyT/5c
-         YJ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=w3F+tqbuCaIkVEmb3xZOgqKho6J48v4zfZ9zqPryVN8=;
-        b=MX4Z+T4iFkHep0ecCIZAG2Bx5suMCvZWTGV6gtkVqB+xCRfD+/4GkQN8pKuK814h0C
-         HYzYKHEh31ZM2Jun958agGn3llELFBJojg0az4HHHG3ZPDAdG+hEXWVAvUtFSr2KqVkC
-         mEav+2VyqMZJQsccMJ3+BhdsFldLcjx9D5ex7+bPQkEBCod7dvHGft3crH16uCrxytyR
-         FXQsXDkwXqXOyYpgWNTDtd5AoTeSyeuejIikoheByRHVK5QwD2XuFKWlazQXiAJLcpKI
-         CXjmf263+4a0/EjAxmZkswtZUIxzOrcCxxETFMEKgn0rGu1nPdn4ZBpt+vEp1sZzvVw5
-         vwxw==
-X-Gm-Message-State: APjAAAUSDwbrLc3wHbkMHj90g2a4ONZsWS7bneoMpQCpZw+ER6EC9VbY
-        u0BOiTnUy2mSPUQUu4Opjhb+cA==
-X-Google-Smtp-Source: APXvYqwxPGGkHGeCrj0vxlOHZFHSZuMOUZLSiXgf7NgyB/aIkSZ03HweWLPeu8yjUokOOKyyRr1TDw==
-X-Received: by 2002:a19:4f50:: with SMTP id a16mr3070485lfk.24.1561564755631;
-        Wed, 26 Jun 2019 08:59:15 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id p27sm2504052lfo.16.2019.06.26.08.59.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 08:59:15 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     bjorn.topel@intel.com, magnus.karlsson@intel.com,
-        davem@davemloft.net
-Cc:     ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-        john.fastabend@gmail.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for 32bits systems
-Date:   Wed, 26 Jun 2019 18:59:11 +0300
-Message-Id: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726271AbfFZQgj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Wed, 26 Jun 2019 12:36:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59474 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfFZQgj (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:36:39 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B64033082E0F;
+        Wed, 26 Jun 2019 16:36:21 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 434961001B04;
+        Wed, 26 Jun 2019 16:36:03 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 18:36:01 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc:     "Machulsky\, Zorik" <zorik@amazon.com>,
+        "Jubran\, Samih" <sameehj@amazon.com>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Woodhouse\, David" <dwmw@amazon.co.uk>,
+        "Matushevsky\, Alexander" <matua@amazon.com>,
+        "Bshara\, Saeed" <saeedb@amazon.com>,
+        "Wilson\, Matt" <msw@amazon.com>,
+        "Liguori\, Anthony" <aliguori@amazon.com>,
+        "Bshara\, Nafea" <nafea@amazon.com>,
+        "Tzalik\, Guy" <gtzalik@amazon.com>,
+        "Belgazal\, Netanel" <netanel@amazon.com>,
+        "Saidi\, Ali" <alisaidi@amazon.com>,
+        "Herrenschmidt\, Benjamin" <benh@amazon.com>,
+        "Kiyanovski\, Arthur" <akiyano@amazon.com>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "xdp-newbies\@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        brouer@redhat.com
+Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
+ net: ena: implement XDP drop support)
+Message-ID: <20190626183601.1bd43d00@carbon>
+In-Reply-To: <87ef3gbcpz.fsf@toke.dk>
+References: <20190623070649.18447-1-sameehj@amazon.com>
+        <20190623070649.18447-2-sameehj@amazon.com>
+        <20190623162133.6b7f24e1@carbon>
+        <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
+        <20190626103829.5360ef2d@carbon>
+        <87a7e4d0nj.fsf@toke.dk>
+        <20190626164059.4a9511cf@carbon>
+        <87ef3gbcpz.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 26 Jun 2019 16:36:38 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Use kmap instead of page_address as it's not always in low memory.
+On Wed, 26 Jun 2019 17:14:32 +0200
+Toke Høiland-Jørgensen <toke@redhat.com> wrote:
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- net/xdp/xdp_umem.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+> Jesper Dangaard Brouer <brouer@redhat.com> writes:
+> 
+> > On Wed, 26 Jun 2019 13:52:16 +0200
+> > Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> >  
+> >> Jesper Dangaard Brouer <brouer@redhat.com> writes:
+> >>   
+> >> > On Tue, 25 Jun 2019 03:19:22 +0000
+> >> > "Machulsky, Zorik" <zorik@amazon.com> wrote:
+> >> >    
+> >> >> ﻿On 6/23/19, 7:21 AM, "Jesper Dangaard Brouer" <brouer@redhat.com> wrote:
+> >> >> 
+> >> >>     On Sun, 23 Jun 2019 10:06:49 +0300 <sameehj@amazon.com> wrote:
+> >> >>         
+> >> >>     > This commit implements the basic functionality of drop/pass logic in the
+> >> >>     > ena driver.      
+> >> >>     
+> >> >>     Usually we require a driver to implement all the XDP return codes,
+> >> >>     before we accept it.  But as Daniel and I discussed with Zorik during
+> >> >>     NetConf[1], we are going to make an exception and accept the driver
+> >> >>     if you also implement XDP_TX.
+> >> >>     
+> >> >>     As we trust that Zorik/Amazon will follow and implement XDP_REDIRECT
+> >> >>     later, given he/you wants AF_XDP support which requires XDP_REDIRECT.
+> >> >> 
+> >> >> Jesper, thanks for your comments and very helpful discussion during
+> >> >> NetConf! That's the plan, as we agreed. From our side I would like to
+> >> >> reiterate again the importance of multi-buffer support by xdp frame.
+> >> >> We would really prefer not to see our MTU shrinking because of xdp
+> >> >> support.       
+> >> >
+> >> > Okay we really need to make a serious attempt to find a way to support
+> >> > multi-buffer packets with XDP. With the important criteria of not
+> >> > hurting performance of the single-buffer per packet design.
+> >> >
+> >> > I've created a design document[2], that I will update based on our
+> >> > discussions: [2] https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org
+> >> >
+> >> > The use-case that really convinced me was Eric's packet header-split.
+> >> >
+> >> >
+> >> > Lets refresh: Why XDP don't have multi-buffer support:
+> >> >
+> >> > XDP is designed for maximum performance, which is why certain driver-level
+> >> > use-cases were not supported, like multi-buffer packets (like jumbo-frames).
+> >> > As it e.g. complicated the driver RX-loop and memory model handling.
+> >> >
+> >> > The single buffer per packet design, is also tied into eBPF Direct-Access
+> >> > (DA) to packet data, which can only be allowed if the packet memory is in
+> >> > contiguous memory.  This DA feature is essential for XDP performance.
+> >> >
+> >> >
+> >> > One way forward is to define that XDP only get access to the first
+> >> > packet buffer, and it cannot see subsequent buffers. For XDP_TX and
+> >> > XDP_REDIRECT to work then XDP still need to carry pointers (plus
+> >> > len+offset) to the other buffers, which is 16 bytes per extra buffer.    
+> >> 
+> >> Yeah, I think this would be reasonable. As long as we can have a
+> >> metadata field with the full length + still give XDP programs the
+> >> ability to truncate the packet (i.e., discard the subsequent pages)  
+> >
+> > You touch upon some interesting complications already:
+> >
+> > 1. It is valuable for XDP bpf_prog to know "full" length?
+> >    (if so, then we need to extend xdp ctx with info)
+> >
+> >  But if we need to know the full length, when the first-buffer is
+> >  processed. Then realize that this affect the drivers RX-loop, because
+> >  then we need to "collect" all the buffers before we can know the
+> >  length (although some HW provide this in first descriptor).
+> >
+> >  We likely have to change drivers RX-loop anyhow, as XDP_TX and
+> >  XDP_REDIRECT will also need to "collect" all buffers before the packet
+> >  can be forwarded. (Although this could potentially happen later in
+> >  driver loop when it meet/find the End-Of-Packet descriptor bit).  
+> 
+> A few more points (mostly thinking out loud here):
+> 
+> - In any case we probably need to loop through the subsequent
+>   descriptors in all cases, right? (i.e., if we run XDP on first
+>   segment, and that returns DROP, the rest that are part of the packet
+>   still need to be discarded). So we may as well delay XDP execution
+>   until we have the whole packet?
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 9c6de4f114f8..d3c1411420fd 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -169,6 +169,14 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
- 	}
- }
+For the XDP_DROP case, drivers usually have way to discard remaining
+buffers/segments, to handle error cases.  But it heavily depend on the
+driver, how tricky/convoluted this code is...
+
+Generally I would say it would make sense to delay XDP execution until
+all buffers/segments are "collected".  It would be the clean approach,
+but will likely require refactoring of driver level code.
+
  
-+static void xdp_umem_unmap_pages(struct xdp_umem *umem)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < umem->npgs; i++)
-+		kunmap(umem->pgs[i]);
-+}
-+
- static void xdp_umem_unpin_pages(struct xdp_umem *umem)
- {
- 	unsigned int i;
-@@ -210,6 +218,7 @@ static void xdp_umem_release(struct xdp_umem *umem)
- 
- 	xsk_reuseq_destroy(umem);
- 
-+	xdp_umem_unmap_pages(umem);
- 	xdp_umem_unpin_pages(umem);
- 
- 	kfree(umem->pages);
-@@ -372,7 +381,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 	}
- 
- 	for (i = 0; i < umem->npgs; i++)
--		umem->pages[i].addr = page_address(umem->pgs[i]);
-+		umem->pages[i].addr = kmap(umem->pgs[i]);
- 
- 	return 0;
- 
+> - Will this allow us to run XDP on hardware-assembled GRO super-packets?
+
+Big YES.  This is usually called LRO or TSO packets.  And yes, I also
+want to support this use-case, which is also listed in [2].  If we go
+down this road, this use-case is also important. (Especially related to
+my alloc SKBs outside drivers[3], this is a hardware offload we must
+support).
+
+
+[2] https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org
+
+[3] http://vger.kernel.org/netconf2019_files/xdp-metadata-discussion.pdf
 -- 
-2.17.1
-
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
