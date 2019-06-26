@@ -2,116 +2,118 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8359155AFD
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 00:23:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C621055D43
+	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 03:14:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfFYWXi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 25 Jun 2019 18:23:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36286 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfFYWXg (ORCPT
+        id S1726354AbfFZBOI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 25 Jun 2019 21:14:08 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33403 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZBOH (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:23:36 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g18so56408qkl.3;
-        Tue, 25 Jun 2019 15:23:35 -0700 (PDT)
+        Tue, 25 Jun 2019 21:14:07 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so335296qkc.0;
+        Tue, 25 Jun 2019 18:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sIswbHwSgwSuwLr12QK1wbcjOcRm9pBAZPfq0tTPI80=;
-        b=Kd+OIZ4ILZQeUT4uqYRzZCi57MzQutS8qVccTvXg3Y881AcKiY/VGcvk5Tnq7TJxsi
-         aTeNWHp/cE+chparMWuUSn9pfGUxuZL34U89IAbnDl+20fpCbMBC3A6YV5r+Tzb8Mp2r
-         Xz31U3gYgxprK+5DRzhxx9nv3bGmHzztjawhgFg2/6Sf42ISGyMlbSNf1ZC1UgZbaXA6
-         yfUHQDMWB5SE/j2FAFIqwdC2x6sPwXw+QLmlZqXeA7cvL4Bk/5x+XZQr3cieIjaVQ8SL
-         rbPa7m6v/XvLiMYwJ8UvpwE0RPuifekrcaaoh3wxXOroz7eYKe2L4QsFXE9x7+NI8edP
-         hRuQ==
+        bh=xa7kFnyQoa+lEZDO7e1IGoD9fmAsnkzHy+2marOiLwQ=;
+        b=deuJZWDXie6s6wJsPRLE5XatLhfZLBdzcg6KTeUX2rNTbwn/Sr0i2IQn8sAkXCPj/W
+         w3uuurc9pGXAcSTtC6m85Q93L0TM+Sm7V1ogHHAPgcEahjF9afHWYGokfqQcYY/O5k3h
+         K+ty7S/xbnHiZzXDscxmuu5SJBh2Brl0CygB7ZULmdjugnRMUDSApG6K2M7EK/WaArtQ
+         +5BRK/NZ/zLbuAv1BIib1n7z2B7OJ/A54VZRMDJbmXMl4VUOzwi5+Qoxttj8m1ukNhCI
+         uZPXdghZ6BfI2oNRCmwWowhUYTQrqJDoOSZB1+f9vY42oLRANTYIuxdDkdNKiN19nL/e
+         5TFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sIswbHwSgwSuwLr12QK1wbcjOcRm9pBAZPfq0tTPI80=;
-        b=nR9qRqxc+CmtthuxtB7Y0JBgiOIEKmQDG4BjgqeIrQtIsYNYXrsvttucspnoPtlRuZ
-         4xoejsXqmKF40VXMT1AT4Dae9ZmP2AuieYp8/DcAm8gfMsV0GsVLN3yScPb8tVx+8qjK
-         MCO4LiVYTH0UmntHsDpWvJ1AMRP97t7EY3je+xUNz/uqbtef/p/1P7FgVJAtjMvBrO1S
-         kizQtpoA8r8aqLZBnou5eqGUuLUYCCUdKGg6vqtpPxgmJl6RWL/KdVlnzeiMDl16JUfa
-         +K+eU2PC6hHWBGzZwhwG0JOBIfzeXhy2Zn7CibM2Z4NcUwPeQnhrWk30SIcwVcENe9Fo
-         qeNA==
-X-Gm-Message-State: APjAAAWQc6xbpqy41/w8tsigUrgiwDJMv6NxP1IjHJXKPhPx5X2g+UCD
-        lPrpwiPtTOCXUhPJ7YCXt5rp9KmpER7Jyw7Pwlk=
-X-Google-Smtp-Source: APXvYqyNaJzdwtghH1BJIpZux6J6aG6NzXOARLRHwdRwvCxVslZjvITlICUOdMwqZAi1K5yeWj6dSC47b+65ljYb6TY=
-X-Received: by 2002:a37:4d82:: with SMTP id a124mr995904qkb.72.1561501415343;
- Tue, 25 Jun 2019 15:23:35 -0700 (PDT)
+        bh=xa7kFnyQoa+lEZDO7e1IGoD9fmAsnkzHy+2marOiLwQ=;
+        b=Y/E0LUJK/BWPK/9JWr/vCcEvdcybTh9EXyvSNlm51WSIiAUjamAFMSQufWIzVtHL99
+         N+toJrMa/JzxDBLeXYckEvKtfN8bspM6At4ZhoC3oTREqNzXoKnaZRkgR4v1XhuY1C+N
+         cIlUjFms1vjoEltoIJ/8DFHVqmq4Vm0q06Ph96preouXcNItlPpRz7xC+JpRW6wiEmQ7
+         3GlS8V2DOTr8KTsgeGY0iMGSnA1nLwGtLOUYxNuCB0wth2dnVjH8B8lO6XBJw0Apvxd+
+         9zccbhML8ZO7TMcGdIU/oBJk+U3ZuJAjPNKKALN5pITbyhx3jqYLlU+9+4BrH9RHIlwp
+         IuOw==
+X-Gm-Message-State: APjAAAXoDMSDXlyaDI7wr2D9e48oyBZQq45HnkJynbtjGywRPYIIKWlk
+        KepULaqrEXd6h4k+3D7j1nj6QELdPFxOQHZugcs=
+X-Google-Smtp-Source: APXvYqwEjNW3qilUtEwD2dd81tM9h8NAAnx3UXiozPS4tBXBBlz4c70wG/gGkbGLe8mrr+8HWDosRFreLhfZBZJdAR0=
+X-Received: by 2002:a37:4d82:: with SMTP id a124mr1492498qkb.72.1561511646642;
+ Tue, 25 Jun 2019 18:14:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190625023137.29272-1-yuehaibing@huawei.com> <20190625112104.6654a048@carbon>
-In-Reply-To: <20190625112104.6654a048@carbon>
+References: <20190625182352.13918-1-natechancellor@gmail.com>
+In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
 From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 25 Jun 2019 15:23:24 -0700
-Message-ID: <CAPhsuW7e8KLooD_ASwWE_dbJwNTcs5sqR66LTWxR-cH3SBzSJw@mail.gmail.com>
-Subject: Re: [PATCH net-next] xdp: Make __mem_id_disconnect static
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Date:   Tue, 25 Jun 2019 18:13:55 -0700
+Message-ID: <CAPhsuW5XRqNpcw7WEsg=E6----XG6-9Cs8=wQbPRfAOXnOYv8Q@mail.gmail.com>
+Subject: Re: [PATCH] xsk: Properly terminate assignment in xskq_produce_flush_desc
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org,
         open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, xdp-newbies@vger.kernel.org,
-        bpf <bpf@vger.kernel.org>
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 4:52 AM Jesper Dangaard Brouer
-<brouer@redhat.com> wrote:
+On Tue, Jun 25, 2019 at 12:54 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> On Tue, 25 Jun 2019 10:31:37 +0800
-> YueHaibing <yuehaibing@huawei.com> wrote:
+> Clang warns:
 >
-> > Fix sparse warning:
-> >
-> > net/core/xdp.c:88:6: warning:
-> >  symbol '__mem_id_disconnect' was not declared. Should it be static?
+> In file included from net/xdp/xsk_queue.c:10:
+> net/xdp/xsk_queue.h:292:2: warning: expression result unused
+> [-Wunused-value]
+>         WRITE_ONCE(q->ring->producer, q->prod_tail);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
+>         __u.__val;                                      \
+>         ~~~ ^~~~~
+> 1 warning generated.
 >
-> I didn't declare it static as I didn't want it to get inlined.  As
-> during development I was using kprobes to inspect this function.  In
-> the end I added a tracepoint in this function as kprobes was not enough
-> to capture the state needed.
+> The q->prod_tail assignment has a comma at the end, not a semi-colon.
+> Fix that so clang no longer warns and everything works as expected.
 >
-> So, I guess we can declare it static.
->
-> Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/544
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-I think the rule is, non-static function must be declared in a header.
-
+Cc: <stable@vger.kernel.org> # v4.18+
 Acked-by: Song Liu <songliubraving@fb.com>
 
+Thanks for the fix!
+
+
+> ---
+>  net/xdp/xsk_queue.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >  net/core/xdp.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/net/core/xdp.c b/net/core/xdp.c
-> > index b29d7b5..829377c 100644
-> > --- a/net/core/xdp.c
-> > +++ b/net/core/xdp.c
-> > @@ -85,7 +85,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
-> >       kfree(xa);
-> >  }
-> >
-> > -bool __mem_id_disconnect(int id, bool force)
-> > +static bool __mem_id_disconnect(int id, bool force)
-> >  {
-> >       struct xdp_mem_allocator *xa;
-> >       bool safe_to_remove = true;
+> diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+> index 88b9ae24658d..cba4a640d5e8 100644
+> --- a/net/xdp/xsk_queue.h
+> +++ b/net/xdp/xsk_queue.h
+> @@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
+>         /* Order producer and data */
+>         smp_wmb(); /* B, matches C */
 >
+> -       q->prod_tail = q->prod_head,
+> +       q->prod_tail = q->prod_head;
+>         WRITE_ONCE(q->ring->producer, q->prod_tail);
+>  }
 >
 > --
-> Best regards,
->   Jesper Dangaard Brouer
->   MSc.CS, Principal Kernel Engineer at Red Hat
->   LinkedIn: http://www.linkedin.com/in/brouer
+> 2.22.0
+>
