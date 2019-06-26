@@ -2,161 +2,126 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37FA457222
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 22:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E9965731B
+	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 22:50:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfFZUA7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 26 Jun 2019 16:00:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43230 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZUA6 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:00:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F23EDC07F9A6;
-        Wed, 26 Jun 2019 20:00:47 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D18A1001DEF;
-        Wed, 26 Jun 2019 20:00:30 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 22:00:28 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     "Jonathan Lemon" <jonathan.lemon@gmail.com>
-Cc:     "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
-        "Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=" <toke@redhat.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>,
-        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Matushevsky, Alexander" <matua@amazon.com>,
-        "Bshara, Saeed" <saeedb@amazon.com>,
-        "Wilson, Matt" <msw@amazon.com>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        "Bshara, Nafea" <nafea@amazon.com>,
-        "Tzalik, Guy" <gtzalik@amazon.com>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "Daniel Borkmann" <borkmann@iogearbox.net>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        xdp-newbies@vger.kernel.org, brouer@redhat.com
-Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
- net: ena: implement XDP drop support)
-Message-ID: <20190626220028.2bb12196@carbon>
-In-Reply-To: <99AFC1EE-E27E-4D4D-B9B8-CA2215E68E1B@gmail.com>
-References: <20190623070649.18447-1-sameehj@amazon.com>
-        <20190623070649.18447-2-sameehj@amazon.com>
-        <20190623162133.6b7f24e1@carbon>
-        <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
-        <20190626103829.5360ef2d@carbon>
-        <87a7e4d0nj.fsf@toke.dk>
-        <20190626164059.4a9511cf@carbon>
-        <87h88cbdbe.fsf@toke.dk>
-        <CA+FuTSfKnhv9rr=cDa_4m7Dd9qkEm_oabDfyvH0T0sM+fQTU=w@mail.gmail.com>
-        <99AFC1EE-E27E-4D4D-B9B8-CA2215E68E1B@gmail.com>
+        id S1726347AbfFZUuf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 26 Jun 2019 16:50:35 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36817 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZUuf (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:50:35 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so113763qtl.3;
+        Wed, 26 Jun 2019 13:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0JIsc6upKI8LAsXQYXKRr6HIlOo8/DmHKKpGfMNZUew=;
+        b=SjGNdwfNg/zcvVGN+PGBlPzER4WoOK2W/rlWgMe5EDeYvGrDCPHKp2nfZun+PStLEZ
+         M7Y0HiMd2AQdt5pmBv/b4PN5sx5gtsvu1p7c/sl2xkPKEGIjX+vpoQ/fpefRgoTBNZJU
+         b/q6V1NctY9VKorBH1nPg651d1aq35B9SGL5WtaK5QTjApgRRx3OuuDBICmTd1yjMxuh
+         wLI5bsBAkfAoJmz0p4tjXdusElbj3ntkL7P4SH/CXsWVvLFq/7Wje6I1ANM4/x/WlW6O
+         tU78+s/ses5VMjryhek9d7DiMvz8SE6oGnFGjZPZLhKYumKEXZ9qR0nnWgIpICMo8k04
+         0kdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0JIsc6upKI8LAsXQYXKRr6HIlOo8/DmHKKpGfMNZUew=;
+        b=Fg5BeBGj/ZmlJbzsaiMBlRk8WsBNyw5At4hDUBunHrTvroHs1XBHVarPHOqXsUv/xo
+         B3f0eMml1WKg4axGjQxWWN3O/zKyw8bY8PeRJkpJ8NdmUt+FEpdWeaZ5MM4OFP5yBJl3
+         obs2DMhdJNFPnUuR1tQuNwr8XO4oHkK18eQ2UOm0UjoYnNcV3GQtn+DcC85yiAyQv1oI
+         A83l25fPoq0uF93G4kfzjPX2aQFTuAke/apZoH7vYGybX0N09/TD1QD7drsN4azCUqKw
+         EbxuxZTSyUz5Rp6x4n0bN4lNCEn/clmTQf5dwWAAcelY0UYhImF8bC7iqx8FJc3fYNMh
+         zwFA==
+X-Gm-Message-State: APjAAAUq7Vxyibj0mJkoBwDjfmQp1oU0kGlK49vPtU8XXxl0g4cavLlD
+        wJ14glOd2VC67LenLDbFgclMY7W39wtPuDH90Z0=
+X-Google-Smtp-Source: APXvYqzg4kpaOhgH6DRsJAUX1HodpBqgBiRivJiHRugOt304HkbVCpfYd6BJiuQm5gWEfmapy8VnKuRQpNwdYxYSOeg=
+X-Received: by 2002:a0c:c146:: with SMTP id i6mr5401108qvh.79.1561582233943;
+ Wed, 26 Jun 2019 13:50:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 26 Jun 2019 20:00:58 +0000 (UTC)
+References: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Wed, 26 Jun 2019 22:50:23 +0200
+Message-ID: <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+Subject: Re: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for 32bits systems
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+On Wed, 26 Jun 2019 at 17:59, Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> Use kmap instead of page_address as it's not always in low memory.
+>
 
-On Wed, 26 Jun 2019 09:42:07 -0700 "Jonathan Lemon" <jonathan.lemon@gmail.com> wrote:
+Ah, some 32-bit love. :-) Thanks for working on this!
 
-> If all packets are collected together (like the bulk queue does), and 
-> then passed to XDP, this could easily be made backwards compatible.
-> If the XDP program isn't 'multi-frag' aware, then each packet is just
-> passed in individually.
+For future patches, please base AF_XDP patches on the bpf/bpf-next
+tree instead of net/net-next.
 
-My proposal#1 is XDP only access first-buffer[1], as this simplifies things.
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
 
-(AFAIK) What you are proposing is that all the buffers are passed to
-the XDP prog (in form of a iovec).  I need some more details about your
-suggestion.
-
-Specifically:
-
-- What is the semantic when a 3 buffer packet is input and XDP prog
-choose to return XDP_DROP for packet #2 ?
-
-- Same situation of packet #2 wants a XDP_TX or redirect?
-
-
-> Of course, passing in the equivalent of a iovec requires some form of 
-> loop support on the BPF side, doesn't it?
-
-The data structure used for holding these packet buffers/segments also
-needs to be discussed.  I would either use an array of bio_vec[2] or
-skb_frag_t (aka skb_frag_struct).  The skb_frag_t would be most
-obvious, as we already have to write this when creating an SKB, in
-skb_shared_info area. (Structs listed below signature).
-
-The problem is also that size of these structs (16 bytes) per
-buffer/segment, and we likely need to support 17 segments, as this need
-to be compatible with SKBs (size 272 bytes).
-
-My idea here is that we simply use the same memory area, that we have to
-store skb_shared_info into.  As this allow us to get the SKB setup for
-free, when doing XDP_PASS or when doing SKB alloc after XDP_REDIRECT.
-
-
-[1] https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org#proposal1-xdp-only-access-first-buffer
-
-[2] https://lore.kernel.org/netdev/20190501041757.8647-1-willy@infradead.org/
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
-
-$ pahole -C skb_frag_struct vmlinux
-struct skb_frag_struct {
-	struct {
-		struct page * p;                         /*     0     8 */
-	} page;                                          /*     0     8 */
-	__u32                      page_offset;          /*     8     4 */
-	__u32                      size;                 /*    12     4 */
-
-	/* size: 16, cachelines: 1, members: 3 */
-	/* last cacheline: 16 bytes */
-};
-
-$ pahole -C bio_vec vmlinux
-struct bio_vec {
-	struct page        * bv_page;                    /*     0     8 */
-	unsigned int               bv_len;               /*     8     4 */
-	unsigned int               bv_offset;            /*    12     4 */
-
-	/* size: 16, cachelines: 1, members: 3 */
-	/* last cacheline: 16 bytes */
-};
-
-$ pahole -C skb_shared_info vmlinux
-struct skb_shared_info {
-	__u8                       __unused;             /*     0     1 */
-	__u8                       meta_len;             /*     1     1 */
-	__u8                       nr_frags;             /*     2     1 */
-	__u8                       tx_flags;             /*     3     1 */
-	short unsigned int         gso_size;             /*     4     2 */
-	short unsigned int         gso_segs;             /*     6     2 */
-	struct sk_buff     * frag_list;                  /*     8     8 */
-	struct skb_shared_hwtstamps hwtstamps;           /*    16     8 */
-	unsigned int               gso_type;             /*    24     4 */
-	u32                        tskey;                /*    28     4 */
-	atomic_t                   dataref;              /*    32     0 */
-
-	/* XXX 8 bytes hole, try to pack */
-
-	void *                     destructor_arg;       /*    40     8 */
-	skb_frag_t                 frags[17];            /*    48   272 */
-
-	/* size: 320, cachelines: 5, members: 13 */
-	/* sum members: 312, holes: 1, sum holes: 8 */
-};
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
+>  net/xdp/xdp_umem.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+> index 9c6de4f114f8..d3c1411420fd 100644
+> --- a/net/xdp/xdp_umem.c
+> +++ b/net/xdp/xdp_umem.c
+> @@ -169,6 +169,14 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem=
+)
+>         }
+>  }
+>
+> +static void xdp_umem_unmap_pages(struct xdp_umem *umem)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < umem->npgs; i++)
+> +               kunmap(umem->pgs[i]);
+> +}
+> +
+>  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
+>  {
+>         unsigned int i;
+> @@ -210,6 +218,7 @@ static void xdp_umem_release(struct xdp_umem *umem)
+>
+>         xsk_reuseq_destroy(umem);
+>
+> +       xdp_umem_unmap_pages(umem);
+>         xdp_umem_unpin_pages(umem);
+>
+>         kfree(umem->pages);
+> @@ -372,7 +381,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct=
+ xdp_umem_reg *mr)
+>         }
+>
+>         for (i =3D 0; i < umem->npgs; i++)
+> -               umem->pages[i].addr =3D page_address(umem->pgs[i]);
+> +               umem->pages[i].addr =3D kmap(umem->pgs[i]);
+>
+>         return 0;
+>
+> --
+> 2.17.1
+>
