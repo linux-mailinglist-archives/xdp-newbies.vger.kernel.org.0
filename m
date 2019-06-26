@@ -2,49 +2,40 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FE7D56BF6
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 16:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E68256C13
+	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 16:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFZOap (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 26 Jun 2019 10:30:45 -0400
-Received: from www62.your-server.de ([213.133.104.62]:44192 "EHLO
+        id S1727660AbfFZOdl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 26 Jun 2019 10:33:41 -0400
+Received: from www62.your-server.de ([213.133.104.62]:45082 "EHLO
         www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfFZOap (ORCPT
+        with ESMTP id S1725958AbfFZOdl (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:30:45 -0400
+        Wed, 26 Jun 2019 10:33:41 -0400
 Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
         by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89_1)
         (envelope-from <daniel@iogearbox.net>)
-        id 1hg8wV-0000Sf-5y; Wed, 26 Jun 2019 16:30:35 +0200
+        id 1hg8zL-0000g3-6O; Wed, 26 Jun 2019 16:33:31 +0200
 Received: from [2a02:1205:5054:6d70:b45c:ec96:516a:e956] (helo=linux.home)
         by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.89)
         (envelope-from <daniel@iogearbox.net>)
-        id 1hg8wU-000Rp6-U7; Wed, 26 Jun 2019 16:30:34 +0200
-Subject: Re: [PATCH] xsk: Properly terminate assignment in
- xskq_produce_flush_desc
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>
-References: <20190625182352.13918-1-natechancellor@gmail.com>
+        id 1hg8zL-000Lro-0N; Wed, 26 Jun 2019 16:33:31 +0200
+Subject: Re: [PATCH net-next] xdp: Make __mem_id_disconnect static
+To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        ast@kernel.org, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+References: <20190625023137.29272-1-yuehaibing@huawei.com>
 From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <253f2fcd-f62d-90e1-2963-c8e5cdda4726@iogearbox.net>
-Date:   Wed, 26 Jun 2019 16:30:34 +0200
+Message-ID: <bbd0b831-8ffa-1993-0a2a-06c1102f3292@iogearbox.net>
+Date:   Wed, 26 Jun 2019 16:33:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
+In-Reply-To: <20190625023137.29272-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,24 +46,13 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 06/25/2019 08:23 PM, Nathan Chancellor wrote:
-> Clang warns:
+On 06/25/2019 04:31 AM, YueHaibing wrote:
+> Fix sparse warning:
 > 
-> In file included from net/xdp/xsk_queue.c:10:
-> net/xdp/xsk_queue.h:292:2: warning: expression result unused
-> [-Wunused-value]
->         WRITE_ONCE(q->ring->producer, q->prod_tail);
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
->         __u.__val;                                      \
->         ~~~ ^~~~~
-> 1 warning generated.
+> net/core/xdp.c:88:6: warning:
+>  symbol '__mem_id_disconnect' was not declared. Should it be static?
 > 
-> The q->prod_tail assignment has a comma at the end, not a semi-colon.
-> Fix that so clang no longer warns and everything works as expected.
-> 
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/544
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
 Applied, thanks!
