@@ -2,126 +2,93 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E9965731B
-	for <lists+xdp-newbies@lfdr.de>; Wed, 26 Jun 2019 22:50:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECB785783E
+	for <lists+xdp-newbies@lfdr.de>; Thu, 27 Jun 2019 02:52:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfFZUuf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 26 Jun 2019 16:50:35 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36817 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZUuf (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:50:35 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p15so113763qtl.3;
-        Wed, 26 Jun 2019 13:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0JIsc6upKI8LAsXQYXKRr6HIlOo8/DmHKKpGfMNZUew=;
-        b=SjGNdwfNg/zcvVGN+PGBlPzER4WoOK2W/rlWgMe5EDeYvGrDCPHKp2nfZun+PStLEZ
-         M7Y0HiMd2AQdt5pmBv/b4PN5sx5gtsvu1p7c/sl2xkPKEGIjX+vpoQ/fpefRgoTBNZJU
-         b/q6V1NctY9VKorBH1nPg651d1aq35B9SGL5WtaK5QTjApgRRx3OuuDBICmTd1yjMxuh
-         wLI5bsBAkfAoJmz0p4tjXdusElbj3ntkL7P4SH/CXsWVvLFq/7Wje6I1ANM4/x/WlW6O
-         tU78+s/ses5VMjryhek9d7DiMvz8SE6oGnFGjZPZLhKYumKEXZ9qR0nnWgIpICMo8k04
-         0kdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0JIsc6upKI8LAsXQYXKRr6HIlOo8/DmHKKpGfMNZUew=;
-        b=Fg5BeBGj/ZmlJbzsaiMBlRk8WsBNyw5At4hDUBunHrTvroHs1XBHVarPHOqXsUv/xo
-         B3f0eMml1WKg4axGjQxWWN3O/zKyw8bY8PeRJkpJ8NdmUt+FEpdWeaZ5MM4OFP5yBJl3
-         obs2DMhdJNFPnUuR1tQuNwr8XO4oHkK18eQ2UOm0UjoYnNcV3GQtn+DcC85yiAyQv1oI
-         A83l25fPoq0uF93G4kfzjPX2aQFTuAke/apZoH7vYGybX0N09/TD1QD7drsN4azCUqKw
-         EbxuxZTSyUz5Rp6x4n0bN4lNCEn/clmTQf5dwWAAcelY0UYhImF8bC7iqx8FJc3fYNMh
-         zwFA==
-X-Gm-Message-State: APjAAAUq7Vxyibj0mJkoBwDjfmQp1oU0kGlK49vPtU8XXxl0g4cavLlD
-        wJ14glOd2VC67LenLDbFgclMY7W39wtPuDH90Z0=
-X-Google-Smtp-Source: APXvYqzg4kpaOhgH6DRsJAUX1HodpBqgBiRivJiHRugOt304HkbVCpfYd6BJiuQm5gWEfmapy8VnKuRQpNwdYxYSOeg=
-X-Received: by 2002:a0c:c146:: with SMTP id i6mr5401108qvh.79.1561582233943;
- Wed, 26 Jun 2019 13:50:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 26 Jun 2019 22:50:23 +0200
-Message-ID: <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
-Subject: Re: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for 32bits systems
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
+        id S1727775AbfF0Adb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 26 Jun 2019 20:33:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727237AbfF0Ada (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:33:30 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DE020815;
+        Thu, 27 Jun 2019 00:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595609;
+        bh=Z+shlkBQ8wdolk7PdrDWnw2HVrwoukW1lc4Rr9oYFNM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yI3VQ3i/7+Fp7SyqLBPM53mXMPkR4vaX/pU3UZy6YrgiRLlQFjYzl6eK0RJoeqUgb
+         YaVjSk6AZfvrwqQCIhlSdmTHrHgZlTyPDS8Fzu2idjBvJRQZpbCB0v1cGG5CUIOTAT
+         yVvCSUyyLqiaNCzIVMFLpeMQ1uAPpeYXZMXx6+gc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ilya Maximets <i.maximets@samsung.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 54/95] xdp: check device pointer before clearing
+Date:   Wed, 26 Jun 2019 20:29:39 -0400
+Message-Id: <20190627003021.19867-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 26 Jun 2019 at 17:59, Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> Use kmap instead of page_address as it's not always in low memory.
->
+From: Ilya Maximets <i.maximets@samsung.com>
 
-Ah, some 32-bit love. :-) Thanks for working on this!
+[ Upstream commit 01d76b5317003e019ace561a9b775f51aafdfdc4 ]
 
-For future patches, please base AF_XDP patches on the bpf/bpf-next
-tree instead of net/net-next.
+We should not call 'ndo_bpf()' or 'dev_put()' with NULL argument.
 
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+Fixes: c9b47cc1fabc ("xsk: fix bug when trying to use both copy and zero-copy on one queue id")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/xdp/xdp_umem.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  net/xdp/xdp_umem.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 9c6de4f114f8..d3c1411420fd 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -169,6 +169,14 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem=
-)
->         }
->  }
->
-> +static void xdp_umem_unmap_pages(struct xdp_umem *umem)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < umem->npgs; i++)
-> +               kunmap(umem->pgs[i]);
-> +}
-> +
->  static void xdp_umem_unpin_pages(struct xdp_umem *umem)
->  {
->         unsigned int i;
-> @@ -210,6 +218,7 @@ static void xdp_umem_release(struct xdp_umem *umem)
->
->         xsk_reuseq_destroy(umem);
->
-> +       xdp_umem_unmap_pages(umem);
->         xdp_umem_unpin_pages(umem);
->
->         kfree(umem->pages);
-> @@ -372,7 +381,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct=
- xdp_umem_reg *mr)
->         }
->
->         for (i =3D 0; i < umem->npgs; i++)
-> -               umem->pages[i].addr =3D page_address(umem->pgs[i]);
-> +               umem->pages[i].addr =3D kmap(umem->pgs[i]);
->
->         return 0;
->
-> --
-> 2.17.1
->
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 989e52386c35..2f7e2c33a812 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -143,6 +143,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 	struct netdev_bpf bpf;
+ 	int err;
+ 
++	if (!umem->dev)
++		return;
++
+ 	if (umem->zc) {
+ 		bpf.command = XDP_SETUP_XSK_UMEM;
+ 		bpf.xsk.umem = NULL;
+@@ -156,11 +159,9 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
+ 			WARN(1, "failed to disable umem!\n");
+ 	}
+ 
+-	if (umem->dev) {
+-		rtnl_lock();
+-		xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
+-		rtnl_unlock();
+-	}
++	rtnl_lock();
++	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
++	rtnl_unlock();
+ 
+ 	if (umem->zc) {
+ 		dev_put(umem->dev);
+-- 
+2.20.1
+
