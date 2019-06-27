@@ -2,390 +2,238 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D8258D95
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 00:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6DC58DA1
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 00:08:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfF0WE7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 27 Jun 2019 18:04:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41640 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfF0WE7 (ORCPT
+        id S1726523AbfF0WIA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 27 Jun 2019 18:08:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41029 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0WIA (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:04:59 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m7so2002492pls.8;
-        Thu, 27 Jun 2019 15:04:58 -0700 (PDT)
+        Thu, 27 Jun 2019 18:08:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q4so144693pgj.8;
+        Thu, 27 Jun 2019 15:07:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=00evef/ayLM+dg1y18kUMmlFRCnU3hiwv5zN2enrdho=;
-        b=KIyQxRglox+IYjflq/aM/KfRvlAZ8LIosypDvq26rI97FIhP2XatmVJrNA8bHvPErH
-         TlBwmZBG8zsnXGGD6PSUfhG85rbbjmXOGiFGGjtU++qRaN7FJ1xPE3q79jxrvOvsWNJL
-         uzFQzAtrhAN4nILywZys4rIQ/CUWdTedZ5tuN1GFK5EIfrilIWCBINmJcSj1G+bz+efA
-         ETbzDuWrpcJzbqwIKl+Yi8mrlMJsWLnVEJW3pKtRiYGgiPbkNZgyGjKm8Bpizkz+Dy5/
-         kMam1qvCTWfcuaSLAKkgMuwyZpIG/hga0XX2BdsBSqG4f1IGGpt1LjjAl+8HpXgPsXIb
-         eEhg==
+         :mime-version:content-transfer-encoding;
+        bh=/h3ULTjXDzRWUsUxCT1KF9AIRl7JQviKgO6mJP3zRGY=;
+        b=bqsuDWfbWt4udbXjfHjiH+jK5MPShPoVN2Ng0aieW8+X6bzlBLwTj9uRPKrhyUDscJ
+         ZnsjnwPhla0DDGsR87Tz7jfstBv9hw+2gTYiwLL1iihk0+omLFKfawCEjkMh+mZ+vswl
+         0XGNglSF5EaOyeN6/ic3h4BXb38BWMH1NF/iwN7t+Ep3Yyqbdh9RSE5MciKOuwelSASh
+         hlUdH1U81eE/NsCHVhcAcJB01+Ee6z2Ub3wPzGfj3QWcBVpyEJqdgTMzf+Ij9NBYZjlD
+         14aLZlNI+p+H6kSByQBmvykRZaywo/xBTI7cHy5p6GE88k4uVd3UwLQCkIvsVe9q8nvr
+         xH/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=00evef/ayLM+dg1y18kUMmlFRCnU3hiwv5zN2enrdho=;
-        b=dKy+u9Dkf0Eh534bw8GtX1MVBcFyJRJf3iC0eCnCHGRCOl6oPX396+odxoQwEb95rT
-         HNMjqFNhwYX1Em8ltchTzBneWtecKUqrT67jPKPdj4jp+MU8umuY5C9bcifQjtLuM+Ww
-         2wotwFIaX3GKvdmC+I2N3kkpiWZG4Z058wDLOC43OnGDoCroef5TRFOec9XK4/DLhq0C
-         RdMTW/pGplG24FUmmdv0DGcRr6hjLjyoIUhLiidiX/gK5+i7tPhCyjT+8GmK8tfDwpC6
-         4Fxsy50EmgnW+JkQyZrM+ZH4+Xi1OMH4bbH6B6bcGoftv49uTCvTnA5Tb2ikHh6+4U4/
-         GKYA==
-X-Gm-Message-State: APjAAAV6kw5MDVm5cemKoySRqprJzfGXEwinuj9Zs5hs7Hb4k0xclYKP
-        gm8hfVuxkNm9flFu+ljZQbM=
-X-Google-Smtp-Source: APXvYqxGj028cy2iifwg6UKnYwLZozVXHOCO16yNwBas3fLOK1KxD8YiEH9jepBpKM89UDF8gguzmA==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr6850510plb.164.1561673098595;
-        Thu, 27 Jun 2019 15:04:58 -0700 (PDT)
+         :references:mime-version:content-transfer-encoding;
+        bh=/h3ULTjXDzRWUsUxCT1KF9AIRl7JQviKgO6mJP3zRGY=;
+        b=Hu3gNiLL7sC8bI6hTlj/g14BF41Cajnw5u8/fWt75WuFE43rqF+856+5tt9fm+xfQY
+         yRyAyNOqWXjTuHD66XquA/RxLXaIuieYPMp9rBU+JkqTiC0YN9YXkm/dBB+fwgtsYdjh
+         KbDNLtxVt3HePV2s+S72zeuYtMdHlQZT574VCMULqPIySdLweHfMAQIXA9PvkwsfKdk+
+         bEo2tMzyeainWLxgx2Qwzt3wbBlb9PJwamlpGrYQ9hUurbTUS7oz96Tb+Cgshg/vKETt
+         57v73x0/rKqNKay2zHYOSJjhF9Au6m9nLKo6sTW1vxDyg4sssOCFO8R6YIdVm2UlhW1P
+         C8RQ==
+X-Gm-Message-State: APjAAAXh1M/az/id0UX+P5sPkGKius7XnT8f5KXLpXONcIBkxOIll4JE
+        QxrJxi0AZH4GF9OH8VtoAPk=
+X-Google-Smtp-Source: APXvYqxMNHeH0nKiRHBn2Mmbu0zzCIAgk2uN8HnwwNRPT+HGpIbgpHYumjjT3yUNS5MallVY2O2XSw==
+X-Received: by 2002:a17:90a:c596:: with SMTP id l22mr8928895pjt.46.1561673279609;
+        Thu, 27 Jun 2019 15:07:59 -0700 (PDT)
 Received: from [172.20.53.102] ([2620:10d:c090:200::6693])
-        by smtp.gmail.com with ESMTPSA id p2sm70688pfb.118.2019.06.27.15.04.57
+        by smtp.gmail.com with ESMTPSA id a21sm128620pgd.45.2019.06.27.15.07.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 15:04:58 -0700 (PDT)
+        Thu, 27 Jun 2019 15:07:58 -0700 (PDT)
 From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Ilya Maximets" <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
+To:     "Jesper Dangaard Brouer" <brouer@redhat.com>
+Cc:     "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
+        "Toke =?utf-8?b?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=" <toke@redhat.com>,
+        "Machulsky, Zorik" <zorik@amazon.com>,
+        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Matushevsky, Alexander" <matua@amazon.com>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "Wilson, Matt" <msw@amazon.com>,
+        "Liguori, Anthony" <aliguori@amazon.com>,
+        "Bshara, Nafea" <nafea@amazon.com>,
+        "Tzalik, Guy" <gtzalik@amazon.com>,
+        "Belgazal, Netanel" <netanel@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "Daniel Borkmann" <borkmann@iogearbox.net>,
+        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
         "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        "Daniel Borkmann" <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf v5 2/2] xdp: fix hang while unregistering device bound
- to xdp socket
-Date:   Thu, 27 Jun 2019 15:04:57 -0700
+        xdp-newbies@vger.kernel.org
+Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
+ net: ena: implement XDP drop support)
+Date:   Thu, 27 Jun 2019 15:07:56 -0700
 X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <74C6C13C-651D-4CD1-BCA1-1B8998A4FA31@gmail.com>
-In-Reply-To: <20190627101529.11234-3-i.maximets@samsung.com>
-References: <20190627101529.11234-1-i.maximets@samsung.com>
- <CGME20190627101540eucas1p149805b39e12bf7ecf5864b7ff1b0c934@eucas1p1.samsung.com>
- <20190627101529.11234-3-i.maximets@samsung.com>
+Message-ID: <0D1286E7-02CD-4252-823C-4D1CBB8F2807@gmail.com>
+In-Reply-To: <20190626220028.2bb12196@carbon>
+References: <20190623070649.18447-1-sameehj@amazon.com>
+ <20190623070649.18447-2-sameehj@amazon.com> <20190623162133.6b7f24e1@carbon>
+ <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
+ <20190626103829.5360ef2d@carbon> <87a7e4d0nj.fsf@toke.dk>
+ <20190626164059.4a9511cf@carbon> <87h88cbdbe.fsf@toke.dk>
+ <CA+FuTSfKnhv9rr=cDa_4m7Dd9qkEm_oabDfyvH0T0sM+fQTU=w@mail.gmail.com>
+ <99AFC1EE-E27E-4D4D-B9B8-CA2215E68E1B@gmail.com>
+ <20190626220028.2bb12196@carbon>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 27 Jun 2019, at 3:15, Ilya Maximets wrote:
+On 26 Jun 2019, at 13:00, Jesper Dangaard Brouer wrote:
 
-> Device that bound to XDP socket will not have zero refcount until the
-> userspace application will not close it. This leads to hang inside
-> 'netdev_wait_allrefs()' if device unregistering requested:
->
->   # ip link del p1
->   < hang on recvmsg on netlink socket >
->
->   # ps -x | grep ip
->   5126  pts/0    D+   0:00 ip link del p1
->
->   # journalctl -b
->
->   Jun 05 07:19:16 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->
->   Jun 05 07:19:27 kernel:
->   unregister_netdevice: waiting for p1 to become free. Usage count = 1
->   ...
->
-> Fix that by implementing NETDEV_UNREGISTER event notification handler
-> to properly clean up all the resources and unref device.
->
-> This should also allow socket killing via ss(8) utility.
->
-> Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> ---
->  include/net/xdp_sock.h |  5 +++
->  net/xdp/xdp_umem.c     | 10 ++---
->  net/xdp/xdp_umem.h     |  1 +
->  net/xdp/xsk.c          | 87 
-> ++++++++++++++++++++++++++++++++++++------
->  4 files changed, 87 insertions(+), 16 deletions(-)
->
-> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
-> index d074b6d60f8a..82d153a637c7 100644
-> --- a/include/net/xdp_sock.h
-> +++ b/include/net/xdp_sock.h
-> @@ -61,6 +61,11 @@ struct xdp_sock {
->  	struct xsk_queue *tx ____cacheline_aligned_in_smp;
->  	struct list_head list;
->  	bool zc;
-> +	enum {
-> +		XSK_UNINITIALIZED = 0,
-> +		XSK_BINDED,
-> +		XSK_UNBINDED,
-> +	} state;
+> On Wed, 26 Jun 2019 09:42:07 -0700 "Jonathan Lemon" =
 
-I'd prefer that these were named better, perhaps:
-    XSK_READY,
-    XSK_BOUND,
-    XSK_UNBOUND,
+> <jonathan.lemon@gmail.com> wrote:
+>
+>> If all packets are collected together (like the bulk queue does), and
+>> then passed to XDP, this could easily be made backwards compatible.
+>> If the XDP program isn't 'multi-frag' aware, then each packet is just
+>> passed in individually.
+>
+> My proposal#1 is XDP only access first-buffer[1], as this simplifies =
+
+> things.
+>
+> (AFAIK) What you are proposing is that all the buffers are passed to
+> the XDP prog (in form of a iovec).  I need some more details about =
+
+> your
+> suggestion.
+
+I was thinking this over yesterday - and was probably conflating packets
+and buffers a bit.  Suppose that for the purposes of this discussion, =
+
+we're
+talking about a single packet that is split over multiple buffer areas.
+
+Say, on RX, with header split:
+    buf[0] =3D header
+    buf[1] =3D data
+
+For LRO (hw recv) and jumbo frames (and TSO):
+    buf[0] =3D hdr + data
+    buf[1] =3D data
+    buf[n] =3D data
+
+GRO cases, where individual packets are reassembled by software, aren't
+handled here.
 
 
-Other than that:
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+> Specifically:
+>
+> - What is the semantic when a 3 buffer packet is input and XDP prog
+> choose to return XDP_DROP for packet #2 ?
+>
+> - Same situation of packet #2 wants a XDP_TX or redirect?
 
--- 
+The collection of buffers represents a single packet, so this isn't
+applicable here, right?
+
+However, just thinking about incomplete data words (aka: pullup) gives
+me a headache - seems this would complicate the BPF/verifier quite a =
+
+bit.
+
+So perhaps just restricting things to the first entry would do for now?
+
+As far as the exact data structure used to hold the buffers, it would
+be nice if it had the same layout as a bio_vec, in case someone wanted
+to get clever and start transferring things over directly.
+-- =
+
 Jonathan
 
 
+>> Of course, passing in the equivalent of a iovec requires some form of
+>> loop support on the BPF side, doesn't it?
+>
+> The data structure used for holding these packet buffers/segments also
+> needs to be discussed.  I would either use an array of bio_vec[2] or
+> skb_frag_t (aka skb_frag_struct).  The skb_frag_t would be most
+> obvious, as we already have to write this when creating an SKB, in
+> skb_shared_info area. (Structs listed below signature).
+>
+> The problem is also that size of these structs (16 bytes) per
+> buffer/segment, and we likely need to support 17 segments, as this =
 
->  	/* Protects multiple processes in the control path */
->  	struct mutex mutex;
->  	/* Mutual exclusion of NAPI TX thread and sendmsg error paths
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 267b82a4cbcf..20c91f02d3d8 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -140,11 +140,13 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, 
-> struct net_device *dev,
->  	return err;
->  }
+> need
+> to be compatible with SKBs (size 272 bytes).
 >
-> -static void xdp_umem_clear_dev(struct xdp_umem *umem)
-> +void xdp_umem_clear_dev(struct xdp_umem *umem)
->  {
->  	struct netdev_bpf bpf;
->  	int err;
+> My idea here is that we simply use the same memory area, that we have =
+
+> to
+> store skb_shared_info into.  As this allow us to get the SKB setup for
+> free, when doing XDP_PASS or when doing SKB alloc after XDP_REDIRECT.
 >
-> +	ASSERT_RTNL();
-> +
->  	if (!umem->dev)
->  		return;
 >
-> @@ -153,17 +155,13 @@ static void xdp_umem_clear_dev(struct xdp_umem 
-> *umem)
->  		bpf.xsk.umem = NULL;
->  		bpf.xsk.queue_id = umem->queue_id;
+> [1] =
+
+> https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-m=
+ulti-buffer01-design.org#proposal1-xdp-only-access-first-buffer
 >
-> -		rtnl_lock();
->  		err = umem->dev->netdev_ops->ndo_bpf(umem->dev, &bpf);
-> -		rtnl_unlock();
+> [2] =
+
+> https://lore.kernel.org/netdev/20190501041757.8647-1-willy@infradead.or=
+g/
+> -- =
+
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
 >
->  		if (err)
->  			WARN(1, "failed to disable umem!\n");
->  	}
 >
-> -	rtnl_lock();
->  	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
-> -	rtnl_unlock();
+> $ pahole -C skb_frag_struct vmlinux
+> struct skb_frag_struct {
+> 	struct {
+> 		struct page * p;                         /*     0     8 */
+> 	} page;                                          /*     0     8 */
+> 	__u32                      page_offset;          /*     8     4 */
+> 	__u32                      size;                 /*    12     4 */
 >
->  	dev_put(umem->dev);
->  	umem->dev = NULL;
-> @@ -195,7 +193,9 @@ static void xdp_umem_unaccount_pages(struct 
-> xdp_umem *umem)
+> 	/* size: 16, cachelines: 1, members: 3 */
+> 	/* last cacheline: 16 bytes */
+> };
 >
->  static void xdp_umem_release(struct xdp_umem *umem)
->  {
-> +	rtnl_lock();
->  	xdp_umem_clear_dev(umem);
-> +	rtnl_unlock();
+> $ pahole -C bio_vec vmlinux
+> struct bio_vec {
+> 	struct page        * bv_page;                    /*     0     8 */
+> 	unsigned int               bv_len;               /*     8     4 */
+> 	unsigned int               bv_offset;            /*    12     4 */
 >
->  	ida_simple_remove(&umem_ida, umem->id);
+> 	/* size: 16, cachelines: 1, members: 3 */
+> 	/* last cacheline: 16 bytes */
+> };
 >
-> diff --git a/net/xdp/xdp_umem.h b/net/xdp/xdp_umem.h
-> index 27603227601b..a63a9fb251f5 100644
-> --- a/net/xdp/xdp_umem.h
-> +++ b/net/xdp/xdp_umem.h
-> @@ -10,6 +10,7 @@
+> $ pahole -C skb_shared_info vmlinux
+> struct skb_shared_info {
+> 	__u8                       __unused;             /*     0     1 */
+> 	__u8                       meta_len;             /*     1     1 */
+> 	__u8                       nr_frags;             /*     2     1 */
+> 	__u8                       tx_flags;             /*     3     1 */
+> 	short unsigned int         gso_size;             /*     4     2 */
+> 	short unsigned int         gso_segs;             /*     6     2 */
+> 	struct sk_buff     * frag_list;                  /*     8     8 */
+> 	struct skb_shared_hwtstamps hwtstamps;           /*    16     8 */
+> 	unsigned int               gso_type;             /*    24     4 */
+> 	u32                        tskey;                /*    28     4 */
+> 	atomic_t                   dataref;              /*    32     0 */
 >
->  int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device 
-> *dev,
->  			u16 queue_id, u16 flags);
-> +void xdp_umem_clear_dev(struct xdp_umem *umem);
->  bool xdp_umem_validate_queues(struct xdp_umem *umem);
->  void xdp_get_umem(struct xdp_umem *umem);
->  void xdp_put_umem(struct xdp_umem *umem);
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index a14e8864e4fa..336723948a36 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -335,6 +335,22 @@ static int xsk_init_queue(u32 entries, struct 
-> xsk_queue **queue,
->  	return 0;
->  }
+> 	/* XXX 8 bytes hole, try to pack */
 >
-> +static void xsk_unbind_dev(struct xdp_sock *xs)
-> +{
-> +	struct net_device *dev = xs->dev;
-> +
-> +	if (!dev || xs->state != XSK_BINDED)
-> +		return;
-> +
-> +	xs->state = XSK_UNBINDED;
-> +
-> +	/* Wait for driver to stop using the xdp socket. */
-> +	xdp_del_sk_umem(xs->umem, xs);
-> +	xs->dev = NULL;
-> +	synchronize_net();
-> +	dev_put(dev);
-> +}
-> +
->  static int xsk_release(struct socket *sock)
->  {
->  	struct sock *sk = sock->sk;
-> @@ -354,15 +370,7 @@ static int xsk_release(struct socket *sock)
->  	sock_prot_inuse_add(net, sk->sk_prot, -1);
->  	local_bh_enable();
+> 	void *                     destructor_arg;       /*    40     8 */
+> 	skb_frag_t                 frags[17];            /*    48   272 */
 >
-> -	if (xs->dev) {
-> -		struct net_device *dev = xs->dev;
-> -
-> -		/* Wait for driver to stop using the xdp socket. */
-> -		xdp_del_sk_umem(xs->umem, xs);
-> -		xs->dev = NULL;
-> -		synchronize_net();
-> -		dev_put(dev);
-> -	}
-> +	xsk_unbind_dev(xs);
->
->  	xskq_destroy(xs->rx);
->  	xskq_destroy(xs->tx);
-> @@ -412,7 +420,7 @@ static int xsk_bind(struct socket *sock, struct 
-> sockaddr *addr, int addr_len)
->  		return -EINVAL;
->
->  	mutex_lock(&xs->mutex);
-> -	if (xs->dev) {
-> +	if (xs->state != XSK_UNINITIALIZED) {
->  		err = -EBUSY;
->  		goto out_release;
->  	}
-> @@ -492,6 +500,8 @@ static int xsk_bind(struct socket *sock, struct 
-> sockaddr *addr, int addr_len)
->  out_unlock:
->  	if (err)
->  		dev_put(dev);
-> +	else
-> +		xs->state = XSK_BINDED;
->  out_release:
->  	mutex_unlock(&xs->mutex);
->  	return err;
-> @@ -520,6 +530,10 @@ static int xsk_setsockopt(struct socket *sock, 
-> int level, int optname,
->  			return -EFAULT;
->
->  		mutex_lock(&xs->mutex);
-> +		if (xs->state != XSK_UNINITIALIZED) {
-> +			mutex_unlock(&xs->mutex);
-> +			return -EBUSY;
-> +		}
->  		q = (optname == XDP_TX_RING) ? &xs->tx : &xs->rx;
->  		err = xsk_init_queue(entries, q, false);
->  		mutex_unlock(&xs->mutex);
-> @@ -534,7 +548,7 @@ static int xsk_setsockopt(struct socket *sock, int 
-> level, int optname,
->  			return -EFAULT;
->
->  		mutex_lock(&xs->mutex);
-> -		if (xs->umem) {
-> +		if (xs->state != XSK_UNINITIALIZED || xs->umem) {
->  			mutex_unlock(&xs->mutex);
->  			return -EBUSY;
->  		}
-> @@ -561,6 +575,10 @@ static int xsk_setsockopt(struct socket *sock, 
-> int level, int optname,
->  			return -EFAULT;
->
->  		mutex_lock(&xs->mutex);
-> +		if (xs->state != XSK_UNINITIALIZED) {
-> +			mutex_unlock(&xs->mutex);
-> +			return -EBUSY;
-> +		}
->  		if (!xs->umem) {
->  			mutex_unlock(&xs->mutex);
->  			return -EINVAL;
-> @@ -662,6 +680,9 @@ static int xsk_mmap(struct file *file, struct 
-> socket *sock,
->  	unsigned long pfn;
->  	struct page *qpg;
->
-> +	if (xs->state != XSK_UNINITIALIZED)
-> +		return -EBUSY;
-> +
->  	if (offset == XDP_PGOFF_RX_RING) {
->  		q = READ_ONCE(xs->rx);
->  	} else if (offset == XDP_PGOFF_TX_RING) {
-> @@ -693,6 +714,38 @@ static int xsk_mmap(struct file *file, struct 
-> socket *sock,
->  			       size, vma->vm_page_prot);
->  }
->
-> +static int xsk_notifier(struct notifier_block *this,
-> +			unsigned long msg, void *ptr)
-> +{
-> +	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-> +	struct net *net = dev_net(dev);
-> +	struct sock *sk;
-> +
-> +	switch (msg) {
-> +	case NETDEV_UNREGISTER:
-> +		mutex_lock(&net->xdp.lock);
-> +		sk_for_each(sk, &net->xdp.list) {
-> +			struct xdp_sock *xs = xdp_sk(sk);
-> +
-> +			mutex_lock(&xs->mutex);
-> +			if (xs->dev == dev) {
-> +				sk->sk_err = ENETDOWN;
-> +				if (!sock_flag(sk, SOCK_DEAD))
-> +					sk->sk_error_report(sk);
-> +
-> +				xsk_unbind_dev(xs);
-> +
-> +				/* Clear device references in umem. */
-> +				xdp_umem_clear_dev(xs->umem);
-> +			}
-> +			mutex_unlock(&xs->mutex);
-> +		}
-> +		mutex_unlock(&net->xdp.lock);
-> +		break;
-> +	}
-> +	return NOTIFY_DONE;
-> +}
-> +
->  static struct proto xsk_proto = {
->  	.name =		"XDP",
->  	.owner =	THIS_MODULE,
-> @@ -764,6 +817,7 @@ static int xsk_create(struct net *net, struct 
-> socket *sock, int protocol,
->  	sock_set_flag(sk, SOCK_RCU_FREE);
->
->  	xs = xdp_sk(sk);
-> +	xs->state = XSK_UNINITIALIZED;
->  	mutex_init(&xs->mutex);
->  	spin_lock_init(&xs->tx_completion_lock);
->
-> @@ -784,6 +838,10 @@ static const struct net_proto_family 
-> xsk_family_ops = {
->  	.owner	= THIS_MODULE,
->  };
->
-> +static struct notifier_block xsk_netdev_notifier = {
-> +	.notifier_call	= xsk_notifier,
-> +};
-> +
->  static int __net_init xsk_net_init(struct net *net)
->  {
->  	mutex_init(&net->xdp.lock);
-> @@ -816,8 +874,15 @@ static int __init xsk_init(void)
->  	err = register_pernet_subsys(&xsk_net_ops);
->  	if (err)
->  		goto out_sk;
-> +
-> +	err = register_netdevice_notifier(&xsk_netdev_notifier);
-> +	if (err)
-> +		goto out_pernet;
-> +
->  	return 0;
->
-> +out_pernet:
-> +	unregister_pernet_subsys(&xsk_net_ops);
->  out_sk:
->  	sock_unregister(PF_XDP);
->  out_proto:
-> -- 
-> 2.17.1
+> 	/* size: 320, cachelines: 5, members: 13 */
+> 	/* sum members: 312, holes: 1, sum holes: 8 */
+> };
