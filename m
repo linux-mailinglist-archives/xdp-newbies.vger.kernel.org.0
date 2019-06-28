@@ -2,78 +2,98 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84A0359C81
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 15:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67ABA59E9D
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 17:17:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfF1NFD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 28 Jun 2019 09:05:03 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:36319 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfF1NFB (ORCPT
+        id S1726812AbfF1PRU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 28 Jun 2019 11:17:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35568 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfF1PRU (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 09:05:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id k21so6591233ioj.3
-        for <xdp-newbies@vger.kernel.org>; Fri, 28 Jun 2019 06:05:01 -0700 (PDT)
+        Fri, 28 Jun 2019 11:17:20 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so3419511plp.2;
+        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=YCxs/qt8Mwv3z7mR64kHU2i7RhK2QfF8Lu/zZDPEtsk=;
-        b=dX1lFdF9IBxEWZQO2t8kM6lR0hFc6SSckGMKEHrISBlNcgu3VlMZhyOffu7R/hGLKC
-         HlI8a5hT38Q5jrwRE2e5K9FUkX263B6qyvvjD5Oxquy/vp5QghrNwiN9Tk3KhHb6TEqQ
-         YEytMlX4sVJAUY4lyuQtVIxBGLKEnKMUlymVyZQ29oruquXvboAXo/L65BJFlA43A6oM
-         ItTVfDB5uXf2g41f7xKWWyOieMwRmJq6Iw0mS/kg48dFz8SdGW1ivq0TjHrr9o5zMzXh
-         Ch3vGAxsj8p3f7Ru6Dyo6D83Ev8mIFjN8mm6hEgMfoaX7E0AJdfHrJcyYyPgDCcHszBm
-         KTUQ==
-X-Gm-Message-State: APjAAAXftV8JdFz0/bOJx9d1A2ipP3vOdQtqGIfjYSY7f35c921wYuKe
-        dh8vloh4qB8Qjj04cLNkxsrASCINi181HWRIiJ7WO4Fjmb4g
-X-Google-Smtp-Source: APXvYqx8GKh0Tz0N6JPHNRL9IOslCQEy3zMhF+Ww6SA10ngn8dacBYWiHU7ErPZ6cdknibLtC5lh5DRaS2I+orgfp5ZsyEQIgEVu
-MIME-Version: 1.0
-X-Received: by 2002:a6b:8d92:: with SMTP id p140mr10485891iod.144.1561727100535;
- Fri, 28 Jun 2019 06:05:00 -0700 (PDT)
-Date:   Fri, 28 Jun 2019 06:05:00 -0700
-In-Reply-To: <00000000000000ac4f058bd50039@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000104b00058c61eda4@google.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=08U5q1pt2W+YM1rIatW1uXCddvaCPZQ1ACknIlDj2y4=;
+        b=kLEsghuThznChptBzFvzk6m1ix8/alSy5C9QQbAzVmrg2t68sVhUMRUaDPW+Kvpu2h
+         YRkcwimqeFaSXKvWK7Zl8R2nOCIPxSEKe7/1llcm1Z83NoTUmP0mdYlf65rYbjCBP2UJ
+         qrlR7H9o9rg2bOIXMZD2kvvWrUQSP445pmGgSyYAwz4EpAxvLYDsQFUO1MVZFiDFHrJA
+         obaUnIMoiI0IDdFVNbuB8ZKOTZwfIcF2Hr6/RimrcuhDDvugHCOhm8aRZnNBfqo4ii3y
+         ro3mDAaXOx/Lwu9NWI80Jp+A9aGAuRrgLQY45W+12utqHVh7aI8azgm0SKWjjySRFrjX
+         wbPw==
+X-Gm-Message-State: APjAAAXa+EUlIeOAexujdLiNM/KtybIWT6c4jwaKU4jTp2vUrQ6YS9Hx
+        nhzUIW1WsHgVEZXP4dOl7o0=
+X-Google-Smtp-Source: APXvYqy6BruVFpT+atnt6vuKZwUyXTZc4F4Iz59vx0pXbfCiYbMdSN3HzP8L529KkVDl7Km+IkcRCg==
+X-Received: by 2002:a17:902:8205:: with SMTP id x5mr12403394pln.279.1561735039122;
+        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id e20sm4758253pfh.50.2019.06.28.08.17.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Jun 2019 08:17:17 -0700 (PDT)
 Subject: Re: WARNING in is_bpf_text_address
-From:   syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        bvanassche@acm.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com,
-        johannes.berg@intel.com, johannes@sipsolutions.net,
-        john.fastabend@gmail.com, kafai@fb.com,
+To:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, johannes.berg@intel.com,
+        johannes@sipsolutions.net, john.fastabend@gmail.com, kafai@fb.com,
         linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
         netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
         peterz@infradead.org, songliubraving@fb.com,
         syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
         torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        xdp-newbies@vger.kernel.org, yhs@fb.com,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <000000000000104b00058c61eda4@google.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <c0e440a1-30aa-a636-fe5c-44f71705857b@acm.org>
+Date:   Fri, 28 Jun 2019 08:17:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <000000000000104b00058c61eda4@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 6/28/19 6:05 AM, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
+> Author: Bart Van Assche <bvanassche@acm.org>
+> Date:   Thu Feb 14 23:00:46 2019 +0000
+> 
+>      locking/lockdep: Free lock classes that are no longer in use
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
+> start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of 
+> git://git.kernel.org/pu..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
+> 
+> Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
+> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no 
+> longer in use")
+> 
+> For information about bisection process see: 
+> https://goo.gl/tpsmEJ#bisection
 
-commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-Author: Bart Van Assche <bvanassche@acm.org>
-Date:   Thu Feb 14 23:00:46 2019 +0000
+Dmitry, this bisection result does not make any sense to me. Can I mark 
+this bisection result myself as invalid?
 
-     locking/lockdep: Free lock classes that are no longer in use
+Thanks,
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
-
-Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
-Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer  
-in use")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Bart.
