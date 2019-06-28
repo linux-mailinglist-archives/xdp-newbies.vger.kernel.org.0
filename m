@@ -2,29 +2,32 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D49595F9
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 10:23:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 596D95965F
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 10:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfF1IXS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 28 Jun 2019 04:23:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1360 "EHLO mx1.redhat.com"
+        id S1726426AbfF1IsL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 28 Jun 2019 04:48:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42552 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbfF1IXS (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:23:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1725873AbfF1IsL (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:48:11 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3196D3073AFE;
-        Fri, 28 Jun 2019 08:23:17 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9DADC3082135;
+        Fri, 28 Jun 2019 08:48:05 +0000 (UTC)
 Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BEC560C6E;
-        Fri, 28 Jun 2019 08:22:55 +0000 (UTC)
-Date:   Fri, 28 Jun 2019 10:22:54 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AFF9A5D962;
+        Fri, 28 Jun 2019 08:47:52 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:46:23 +0200
 From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     "Eelco Chaudron" <echaudro@redhat.com>
-Cc:     "Machulsky, Zorik" <zorik@amazon.com>,
-        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        "Machulsky, Zorik" <zorik@amazon.com>,
+        "Jubran, Samih" <sameehj@amazon.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
         "Matushevsky, Alexander" <matua@amazon.com>,
         "Bshara, Saeed" <saeedb@amazon.com>,
         "Wilson, Matt" <msw@amazon.com>,
@@ -35,140 +38,121 @@ Cc:     "Machulsky, Zorik" <zorik@amazon.com>,
         "Saidi, Ali" <alisaidi@amazon.com>,
         "Herrenschmidt, Benjamin" <benh@amazon.com>,
         "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "Daniel Borkmann" <borkmann@iogearbox.net>,
-        "Toke =?UTF-8?B?SMO4aWxhbmQt?= =?UTF-8?B?SsO4cmdlbnNlbg==?=" 
-        <toke@redhat.com>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        xdp-newbies@vger.kernel.org, brouer@redhat.com,
-        Steffen Klassert <steffen.klassert@secunet.com>
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        brouer@redhat.com
 Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
  net: ena: implement XDP drop support)
-Message-ID: <20190628102254.28191f12@carbon>
-In-Reply-To: <CC99D6DE-5B6B-42F3-8D68-7F9AFF1712FF@redhat.com>
+Message-ID: <20190628104557.1ffef3e5@carbon>
+In-Reply-To: <CA+FuTSfKnhv9rr=cDa_4m7Dd9qkEm_oabDfyvH0T0sM+fQTU=w@mail.gmail.com>
 References: <20190623070649.18447-1-sameehj@amazon.com>
         <20190623070649.18447-2-sameehj@amazon.com>
         <20190623162133.6b7f24e1@carbon>
         <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
         <20190626103829.5360ef2d@carbon>
-        <CC99D6DE-5B6B-42F3-8D68-7F9AFF1712FF@redhat.com>
+        <87a7e4d0nj.fsf@toke.dk>
+        <20190626164059.4a9511cf@carbon>
+        <87h88cbdbe.fsf@toke.dk>
+        <CA+FuTSfKnhv9rr=cDa_4m7Dd9qkEm_oabDfyvH0T0sM+fQTU=w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 28 Jun 2019 08:23:17 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 28 Jun 2019 08:48:11 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, 28 Jun 2019 09:14:39 +0200
-"Eelco Chaudron" <echaudro@redhat.com> wrote:
 
-> On 26 Jun 2019, at 10:38, Jesper Dangaard Brouer wrote:
+On Wed, 26 Jun 2019 11:20:45 -0400 Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+> On Wed, Jun 26, 2019 at 11:01 AM Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> > Jesper Dangaard Brouer <brouer@redhat.com> writes:
+> > > On Wed, 26 Jun 2019 13:52:16 +0200
+> > > Toke Høiland-Jørgensen <toke@redhat.com> wrote:
+> > >  
+> > >> Jesper Dangaard Brouer <brouer@redhat.com> writes:
+> > >>  
+[...]
+> > >
+> > > You touch upon some interesting complications already:
+> > >
+> > > 1. It is valuable for XDP bpf_prog to know "full" length?
+> > >    (if so, then we need to extend xdp ctx with info)  
+> >
+> > Valuable, quite likely. A hard requirement, probably not (for all use
+> > cases).  
 > 
-> > On Tue, 25 Jun 2019 03:19:22 +0000
-> > "Machulsky, Zorik" <zorik@amazon.com> wrote:
+> Agreed.
+> 
+> One common validation use would be to drop any packets whose header
+> length disagrees with the actual packet length.
+
+That is a good point.
+
+Added a section "XDP access to full packet length?" to capture this:
+- https://github.com/xdp-project/xdp-project/commit/da5b84264b85b0d
+- https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org#xdp-access-to-full-packet-length
+
+
+> > >  But if we need to know the full length, when the first-buffer is
+> > >  processed. Then realize that this affect the drivers RX-loop, because
+> > >  then we need to "collect" all the buffers before we can know the
+> > >  length (although some HW provide this in first descriptor).
+> > >
+> > >  We likely have to change drivers RX-loop anyhow, as XDP_TX and
+> > >  XDP_REDIRECT will also need to "collect" all buffers before the packet
+> > >  can be forwarded. (Although this could potentially happen later in
+> > >  driver loop when it meet/find the End-Of-Packet descriptor bit).  
+> 
+> Yes, this might be quite a bit of refactoring of device driver code.
+> 
+> Should we move forward with some initial constraints, e.g., no
+> XDP_REDIRECT, no "full" length and no bpf_xdp_adjust_tail?
+
+I generally like this...
+
+If not adding "full" length. Maybe we could add an indication to
+XDP-developer, that his is a multi-buffer/multi-segment packet, such
+that header length validation code against packet length (data_end-data)
+is not possible.  This is user visible, so we would have to keep it
+forever... I'm leaning towards adding "full" length from beginning.
+
+> That already allows many useful programs.
+>
+> As long as we don't arrive at a design that cannot be extended with
+> those features later.
+
+That is the important part...
+
+ 
+> > > 2. Can we even allow helper bpf_xdp_adjust_tail() ?
+[...]
 > >  
-> >> ﻿On 6/23/19, 7:21 AM, "Jesper Dangaard Brouer" <brouer@redhat.com> 
-> >> wrote:
-> >>
-> >>     On Sun, 23 Jun 2019 10:06:49 +0300 <sameehj@amazon.com> wrote:
-> >>  
-> >>     > This commit implements the basic functionality of drop/pass logic in the  
-> >>     > ena driver.  
-> >>
-> >>     Usually we require a driver to implement all the XDP return codes,
-> >>     before we accept it.  But as Daniel and I discussed with Zorik during
-> >>     NetConf[1], we are going to make an exception and accept the driver
-> >>     if you also implement XDP_TX.
-> >>
-> >>     As we trust that Zorik/Amazon will follow and implement XDP_REDIRECT
-> >>     later, given he/you wants AF_XDP support which requires XDP_REDIRECT.
-> >>
-> >> Jesper, thanks for your comments and very helpful discussion during
-> >> NetConf! That's the plan, as we agreed. From our side I would like to
-> >> reiterate again the importance of multi-buffer support by xdp frame.
-> >> We would really prefer not to see our MTU shrinking because of xdp
-> >> support.  
+> > >  Perhaps it is better to let bpf_xdp_adjust_tail() fail runtime?  
 > >
-> > Okay we really need to make a serious attempt to find a way to support
-> > multi-buffer packets with XDP. With the important criteria of not
-> > hurting performance of the single-buffer per packet design.
-> >
-> > I've created a design document[2], that I will update based on our
-> > discussions: [2] 
-> > https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org
-> >
-> > The use-case that really convinced me was Eric's packet header-split.
-> >
-> >
-> > Lets refresh: Why XDP don't have multi-buffer support:
-> >
-> > XDP is designed for maximum performance, which is why certain 
-> > driver-level
-> > use-cases were not supported, like multi-buffer packets (like 
-> > jumbo-frames).
-> > As it e.g. complicated the driver RX-loop and memory model handling.
-> >
-> > The single buffer per packet design, is also tied into eBPF 
-> > Direct-Access
-> > (DA) to packet data, which can only be allowed if the packet memory is 
-> > in
-> > contiguous memory.  This DA feature is essential for XDP performance.
-> >
-> >
-> > One way forward is to define that XDP only get access to the first
-> > packet buffer, and it cannot see subsequent buffers.  For XDP_TX and
-> > XDP_REDIRECT to work then XDP still need to carry pointers (plus
-> > len+offset) to the other buffers, which is 16 bytes per extra buffer.  
+> > If we do disallow it, I think I'd lean towards failing the call at
+> > runtime...  
 > 
-> 
-> I’ve seen various network processor HW designs, and they normally get 
-> the first x bytes (128 - 512) which they can manipulate 
-> (append/prepend/insert/modify/delete).
+> Disagree. I'd rather have a program fail at load if it depends on
+> multi-frag support while the (driver) implementation does not yet
+> support it.
 
-Good data point, thank you!  It confirms that XDP only getting access to
-the first packet-buffer makes sense, for most use-cases.
+I usually agree that we should fail the program, early at load time.
+For XDP we are unfortunately missing some knobs to do this, see[1].
 
-We also have to remember that XDP it not meant to handle every
-use-case.  XDP is a software fast-path, that can accelerate certain
-use-case.  We have the existing network stack as a fall-back for
-handling the corner-cases, that would otherwise slowdown our XDP
-fast-path.
-
-
-> There are designs where they can “page in” the additional fragments 
-> but it’s expensive as it requires additional memory transfers. But
-> the majority do not care (cannot change) the remaining fragments. Can
-> also not think of a reason why you might want to remove something at
-> the end of the frame (thinking about routing/forwarding needs here).
-
-Use-cases that need to adjust tail of packet:
-
-- ICMP replies directly from XDP[1] need to shorten packet tail, but
-  this use-case doesn't use fragments.
-
-- IPsec need to add/extend packet tail for IPset-trailer[2], again
-  unlikely that this needs fragments(?). (This use-case convinced me
-  that we need to add extend-tail support to bpf_xdp_adjust_tail)
-
-- DNS or memcached replies directly from XDP, need to extend packet
-  tail, to have room for reply. (It would be interesting to allow larger
-  replies, but I'm not sure we should ever support that).
+Specifically for bpf_xdp_adjust_tail(), it might be better to fail
+runtime.  Because, the driver might have enabled TSO for TCP packets,
+while your XDP use-case is for adjusting UDP-packets (and do XDP level
+replies), which will never see multi-buffer packets.  If we fail use of
+bpf_xdp_adjust_tail(), then you would have to disable TSO to allow
+loading your XDP-prog, hurting the other TSO-TCP use-case.
 
 
-> If we do want XDP to access other fragments we could do this through
-> a helper which swaps the packet context?
-
-That might be a way forward.  If the XDP developer have to call a
-helper, then they should realize and "buy into" an additional
-overhead/cost.
-
-
-[1] https://github.com/torvalds/linux/blob/master/samples/bpf/xdp_adjust_tail_kern.c
-[2] http://vger.kernel.org/netconf2019_files/xfrm_xdp.pdf
+[1] http://vger.kernel.org/netconf2019_files/xdp-feature-detection.pdf
 -- 
 Best regards,
   Jesper Dangaard Brouer
