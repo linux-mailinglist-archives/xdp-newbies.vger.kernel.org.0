@@ -2,98 +2,113 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67ABA59E9D
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 17:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2605A304
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 20:01:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfF1PRU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 28 Jun 2019 11:17:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35568 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfF1PRU (ORCPT
+        id S1726720AbfF1SBF (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 28 Jun 2019 14:01:05 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:45884 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfF1SBF (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 11:17:20 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so3419511plp.2;
-        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=08U5q1pt2W+YM1rIatW1uXCddvaCPZQ1ACknIlDj2y4=;
-        b=kLEsghuThznChptBzFvzk6m1ix8/alSy5C9QQbAzVmrg2t68sVhUMRUaDPW+Kvpu2h
-         YRkcwimqeFaSXKvWK7Zl8R2nOCIPxSEKe7/1llcm1Z83NoTUmP0mdYlf65rYbjCBP2UJ
-         qrlR7H9o9rg2bOIXMZD2kvvWrUQSP445pmGgSyYAwz4EpAxvLYDsQFUO1MVZFiDFHrJA
-         obaUnIMoiI0IDdFVNbuB8ZKOTZwfIcF2Hr6/RimrcuhDDvugHCOhm8aRZnNBfqo4ii3y
-         ro3mDAaXOx/Lwu9NWI80Jp+A9aGAuRrgLQY45W+12utqHVh7aI8azgm0SKWjjySRFrjX
-         wbPw==
-X-Gm-Message-State: APjAAAXa+EUlIeOAexujdLiNM/KtybIWT6c4jwaKU4jTp2vUrQ6YS9Hx
-        nhzUIW1WsHgVEZXP4dOl7o0=
-X-Google-Smtp-Source: APXvYqy6BruVFpT+atnt6vuKZwUyXTZc4F4Iz59vx0pXbfCiYbMdSN3HzP8L529KkVDl7Km+IkcRCg==
-X-Received: by 2002:a17:902:8205:: with SMTP id x5mr12403394pln.279.1561735039122;
-        Fri, 28 Jun 2019 08:17:19 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id e20sm4758253pfh.50.2019.06.28.08.17.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Jun 2019 08:17:17 -0700 (PDT)
-Subject: Re: WARNING in is_bpf_text_address
-To:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        jakub.kicinski@netronome.com, johannes.berg@intel.com,
-        johannes@sipsolutions.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <000000000000104b00058c61eda4@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <c0e440a1-30aa-a636-fe5c-44f71705857b@acm.org>
-Date:   Fri, 28 Jun 2019 08:17:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 28 Jun 2019 14:01:05 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8DED880348;
+        Fri, 28 Jun 2019 20:00:58 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 20:00:57 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Colin Cross <ccross@android.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure
+ they are self-contained
+Message-ID: <20190628180057.GA22758@ravnborg.org>
+References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+ <20190627163903.28398-5-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000104b00058c61eda4@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627163903.28398-5-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=yXOKcWPwKYVsdpAgASMA:9 a=CjuIK1q_8ugA:10
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 6/28/19 6:05 AM, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-> Author: Bart Van Assche <bvanassche@acm.org>
-> Date:   Thu Feb 14 23:00:46 2019 +0000
-> 
->      locking/lockdep: Free lock classes that are no longer in use
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-> start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of 
-> git://git.kernel.org/pu..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
-> 
-> Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
-> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no 
-> longer in use")
-> 
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
+Hi Masahiro.
 
-Dmitry, this bisection result does not make any sense to me. Can I mark 
-this bisection result myself as invalid?
+On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
+> The headers in include/ are globally used in the kernel source tree
+> to provide common APIs. They are included from external modules, too.
+> 
+> It will be useful to make as many headers self-contained as possible
+> so that we do not have to rely on a specific include order.
+> 
+> There are more than 4000 headers in include/. In my rough analysis,
+> 70% of them are already self-contained. With efforts, most of them
+> can be self-contained.
+> 
+> For now, we must exclude more than 1000 headers just because they
+> cannot be compiled as standalone units. I added them to header-test-.
+> The black list was mostly generated by a script, so should be checked
+> later.
+The list is smaller than I had expected.
+And I see why you insisted on avoiding a maze ok Kbuild files.
+It looks good, except there is a few issues..
 
-Thanks,
 
-Bart.
+The file kernel/kheaders_data.tar.xz includes all the .s files.
+Something needs to be done to exclude the .s files...
+
+When building a full kernel the build fails like this:
+  LD      vmlinux.o
+aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
+make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
+make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
+make: *** [Makefile:179: sub-make] Error 2
+
+
+include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
+There is likely more header files that will fail when we start to
+throw this after diverse randconfigs.
+I have no good idea how to catch this.
+Unless your scripts could automate this across several architectures.
+
+I did not continue my testing futher.
+
+> +header-test-			+= uapi/drm/vmwgfx_drm.h
+> +header-test-			+= uapi/linux/a.out.h
+> +header-test-			+= uapi/linux/coda.h
+...
+> +header-test-			+= uapi/xen/evtchn.h
+> +header-test-			+= uapi/xen/gntdev.h
+> +header-test-			+= uapi/xen/privcmd.h
+
+I though uapi files were covered by another Makefile?
+If they are added because we pull them in using a pattern, maybe they
+should be removed using a specific filer-out?
+
+	Sam
