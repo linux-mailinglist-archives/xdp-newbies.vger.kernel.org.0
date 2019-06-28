@@ -2,166 +2,78 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0D2559968
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 13:50:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A0359C81
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 15:05:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfF1LuL convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 28 Jun 2019 07:50:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46752 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbfF1LuL (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 07:50:11 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D217688306;
-        Fri, 28 Jun 2019 11:50:03 +0000 (UTC)
-Received: from [10.36.116.200] (ovpn-116-200.ams2.redhat.com [10.36.116.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B3A46608D0;
-        Fri, 28 Jun 2019 11:49:45 +0000 (UTC)
-From:   "Eelco Chaudron" <echaudro@redhat.com>
-To:     "Toke =?utf-8?b?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=" <toke@redhat.com>
-Cc:     "Jesper Dangaard Brouer" <brouer@redhat.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>,
-        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Matushevsky, Alexander" <matua@amazon.com>,
-        "Bshara, Saeed" <saeedb@amazon.com>,
-        "Wilson, Matt" <msw@amazon.com>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        "Bshara, Nafea" <nafea@amazon.com>,
-        "Tzalik, Guy" <gtzalik@amazon.com>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "Daniel Borkmann" <borkmann@iogearbox.net>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        xdp-newbies@vger.kernel.org
-Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
- net: ena: implement XDP drop support)
-Date:   Fri, 28 Jun 2019 13:49:43 +0200
-Message-ID: <5127F708-7CDD-4471-9767-D8C87DC23888@redhat.com>
-In-Reply-To: <87y31m884a.fsf@toke.dk>
-References: <20190623070649.18447-1-sameehj@amazon.com>
- <20190623070649.18447-2-sameehj@amazon.com> <20190623162133.6b7f24e1@carbon>
- <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
- <20190626103829.5360ef2d@carbon>
- <CC99D6DE-5B6B-42F3-8D68-7F9AFF1712FF@redhat.com> <87y31m884a.fsf@toke.dk>
+        id S1727051AbfF1NFD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 28 Jun 2019 09:05:03 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:36319 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfF1NFB (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:05:01 -0400
+Received: by mail-io1-f71.google.com with SMTP id k21so6591233ioj.3
+        for <xdp-newbies@vger.kernel.org>; Fri, 28 Jun 2019 06:05:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=YCxs/qt8Mwv3z7mR64kHU2i7RhK2QfF8Lu/zZDPEtsk=;
+        b=dX1lFdF9IBxEWZQO2t8kM6lR0hFc6SSckGMKEHrISBlNcgu3VlMZhyOffu7R/hGLKC
+         HlI8a5hT38Q5jrwRE2e5K9FUkX263B6qyvvjD5Oxquy/vp5QghrNwiN9Tk3KhHb6TEqQ
+         YEytMlX4sVJAUY4lyuQtVIxBGLKEnKMUlymVyZQ29oruquXvboAXo/L65BJFlA43A6oM
+         ItTVfDB5uXf2g41f7xKWWyOieMwRmJq6Iw0mS/kg48dFz8SdGW1ivq0TjHrr9o5zMzXh
+         Ch3vGAxsj8p3f7Ru6Dyo6D83Ev8mIFjN8mm6hEgMfoaX7E0AJdfHrJcyYyPgDCcHszBm
+         KTUQ==
+X-Gm-Message-State: APjAAAXftV8JdFz0/bOJx9d1A2ipP3vOdQtqGIfjYSY7f35c921wYuKe
+        dh8vloh4qB8Qjj04cLNkxsrASCINi181HWRIiJ7WO4Fjmb4g
+X-Google-Smtp-Source: APXvYqx8GKh0Tz0N6JPHNRL9IOslCQEy3zMhF+Ww6SA10ngn8dacBYWiHU7ErPZ6cdknibLtC5lh5DRaS2I+orgfp5ZsyEQIgEVu
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 28 Jun 2019 11:50:10 +0000 (UTC)
+X-Received: by 2002:a6b:8d92:: with SMTP id p140mr10485891iod.144.1561727100535;
+ Fri, 28 Jun 2019 06:05:00 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 06:05:00 -0700
+In-Reply-To: <00000000000000ac4f058bd50039@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000104b00058c61eda4@google.com>
+Subject: Re: WARNING in is_bpf_text_address
+From:   syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
+        bvanassche@acm.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
+        johannes.berg@intel.com, johannes@sipsolutions.net,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
+        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
+        torvalds@linux-foundation.org, will.deacon@arm.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+syzbot has bisected this bug to:
 
+commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
+Author: Bart Van Assche <bvanassche@acm.org>
+Date:   Thu Feb 14 23:00:46 2019 +0000
 
-On 28 Jun 2019, at 9:46, Toke Høiland-Jørgensen wrote:
+     locking/lockdep: Free lock classes that are no longer in use
 
-> "Eelco Chaudron" <echaudro@redhat.com> writes:
->
->> On 26 Jun 2019, at 10:38, Jesper Dangaard Brouer wrote:
->>
->>> On Tue, 25 Jun 2019 03:19:22 +0000
->>> "Machulsky, Zorik" <zorik@amazon.com> wrote:
->>>
->>>> ﻿On 6/23/19, 7:21 AM, "Jesper Dangaard Brouer" 
->>>> <brouer@redhat.com>
->>>> wrote:
->>>>
->>>>     On Sun, 23 Jun 2019 10:06:49 +0300 <sameehj@amazon.com> wrote:
->>>>
->>>>     > This commit implements the basic functionality of drop/pass
->>>> logic in the
->>>>     > ena driver.
->>>>
->>>>     Usually we require a driver to implement all the XDP return
->>>> codes,
->>>>     before we accept it.  But as Daniel and I discussed with Zorik
->>>> during
->>>>     NetConf[1], we are going to make an exception and accept the
->>>> driver
->>>>     if you also implement XDP_TX.
->>>>
->>>>     As we trust that Zorik/Amazon will follow and implement
->>>> XDP_REDIRECT
->>>>     later, given he/you wants AF_XDP support which requires
->>>> XDP_REDIRECT.
->>>>
->>>> Jesper, thanks for your comments and very helpful discussion during
->>>> NetConf! That's the plan, as we agreed. From our side I would like 
->>>> to
->>>> reiterate again the importance of multi-buffer support by xdp 
->>>> frame.
->>>> We would really prefer not to see our MTU shrinking because of xdp
->>>> support.
->>>
->>> Okay we really need to make a serious attempt to find a way to 
->>> support
->>> multi-buffer packets with XDP. With the important criteria of not
->>> hurting performance of the single-buffer per packet design.
->>>
->>> I've created a design document[2], that I will update based on our
->>> discussions: [2]
->>> https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org
->>>
->>> The use-case that really convinced me was Eric's packet 
->>> header-split.
->>>
->>>
->>> Lets refresh: Why XDP don't have multi-buffer support:
->>>
->>> XDP is designed for maximum performance, which is why certain
->>> driver-level
->>> use-cases were not supported, like multi-buffer packets (like
->>> jumbo-frames).
->>> As it e.g. complicated the driver RX-loop and memory model handling.
->>>
->>> The single buffer per packet design, is also tied into eBPF
->>> Direct-Access
->>> (DA) to packet data, which can only be allowed if the packet memory 
->>> is
->>> in
->>> contiguous memory.  This DA feature is essential for XDP 
->>> performance.
->>>
->>>
->>> One way forward is to define that XDP only get access to the first
->>> packet buffer, and it cannot see subsequent buffers.  For XDP_TX and
->>> XDP_REDIRECT to work then XDP still need to carry pointers (plus
->>> len+offset) to the other buffers, which is 16 bytes per extra 
->>> buffer.
->>
->>
->> I’ve seen various network processor HW designs, and they normally 
->> get
->> the first x bytes (128 - 512) which they can manipulate
->> (append/prepend/insert/modify/delete).
->>
->> There are designs where they can “page in” the additional 
->> fragments
->> but it’s expensive as it requires additional memory transfers. But 
->> the
->> majority do not care (cannot change) the remaining fragments. Can 
->> also
->> not think of a reason why you might want to remove something at the 
->> end
->> of the frame (thinking about routing/forwarding needs here).
->>
->> If we do want XDP to access other fragments we could do this through 
->> a
->> helper which swaps the packet context?
->
-> Yeah, I was also going to suggest a helper for that. It doesn't
-> necessarily need to swap the packet context, it could just return a 
-> new
-> pointer?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
+start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ae828aa00000
 
-Yes that will work, my head was still thinking ASICs where there is 
-limited SRAM space…
+Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
+Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer  
+in use")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
