@@ -2,393 +2,175 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4325958A
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 10:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D49595F9
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 10:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfF1IEZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 28 Jun 2019 04:04:25 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46251 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfF1IEY (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 04:04:24 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190628080423euoutp02635c8596737c0479cf5375785bf50175~sTh5-3BMn1432614326euoutp02k
-        for <xdp-newbies@vger.kernel.org>; Fri, 28 Jun 2019 08:04:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190628080423euoutp02635c8596737c0479cf5375785bf50175~sTh5-3BMn1432614326euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561709063;
-        bh=q8MqjSyDIsmIpRYnJSjI1zGGjkLLK/XYbow98sx3X5Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ceIZo7aMX8EpPeSA56EI97Ox967+TKZVVnhIggPScrwYk0HwUwKD19qHNbj/0Os3g
-         BYIEk0Vcoocy49f6JitQ6e/wZm+ll0Vo66LmJvO0CYycbOHSWRrEPSDtuiVlTF36/l
-         N+DgU5Fi+PfljTSvcjp92dljgGQ72sBoIZ2po2Vo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190628080422eucas1p294f675502229b7f0f8d49707c3c09d21~sTh5Tk8VC3242232422eucas1p24;
-        Fri, 28 Jun 2019 08:04:22 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 04.73.04377.60AC51D5; Fri, 28
-        Jun 2019 09:04:22 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190628080422eucas1p26e61d31042662bbabe295f55ae80e6c9~sTh4fLKlT1971119711eucas1p2r;
-        Fri, 28 Jun 2019 08:04:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190628080421eusmtrp18b2d2c214220b07e70ddb4e8ac75b81c~sTh4Q9LaM2335823358eusmtrp1G;
-        Fri, 28 Jun 2019 08:04:21 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-a6-5d15ca06cdc9
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id AF.10.04140.50AC51D5; Fri, 28
-        Jun 2019 09:04:21 +0100 (BST)
-Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190628080421eusmtip19f73031fa8b970aef98ce6233ff0b3d0~sTh3miR6X2228022280eusmtip1W;
-        Fri, 28 Jun 2019 08:04:21 +0000 (GMT)
-From:   Ilya Maximets <i.maximets@samsung.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ilya Maximets <i.maximets@samsung.com>
-Subject: [PATCH bpf v6 2/2] xdp: fix hang while unregistering device bound
- to xdp socket
-Date:   Fri, 28 Jun 2019 11:04:07 +0300
-Message-Id: <20190628080407.30354-3-i.maximets@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190628080407.30354-1-i.maximets@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRju2znbzszFaa58XWm1kkjzSj8OZVYQMfoVRBCG2NSTim7KjteE
-        MlpqS9RcMDYszGWaUpnN21LLZSreCovSIuY1tYsaM9Fc1uaZ9O99nvd5n+d9Pz4CE+m5EiJB
-        mUqrlPIkKc8Nb+hcHgjg9WyJDJ6c20vZc2sRZevo4lHGu4sYVfpajVPv8pb5VOe0mkeZH+kx
-        6q25lEdVWbodXNlWqrGoDR3dKDM9GObImg2f+TJjywxHphkaxGS6G6OYrNBUjWS2Op9T/Ai3
-        sFg6KSGdVgWFn3eLt5e3clLuhWc+7J/Cc1BviAYJCCAPgLF1GNcgN0JEViGYaqvAWLCAoCq/
-        nM8CG4L2L4uc9RHt4guXqhLBr79WHguWECxo67lOFY/cDz01HchZi0kJ/GxqXLPCSD0GpvFb
-        uLPhQUbA1br7ayKc9AXrimWNF5KHYMzUwGfjdkBNrTNOQAjIMJibykVOIyC1fNAY5h1phAMc
-        hyfTGKv3gK9dJtfsdujVFuBsfRms6hnXbD4CnWXVdc8RMH0b4Dt9MHIfPDYHsfQxMH0aRKz9
-        Jhj6sdlJY46ypEGHsbQQ8nNFrHoPrLRXujaQwPCszbWBDD5ef4nY9ylC0Hf7Jl6Mdhj+h5Uh
-        VI086TRGEUczoUo6I5CRK5g0ZVxgTLKiDjk+TO9q10ITMtujLYgkkNRduLNZHCniytOZLIUF
-        AYFJxUKvAQcljJVnXaRVyVGqtCSasaBtBC71FGZvGDknIuPkqXQiTafQqvUuhxBIctCV+vfe
-        PVGaYmrh9IeRGP9XsaOMKtnL32d3olFSb3+zVNKtnnfnZUQXcM80Hm6O6ff9Mzt9iUu2BuPP
-        RMHC54TUcOcgutYnNuh+f2/1Fe3iAKo4cXJ8rHhi0i/T20fQN5Id2JGhSmIyQy+cLTJN1An1
-        2S3WvKqnhQGrbfmZE1KciZeH+GEqRv4PqdFUlSwDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsVy+t/xu7qsp0RjDa4sMbT407aB0eLzkeNs
-        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
-        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DS
-        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PPor1MBUvsKtaefc7SwHjasIuRk0NCwERi
-        8rcDzF2MXBxCAksZJV6/nM4MkZCS+PHrAiuELSzx51oXG0TRN0aJxrlvmEASbAI6EqdWH2EE
-        sUWAGj7u2M4OYjMLLGSW+DLJBMQWFoiQWPtvG1gNi4CqxP3fh1hAbF4Ba4lHW7axQyyQl1i9
-        4QDYYk4BG4n3z9vA6oWAah7u/cU6gZFvASPDKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMBw
-        33bs55YdjF3vgg8xCnAwKvHwKuwUiRViTSwrrsw9xCjBwawkwit5DijEm5JYWZValB9fVJqT
-        WnyI0RToqInMUqLJ+cBYzCuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKanZpakFoE08fE
-        wSnVwHhQM6DmZMJxASER2xwDq8fW2stOOYv9tXP7ur076UtQt3EYh/ODNjfRc1XhZ7d9Dtwx
-        +bqRkb9HbG6NkfNmjwSXibbmjVcE2teUnE9ViRP/8/ml+MnXGzo/iGrLMS35bKRd03B4y4S4
-        Th6zK+8eBsp2sB+76nZB8cLCursPYm7NvZ9gsExmsxJLcUaioRZzUXEiALszZduNAgAA
-X-CMS-MailID: 20190628080422eucas1p26e61d31042662bbabe295f55ae80e6c9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190628080422eucas1p26e61d31042662bbabe295f55ae80e6c9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190628080422eucas1p26e61d31042662bbabe295f55ae80e6c9
-References: <20190628080407.30354-1-i.maximets@samsung.com>
-        <CGME20190628080422eucas1p26e61d31042662bbabe295f55ae80e6c9@eucas1p2.samsung.com>
+        id S1726385AbfF1IXS convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 28 Jun 2019 04:23:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:1360 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbfF1IXS (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 28 Jun 2019 04:23:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3196D3073AFE;
+        Fri, 28 Jun 2019 08:23:17 +0000 (UTC)
+Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BEC560C6E;
+        Fri, 28 Jun 2019 08:22:55 +0000 (UTC)
+Date:   Fri, 28 Jun 2019 10:22:54 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     "Eelco Chaudron" <echaudro@redhat.com>
+Cc:     "Machulsky, Zorik" <zorik@amazon.com>,
+        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Matushevsky, Alexander" <matua@amazon.com>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "Wilson, Matt" <msw@amazon.com>,
+        "Liguori, Anthony" <aliguori@amazon.com>,
+        "Bshara, Nafea" <nafea@amazon.com>,
+        "Tzalik, Guy" <gtzalik@amazon.com>,
+        "Belgazal, Netanel" <netanel@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "Daniel Borkmann" <borkmann@iogearbox.net>,
+        "Toke =?UTF-8?B?SMO4aWxhbmQt?= =?UTF-8?B?SsO4cmdlbnNlbg==?=" 
+        <toke@redhat.com>,
+        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        xdp-newbies@vger.kernel.org, brouer@redhat.com,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
+ net: ena: implement XDP drop support)
+Message-ID: <20190628102254.28191f12@carbon>
+In-Reply-To: <CC99D6DE-5B6B-42F3-8D68-7F9AFF1712FF@redhat.com>
+References: <20190623070649.18447-1-sameehj@amazon.com>
+        <20190623070649.18447-2-sameehj@amazon.com>
+        <20190623162133.6b7f24e1@carbon>
+        <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
+        <20190626103829.5360ef2d@carbon>
+        <CC99D6DE-5B6B-42F3-8D68-7F9AFF1712FF@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 28 Jun 2019 08:23:17 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Device that bound to XDP socket will not have zero refcount until the
-userspace application will not close it. This leads to hang inside
-'netdev_wait_allrefs()' if device unregistering requested:
+On Fri, 28 Jun 2019 09:14:39 +0200
+"Eelco Chaudron" <echaudro@redhat.com> wrote:
 
-  # ip link del p1
-  < hang on recvmsg on netlink socket >
+> On 26 Jun 2019, at 10:38, Jesper Dangaard Brouer wrote:
+> 
+> > On Tue, 25 Jun 2019 03:19:22 +0000
+> > "Machulsky, Zorik" <zorik@amazon.com> wrote:
+> >  
+> >> ﻿On 6/23/19, 7:21 AM, "Jesper Dangaard Brouer" <brouer@redhat.com> 
+> >> wrote:
+> >>
+> >>     On Sun, 23 Jun 2019 10:06:49 +0300 <sameehj@amazon.com> wrote:
+> >>  
+> >>     > This commit implements the basic functionality of drop/pass logic in the  
+> >>     > ena driver.  
+> >>
+> >>     Usually we require a driver to implement all the XDP return codes,
+> >>     before we accept it.  But as Daniel and I discussed with Zorik during
+> >>     NetConf[1], we are going to make an exception and accept the driver
+> >>     if you also implement XDP_TX.
+> >>
+> >>     As we trust that Zorik/Amazon will follow and implement XDP_REDIRECT
+> >>     later, given he/you wants AF_XDP support which requires XDP_REDIRECT.
+> >>
+> >> Jesper, thanks for your comments and very helpful discussion during
+> >> NetConf! That's the plan, as we agreed. From our side I would like to
+> >> reiterate again the importance of multi-buffer support by xdp frame.
+> >> We would really prefer not to see our MTU shrinking because of xdp
+> >> support.  
+> >
+> > Okay we really need to make a serious attempt to find a way to support
+> > multi-buffer packets with XDP. With the important criteria of not
+> > hurting performance of the single-buffer per packet design.
+> >
+> > I've created a design document[2], that I will update based on our
+> > discussions: [2] 
+> > https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-multi-buffer01-design.org
+> >
+> > The use-case that really convinced me was Eric's packet header-split.
+> >
+> >
+> > Lets refresh: Why XDP don't have multi-buffer support:
+> >
+> > XDP is designed for maximum performance, which is why certain 
+> > driver-level
+> > use-cases were not supported, like multi-buffer packets (like 
+> > jumbo-frames).
+> > As it e.g. complicated the driver RX-loop and memory model handling.
+> >
+> > The single buffer per packet design, is also tied into eBPF 
+> > Direct-Access
+> > (DA) to packet data, which can only be allowed if the packet memory is 
+> > in
+> > contiguous memory.  This DA feature is essential for XDP performance.
+> >
+> >
+> > One way forward is to define that XDP only get access to the first
+> > packet buffer, and it cannot see subsequent buffers.  For XDP_TX and
+> > XDP_REDIRECT to work then XDP still need to carry pointers (plus
+> > len+offset) to the other buffers, which is 16 bytes per extra buffer.  
+> 
+> 
+> I’ve seen various network processor HW designs, and they normally get 
+> the first x bytes (128 - 512) which they can manipulate 
+> (append/prepend/insert/modify/delete).
 
-  # ps -x | grep ip
-  5126  pts/0    D+   0:00 ip link del p1
+Good data point, thank you!  It confirms that XDP only getting access to
+the first packet-buffer makes sense, for most use-cases.
 
-  # journalctl -b
+We also have to remember that XDP it not meant to handle every
+use-case.  XDP is a software fast-path, that can accelerate certain
+use-case.  We have the existing network stack as a fall-back for
+handling the corner-cases, that would otherwise slowdown our XDP
+fast-path.
 
-  Jun 05 07:19:16 kernel:
-  unregister_netdevice: waiting for p1 to become free. Usage count = 1
 
-  Jun 05 07:19:27 kernel:
-  unregister_netdevice: waiting for p1 to become free. Usage count = 1
-  ...
+> There are designs where they can “page in” the additional fragments 
+> but it’s expensive as it requires additional memory transfers. But
+> the majority do not care (cannot change) the remaining fragments. Can
+> also not think of a reason why you might want to remove something at
+> the end of the frame (thinking about routing/forwarding needs here).
 
-Fix that by implementing NETDEV_UNREGISTER event notification handler
-to properly clean up all the resources and unref device.
+Use-cases that need to adjust tail of packet:
 
-This should also allow socket killing via ss(8) utility.
+- ICMP replies directly from XDP[1] need to shorten packet tail, but
+  this use-case doesn't use fragments.
 
-Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
----
- include/net/xdp_sock.h |  5 +++
- net/xdp/xdp_umem.c     | 10 ++---
- net/xdp/xdp_umem.h     |  1 +
- net/xdp/xsk.c          | 87 ++++++++++++++++++++++++++++++++++++------
- 4 files changed, 87 insertions(+), 16 deletions(-)
+- IPsec need to add/extend packet tail for IPset-trailer[2], again
+  unlikely that this needs fragments(?). (This use-case convinced me
+  that we need to add extend-tail support to bpf_xdp_adjust_tail)
 
-diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
-index d074b6d60f8a..82d153a637c7 100644
---- a/include/net/xdp_sock.h
-+++ b/include/net/xdp_sock.h
-@@ -61,6 +61,11 @@ struct xdp_sock {
- 	struct xsk_queue *tx ____cacheline_aligned_in_smp;
- 	struct list_head list;
- 	bool zc;
-+	enum {
-+		XSK_READY = 0,
-+		XSK_BOUND,
-+		XSK_UNBOUND,
-+	} state;
- 	/* Protects multiple processes in the control path */
- 	struct mutex mutex;
- 	/* Mutual exclusion of NAPI TX thread and sendmsg error paths
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 267b82a4cbcf..20c91f02d3d8 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -140,11 +140,13 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 	return err;
- }
- 
--static void xdp_umem_clear_dev(struct xdp_umem *umem)
-+void xdp_umem_clear_dev(struct xdp_umem *umem)
- {
- 	struct netdev_bpf bpf;
- 	int err;
- 
-+	ASSERT_RTNL();
-+
- 	if (!umem->dev)
- 		return;
- 
-@@ -153,17 +155,13 @@ static void xdp_umem_clear_dev(struct xdp_umem *umem)
- 		bpf.xsk.umem = NULL;
- 		bpf.xsk.queue_id = umem->queue_id;
- 
--		rtnl_lock();
- 		err = umem->dev->netdev_ops->ndo_bpf(umem->dev, &bpf);
--		rtnl_unlock();
- 
- 		if (err)
- 			WARN(1, "failed to disable umem!\n");
- 	}
- 
--	rtnl_lock();
- 	xdp_clear_umem_at_qid(umem->dev, umem->queue_id);
--	rtnl_unlock();
- 
- 	dev_put(umem->dev);
- 	umem->dev = NULL;
-@@ -195,7 +193,9 @@ static void xdp_umem_unaccount_pages(struct xdp_umem *umem)
- 
- static void xdp_umem_release(struct xdp_umem *umem)
- {
-+	rtnl_lock();
- 	xdp_umem_clear_dev(umem);
-+	rtnl_unlock();
- 
- 	ida_simple_remove(&umem_ida, umem->id);
- 
-diff --git a/net/xdp/xdp_umem.h b/net/xdp/xdp_umem.h
-index 27603227601b..a63a9fb251f5 100644
---- a/net/xdp/xdp_umem.h
-+++ b/net/xdp/xdp_umem.h
-@@ -10,6 +10,7 @@
- 
- int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
- 			u16 queue_id, u16 flags);
-+void xdp_umem_clear_dev(struct xdp_umem *umem);
- bool xdp_umem_validate_queues(struct xdp_umem *umem);
- void xdp_get_umem(struct xdp_umem *umem);
- void xdp_put_umem(struct xdp_umem *umem);
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index a14e8864e4fa..336723948a36 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -335,6 +335,22 @@ static int xsk_init_queue(u32 entries, struct xsk_queue **queue,
- 	return 0;
- }
- 
-+static void xsk_unbind_dev(struct xdp_sock *xs)
-+{
-+	struct net_device *dev = xs->dev;
-+
-+	if (!dev || xs->state != XSK_BOUND)
-+		return;
-+
-+	xs->state = XSK_UNBOUND;
-+
-+	/* Wait for driver to stop using the xdp socket. */
-+	xdp_del_sk_umem(xs->umem, xs);
-+	xs->dev = NULL;
-+	synchronize_net();
-+	dev_put(dev);
-+}
-+
- static int xsk_release(struct socket *sock)
- {
- 	struct sock *sk = sock->sk;
-@@ -354,15 +370,7 @@ static int xsk_release(struct socket *sock)
- 	sock_prot_inuse_add(net, sk->sk_prot, -1);
- 	local_bh_enable();
- 
--	if (xs->dev) {
--		struct net_device *dev = xs->dev;
--
--		/* Wait for driver to stop using the xdp socket. */
--		xdp_del_sk_umem(xs->umem, xs);
--		xs->dev = NULL;
--		synchronize_net();
--		dev_put(dev);
--	}
-+	xsk_unbind_dev(xs);
- 
- 	xskq_destroy(xs->rx);
- 	xskq_destroy(xs->tx);
-@@ -412,7 +420,7 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 		return -EINVAL;
- 
- 	mutex_lock(&xs->mutex);
--	if (xs->dev) {
-+	if (xs->state != XSK_READY) {
- 		err = -EBUSY;
- 		goto out_release;
- 	}
-@@ -492,6 +500,8 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- out_unlock:
- 	if (err)
- 		dev_put(dev);
-+	else
-+		xs->state = XSK_BOUND;
- out_release:
- 	mutex_unlock(&xs->mutex);
- 	return err;
-@@ -520,6 +530,10 @@ static int xsk_setsockopt(struct socket *sock, int level, int optname,
- 			return -EFAULT;
- 
- 		mutex_lock(&xs->mutex);
-+		if (xs->state != XSK_READY) {
-+			mutex_unlock(&xs->mutex);
-+			return -EBUSY;
-+		}
- 		q = (optname == XDP_TX_RING) ? &xs->tx : &xs->rx;
- 		err = xsk_init_queue(entries, q, false);
- 		mutex_unlock(&xs->mutex);
-@@ -534,7 +548,7 @@ static int xsk_setsockopt(struct socket *sock, int level, int optname,
- 			return -EFAULT;
- 
- 		mutex_lock(&xs->mutex);
--		if (xs->umem) {
-+		if (xs->state != XSK_READY || xs->umem) {
- 			mutex_unlock(&xs->mutex);
- 			return -EBUSY;
- 		}
-@@ -561,6 +575,10 @@ static int xsk_setsockopt(struct socket *sock, int level, int optname,
- 			return -EFAULT;
- 
- 		mutex_lock(&xs->mutex);
-+		if (xs->state != XSK_READY) {
-+			mutex_unlock(&xs->mutex);
-+			return -EBUSY;
-+		}
- 		if (!xs->umem) {
- 			mutex_unlock(&xs->mutex);
- 			return -EINVAL;
-@@ -662,6 +680,9 @@ static int xsk_mmap(struct file *file, struct socket *sock,
- 	unsigned long pfn;
- 	struct page *qpg;
- 
-+	if (xs->state != XSK_READY)
-+		return -EBUSY;
-+
- 	if (offset == XDP_PGOFF_RX_RING) {
- 		q = READ_ONCE(xs->rx);
- 	} else if (offset == XDP_PGOFF_TX_RING) {
-@@ -693,6 +714,38 @@ static int xsk_mmap(struct file *file, struct socket *sock,
- 			       size, vma->vm_page_prot);
- }
- 
-+static int xsk_notifier(struct notifier_block *this,
-+			unsigned long msg, void *ptr)
-+{
-+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-+	struct net *net = dev_net(dev);
-+	struct sock *sk;
-+
-+	switch (msg) {
-+	case NETDEV_UNREGISTER:
-+		mutex_lock(&net->xdp.lock);
-+		sk_for_each(sk, &net->xdp.list) {
-+			struct xdp_sock *xs = xdp_sk(sk);
-+
-+			mutex_lock(&xs->mutex);
-+			if (xs->dev == dev) {
-+				sk->sk_err = ENETDOWN;
-+				if (!sock_flag(sk, SOCK_DEAD))
-+					sk->sk_error_report(sk);
-+
-+				xsk_unbind_dev(xs);
-+
-+				/* Clear device references in umem. */
-+				xdp_umem_clear_dev(xs->umem);
-+			}
-+			mutex_unlock(&xs->mutex);
-+		}
-+		mutex_unlock(&net->xdp.lock);
-+		break;
-+	}
-+	return NOTIFY_DONE;
-+}
-+
- static struct proto xsk_proto = {
- 	.name =		"XDP",
- 	.owner =	THIS_MODULE,
-@@ -764,6 +817,7 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
- 	sock_set_flag(sk, SOCK_RCU_FREE);
- 
- 	xs = xdp_sk(sk);
-+	xs->state = XSK_READY;
- 	mutex_init(&xs->mutex);
- 	spin_lock_init(&xs->tx_completion_lock);
- 
-@@ -784,6 +838,10 @@ static const struct net_proto_family xsk_family_ops = {
- 	.owner	= THIS_MODULE,
- };
- 
-+static struct notifier_block xsk_netdev_notifier = {
-+	.notifier_call	= xsk_notifier,
-+};
-+
- static int __net_init xsk_net_init(struct net *net)
- {
- 	mutex_init(&net->xdp.lock);
-@@ -816,8 +874,15 @@ static int __init xsk_init(void)
- 	err = register_pernet_subsys(&xsk_net_ops);
- 	if (err)
- 		goto out_sk;
-+
-+	err = register_netdevice_notifier(&xsk_netdev_notifier);
-+	if (err)
-+		goto out_pernet;
-+
- 	return 0;
- 
-+out_pernet:
-+	unregister_pernet_subsys(&xsk_net_ops);
- out_sk:
- 	sock_unregister(PF_XDP);
- out_proto:
+- DNS or memcached replies directly from XDP, need to extend packet
+  tail, to have room for reply. (It would be interesting to allow larger
+  replies, but I'm not sure we should ever support that).
+
+
+> If we do want XDP to access other fragments we could do this through
+> a helper which swaps the packet context?
+
+That might be a way forward.  If the XDP developer have to call a
+helper, then they should realize and "buy into" an additional
+overhead/cost.
+
+
+[1] https://github.com/torvalds/linux/blob/master/samples/bpf/xdp_adjust_tail_kern.c
+[2] http://vger.kernel.org/netconf2019_files/xfrm_xdp.pdf
 -- 
-2.17.1
-
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
