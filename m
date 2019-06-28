@@ -2,238 +2,138 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B6DC58DA1
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 00:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 276EF59323
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 06:58:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfF0WIA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 27 Jun 2019 18:08:00 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41029 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfF0WIA (ORCPT
+        id S1726940AbfF1E6E (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 28 Jun 2019 00:58:04 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:17874 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfF1E6E (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:08:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id q4so144693pgj.8;
-        Thu, 27 Jun 2019 15:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/h3ULTjXDzRWUsUxCT1KF9AIRl7JQviKgO6mJP3zRGY=;
-        b=bqsuDWfbWt4udbXjfHjiH+jK5MPShPoVN2Ng0aieW8+X6bzlBLwTj9uRPKrhyUDscJ
-         ZnsjnwPhla0DDGsR87Tz7jfstBv9hw+2gTYiwLL1iihk0+omLFKfawCEjkMh+mZ+vswl
-         0XGNglSF5EaOyeN6/ic3h4BXb38BWMH1NF/iwN7t+Ep3Yyqbdh9RSE5MciKOuwelSASh
-         hlUdH1U81eE/NsCHVhcAcJB01+Ee6z2Ub3wPzGfj3QWcBVpyEJqdgTMzf+Ij9NBYZjlD
-         14aLZlNI+p+H6kSByQBmvykRZaywo/xBTI7cHy5p6GE88k4uVd3UwLQCkIvsVe9q8nvr
-         xH/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/h3ULTjXDzRWUsUxCT1KF9AIRl7JQviKgO6mJP3zRGY=;
-        b=Hu3gNiLL7sC8bI6hTlj/g14BF41Cajnw5u8/fWt75WuFE43rqF+856+5tt9fm+xfQY
-         yRyAyNOqWXjTuHD66XquA/RxLXaIuieYPMp9rBU+JkqTiC0YN9YXkm/dBB+fwgtsYdjh
-         KbDNLtxVt3HePV2s+S72zeuYtMdHlQZT574VCMULqPIySdLweHfMAQIXA9PvkwsfKdk+
-         bEo2tMzyeainWLxgx2Qwzt3wbBlb9PJwamlpGrYQ9hUurbTUS7oz96Tb+Cgshg/vKETt
-         57v73x0/rKqNKay2zHYOSJjhF9Au6m9nLKo6sTW1vxDyg4sssOCFO8R6YIdVm2UlhW1P
-         C8RQ==
-X-Gm-Message-State: APjAAAXh1M/az/id0UX+P5sPkGKius7XnT8f5KXLpXONcIBkxOIll4JE
-        QxrJxi0AZH4GF9OH8VtoAPk=
-X-Google-Smtp-Source: APXvYqxMNHeH0nKiRHBn2Mmbu0zzCIAgk2uN8HnwwNRPT+HGpIbgpHYumjjT3yUNS5MallVY2O2XSw==
-X-Received: by 2002:a17:90a:c596:: with SMTP id l22mr8928895pjt.46.1561673279609;
-        Thu, 27 Jun 2019 15:07:59 -0700 (PDT)
-Received: from [172.20.53.102] ([2620:10d:c090:200::6693])
-        by smtp.gmail.com with ESMTPSA id a21sm128620pgd.45.2019.06.27.15.07.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 15:07:58 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Jesper Dangaard Brouer" <brouer@redhat.com>
-Cc:     "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
-        "Toke =?utf-8?b?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=" <toke@redhat.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>,
-        "Jubran, Samih" <sameehj@amazon.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Matushevsky, Alexander" <matua@amazon.com>,
-        "Bshara, Saeed" <saeedb@amazon.com>,
-        "Wilson, Matt" <msw@amazon.com>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        "Bshara, Nafea" <nafea@amazon.com>,
-        "Tzalik, Guy" <gtzalik@amazon.com>,
-        "Belgazal, Netanel" <netanel@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Kiyanovski, Arthur" <akiyano@amazon.com>,
-        "Daniel Borkmann" <borkmann@iogearbox.net>,
-        "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
-        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        xdp-newbies@vger.kernel.org
-Subject: Re: XDP multi-buffer incl. jumbo-frames (Was: [RFC V1 net-next 1/1]
- net: ena: implement XDP drop support)
-Date:   Thu, 27 Jun 2019 15:07:56 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <0D1286E7-02CD-4252-823C-4D1CBB8F2807@gmail.com>
-In-Reply-To: <20190626220028.2bb12196@carbon>
-References: <20190623070649.18447-1-sameehj@amazon.com>
- <20190623070649.18447-2-sameehj@amazon.com> <20190623162133.6b7f24e1@carbon>
- <A658E65E-93D2-4F10-823D-CC25B081C1B7@amazon.com>
- <20190626103829.5360ef2d@carbon> <87a7e4d0nj.fsf@toke.dk>
- <20190626164059.4a9511cf@carbon> <87h88cbdbe.fsf@toke.dk>
- <CA+FuTSfKnhv9rr=cDa_4m7Dd9qkEm_oabDfyvH0T0sM+fQTU=w@mail.gmail.com>
- <99AFC1EE-E27E-4D4D-B9B8-CA2215E68E1B@gmail.com>
- <20190626220028.2bb12196@carbon>
+        Fri, 28 Jun 2019 00:58:04 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x5S4vmF1019231;
+        Fri, 28 Jun 2019 13:57:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5S4vmF1019231
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561697869;
+        bh=SIK/nAM+sI54EJmk0mR1Usgw9j5vfYmGFrOtLjOZzLg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JxblWpm3C3r7r01gYCOajBSW84T6W3cnHh34fYXfzFs98o7YC0XLfQPjyIZJOe7wM
+         PY/Z814YyNy19enS/Ou211c5U7rm691JuQCgggAcE2sGPHLAj9wwCQolzRkbPaDRiu
+         FrTXIynHp8sn8Ga5l38WmMbWouAfZu8DxdTPzh8CSEslepOK3tMS5SQS+4VtUehZ9t
+         NSNHzUy1OY+BQNhszkLRTwslt4vvB1fQRAdLZXk9kVNL+2+OwXetOycQuOQ2VOQRtf
+         XghTnCtXDc6J9Kd7iUMUzD/WmoM3yPHVBRQHQLacTI0FvtiDEE2S7qU0bYPKqALUUD
+         5RDATmr7n88Ew==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id m8so3223822vsj.0;
+        Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAVu7n6CngMno4scf2pMdH3Hmq9hLhKhaaiLPuIUzywdwnzZSMaq
+        //TzyUqqq0KFjBboz92i6ufgqEomdtaXqA+s3JY=
+X-Google-Smtp-Source: APXvYqyyvmsd8AAk5R7aaNFgntOJs2TjX0FeQ1b2WdSaf2T0LzzKUcfk9Z8oacISJcBzf5zvmHjL7/Pj9m8miFmaa6o=
+X-Received: by 2002:a67:d46:: with SMTP id 67mr4682467vsn.181.1561697868020;
+ Thu, 27 Jun 2019 21:57:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190627163903.28398-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 28 Jun 2019 13:57:12 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
+Message-ID: <CAK7LNARj+A1JDnUmA_ZFC5Shsy7Tg37LtXS27H7ZTgDbp5BO2w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Compile-test UAPI and kernel headers
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-riscv@lists.infradead.org, Sam Ravnborg <sam@ravnborg.org>,
+        Kees Cook <keescook@chromium.org>, xdp-newbies@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Colin Cross <ccross@android.com>, bpf@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 26 Jun 2019, at 13:00, Jesper Dangaard Brouer wrote:
-
-> On Wed, 26 Jun 2019 09:42:07 -0700 "Jonathan Lemon" =
-
-> <jonathan.lemon@gmail.com> wrote:
+On Fri, Jun 28, 2019 at 1:41 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
->> If all packets are collected together (like the bulk queue does), and
->> then passed to XDP, this could easily be made backwards compatible.
->> If the XDP program isn't 'multi-frag' aware, then each packet is just
->> passed in individually.
+> 1/4: Compile-test exported headers (reworked in v2)
 >
-> My proposal#1 is XDP only access first-buffer[1], as this simplifies =
-
-> things.
+> 2/4: fix a flaw I noticed when I was working on this series.
+>      Avoid generating intermediate wrappers.
 >
-> (AFAIK) What you are proposing is that all the buffers are passed to
-> the XDP prog (in form of a iovec).  I need some more details about =
-
-> your
-> suggestion.
-
-I was thinking this over yesterday - and was probably conflating packets
-and buffers a bit.  Suppose that for the purposes of this discussion, =
-
-we're
-talking about a single packet that is split over multiple buffer areas.
-
-Say, on RX, with header split:
-    buf[0] =3D header
-    buf[1] =3D data
-
-For LRO (hw recv) and jumbo frames (and TSO):
-    buf[0] =3D hdr + data
-    buf[1] =3D data
-    buf[n] =3D data
-
-GRO cases, where individual packets are reassembled by software, aren't
-handled here.
-
-
-> Specifically:
+> 3/4: maybe useful for 4/4 and in some other places.
+>      Add header-test-pattern-y syntax.
 >
-> - What is the semantic when a 3 buffer packet is input and XDP prog
-> choose to return XDP_DROP for packet #2 ?
+> 4/4: Compile-test kernel-space headers in include/.
+>      v2: compile as many headers as possible.
+>      v3: exclude more headers causing build errors
+
+
+I push this series to
+ git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ header-test-v3
+for somebody who wants to test it.
+
+
+
 >
-> - Same situation of packet #2 wants a XDP_TX or redirect?
-
-The collection of buffers represents a single packet, so this isn't
-applicable here, right?
-
-However, just thinking about incomplete data words (aka: pullup) gives
-me a headache - seems this would complicate the BPF/verifier quite a =
-
-bit.
-
-So perhaps just restricting things to the first entry would do for now?
-
-As far as the exact data structure used to hold the buffers, it would
-be nice if it had the same layout as a bio_vec, in case someone wanted
-to get clever and start transferring things over directly.
--- =
-
-Jonathan
-
-
->> Of course, passing in the equivalent of a iovec requires some form of
->> loop support on the BPF side, doesn't it?
+> Masahiro Yamada (4):
+>   kbuild: compile-test UAPI headers to ensure they are self-contained
+>   kbuild: do not create wrappers for header-test-y
+>   kbuild: support header-test-pattern-y
+>   kbuild: compile-test kernel headers to ensure they are self-contained
 >
-> The data structure used for holding these packet buffers/segments also
-> needs to be discussed.  I would either use an array of bio_vec[2] or
-> skb_frag_t (aka skb_frag_struct).  The skb_frag_t would be most
-> obvious, as we already have to write this when creating an SKB, in
-> skb_shared_info area. (Structs listed below signature).
+>  .gitignore                         |    1 -
+>  Documentation/dontdiff             |    1 -
+>  Documentation/kbuild/makefiles.txt |   13 +-
+>  Makefile                           |    4 +-
+>  include/Kbuild                     | 1250 ++++++++++++++++++++++++++++
+>  init/Kconfig                       |   22 +
+>  scripts/Makefile.build             |   10 +-
+>  scripts/Makefile.lib               |   13 +-
+>  scripts/cc-system-headers.sh       |    8 +
+>  usr/.gitignore                     |    1 -
+>  usr/Makefile                       |    2 +
+>  usr/include/.gitignore             |    3 +
+>  usr/include/Makefile               |  134 +++
+>  13 files changed, 1449 insertions(+), 13 deletions(-)
+>  create mode 100644 include/Kbuild
+>  create mode 100755 scripts/cc-system-headers.sh
+>  create mode 100644 usr/include/.gitignore
+>  create mode 100644 usr/include/Makefile
 >
-> The problem is also that size of these structs (16 bytes) per
-> buffer/segment, and we likely need to support 17 segments, as this =
-
-> need
-> to be compatible with SKBs (size 272 bytes).
->
-> My idea here is that we simply use the same memory area, that we have =
-
-> to
-> store skb_shared_info into.  As this allow us to get the SKB setup for
-> free, when doing XDP_PASS or when doing SKB alloc after XDP_REDIRECT.
+> --
+> 2.17.1
 >
 >
-> [1] =
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> https://github.com/xdp-project/xdp-project/blob/master/areas/core/xdp-m=
-ulti-buffer01-design.org#proposal1-xdp-only-access-first-buffer
->
-> [2] =
 
-> https://lore.kernel.org/netdev/20190501041757.8647-1-willy@infradead.or=
-g/
-> -- =
 
-> Best regards,
->   Jesper Dangaard Brouer
->   MSc.CS, Principal Kernel Engineer at Red Hat
->   LinkedIn: http://www.linkedin.com/in/brouer
->
->
-> $ pahole -C skb_frag_struct vmlinux
-> struct skb_frag_struct {
-> 	struct {
-> 		struct page * p;                         /*     0     8 */
-> 	} page;                                          /*     0     8 */
-> 	__u32                      page_offset;          /*     8     4 */
-> 	__u32                      size;                 /*    12     4 */
->
-> 	/* size: 16, cachelines: 1, members: 3 */
-> 	/* last cacheline: 16 bytes */
-> };
->
-> $ pahole -C bio_vec vmlinux
-> struct bio_vec {
-> 	struct page        * bv_page;                    /*     0     8 */
-> 	unsigned int               bv_len;               /*     8     4 */
-> 	unsigned int               bv_offset;            /*    12     4 */
->
-> 	/* size: 16, cachelines: 1, members: 3 */
-> 	/* last cacheline: 16 bytes */
-> };
->
-> $ pahole -C skb_shared_info vmlinux
-> struct skb_shared_info {
-> 	__u8                       __unused;             /*     0     1 */
-> 	__u8                       meta_len;             /*     1     1 */
-> 	__u8                       nr_frags;             /*     2     1 */
-> 	__u8                       tx_flags;             /*     3     1 */
-> 	short unsigned int         gso_size;             /*     4     2 */
-> 	short unsigned int         gso_segs;             /*     6     2 */
-> 	struct sk_buff     * frag_list;                  /*     8     8 */
-> 	struct skb_shared_hwtstamps hwtstamps;           /*    16     8 */
-> 	unsigned int               gso_type;             /*    24     4 */
-> 	u32                        tskey;                /*    28     4 */
-> 	atomic_t                   dataref;              /*    32     0 */
->
-> 	/* XXX 8 bytes hole, try to pack */
->
-> 	void *                     destructor_arg;       /*    40     8 */
-> 	skb_frag_t                 frags[17];            /*    48   272 */
->
-> 	/* size: 320, cachelines: 5, members: 13 */
-> 	/* sum members: 312, holes: 1, sum holes: 8 */
-> };
+--
+Best Regards
+Masahiro Yamada
