@@ -2,113 +2,62 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F2605A304
-	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jun 2019 20:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E2D5ACC3
+	for <lists+xdp-newbies@lfdr.de>; Sat, 29 Jun 2019 19:53:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfF1SBF (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 28 Jun 2019 14:01:05 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:45884 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfF1SBF (ORCPT
+        id S1726883AbfF2RxI convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Sat, 29 Jun 2019 13:53:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38174 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfF2RxH (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 28 Jun 2019 14:01:05 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8DED880348;
-        Fri, 28 Jun 2019 20:00:58 +0200 (CEST)
-Date:   Fri, 28 Jun 2019 20:00:57 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Jani Nikula <jani.nikula@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure
- they are self-contained
-Message-ID: <20190628180057.GA22758@ravnborg.org>
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
- <20190627163903.28398-5-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627163903.28398-5-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=yXOKcWPwKYVsdpAgASMA:9 a=CjuIK1q_8ugA:10
+        Sat, 29 Jun 2019 13:53:07 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 09FC214B566FC;
+        Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
+Date:   Sat, 29 Jun 2019 10:53:06 -0700 (PDT)
+Message-Id: <20190629.105306.762888643756822083.davem@davemloft.net>
+To:     bjorn.topel@gmail.com
+Cc:     ivan.khoronzhuk@linaro.org, bjorn.topel@intel.com,
+        magnus.karlsson@intel.com, ast@kernel.org, daniel@iogearbox.net,
+        hawk@kernel.org, john.fastabend@gmail.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] xdp: xdp_umem: fix umem pages mapping for
+ 32bits systems
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+References: <20190626155911.13574-1-ivan.khoronzhuk@linaro.org>
+        <CAJ+HfNid3PntipAJHuPR-tQudf+E6UQK6mPDHdc0O=wCUSjEEA@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 29 Jun 2019 10:53:07 -0700 (PDT)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Masahiro.
+From: Björn Töpel <bjorn.topel@gmail.com>
+Date: Wed, 26 Jun 2019 22:50:23 +0200
 
-On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
-> The headers in include/ are globally used in the kernel source tree
-> to provide common APIs. They are included from external modules, too.
+> On Wed, 26 Jun 2019 at 17:59, Ivan Khoronzhuk
+> <ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> Use kmap instead of page_address as it's not always in low memory.
+>>
 > 
-> It will be useful to make as many headers self-contained as possible
-> so that we do not have to rely on a specific include order.
+> Ah, some 32-bit love. :-) Thanks for working on this!
 > 
-> There are more than 4000 headers in include/. In my rough analysis,
-> 70% of them are already self-contained. With efforts, most of them
-> can be self-contained.
+> For future patches, please base AF_XDP patches on the bpf/bpf-next
+> tree instead of net/net-next.
 > 
-> For now, we must exclude more than 1000 headers just because they
-> cannot be compiled as standalone units. I added them to header-test-.
-> The black list was mostly generated by a script, so should be checked
-> later.
-The list is smaller than I had expected.
-And I see why you insisted on avoiding a maze ok Kbuild files.
-It looks good, except there is a few issues..
+> Acked-by: Björn Töpel <bjorn.topel@intel.com>
 
+Alexei and Daniel, I'll let you guys take this one.
 
-The file kernel/kheaders_data.tar.xz includes all the .s files.
-Something needs to be done to exclude the .s files...
-
-When building a full kernel the build fails like this:
-  LD      vmlinux.o
-aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
-make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
-make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
-make: *** [Makefile:179: sub-make] Error 2
-
-
-include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
-There is likely more header files that will fail when we start to
-throw this after diverse randconfigs.
-I have no good idea how to catch this.
-Unless your scripts could automate this across several architectures.
-
-I did not continue my testing futher.
-
-> +header-test-			+= uapi/drm/vmwgfx_drm.h
-> +header-test-			+= uapi/linux/a.out.h
-> +header-test-			+= uapi/linux/coda.h
-...
-> +header-test-			+= uapi/xen/evtchn.h
-> +header-test-			+= uapi/xen/gntdev.h
-> +header-test-			+= uapi/xen/privcmd.h
-
-I though uapi files were covered by another Makefile?
-If they are added because we pull them in using a pattern, maybe they
-should be removed using a specific filer-out?
-
-	Sam
+Thanks.
