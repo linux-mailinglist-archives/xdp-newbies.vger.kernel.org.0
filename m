@@ -2,157 +2,135 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 438E85AF4D
-	for <lists+xdp-newbies@lfdr.de>; Sun, 30 Jun 2019 09:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 190515B0DF
+	for <lists+xdp-newbies@lfdr.de>; Sun, 30 Jun 2019 19:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfF3H6Z (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 30 Jun 2019 03:58:25 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:19799 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfF3H6Z (ORCPT
+        id S1726666AbfF3RYT (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 30 Jun 2019 13:24:19 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37641 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfF3RYT (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 30 Jun 2019 03:58:25 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5U7vxPV023007;
-        Sun, 30 Jun 2019 16:58:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5U7vxPV023007
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561881480;
-        bh=+9brw8RpKfPCHLaNnVG0ALKGMwnUyxhWFifAcm1Jy9A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zUawODtU0vhTiPl5qaNgEo9ByKy2yYb9HTAWd7jH5/KmRFRbCTqDf1r2buPkH6eY7
-         9KWkOkbCmnK9rkMatOmM0itxGnwHB/mMPuqRIjog1NzLgK//i1B3cXHhcTtE4pC6OU
-         VNXerozMf6mNDQ2YuNycgdEq1clJ5Ax3fRXt2Pykx7Eg5zzgtutbB8rwb3gug/dYXr
-         O98/bPfya6esIc3ETSzeD3199w5ae4W/Lwcu2gAXFoPoyufabN5ofgPBt7+mBFPuRl
-         yTH6VnFiqBpTquzJOkRU+fykLB1M8/iymSMC+5w1Mo4YIFRRu6hO3v+dQXWv3IKe2k
-         Skm8IrMNwnxoQ==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id z13so3851870uaa.4;
-        Sun, 30 Jun 2019 00:58:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAWysMbNscscgdcwsu+dZATRmuJuaguufvScETMbNbgnIXct6t2m
-        LqZIl0OYZjwAjoaIWjYoBL6cZFfUIYYY90xpG9I=
-X-Google-Smtp-Source: APXvYqzyVZpInW2H6+hLd4o8U+kv7ZbqLoJ5DBzo4XhAbsuYuwZv3Nes7LIrEN98cU8HrIW65l38Jgqlp5UdZQn0x3E=
-X-Received: by 2002:a9f:25e9:: with SMTP id 96mr10993006uaf.95.1561881479132;
- Sun, 30 Jun 2019 00:57:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190627163903.28398-1-yamada.masahiro@socionext.com>
- <20190627163903.28398-5-yamada.masahiro@socionext.com> <20190628180057.GA22758@ravnborg.org>
-In-Reply-To: <20190628180057.GA22758@ravnborg.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 30 Jun 2019 16:57:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
-Message-ID: <CAK7LNAQDqtm5F_JoPAjPOuf6s3d0F1=Ctyq6s0u2DWNpbFr5vg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] kbuild: compile-test kernel headers to ensure they
- are self-contained
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 30 Jun 2019 13:24:19 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so10639894ljf.4
+        for <xdp-newbies@vger.kernel.org>; Sun, 30 Jun 2019 10:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DPwrQFg4SMsQ0Yy8vytLFwgLYycpl+OBmBKTwx8dTWc=;
+        b=Jn5dbha8phys6TijaUHIy41CHa5/B3xQc4VSSGASGi7VOd4SHz7clN1hLMUh3dPUYI
+         UOB9RFG1eUP93Af+QAaSqU3qKo2/efPk9tZV2eRulM5yn27qlllCAFgtaIzi7ppXkEk1
+         Io+x2gb3pbYr7Zck+QzMJ8jwINmy4nW7sYl0PWAwCxRu7uxLZq8Xpb0TzKZwKEfBSwjz
+         wH8S9eMaG9CHuJrzF06DgsuaecQGdefZyRTbNoYZJi7QEIdo94KYUIUWj/6Cbrnu/Hlz
+         jcMMsJ8KzmT3taHEl6zTIXOEzBCFLc8dQ9rM6rTDWffQH2Ani+0ic7adE63Dgag/pzMa
+         d3Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DPwrQFg4SMsQ0Yy8vytLFwgLYycpl+OBmBKTwx8dTWc=;
+        b=NlKTfgzwP5CCs0ygoRxJVWPhV+n0c6m1Pr+H25nKx8g8DEMw8Vfh61tPCzz8e59OKf
+         HUzegZ4VBvERwHDIaMKVFDTBGA6KGw7+fj6YQ3y6lQw8HdvOAKPvgNwi9TFkMgBGWrpw
+         BSy8caGPqpBsBU+S+zN8AEtxUlatYnOaRG/G2joP2O0nYuWvqse42hQj/wW+XVYzedSi
+         bpk/24i2e7whEeGLIxQY+XiFu7HlOaCp2Cv50dec+t+ANXHUUi7+lOx7TPZNeQysf3J7
+         Y9cH7ky9z8nONHZaAN5VsN60jzlnnifgHlei6ilTZSbGFmfYUpCyJ5NzC3KmaeKwasFz
+         TmhQ==
+X-Gm-Message-State: APjAAAU8WDUlddMMvErvpYuuYxMtG3BtcLKHW0iFLy40aFtD7FIYFQaH
+        IscbJqMikvf0TK8l33CVbeO61w==
+X-Google-Smtp-Source: APXvYqzg00rV2HOfgLqYPrIxuxkj4JtSuEaGuAlRnQ8UUfwPQyN31xUZUHRyb4DtfKm7qcEWHMQ0GA==
+X-Received: by 2002:a2e:658e:: with SMTP id e14mr11462808ljf.147.1561915457685;
+        Sun, 30 Jun 2019 10:24:17 -0700 (PDT)
+Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id c1sm2273795lfh.13.2019.06.30.10.24.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 30 Jun 2019 10:24:17 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
+Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v5 net-next 0/6] net: ethernet: ti: cpsw: Add XDP support
+Date:   Sun, 30 Jun 2019 20:23:42 +0300
+Message-Id: <20190630172348.5692-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Sam,
+This patchset adds XDP support for TI cpsw driver and base it on
+page_pool allocator. It was verified on af_xdp socket drop,
+af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+
+It was verified with following configs enabled:
+CONFIG_JIT=y
+CONFIG_BPFILTER=y
+CONFIG_BPF_SYSCALL=y
+CONFIG_XDP_SOCKETS=y
+CONFIG_BPF_EVENTS=y
+CONFIG_HAVE_EBPF_JIT=y
+CONFIG_BPF_JIT=y
+CONFIG_CGROUP_BPF=y
+
+Link on previous v4:
+https://lkml.org/lkml/2019/6/25/996
+
+Also regular tests with iperf2 were done in order to verify impact on
+regular netstack performance, compared with base commit:
+https://pastebin.com/JSMT0iZ4
+
+v4..v5:
+- added two plreliminary patches:
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+- added xdp alocator refcnt on xdp level, avoiding page pool refcnt
+- moved flush status as separate argument for cpdma_chan_process
+- reworked cpsw code according to last changes to allocator
+- added missed statistic counter
+
+v3..v4:
+- added page pool user counter
+- use same pool for ndevs in dual mac
+- restructured page pool create/destroy according to the last changes in API
+
+v2..v3:
+- each rxq and ndev has its own page pool
+
+v1..v2:
+- combined xdp_xmit functions
+- used page allocation w/o refcnt juggle
+- unmapped page for skb netstack
+- moved rxq/page pool allocation to open/close pair
+- added several preliminary patches:
+  net: page_pool: add helper function to retrieve dma addresses
+  net: page_pool: add helper function to unmap dma addresses
+  net: ethernet: ti: cpsw: use cpsw as drv data
+  net: ethernet: ti: cpsw_ethtool: simplify slave loops
 
 
-On Sat, Jun 29, 2019 at 3:01 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Masahiro.
->
-> On Fri, Jun 28, 2019 at 01:39:02AM +0900, Masahiro Yamada wrote:
-> > The headers in include/ are globally used in the kernel source tree
-> > to provide common APIs. They are included from external modules, too.
-> >
-> > It will be useful to make as many headers self-contained as possible
-> > so that we do not have to rely on a specific include order.
-> >
-> > There are more than 4000 headers in include/. In my rough analysis,
-> > 70% of them are already self-contained. With efforts, most of them
-> > can be self-contained.
-> >
-> > For now, we must exclude more than 1000 headers just because they
-> > cannot be compiled as standalone units. I added them to header-test-.
-> > The black list was mostly generated by a script, so should be checked
-> > later.
-> The list is smaller than I had expected.
-> And I see why you insisted on avoiding a maze ok Kbuild files.
-> It looks good, except there is a few issues..
->
->
-> The file kernel/kheaders_data.tar.xz includes all the .s files.
-> Something needs to be done to exclude the .s files...
+Based on net-next/master
 
-Good catch. I will change scripts/gen_kheaders.sh
+Ivan Khoronzhuk (6):
+  xdp: allow same allocator usage
+  net: ethernet: ti: davinci_cpdma: add dma mapped submit
+  net: ethernet: ti: davinci_cpdma: return handler status
+  net: ethernet: ti: davinci_cpdma: allow desc split while down
+  net: ethernet: ti: cpsw_ethtool: allow res split while down
+  net: ethernet: ti: cpsw: add XDP support
 
-
-> When building a full kernel the build fails like this:
->   LD      vmlinux.o
-> aarch64-linux-gnu-ld: cannot find include/lib.a: No such file or directory
-> make[1]: *** [/home/sam/kernel/linux-kbuild.git/Makefile:1054: vmlinux] Error 1
-> make[1]: Leaving directory '/home/sam/kernel/linux-kbuild.git/.build/arm64-allyesconfig'
-> make: *** [Makefile:179: sub-make] Error 2
-
-My bad - I built only include/,
-without testing full build.
-
-I will fix.
-
-
->
-> include/uapi/linux/mman.h fails when building sparc64 allmodconfig.
-> There is likely more header files that will fail when we start to
-> throw this after diverse randconfigs.
-> I have no good idea how to catch this.
-> Unless your scripts could automate this across several architectures.
-
-Thanks. I excluded a little more headers.
-
-
-> I did not continue my testing futher.
->
-> > +header-test-                 += uapi/drm/vmwgfx_drm.h
-> > +header-test-                 += uapi/linux/a.out.h
-> > +header-test-                 += uapi/linux/coda.h
-> ...
-> > +header-test-                 += uapi/xen/evtchn.h
-> > +header-test-                 += uapi/xen/gntdev.h
-> > +header-test-                 += uapi/xen/privcmd.h
->
-> I though uapi files were covered by another Makefile?
-> If they are added because we pull them in using a pattern, maybe they
-> should be removed using a specific filer-out?
-
-I have not looked at this closely yet.
-
-usr/include/Makefile tests UAPI headers
-crafted by scripts/headers_install.sh
-
-Testing UAPI headers in their raw form
-makes sense, I think.
-
-
+ drivers/net/ethernet/ti/Kconfig         |   1 +
+ drivers/net/ethernet/ti/cpsw.c          | 520 +++++++++++++++++++++---
+ drivers/net/ethernet/ti/cpsw_ethtool.c  |  78 +++-
+ drivers/net/ethernet/ti/cpsw_priv.h     |   9 +-
+ drivers/net/ethernet/ti/davinci_cpdma.c | 125 +++++-
+ drivers/net/ethernet/ti/davinci_cpdma.h |  11 +-
+ drivers/net/ethernet/ti/davinci_emac.c  |  17 +-
+ include/net/xdp_priv.h                  |   1 +
+ net/core/xdp.c                          |  46 +++
+ 9 files changed, 701 insertions(+), 107 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
