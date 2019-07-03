@@ -2,181 +2,76 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5011F5EAA6
-	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 19:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9455EB99
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 20:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfGCRkg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 3 Jul 2019 13:40:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53372 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfGCRkg (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 3 Jul 2019 13:40:36 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A62BB308FFB1;
-        Wed,  3 Jul 2019 17:40:24 +0000 (UTC)
-Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 575A13795;
-        Wed,  3 Jul 2019 17:40:15 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 19:40:13 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
-        ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, brouer@redhat.com
-Subject: Re: [PATCH v6 net-next 1/5] xdp: allow same allocator usage
-Message-ID: <20190703194013.02842e42@carbon>
-In-Reply-To: <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
-References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
-        <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726988AbfGCSaG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 3 Jul 2019 14:30:06 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:60558 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfGCSaG (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 3 Jul 2019 14:30:06 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6A17D140DA5B3;
+        Wed,  3 Jul 2019 11:30:05 -0700 (PDT)
+Date:   Wed, 03 Jul 2019 11:30:05 -0700 (PDT)
+Message-Id: <20190703.113005.69711790321030429.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     jaswinder.singh@linaro.org, ast@kernel.org,
+        ilias.apalodimas@linaro.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, hawk@kernel.org,
+        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net-next] net: socionext: remove set but not used
+ variable 'pkts'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190703024213.191191-1-yuehaibing@huawei.com>
+References: <20190703024213.191191-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 03 Jul 2019 17:40:35 +0000 (UTC)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 03 Jul 2019 11:30:05 -0700 (PDT)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed,  3 Jul 2019 13:18:59 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 3 Jul 2019 02:42:13 +0000
 
-> First of all, it is an absolute requirement that each RX-queue have
-> their own page_pool object/allocator. And this change is intendant
-> to handle special case, where a single RX-queue can receive packets
-> from two different net_devices.
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> In order to protect against using same allocator for 2 different rx
-> queues, add queue_index to xdp_mem_allocator to catch the obvious
-> mistake where queue_index mismatch, as proposed by Jesper Dangaard
-> Brouer.
+> drivers/net/ethernet/socionext/netsec.c: In function 'netsec_clean_tx_dring':
+> drivers/net/ethernet/socionext/netsec.c:637:15: warning:
+>  variable 'pkts' set but not used [-Wunused-but-set-variable]
 > 
-> Adding this on xdp allocator level allows drivers with such dependency
-> change the allocators w/o modifications.
+> It is not used since commit ba2b232108d3 ("net: netsec: add XDP support")
 > 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  include/net/xdp_priv.h |  2 ++
->  net/core/xdp.c         | 55 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 57 insertions(+)
+>  drivers/net/ethernet/socionext/netsec.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
-> index 6a8cba6ea79a..9858a4057842 100644
-> --- a/include/net/xdp_priv.h
-> +++ b/include/net/xdp_priv.h
-> @@ -18,6 +18,8 @@ struct xdp_mem_allocator {
->  	struct rcu_head rcu;
->  	struct delayed_work defer_wq;
->  	unsigned long defer_warn;
-> +	unsigned long refcnt;
-> +	u32 queue_index;
->  };
-
-I don't like this approach, because I think we need to extend struct
-xdp_mem_allocator with a net_device pointer, for doing dev_hold(), to
-correctly handle lifetime issues. (As I tried to explain previously).
-This will be much harder after this change, which is why I proposed the
-other patch.
-
-
->  #endif /* __LINUX_NET_XDP_PRIV_H__ */
-> diff --git a/net/core/xdp.c b/net/core/xdp.c
-> index 829377cc83db..4f0ddbb3717a 100644
-> --- a/net/core/xdp.c
-> +++ b/net/core/xdp.c
-> @@ -98,6 +98,18 @@ static bool __mem_id_disconnect(int id, bool force)
->  		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
->  		return true;
->  	}
-> +
-> +	/* to avoid calling hash lookup twice, decrement refcnt here till it
-> +	 * reaches zero, then it can be called from workqueue afterwards.
-> +	 */
-> +	if (xa->refcnt)
-> +		xa->refcnt--;
-> +
-> +	if (xa->refcnt) {
-> +		mutex_unlock(&mem_id_lock);
-> +		return true;
-> +	}
-> +
->  	xa->disconnect_cnt++;
->  
->  	/* Detects in-flight packet-pages for page_pool */
-> @@ -312,6 +324,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
->  	return true;
->  }
->  
-> +static struct xdp_mem_allocator *xdp_allocator_find(void *allocator)
-> +{
-> +	struct xdp_mem_allocator *xae, *xa = NULL;
-> +	struct rhashtable_iter iter;
-> +
-> +	if (!allocator)
-> +		return xa;
-> +
-> +	rhashtable_walk_enter(mem_id_ht, &iter);
-> +	do {
-> +		rhashtable_walk_start(&iter);
-> +
-> +		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
-> +			if (xae->allocator == allocator) {
-> +				xa = xae;
-> +				break;
-> +			}
-> +		}
-> +
-> +		rhashtable_walk_stop(&iter);
-> +
-> +	} while (xae == ERR_PTR(-EAGAIN));
-> +	rhashtable_walk_exit(&iter);
-> +
-> +	return xa;
-> +}
-> +
->  int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  			       enum xdp_mem_type type, void *allocator)
+> diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+> index 5544a722543f..015d1ec5436a 100644
+> --- a/drivers/net/ethernet/socionext/netsec.c
+> +++ b/drivers/net/ethernet/socionext/netsec.c
+> @@ -634,7 +634,7 @@ static void netsec_set_rx_de(struct netsec_priv *priv,
+>  static bool netsec_clean_tx_dring(struct netsec_priv *priv)
 >  {
-> @@ -347,6 +386,20 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  		}
->  	}
->  
-> +	mutex_lock(&mem_id_lock);
-> +	xdp_alloc = xdp_allocator_find(allocator);
-> +	if (xdp_alloc) {
-> +		/* One allocator per queue is supposed only */
-> +		if (xdp_alloc->queue_index != xdp_rxq->queue_index)
-> +			return -EINVAL;
-> +
-> +		xdp_rxq->mem.id = xdp_alloc->mem.id;
-> +		xdp_alloc->refcnt++;
-> +		mutex_unlock(&mem_id_lock);
-> +		return 0;
-> +	}
-> +	mutex_unlock(&mem_id_lock);
-> +
->  	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
->  	if (!xdp_alloc)
->  		return -ENOMEM;
-> @@ -360,6 +413,8 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  	xdp_rxq->mem.id = id;
->  	xdp_alloc->mem  = xdp_rxq->mem;
->  	xdp_alloc->allocator = allocator;
-> +	xdp_alloc->refcnt = 1;
-> +	xdp_alloc->queue_index = xdp_rxq->queue_index;
->  
->  	/* Insert allocator into ID lookup table */
->  	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+>  	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
+> -	unsigned int pkts, bytes;
+> +	unsigned int bytes;
+>  	struct netsec_de *entry;
+>  	int tail = dring->tail;
+>  	int cnt = 0;
 
+This breaks the reverse christmas-tree ordering of the local variables in this
+function.  Please move the 'bytes' declaration down by two lines when you make
+this change.
 
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Thanks.
