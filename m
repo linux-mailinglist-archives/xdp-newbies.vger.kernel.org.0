@@ -2,97 +2,181 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BAEA5E985
-	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 18:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5011F5EAA6
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 19:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfGCQsw (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 3 Jul 2019 12:48:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43936 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbfGCQsw (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 3 Jul 2019 12:48:52 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w17so1203447qto.10;
-        Wed, 03 Jul 2019 09:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yJ/AMqCgjHOX7uREQW2b21H1rv+p0xkV9JezuXq3Lrs=;
-        b=PYCV3Ki+HIxfv3LCSaaOhpNO0ILCQojaCN/Usn1R7wPqtJthrqytqFJ3xAEs5RVllF
-         mcdBg1xGlEmpZV15vV47oY1ANNSVFV8PZqk8k+5J6Ap+moz06KU2dZf93XxMTp9crwOU
-         SbC2rSoy/zfmOE+STsNSaVc26bxGUhMkIFh0OeZwUdllN2mqxZuG3Cflqoaxki6KrQOR
-         UTuZv7+tBucPPxMZw/+l86b+cCSLX3Yt99lCF5r2NuM10pY1R6GrzKUWM/bTStwzrqSE
-         659SFGlMCIgDiUKxk1SUDlpkSmmt4eGi6ULQNjPth35HN0TmSpmkHLFFeEZni/epIC8D
-         Lv2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yJ/AMqCgjHOX7uREQW2b21H1rv+p0xkV9JezuXq3Lrs=;
-        b=nEngJeeZiYolpKUutDaLqpqHHKKGBZHfSfk09qD8reQPitkkojg9wU/VmkNyiiAZFJ
-         7ODPn/XAsc0Wtz1RV03ABiXaAiVXo59XQr3Py+972oGAZ52is1AMVwgo+FI748HLGfvF
-         SwWGqTg1x5M7UZxX89aQqe5Rb5X9reBqFv/nXRzOgWH91reb3D2SB8qUBqtj3nUomayo
-         JX4ZGJwBRtiHtDDXSYm2yUK2mLwAkcABZe8DnXZ3YSq6f0CRJl6uyqWc2rVoL7uEsJhP
-         urGCRJTbWVd2R1d/YLxf8jkwPQiBraZeYTl5QETXGvfxVAI9kUhqEKRWKNH3sH/2Ff6i
-         xntA==
-X-Gm-Message-State: APjAAAUJe+SwlPbB3Lac+m/TOJIkQWtjuLx9QcAPDzzXWXUKHIXEsGNz
-        pwzTYMPXuSSQPSO6tjpVV3As/yL5a4m9yzLMzio=
-X-Google-Smtp-Source: APXvYqzsFr7rYzgO9GtHdozh8mRRL64eWIT7m1KC+EQkslfS3kVovMPn+6YEufGDl076fJM7OZRCZ7UvZS6fd3bvZL4=
-X-Received: by 2002:a0c:c586:: with SMTP id a6mr33611361qvj.177.1562172531460;
- Wed, 03 Jul 2019 09:48:51 -0700 (PDT)
+        id S1726890AbfGCRkg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 3 Jul 2019 13:40:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53372 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfGCRkg (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 3 Jul 2019 13:40:36 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A62BB308FFB1;
+        Wed,  3 Jul 2019 17:40:24 +0000 (UTC)
+Received: from carbon (ovpn-200-17.brq.redhat.com [10.40.200.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 575A13795;
+        Wed,  3 Jul 2019 17:40:15 +0000 (UTC)
+Date:   Wed, 3 Jul 2019 19:40:13 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net,
+        ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
+        daniel@iogearbox.net, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, brouer@redhat.com
+Subject: Re: [PATCH v6 net-next 1/5] xdp: allow same allocator usage
+Message-ID: <20190703194013.02842e42@carbon>
+In-Reply-To: <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+        <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-References: <CGME20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77@eucas1p2.samsung.com>
- <20190703120916.19973-1-i.maximets@samsung.com> <CAJ8uoz1Wr+bJrO+HNtSD5b79ych-pNg7BxFiHVhzaMSGGAdqLA@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1Wr+bJrO+HNtSD5b79ych-pNg7BxFiHVhzaMSGGAdqLA@mail.gmail.com>
-From:   William Tu <u9012063@gmail.com>
-Date:   Wed, 3 Jul 2019 09:48:09 -0700
-Message-ID: <CALDO+SYj79zCV9A85OSbMFBQeor_z=ZT305HEoK3YWtCZLeR-A@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] xdp: fix race on generic receive path
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Ilya Maximets <i.maximets@samsung.com>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 03 Jul 2019 17:40:35 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Jul 3, 2019 at 6:20 AM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
->
-> On Wed, Jul 3, 2019 at 2:09 PM Ilya Maximets <i.maximets@samsung.com> wrote:
-> >
-> > Unlike driver mode, generic xdp receive could be triggered
-> > by different threads on different CPU cores at the same time
-> > leading to the fill and rx queue breakage. For example, this
-> > could happen while sending packets from two processes to the
-> > first interface of veth pair while the second part of it is
-> > open with AF_XDP socket.
-> >
-> > Need to take a lock for each generic receive to avoid race.
->
-> I measured the performance degradation of rxdrop on my local machine
-> and it went from 2.19 to 2.08, so roughly a 5% drop. I think we can
-> live with this in XDP_SKB mode. If we at some later point in time need
-> to boost performance in this mode, let us look at it then from a
-> broader perspective and find the most low hanging fruit.
->
-> Thanks Ilya for this fix.
->
-> Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
->
-> > Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> > Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> > ---
+On Wed,  3 Jul 2019 13:18:59 +0300
+Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-Tested on my machine and works ok.
-Tested-by: William Tu <u9012063@gmail.com>
+> First of all, it is an absolute requirement that each RX-queue have
+> their own page_pool object/allocator. And this change is intendant
+> to handle special case, where a single RX-queue can receive packets
+> from two different net_devices.
+> 
+> In order to protect against using same allocator for 2 different rx
+> queues, add queue_index to xdp_mem_allocator to catch the obvious
+> mistake where queue_index mismatch, as proposed by Jesper Dangaard
+> Brouer.
+> 
+> Adding this on xdp allocator level allows drivers with such dependency
+> change the allocators w/o modifications.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
+>  include/net/xdp_priv.h |  2 ++
+>  net/core/xdp.c         | 55 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+> index 6a8cba6ea79a..9858a4057842 100644
+> --- a/include/net/xdp_priv.h
+> +++ b/include/net/xdp_priv.h
+> @@ -18,6 +18,8 @@ struct xdp_mem_allocator {
+>  	struct rcu_head rcu;
+>  	struct delayed_work defer_wq;
+>  	unsigned long defer_warn;
+> +	unsigned long refcnt;
+> +	u32 queue_index;
+>  };
+
+I don't like this approach, because I think we need to extend struct
+xdp_mem_allocator with a net_device pointer, for doing dev_hold(), to
+correctly handle lifetime issues. (As I tried to explain previously).
+This will be much harder after this change, which is why I proposed the
+other patch.
+
+
+>  #endif /* __LINUX_NET_XDP_PRIV_H__ */
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index 829377cc83db..4f0ddbb3717a 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -98,6 +98,18 @@ static bool __mem_id_disconnect(int id, bool force)
+>  		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
+>  		return true;
+>  	}
+> +
+> +	/* to avoid calling hash lookup twice, decrement refcnt here till it
+> +	 * reaches zero, then it can be called from workqueue afterwards.
+> +	 */
+> +	if (xa->refcnt)
+> +		xa->refcnt--;
+> +
+> +	if (xa->refcnt) {
+> +		mutex_unlock(&mem_id_lock);
+> +		return true;
+> +	}
+> +
+>  	xa->disconnect_cnt++;
+>  
+>  	/* Detects in-flight packet-pages for page_pool */
+> @@ -312,6 +324,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
+>  	return true;
+>  }
+>  
+> +static struct xdp_mem_allocator *xdp_allocator_find(void *allocator)
+> +{
+> +	struct xdp_mem_allocator *xae, *xa = NULL;
+> +	struct rhashtable_iter iter;
+> +
+> +	if (!allocator)
+> +		return xa;
+> +
+> +	rhashtable_walk_enter(mem_id_ht, &iter);
+> +	do {
+> +		rhashtable_walk_start(&iter);
+> +
+> +		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
+> +			if (xae->allocator == allocator) {
+> +				xa = xae;
+> +				break;
+> +			}
+> +		}
+> +
+> +		rhashtable_walk_stop(&iter);
+> +
+> +	} while (xae == ERR_PTR(-EAGAIN));
+> +	rhashtable_walk_exit(&iter);
+> +
+> +	return xa;
+> +}
+> +
+>  int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>  			       enum xdp_mem_type type, void *allocator)
+>  {
+> @@ -347,6 +386,20 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>  		}
+>  	}
+>  
+> +	mutex_lock(&mem_id_lock);
+> +	xdp_alloc = xdp_allocator_find(allocator);
+> +	if (xdp_alloc) {
+> +		/* One allocator per queue is supposed only */
+> +		if (xdp_alloc->queue_index != xdp_rxq->queue_index)
+> +			return -EINVAL;
+> +
+> +		xdp_rxq->mem.id = xdp_alloc->mem.id;
+> +		xdp_alloc->refcnt++;
+> +		mutex_unlock(&mem_id_lock);
+> +		return 0;
+> +	}
+> +	mutex_unlock(&mem_id_lock);
+> +
+>  	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
+>  	if (!xdp_alloc)
+>  		return -ENOMEM;
+> @@ -360,6 +413,8 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>  	xdp_rxq->mem.id = id;
+>  	xdp_alloc->mem  = xdp_rxq->mem;
+>  	xdp_alloc->allocator = allocator;
+> +	xdp_alloc->refcnt = 1;
+> +	xdp_alloc->queue_index = xdp_rxq->queue_index;
+>  
+>  	/* Insert allocator into ID lookup table */
+>  	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+
+
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
