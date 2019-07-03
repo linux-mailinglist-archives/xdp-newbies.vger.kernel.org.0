@@ -2,163 +2,198 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6A95E365
-	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 14:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98B0F5E383
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 14:09:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbfGCMDN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 3 Jul 2019 08:03:13 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:49111 "EHLO
+        id S1726652AbfGCMJZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 3 Jul 2019 08:09:25 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:51053 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfGCMDM (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 3 Jul 2019 08:03:12 -0400
+        with ESMTP id S1725943AbfGCMJZ (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 3 Jul 2019 08:09:25 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190703120310euoutp01358c9d507e96fa5e0bdbd6f33105b6ed~t5Az86dYg1393413934euoutp01e
-        for <xdp-newbies@vger.kernel.org>; Wed,  3 Jul 2019 12:03:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190703120310euoutp01358c9d507e96fa5e0bdbd6f33105b6ed~t5Az86dYg1393413934euoutp01e
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190703120923euoutp0198dae2099dada96258820a8a15c4ec89~t5GPvw_Zt1888218882euoutp01D
+        for <xdp-newbies@vger.kernel.org>; Wed,  3 Jul 2019 12:09:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190703120923euoutp0198dae2099dada96258820a8a15c4ec89~t5GPvw_Zt1888218882euoutp01D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562155390;
-        bh=g8Riy6JBS+t00x7n3nd88i1ZZjkYP71PaA1lf7IyZE0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Rtsa2R8hcZC2ZXWp67y92qkRZiNa/9JtfEfBYvpe0/Z2nhv8yMAvu2wNdMpfIqzA1
-         q5MfxR6PXP590ZrlXKtJFq6aOIDeeZkadElOFdALzE5cOWHhLX+57Vk5vKChZKNSQ7
-         AACUj4Z3dp15ppP6BCO7GUEnrHPzknya2GdP4h9M=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190703120309eucas1p169076bd06a70cadfa0f188d0a79b7ae0~t5AzSj98D2486124861eucas1p1w;
-        Wed,  3 Jul 2019 12:03:09 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id DC.95.04377.D799C1D5; Wed,  3
-        Jul 2019 13:03:09 +0100 (BST)
+        s=mail20170921; t=1562155763;
+        bh=EAaWlzGCbN7kuloDJblzBSkq9mB9Yb8loWEXFJ3x8FI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=sfKBvO91Rk8zEsNoNvXvmUKReQkWWNqQ5dFfL/mHD25v9Y7j0Jdwg9fa3K8kpBVW1
+         easiqLv9iCK2S3SiacnFiYA7qV8yQE7duQU9t+0JuOTPnUjvofT6+6dehovlupvqjl
+         nOi+VM8LqVdrmSaRerm/WLfFujeFd5eYjA9LEydo=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190703120922eucas1p201a9328a62ca5bea1866462f64378890~t5GPB9HYc3132631326eucas1p2l;
+        Wed,  3 Jul 2019 12:09:22 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2D.00.04298.2FA9C1D5; Wed,  3
+        Jul 2019 13:09:22 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190703120308eucas1p1e9619a56372825de84067a786f13a91b~t5AyirDjM2545525455eucas1p1v;
-        Wed,  3 Jul 2019 12:03:08 +0000 (GMT)
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77~t5GOUX1Ih1247312473eucas1p2L;
+        Wed,  3 Jul 2019 12:09:22 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190703120308eusmtrp1fd1c76b35df1bd02aae85c768adaefd9~t5AyUgexL0302803028eusmtrp1K;
-        Wed,  3 Jul 2019 12:03:08 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-d8-5d1c997d9a0f
+        20190703120921eusmtrp172fc4f66baa50e60c702a594de8995ac~t5GOAMQZh0630506305eusmtrp1a;
+        Wed,  3 Jul 2019 12:09:21 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-71-5d1c9af2960e
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 03.A6.04140.C799C1D5; Wed,  3
-        Jul 2019 13:03:08 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DB.57.04140.1FA9C1D5; Wed,  3
+        Jul 2019 13:09:21 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190703120307eusmtip2181ec3e2a1c80f7d9b9abb0678a7db22~t5AxqCEQV1327713277eusmtip27;
-        Wed,  3 Jul 2019 12:03:07 +0000 (GMT)
-Subject: Re: [PATCH bpf] xdp: fix race on generic receive path
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        20190703120921eusmtip23925ada6b9adf7ce371179cdbfec550d~t5GNS7MlP1386113861eusmtip2a;
+        Wed,  3 Jul 2019 12:09:20 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
         Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-From:   Ilya Maximets <i.maximets@samsung.com>
-Message-ID: <687d9498-87a9-11e5-dc53-f09f42d6371b@samsung.com>
-Date:   Wed, 3 Jul 2019 15:03:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190702174014.005a3166@cakuba.netronome.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7djP87q1M2ViDeYt4LP48vM2u8Wftg2M
-        Fp+PHGezWLzwG7PFnPMtLBZX2n+yWxx70cJmsWvdTGaLy7vmsFmsOHQCKLZAzGJ7/z5GBx6P
-        LStvMnnsnHWX3WPxnpdMHl03LjF7bFrVyeYxvfshs0ffllWMHp83yQVwRHHZpKTmZJalFunb
-        JXBlHD7+kb3gFG/F8rtf2BsYb3N1MXJySAiYSDx89JCli5GLQ0hgBaPEsqdNUM4XRomNd64x
-        QjifGSW+b2hhhmn5tH0zG0RiOaPEsZ0rWSGcj4wSG26sZQKpEhawkzjdd5EVxBYRMJT4dWMK
-        mM0s8IdJ4uJrUxCbTUBH4tTqI4wgNi9Q/dIN91lAbBYBFYmXzw6yg9iiAhESl7fsgqoRlDg5
-        8wlYDaeAtcTpKxAXMQuISzR9WQk1X15i+9s5zCAHSQi8ZZe496GVDeJsF4mHXRuYIGxhiVfH
-        t7BD2DISpyf3sEDY9RL3W14yQjR3MEpMP/QPqsFeYsvrc0ANHEAbNCXW79IHMSUEHCXe7/WC
-        MPkkbrwVhDiBT2LStunMEGFeiY42IYgZKhK/Dy6HhqGUxM13n9knMCrNQvLYLCTPzELyzCyE
-        tQsYWVYxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEJrTT/45/2cG460/SIUYBDkYlHt4F
-        AdKxQqyJZcWVuYcYJTiYlUR496+QjBXiTUmsrEotyo8vKs1JLT7EKM3BoiTOW83wIFpIID2x
-        JDU7NbUgtQgmy8TBKdXAGKejp3Du8rs9TqWlj0S19otc2pqrICkqP2fBJXN++3/5Vsf4t0kX
-        t6btW+b1+pvKG6eF+d5B1k7zfzRWMnwTt5ve+Xijpdy5xJim3ocT5pm/urzTp2Hiqg+M03Xm
-        9JSWHpmgWTdFOFSl6p+jl/u9pCexJzurXrBftGm9nLK+fnvf+rBL+3z3K7EUZyQaajEXFScC
-        ADJUi7JkAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7o1M2ViDS5tkrL48vM2u8Wftg2M
-        Fp+PHGezWLzwG7PFnPMtLBZX2n+yWxx70cJmsWvdTGaLy7vmsFmsOHQCKLZAzGJ7/z5GBx6P
-        LStvMnnsnHWX3WPxnpdMHl03LjF7bFrVyeYxvfshs0ffllWMHp83yQVwROnZFOWXlqQqZOQX
-        l9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlHD7+kb3gFG/F8rtf2BsY
-        b3N1MXJySAiYSHzavpmti5GLQ0hgKaPE0eu3mCESUhI/fl1ghbCFJf5c62IDsYUE3jNKvGr0
-        ALGFBewkTvddBKsRETCU+HVjCivIIGaBP0wSf5adYISYeoBR4uSWp2BVbAI6EqdWH2EEsXmB
-        upduuM8CYrMIqEi8fHaQHcQWFYiQ6GubzQZRIyhxcuYTsBpOAWuJ01dawK5jFlCX+DPvEpQt
-        LtH0ZSUrhC0vsf3tHOYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl
-        5+duYgRG8bZjP7fsYOx6F3yIUYCDUYmH18NPOlaINbGsuDL3EKMEB7OSCO/+FZKxQrwpiZVV
-        qUX58UWlOanFhxhNgZ6byCwlmpwPTDB5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNT
-        UwtSi2D6mDg4pRoYDzfyrPrc/+a5r87M48yOItFOsy32zDd62v7QSsB87aYZr5++W6+e+K6w
-        IC3eYMYH5viAo1cfXe0JMl/fblZTd3l26BXDwsTn2lt7rJ5pHmoXYXJqOPe0ziZ97fN2732n
-        H7090Dz37H6PC9YVa2YtmuA+59ZK12kRG7v2n9r95ZjGIyf1qTKXjJRYijMSDbWYi4oTAQ/L
-        3Hn4AgAA
-X-CMS-MailID: 20190703120308eucas1p1e9619a56372825de84067a786f13a91b
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf v2] xdp: fix race on generic receive path
+Date:   Wed,  3 Jul 2019 15:09:16 +0300
+Message-Id: <20190703120916.19973-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSW0hTYRzv25lnx+HkNG9f8xINw4rSBB8OZFbkw3mIWFQPlmLHPHhJN9lx
+        mgkmat7xsoqVLTUtXTNU5vAapcO0stSckVdaoTG7mU4tUaxtZ9Lb78r/x8eHIUKVkwhLkKbS
+        cimVJEb53PaB9eFDy1U+UYctXf7Eyvo0j9jMbwWEpX8QJeofrCGEeiSPS4wXrPOIAXMeSnQ3
+        30UIY7caJTSGl1at1pPoKH8GjruQ+seTHLKrapZH1j9d4JDFE2MIqdMWoaSq5BNClum1gLTo
+        /CTYBX5oLJ2UkEbLg8Iu8eOrlfWclDyPq6U9o2g2yN1ZDJwxiIfA6gKLUzHgY0JcA6D6TpWD
+        rADYPD7CY4kFwO+vlNztyi/jksNoBPC2aZTDkj8ANrR95thSKH4Qvm7qBzbsjovgUmeHvYHg
+        vQjsGaxGbIYbfhRW1H6wh7j4Xqh5lGM/IcCPwJq1945zu2FTay9iK0O8nAff1RlR1giH86YZ
+        B3aDXwf1PBb7wKGbpY7ydfgxbwGw5UIAVYYtDmscg/pvw9YCZp20H7Z0B7HyCajRtAGbDHFX
+        OPHD/kqIFSrbVQgrC2BhvpBN+8ONvkaExSI4+dPiWEDCF7lz9gVCPAp+aZzhVAC/qv+3agHQ
+        Ai9awSTH0UywlE4PZKhkRiGNC7wsS9YB63cZ2hpc7gSrYzEGgGNA7CKolXhHCZ2oNCYj2QAg
+        hojdBc81u6KEglgq4xotl0XLFUk0YwDeGFfsJcjcYbooxOOoVPoKTafQ8m2XgzmLsoG+xHUt
+        MnsidfpWi0+l2VdVlhk+y482JSqyRKVlIEKSDTZbFk8XmU/lyJbeuJw8Jzmz2hAgo1buSbWe
+        kqkwl76pzLfhEcZWZbqgjoxJFEcvPvFVV6rP7zvbEVkzT4SGzLXd9/DVibdK8CxJ6MYeU4R5
+        z4zsb3dz/u+AG2MhD8VcJp4KPoDIGeof08Y9NSoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsVy+t/xe7ofZ8nEGnx5pGvx5edtdos/bRsY
+        LT4fOc5msXjhN2aLOedbWCyutP9ktzj2ooXNYte6mcwWl3fNYbNYcegEUGyBmMX2/n2MDjwe
+        W1beZPLYOesuu8fiPS+ZPLpuXGL22LSqk81jevdDZo++LasYPT5vkgvgiNKzKcovLUlVyMgv
+        LrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLmDdpMVNBi2hFz+4LbA2M
+        zYJdjJwcEgImEh8uf2TvYuTiEBJYyijxec9adoiElMSPXxdYIWxhiT/Xutggir4xSvROm80M
+        kmAT0JE4tfoII4gtAtTwccd2sEnMAieYJb7P+swEkhAWsJWYsOA6WBGLgKrEiqVNLCA2r4C1
+        xPxvV1kgNshLrN5wgHkCI88CRoZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgUG97djPLTsY
+        u94FH2IU4GBU4uH18JOOFWJNLCuuzD3EKMHBrCTCu3+FZKwQb0piZVVqUX58UWlOavEhRlOg
+        5ROZpUST84ERl1cSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgfGg
+        sNpV6VVxEy42vpyzqYD5T3zS1etu+zet3Pb07I8s+cJCl3Khx8HRc40lPK6mBH49cqO9jCPP
+        Mzk1vPn63Dlx7gZqF1bJTT/1xlH8e8usI8/MmKbtYnyoPqO7ec6bdp7mffMT2pjkjX+kOi1t
+        93jJvu6uhc+yc4FnvDcLiaZxRU96znKNNU2JpTgj0VCLuag4EQA7azZxgAIAAA==
+X-CMS-MailID: 20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad
+X-RootMTR: 20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad
-References: <CGME20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad@eucas1p2.samsung.com>
-        <20190702143634.19688-1-i.maximets@samsung.com>
-        <20190702174014.005a3166@cakuba.netronome.com>
+X-CMS-RootMailID: 20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77
+References: <CGME20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77@eucas1p2.samsung.com>
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 03.07.2019 3:40, Jakub Kicinski wrote:
-> On Tue,  2 Jul 2019 17:36:34 +0300, Ilya Maximets wrote:
->> Unlike driver mode, generic xdp receive could be triggered
->> by different threads on different CPU cores at the same time
->> leading to the fill and rx queue breakage. For example, this
->> could happen while sending packets from two processes to the
->> first interface of veth pair while the second part of it is
->> open with AF_XDP socket.
->>
->> Need to take a lock for each generic receive to avoid race.
->>
->> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
->> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> 
->> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
->> index a14e8864e4fa..19f41d2b670c 100644
->> --- a/net/xdp/xsk.c
->> +++ b/net/xdp/xsk.c
->> @@ -119,17 +119,22 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
->>  {
->>  	u32 metalen = xdp->data - xdp->data_meta;
->>  	u32 len = xdp->data_end - xdp->data;
->> +	unsigned long flags;
->>  	void *buffer;
->>  	u64 addr;
->>  	int err;
->>  
->> -	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
->> -		return -EINVAL;
->> +	spin_lock_irqsave(&xs->rx_lock, flags);
-> 
-> Why _irqsave, rather than _bh?
+Unlike driver mode, generic xdp receive could be triggered
+by different threads on different CPU cores at the same time
+leading to the fill and rx queue breakage. For example, this
+could happen while sending packets from two processes to the
+first interface of veth pair while the second part of it is
+open with AF_XDP socket.
 
-Yes, spin_lock_bh() is enough here. Will change in v2.
-Thanks.
+Need to take a lock for each generic receive to avoid race.
 
-> 
->> +	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
->> +		err = -EINVAL;
->> +		goto out_unlock;
->> +	}
->>  
->>  	if (!xskq_peek_addr(xs->umem->fq, &addr) ||
->>  	    len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
->> -		xs->rx_dropped++;
->> -		return -ENOSPC;
->> +		err = -ENOSPC;
->> +		goto out_drop;
->>  	}
->>  
->>  	addr += xs->umem->headroom;
-> 
-> 
-> 
+Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+---
+
+Version 2:
+    * spin_lock_irqsave --> spin_lock_bh.
+
+ include/net/xdp_sock.h |  2 ++
+ net/xdp/xsk.c          | 31 ++++++++++++++++++++++---------
+ 2 files changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+index d074b6d60f8a..ac3c047d058c 100644
+--- a/include/net/xdp_sock.h
++++ b/include/net/xdp_sock.h
+@@ -67,6 +67,8 @@ struct xdp_sock {
+ 	 * in the SKB destructor callback.
+ 	 */
+ 	spinlock_t tx_completion_lock;
++	/* Protects generic receive. */
++	spinlock_t rx_lock;
+ 	u64 rx_dropped;
+ };
+ 
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index a14e8864e4fa..5e0637db92ea 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -123,13 +123,17 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+ 	u64 addr;
+ 	int err;
+ 
+-	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
+-		return -EINVAL;
++	spin_lock_bh(&xs->rx_lock);
++
++	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
++		err = -EINVAL;
++		goto out_unlock;
++	}
+ 
+ 	if (!xskq_peek_addr(xs->umem->fq, &addr) ||
+ 	    len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
+-		xs->rx_dropped++;
+-		return -ENOSPC;
++		err = -ENOSPC;
++		goto out_drop;
+ 	}
+ 
+ 	addr += xs->umem->headroom;
+@@ -138,13 +142,21 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+ 	memcpy(buffer, xdp->data_meta, len + metalen);
+ 	addr += metalen;
+ 	err = xskq_produce_batch_desc(xs->rx, addr, len);
+-	if (!err) {
+-		xskq_discard_addr(xs->umem->fq);
+-		xsk_flush(xs);
+-		return 0;
+-	}
++	if (err)
++		goto out_drop;
++
++	xskq_discard_addr(xs->umem->fq);
++	xskq_produce_flush_desc(xs->rx);
+ 
++	spin_unlock_bh(&xs->rx_lock);
++
++	xs->sk.sk_data_ready(&xs->sk);
++	return 0;
++
++out_drop:
+ 	xs->rx_dropped++;
++out_unlock:
++	spin_unlock_bh(&xs->rx_lock);
+ 	return err;
+ }
+ 
+@@ -765,6 +777,7 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+ 
+ 	xs = xdp_sk(sk);
+ 	mutex_init(&xs->mutex);
++	spin_lock_init(&xs->rx_lock);
+ 	spin_lock_init(&xs->tx_completion_lock);
+ 
+ 	mutex_lock(&net->xdp.lock);
+-- 
+2.17.1
+
