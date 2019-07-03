@@ -2,117 +2,79 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 617F35D94C
-	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 02:40:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1D75DC92
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 04:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfGCAkU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 2 Jul 2019 20:40:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46849 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbfGCAkU (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Jul 2019 20:40:20 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h21so630886qtn.13
-        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jul 2019 17:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
-        b=CQdsRFF171jO5+/s1qAUI1rgCzyTzJDs9gZOQMPyPjnK2ayU+zBw/Y1zuHJcS3Aqaa
-         DOee7yY43BfLZd8G3dM1yUpHgG+YIbD8ROTNtVfGY52fSj7ya5Ed3OQroTo8Cz47Xh/E
-         dsaGad6apPp+ZEq3MUye/V3Lzt0F7FRJxgyu40Nim3+roBef6y/zVuOZO/ydtLb1/7AV
-         V8+ae4mRJHOin7xdq2VTx5cmL15S+2G3Ry0hVPR8zpWJTpk/CBENGKyWw6bmiU1kCm0N
-         0AxXt/FTvuMJ1c1JkMO+FwHTrYgADhhuWJSrhkbmeqEKELzouSnt6TgRV1MAj0P94Sef
-         4LpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
-        b=McqjisYePqxkUI1b7GTP/Y0ABiOZ4/Bp88pv4Q0yCFmazKbFWmpBgk1oaKac2OnEjs
-         oN1wQMdt2Hc3+9PROapGYLmO9SqTjBcsN1ZE6aGhzpKgt325xW8WNSBZF+4mtVkF9KcA
-         yLY+kAm6lYTE1FLD38D1NvJY0pxqnbKfLRkfq3jWJZInzPn457YEQbFUmfZnoYrEe5Sa
-         KzUHRSoVxg1dd4RpPFvFyY5LuD/XhCxVdqpFvADaBG5xdfYtXxRIpSUMNYN3visTi6F2
-         UxeM4Nibt46VN2h52UDviQnKKKR/dP81S8pZ6GL7+a31mHimK5+DFcH/LY6Atr3nL/cP
-         JIqQ==
-X-Gm-Message-State: APjAAAWg/ezqY1g3s+IXPuWol03ZZkTULTizGNRxThyMiU90MQBjhpWo
-        wnhgngc6ZLBtRhxXu2PYEWE0VQ==
-X-Google-Smtp-Source: APXvYqxS8kYtvbzapj/eH76oDHlldzxbfNicv6tPtHys9nj2jiUMbU6r2kzPJt0X+uutHWhL+5s2Hg==
-X-Received: by 2002:ac8:2b14:: with SMTP id 20mr28665349qtu.295.1562114419416;
-        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id c18sm220886qkm.78.2019.07.02.17.40.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 17:40:14 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        id S1727350AbfGCCfv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Jul 2019 22:35:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8688 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727144AbfGCCfv (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 2 Jul 2019 22:35:51 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 114BFA93318A16B54761;
+        Wed,  3 Jul 2019 10:35:47 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 3 Jul 2019 10:35:40 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Jassi Brar <jaswinder.singh@linaro.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf] xdp: fix race on generic receive path
-Message-ID: <20190702174014.005a3166@cakuba.netronome.com>
-In-Reply-To: <20190702143634.19688-1-i.maximets@samsung.com>
-References: <CGME20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad@eucas1p2.samsung.com>
-        <20190702143634.19688-1-i.maximets@samsung.com>
-Organization: Netronome Systems, Ltd.
+        "David S . Miller" <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>
+CC:     YueHaibing <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
+        <xdp-newbies@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH net-next] net: socionext: remove set but not used variable 'pkts'
+Date:   Wed, 3 Jul 2019 02:42:13 +0000
+Message-ID: <20190703024213.191191-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue,  2 Jul 2019 17:36:34 +0300, Ilya Maximets wrote:
-> Unlike driver mode, generic xdp receive could be triggered
-> by different threads on different CPU cores at the same time
-> leading to the fill and rx queue breakage. For example, this
-> could happen while sending packets from two processes to the
-> first interface of veth pair while the second part of it is
-> open with AF_XDP socket.
-> 
-> Need to take a lock for each generic receive to avoid race.
-> 
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index a14e8864e4fa..19f41d2b670c 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -119,17 +119,22 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
->  {
->  	u32 metalen = xdp->data - xdp->data_meta;
->  	u32 len = xdp->data_end - xdp->data;
-> +	unsigned long flags;
->  	void *buffer;
->  	u64 addr;
->  	int err;
->  
-> -	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
-> -		return -EINVAL;
-> +	spin_lock_irqsave(&xs->rx_lock, flags);
+drivers/net/ethernet/socionext/netsec.c: In function 'netsec_clean_tx_dring':
+drivers/net/ethernet/socionext/netsec.c:637:15: warning:
+ variable 'pkts' set but not used [-Wunused-but-set-variable]
 
-Why _irqsave, rather than _bh?
+It is not used since commit ba2b232108d3 ("net: netsec: add XDP support")
 
-> +	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
-> +		err = -EINVAL;
-> +		goto out_unlock;
-> +	}
->  
->  	if (!xskq_peek_addr(xs->umem->fq, &addr) ||
->  	    len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
-> -		xs->rx_dropped++;
-> -		return -ENOSPC;
-> +		err = -ENOSPC;
-> +		goto out_drop;
->  	}
->  
->  	addr += xs->umem->headroom;
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ethernet/socionext/netsec.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index 5544a722543f..015d1ec5436a 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -634,7 +634,7 @@ static void netsec_set_rx_de(struct netsec_priv *priv,
+ static bool netsec_clean_tx_dring(struct netsec_priv *priv)
+ {
+ 	struct netsec_desc_ring *dring = &priv->desc_ring[NETSEC_RING_TX];
+-	unsigned int pkts, bytes;
++	unsigned int bytes;
+ 	struct netsec_de *entry;
+ 	int tail = dring->tail;
+ 	int cnt = 0;
+@@ -642,7 +642,6 @@ static bool netsec_clean_tx_dring(struct netsec_priv *priv)
+ 	if (dring->is_xdp)
+ 		spin_lock(&dring->lock);
+ 
+-	pkts = 0;
+ 	bytes = 0;
+ 	entry = dring->vaddr + DESC_SZ * tail;
+
+
 
