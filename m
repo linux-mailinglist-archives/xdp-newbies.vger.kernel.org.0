@@ -2,138 +2,117 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D2E5D48B
-	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Jul 2019 18:47:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617F35D94C
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Jul 2019 02:40:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfGBQrP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 2 Jul 2019 12:47:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35238 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfGBQrP (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Jul 2019 12:47:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s27so7969063pgl.2
-        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jul 2019 09:47:15 -0700 (PDT)
+        id S1727203AbfGCAkU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Jul 2019 20:40:20 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46849 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbfGCAkU (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Jul 2019 20:40:20 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h21so630886qtn.13
+        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jul 2019 17:40:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AwqtYCgoVgMFd7zLHFhWGcqejisGWIssWVV7qBN5clA=;
-        b=fzB5MVLqWtyuS6TrHWjeVZWCRt7xTFDG2hc/XyaXBc42/GpMFNc0clWc7wyZC3/x9k
-         lKWMANDwnbugpxtIihI9PPsv7PZU6CAqFs74AAgSzug0hb03S3WTAXUqkf6OA2TLqj/F
-         lAVi3uicaXPR015jxEg0o8Lz9CCKLPKG65XS0=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
+        b=CQdsRFF171jO5+/s1qAUI1rgCzyTzJDs9gZOQMPyPjnK2ayU+zBw/Y1zuHJcS3Aqaa
+         DOee7yY43BfLZd8G3dM1yUpHgG+YIbD8ROTNtVfGY52fSj7ya5Ed3OQroTo8Cz47Xh/E
+         dsaGad6apPp+ZEq3MUye/V3Lzt0F7FRJxgyu40Nim3+roBef6y/zVuOZO/ydtLb1/7AV
+         V8+ae4mRJHOin7xdq2VTx5cmL15S+2G3Ry0hVPR8zpWJTpk/CBENGKyWw6bmiU1kCm0N
+         0AxXt/FTvuMJ1c1JkMO+FwHTrYgADhhuWJSrhkbmeqEKELzouSnt6TgRV1MAj0P94Sef
+         4LpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AwqtYCgoVgMFd7zLHFhWGcqejisGWIssWVV7qBN5clA=;
-        b=swjCMSd7J5zLlyOvc8ERSNIHwsCYPnH1DZI6ApXPtl8nRQmV77Jm4q8ii3vHFpGaIm
-         axb8K3+Gp77fOUG54dHydc+JIoo7tkjLqNSivjuvu9AWt/08UvwtUwOESdHG/QfnoziS
-         1Ev40kt/kXrS5GMmBK20l0AQ2ViklxpMpCBIVNCpNxB0GFGy3c9J2PtFYJ7f6Hb/6hw4
-         kXKv3J28AHSmw0dhSpHumwLYzUrmycWafU8UBeB9P3/ijEJ2e4eTi3Y4SLBZIfcbTbkJ
-         YJNYjUjCN6r7SR1Cz+RQkTIAGwiCXVBHkPXpZv9PufnGJEly0D1oK72W9+7VBbWkRxIu
-         X7Fg==
-X-Gm-Message-State: APjAAAXTHEJJsSM+9DeO9w5XoafipuU3OdbH5P650gEDmUjb1WxbL2p+
-        FnOQ05VOdZD0Had4nmZEsgVb5w==
-X-Google-Smtp-Source: APXvYqzQ8uHzZ6YNkTzdPuzkj3M5yMySr4CirEds9hca/3caI4D9NArfxglQSOD3nsK4x9A5ZVXEgQ==
-X-Received: by 2002:a63:bd0a:: with SMTP id a10mr17207509pgf.55.1562086034555;
-        Tue, 02 Jul 2019 09:47:14 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q1sm20178917pfg.84.2019.07.02.09.47.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=4BtV39KjV7sDRMWmrXQvT/nf8DtHimxpqWMrsA8yZ8g=;
+        b=McqjisYePqxkUI1b7GTP/Y0ABiOZ4/Bp88pv4Q0yCFmazKbFWmpBgk1oaKac2OnEjs
+         oN1wQMdt2Hc3+9PROapGYLmO9SqTjBcsN1ZE6aGhzpKgt325xW8WNSBZF+4mtVkF9KcA
+         yLY+kAm6lYTE1FLD38D1NvJY0pxqnbKfLRkfq3jWJZInzPn457YEQbFUmfZnoYrEe5Sa
+         KzUHRSoVxg1dd4RpPFvFyY5LuD/XhCxVdqpFvADaBG5xdfYtXxRIpSUMNYN3visTi6F2
+         UxeM4Nibt46VN2h52UDviQnKKKR/dP81S8pZ6GL7+a31mHimK5+DFcH/LY6Atr3nL/cP
+         JIqQ==
+X-Gm-Message-State: APjAAAWg/ezqY1g3s+IXPuWol03ZZkTULTizGNRxThyMiU90MQBjhpWo
+        wnhgngc6ZLBtRhxXu2PYEWE0VQ==
+X-Google-Smtp-Source: APXvYqxS8kYtvbzapj/eH76oDHlldzxbfNicv6tPtHys9nj2jiUMbU6r2kzPJt0X+uutHWhL+5s2Hg==
+X-Received: by 2002:ac8:2b14:: with SMTP id 20mr28665349qtu.295.1562114419416;
+        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id c18sm220886qkm.78.2019.07.02.17.40.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Jul 2019 09:47:13 -0700 (PDT)
-Date:   Tue, 2 Jul 2019 12:47:12 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Tony Luck <tony.luck@intel.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Colin Cross <ccross@android.com>,
+        Tue, 02 Jul 2019 17:40:19 -0700 (PDT)
+Date:   Tue, 2 Jul 2019 17:40:14 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 7/7] kbuild: compile-test kernel headers to ensure they
- are self-contained
-Message-ID: <20190702164712.GA98338@google.com>
-References: <20190701005845.12475-1-yamada.masahiro@socionext.com>
- <20190701005845.12475-8-yamada.masahiro@socionext.com>
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH bpf] xdp: fix race on generic receive path
+Message-ID: <20190702174014.005a3166@cakuba.netronome.com>
+In-Reply-To: <20190702143634.19688-1-i.maximets@samsung.com>
+References: <CGME20190702143639eucas1p2b168c68c35b70aac75cad6c72ccc81ad@eucas1p2.samsung.com>
+        <20190702143634.19688-1-i.maximets@samsung.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701005845.12475-8-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 09:58:45AM +0900, Masahiro Yamada wrote:
-> The headers in include/ are globally used in the kernel source tree
-> to provide common APIs. They are included from external modules, too.
+On Tue,  2 Jul 2019 17:36:34 +0300, Ilya Maximets wrote:
+> Unlike driver mode, generic xdp receive could be triggered
+> by different threads on different CPU cores at the same time
+> leading to the fill and rx queue breakage. For example, this
+> could happen while sending packets from two processes to the
+> first interface of veth pair while the second part of it is
+> open with AF_XDP socket.
 > 
-> It will be useful to make as many headers self-contained as possible
-> so that we do not have to rely on a specific include order.
+> Need to take a lock for each generic receive to avoid race.
 > 
-> There are more than 4000 headers in include/. In my rough analysis,
-> 70% of them are already self-contained. With efforts, most of them
-> can be self-contained.
-> 
-> For now, we must exclude more than 1000 headers just because they
-> cannot be compiled as standalone units. I added them to header-test-.
-> The blacklist was mostly generated by a script, so the reason of the
-> breakage should be checked later.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Tested-by: Jani Nikula <jani.nikula@intel.com>
-> ---
-> 
-> Changes in v4:
->   - Fix vmlinux build error
->   - Exclude more headers for sparc
-> 
-> Changes in v3:
->   - Exclude more headers
->    (Tested for allnoconfig + CONFIG_HEADER_TEST=y)
-> 
-> Changes in v2:
->   - Add everything to test coverage, and exclude broken ones
->   - Rename 'Makefile' to 'Kbuild'
->   - Add CONFIG_KERNEL_HEADER_TEST option
-> 
->  Makefile       |    1 +
->  include/Kbuild | 1253 ++++++++++++++++++++++++++++++++++++++++++++++++
->  init/Kconfig   |   11 +
->  3 files changed, 1265 insertions(+)
->  create mode 100644 include/Kbuild
-[snip
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 74192de8ada6..e2e99544da8d 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -108,6 +108,17 @@ config HEADER_TEST
->  	  If you are a developer or tester and want to ensure the requested
->  	  headers are self-contained, say Y here. Otherwise, choose N.
+> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index a14e8864e4fa..19f41d2b670c 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -119,17 +119,22 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>  {
+>  	u32 metalen = xdp->data - xdp->data_meta;
+>  	u32 len = xdp->data_end - xdp->data;
+> +	unsigned long flags;
+>  	void *buffer;
+>  	u64 addr;
+>  	int err;
 >  
-> +config KERNEL_HEADER_TEST
-> +	bool "Compile test kernel headers"
-> +	depends on HEADER_TEST
-> +	help
-> +	  Headers in include/ are used to build external moduls.
+> -	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index)
+> -		return -EINVAL;
+> +	spin_lock_irqsave(&xs->rx_lock, flags);
 
-Nit:
-							 modules.
+Why _irqsave, rather than _bh?
 
-Otherwise lgtm, thanks for the cc.
-
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> +	if (xs->dev != xdp->rxq->dev || xs->queue_id != xdp->rxq->queue_index) {
+> +		err = -EINVAL;
+> +		goto out_unlock;
+> +	}
+>  
+>  	if (!xskq_peek_addr(xs->umem->fq, &addr) ||
+>  	    len > xs->umem->chunk_size_nohr - XDP_PACKET_HEADROOM) {
+> -		xs->rx_dropped++;
+> -		return -ENOSPC;
+> +		err = -ENOSPC;
+> +		goto out_drop;
+>  	}
+>  
+>  	addr += xs->umem->headroom;
 
