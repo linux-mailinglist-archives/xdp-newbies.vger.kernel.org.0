@@ -2,154 +2,167 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECB285FA01
-	for <lists+xdp-newbies@lfdr.de>; Thu,  4 Jul 2019 16:25:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB5525FC47
+	for <lists+xdp-newbies@lfdr.de>; Thu,  4 Jul 2019 19:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfGDOZO (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 4 Jul 2019 10:25:14 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:53964 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfGDOZN (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 Jul 2019 10:25:13 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190704142511euoutp0260b6d36d107a7caf01b7ce92c893ba57~uOmGO3aYJ1485514855euoutp02k
-        for <xdp-newbies@vger.kernel.org>; Thu,  4 Jul 2019 14:25:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190704142511euoutp0260b6d36d107a7caf01b7ce92c893ba57~uOmGO3aYJ1485514855euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1562250311;
-        bh=nDTQvMV2GmtMsbQlwO3htPXTdx4GYhmbGKKFfHVI23s=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=sYlNM2pLc06yhX4J6R+wYpLvvxtwDi8XUPJR8xeNqRVxyhb0P8pSWuxOmV6YAU9NR
-         avQM52l3jlCqIr/HfhHeJIkGLF2ICeAL640pfRnWtbkabgYKMSKwgmrPFq7d7pvhQ3
-         D2mkM/Y1ePil3BZLjJ0cgVxvHETqleUoI9eYH6kc=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190704142510eucas1p27fcc968426a7dd34b0efc6160ebb1735~uOmFhsDX_2603626036eucas1p28;
-        Thu,  4 Jul 2019 14:25:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 0F.84.04325.64C0E1D5; Thu,  4
-        Jul 2019 15:25:10 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642~uOmEt01Ot1504615046eucas1p2b;
-        Thu,  4 Jul 2019 14:25:09 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190704142509eusmtrp2a4468529258676ae900bdac389d2dafb~uOmEfOG0p0491504915eusmtrp2Y;
-        Thu,  4 Jul 2019 14:25:09 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-5f-5d1e0c4642f7
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7D.77.04146.54C0E1D5; Thu,  4
-        Jul 2019 15:25:09 +0100 (BST)
-Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190704142508eusmtip25289fa98246e93382b2ca1d5375d1111~uOmDvNU--1740317403eusmtip2Q;
-        Thu,  4 Jul 2019 14:25:08 +0000 (GMT)
-From:   Ilya Maximets <i.maximets@samsung.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ilya Maximets <i.maximets@samsung.com>
-Subject: [PATCH bpf] xdp: fix possible cq entry leak
-Date:   Thu,  4 Jul 2019 17:25:03 +0300
-Message-Id: <20190704142503.23501-1-i.maximets@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSbUhTYRjt3b279zqc3Kboi8mCUZSWWtSPC1oZVFwowb8ZI69520Q3dVPT
-        gjK/m2UWljqGGRbqZn6Moc5MdOpmGlbLbNPCkj7U6HOWLUVz3kn/znPOc855fjwEIrrFDyaS
-        lZmsSsmkSjAB2mF1j4Uf8xVL95iag6gF9xROLRe3Aco1aMOo+ru/EUr3tBClxkvcOGWdLcSo
-        7pYahHrRrcOoRsvwGlcXSHVe7wUxvrSpycmjzdo3OF3fM8ejNQ47Qhv1VzC6quwdQpeb9IB2
-        GcVxRLwgOolNTc5mVZEHEwTy29+N/PRp35wPulaQB6oFGuBDQHI/dOWZMQ0QECKyEcBFhxXn
-        hgUASzSjXsUFYEX+R2TD0tTjQDmhAUDz5DyfG/4AaP17FfNsYeRuOGIYBB4cQAbDH12d67kI
-        2YfAh7ba9Sj/tagJgxn3YJTcDi9fu8/TAIIQklGwvQjl2rZCQ1sf4vFCsgyHz5wPvGccgZ8q
-        R/kc9ofzNhPO4RC4ar7D4/AlOF04BzhzKYBVlhWvcAiaPo/hnjKEDIWt3ZEcfRjW3NMhHhqS
-        ftDxZbOHRtbgzY4qLy2EpcUibnsbXOpv8F4TDJ1fXd4LaFjXbFxfF5FSWFAUXgHE2v9VdQDo
-        QRCbpVbIWPU+JXsuQs0o1FlKWcSZNIURrD3L6IrtVxfoXU60AJIAEl9hAiaWivhMtjpXYQGQ
-        QCQBwsWlEKlImMTknmdVaadVWams2gK2EKgkSHhh09tTIlLGZLIpLJvOqjZUHuETnAd2jU/F
-        xscPMMacjAp72NLjFpt/iLNcqsBrZ8pTEhcLywxT7cflm4ZrXsov5j36JtO+dmvTXuFt1IGz
-        2h3o85hY5ueN5mirc+K9X9zQQLijeqG2Mtxnhg3cOTsJTlQtL9lDHb1Ddnff4HD96jjvSWnG
-        0f7YsZEifYGTiTuZHyVB1XJmbxiiUjP/AGAkir0oAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsVy+t/xe7quPHKxBtsuyFp8+Xmb3eJP2wZG
-        i89HjrNZLF74jdlizvkWFosr7T/ZLY69aGGz2LVuJrPF5V1z2CxWHDoBFFsgZrG9fx+jA4/H
-        lpU3mTx2zrrL7rF4z0smj64bl5g9Nq3qZPOY3v2Q2aNvyypGj8+b5AI4ovRsivJLS1IVMvKL
-        S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQypn3YxFpwn6fi6Zz1jA2M
-        M7i6GDk5JARMJFbuucHSxcjFISSwlFFi8a+LbBAJKYkfvy6wQtjCEn+udbFBFH1jlGjfdZAd
-        JMEmoCNxavURRhBbBKjh447t7CBFzAInmCW+z/rMBJIQBlpxbfVOsAYWAVWJxt6lQHEODl4B
-        a4mNrSwQC+QlVm84wDyBkWcBI8MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwJDeduzn5h2M
-        lzYGH2IU4GBU4uFNYJOLFWJNLCuuzD3EKMHBrCTC+/23TKwQb0piZVVqUX58UWlOavEhRlOg
-        3ROZpUST84HxllcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVFq
-        s1l8dbKpgeHCl8mvvxT2Nmq7Lz+916b4mrRv9GXPfx4zXcoajz5pTUoOLzOb4vjka6xFgl1w
-        A++NC4w93sIli24stlrSxe+uclN0B1PNUqG0b4mtud+vFBYXHLkwzXnqx91r5S1FKstO5ByN
-        W/JsqXxIvWvhfPMJRrGWEkrfpIL53k1QUmIpzkg01GIuKk4EAHfN9OJ/AgAA
-X-CMS-MailID: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642
-References: <CGME20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642@eucas1p2.samsung.com>
+        id S1727357AbfGDRL7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 4 Jul 2019 13:11:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38106 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbfGDRL7 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 Jul 2019 13:11:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h28so344364lfj.5
+        for <xdp-newbies@vger.kernel.org>; Thu, 04 Jul 2019 10:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CTw8LgIZLrVf0RNEYgPzuF2QYpEPgzEFcRlidCnudh0=;
+        b=HuH/JsuO8405NViujKhNY1PieKnPq4PjbXEVCQ8+n9tCjMRS8m7dARScFiDdFYh3k8
+         n32TRp7u0m6z3B0D9FzZ2syCVdiokCbih6m/OLiRNp/yIxKjzN9OoRbwwvyX4acKfZ0a
+         HiR74sR6doIrqFfn15vn/I7sCL+1WNOGHamtMsZpL4+x80kHV63tLlnZhnCVz1yKiYdt
+         JwoXpYR/t9TGopxvLD9dXbWfd1Y3kfx/ZltscCN7A6jCa3yiAZfHo6lStppWvT8UbzjI
+         YAjvVwLHFfOqGwE9KnRSjpbwTrjMjNB6bUSqQx3zlUXk30JToslEQ9jX8eIx8jlyYSkY
+         Pp4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=CTw8LgIZLrVf0RNEYgPzuF2QYpEPgzEFcRlidCnudh0=;
+        b=bo0KRtSWzd9iaYJ3JlpoXCE34lNK2tJ1WSEoIYjtrobjKe86olBpieVnE+10X4zaO/
+         So2Lce8H8isDecCM2plGUsjJ4xIXEKpJiqVBX9w+ywwlbUxaOrfWIx4Hf5NhA1kJot8r
+         ckB0fzQvhvBInogvqXhShlTe645y+7aHQadGhupEs2aqTFfwrHKKy8gHoblteHH9yVfN
+         62nJJAyxj+iU+Uae+NsWtk8kyvsUeakeMAyMF+e9t56WdyqyuWFRC4FG50T1ZFCr4tbn
+         WysmHoKC4GVPNG0aZLSwkHRiBx49rvV/Bq89Z42KeeRx2jUsommYrPzpDiykhUS/oBwE
+         pbLg==
+X-Gm-Message-State: APjAAAX+AgknYam/1XlGMegnVAXGe4MinhsPiT7da0vexGcvOb9LWBPt
+        HFWbCLXcZSFe7s7T2NqKsRjbeg==
+X-Google-Smtp-Source: APXvYqwC1GwtWVldB9WJdDmz7RXuTaX/Qg+aRxyVkDoNEMfG5HVm/l90xvLZWEUL8tSpzufWb3TkNw==
+X-Received: by 2002:ac2:5442:: with SMTP id d2mr1501791lfn.70.1562260316525;
+        Thu, 04 Jul 2019 10:11:56 -0700 (PDT)
+Received: from khorivan ([46.211.38.218])
+        by smtp.gmail.com with ESMTPSA id w21sm669798lfl.84.2019.07.04.10.11.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jul 2019 10:11:56 -0700 (PDT)
+Date:   Thu, 4 Jul 2019 20:11:41 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v6 net-next 1/5] xdp: allow same allocator usage
+Message-ID: <20190704171135.GB2923@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        grygorii.strashko@ti.com, davem@davemloft.net, ast@kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+References: <20190703101903.8411-1-ivan.khoronzhuk@linaro.org>
+ <20190703101903.8411-2-ivan.khoronzhuk@linaro.org>
+ <20190703194013.02842e42@carbon>
+ <20190704102239.GA3406@khorivan>
+ <20190704144144.5edd18eb@carbon>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190704144144.5edd18eb@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Completion queue address reservation could not be undone.
-In case of bad 'queue_id' or skb allocation failure, reserved entry
-will be leaked reducing the total capacity of completion queue.
+On Thu, Jul 04, 2019 at 02:41:44PM +0200, Jesper Dangaard Brouer wrote:
+>On Thu, 4 Jul 2019 13:22:40 +0300
+>Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> On Wed, Jul 03, 2019 at 07:40:13PM +0200, Jesper Dangaard Brouer wrote:
+>> >On Wed,  3 Jul 2019 13:18:59 +0300
+>> >Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>> >
+>> >> First of all, it is an absolute requirement that each RX-queue have
+>> >> their own page_pool object/allocator. And this change is intendant
+>> >> to handle special case, where a single RX-queue can receive packets
+>> >> from two different net_devices.
+>> >>
+>> >> In order to protect against using same allocator for 2 different rx
+>> >> queues, add queue_index to xdp_mem_allocator to catch the obvious
+>> >> mistake where queue_index mismatch, as proposed by Jesper Dangaard
+>> >> Brouer.
+>> >>
+>> >> Adding this on xdp allocator level allows drivers with such dependency
+>> >> change the allocators w/o modifications.
+>> >>
+>> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> >> ---
+>> >>  include/net/xdp_priv.h |  2 ++
+>> >>  net/core/xdp.c         | 55 ++++++++++++++++++++++++++++++++++++++++++
+>> >>  2 files changed, 57 insertions(+)
+>> >>
+>> >> diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+>> >> index 6a8cba6ea79a..9858a4057842 100644
+>> >> --- a/include/net/xdp_priv.h
+>> >> +++ b/include/net/xdp_priv.h
+>> >> @@ -18,6 +18,8 @@ struct xdp_mem_allocator {
+>> >>  	struct rcu_head rcu;
+>> >>  	struct delayed_work defer_wq;
+>> >>  	unsigned long defer_warn;
+>> >> +	unsigned long refcnt;
+>> >> +	u32 queue_index;
+>> >>  };
+>> >
+>> >I don't like this approach, because I think we need to extend struct
+>> >xdp_mem_allocator with a net_device pointer, for doing dev_hold(), to
+>> >correctly handle lifetime issues. (As I tried to explain previously).
+>> >This will be much harder after this change, which is why I proposed the
+>> >other patch.
+>> My concern comes not from zero also.
+>> It's partly continuation of not answered questions from here:
+>> https://lwn.net/ml/netdev/20190625122822.GC6485@khorivan/
+>>
+>> "For me it's important to know only if it means that alloc.count is
+>> freed at first call of __mem_id_disconnect() while shutdown.
+>> The workqueue for the rest is connected only with ring cache protected
+>> by ring lock and not supposed that alloc.count can be changed while
+>> workqueue tries to shutdonwn the pool."
+>
+>Yes.  The alloc.count is only freed on first call.  I considered
+>changing the shutdown API, to have two shutdown calls, where the call
+>used from the work-queue will not have the loop emptying alloc.count,
+>but instead have a WARN_ON(alloc.count), as it MUST be empty (once is
+>code running from work-queue).
+>
+>> So patch you propose to leave works only because of luck, because fast
+>> cache is cleared before workqueue is scheduled and no races between two
+>> workqueues for fast cache later. I'm not really against this patch, but
+>> I have to try smth better.
+>
+>It is not "luck".  It does the correct thing as we never enter the
+>while loop in __page_pool_request_shutdown() from a work-queue, but it
+>is not obvious from the code.  The not-so-nice thing is that two
+>work-queue shutdowns will be racing with each-other, in the multi
+>netdev use-case, but access to the ptr_ring is safe/locked.
 
-Fix that by moving reservation to the point where failure is not
-possible. Additionally, 'queue_id' checking moved out from the loop
-since there is no point to check it there.
+So, having this, and being prudent to generic code changes, lets roll back
+to idea from v.4:
+https://lkml.org/lkml/2019/6/25/996
+but use changes from following patch, reintroducing page destroy:
+https://www.spinics.net/lists/netdev/msg583145.html
+with appropriate small modifications for cpsw.
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
----
- net/xdp/xsk.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+In case of some issue connected with it (not supposed), or two/more
+allocators used by cpsw, or one more driver having such multi ndev
+capabilities (supposed), would be nice to use this link as reference
+and it can be base for similar modifications.
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index f53a6ef7c155..703cf5ea448b 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -226,6 +226,9 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 
- 	mutex_lock(&xs->mutex);
- 
-+	if (xs->queue_id >= xs->dev->real_num_tx_queues)
-+		goto out;
-+
- 	while (xskq_peek_desc(xs->tx, &desc)) {
- 		char *buffer;
- 		u64 addr;
-@@ -236,12 +239,6 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 			goto out;
- 		}
- 
--		if (xskq_reserve_addr(xs->umem->cq))
--			goto out;
--
--		if (xs->queue_id >= xs->dev->real_num_tx_queues)
--			goto out;
--
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
- 		if (unlikely(!skb)) {
-@@ -253,7 +250,7 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 		addr = desc.addr;
- 		buffer = xdp_umem_get_data(xs->umem, addr);
- 		err = skb_store_bits(skb, 0, buffer, len);
--		if (unlikely(err)) {
-+		if (unlikely(err) || xskq_reserve_addr(xs->umem->cq)) {
- 			kfree_skb(skb);
- 			goto out;
- 		}
+Unless Jesper disagrees with this ofc.
+
+I will send v7 soon after verification is completed.
+
 -- 
-2.17.1
-
+Regards,
+Ivan Khoronzhuk
