@@ -2,47 +2,47 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D759608AE
-	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jul 2019 17:05:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44CAC608AC
+	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jul 2019 17:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfGEPFP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        id S1727734AbfGEPFP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
         Fri, 5 Jul 2019 11:05:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38558 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfGEPFM (ORCPT
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:37520 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfGEPFM (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>); Fri, 5 Jul 2019 11:05:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so9572552ljg.5
-        for <xdp-newbies@vger.kernel.org>; Fri, 05 Jul 2019 08:05:10 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id c9so4789022lfh.4
+        for <xdp-newbies@vger.kernel.org>; Fri, 05 Jul 2019 08:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3MKWFq9DHUtTXp9RzrqM9cpDCCIlrZafhvrB3JiYBHI=;
-        b=xyvsBDpHC1EZ2dWvSDA7okDtJU8c+RYRWvLbfE6yTRUaRRPTeMx4naijBhc1gORYBB
-         fqdWq7A4JFUU/wg6qPHgari2TlXnujB97hM6gGjY9uRNSnKE3DASyEnY+PcghuM4LxeS
-         uxg3pFkhfafUBbPn9ybRasj+SKZpSafJKQtuprX2VQe5LNP2FoBNFBSB72e53SCevH54
-         o1YOQlp++pyanvB+mbRD9wbCSAs8T59Q2MOM0g0b7uSPxVgzGTQPtbMSEAEwteBb84Ke
-         TjQE87Vma0iBWrx672Jg9bHwyDPLi4EiuZX6A7snuUiaOOACOncLlzvSB3BYPwgz7CEn
-         bfmg==
+        bh=h0qJMdNciD39g3Q1jo3+1MbbNG9llP7wamgm8+ijc+0=;
+        b=oDfE98kPmAv8olG5EU/cTLrPDhDZJWfBTXlVneiTLeFEQ9KVnwf7eKt2hlFFPocvxy
+         uUe6nfw3ViFwp6yvmIysmpnO+k9Wu4fTfhs3b2tq6dQfOoYCsExy7L4KNXeqdLhAdPB+
+         1TD/0Ae8V6EAMs6Bp058Iot84/ZdoxMc4KMgSAsQU52JUMJJXwvWaGJClgWF6teMbUBo
+         uxIthothA0rkhAtBjhsvVdG0aikqWxw7xh3yzReaMfq/gpNokRVaTVAT2x/zMcsjRGHC
+         9G5We3AuyDNiOJXRYSYb0VMqaQpmIp1a2feZzkvQOtBADs5UthlrQM8CmV6gNxnsdfwn
+         h3sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3MKWFq9DHUtTXp9RzrqM9cpDCCIlrZafhvrB3JiYBHI=;
-        b=BGfLVoFTe5dEiJwz7xzpZ96Mn99JHph0r1kyAAkWWLtTO7Jr5hrSykJZHpz9f4KoN5
-         KLg6AlaD0F6LGfPYu3y7tn8Jvnw2xdoTv5t0ecJXqT9t9e15JMrg55UXIRQS6o/SvQ3J
-         N6xpNeqVlCoI/nJelBFAi0Jhaj+WVSXsqidG7E72J5kPQcB5Yp3ZT5VnYyF+53njeN/K
-         FqM0s3VFYl1ohP4LaVtxOkGGDxvxrkklJkA7/t8Hl97+QCjjltAck5baaAxUQCAAT+dH
-         63+4qwk4gztIkSk3h33azkzkfPytCRWf9Nxzv98nxPBoxBpTaftRR9f3qzhj8mK8j1gw
-         KUOQ==
-X-Gm-Message-State: APjAAAXhurfCCQI76MGTBz4hp6kLbxw/HzgZx/p/1tFWuS7+zHQsn76P
-        cMOAsPtMyllmRRc0rMSinBxcuQ==
-X-Google-Smtp-Source: APXvYqzuXhHx+bwkjyadsYI9HwpVyfw9wCKVazqQ4H58bNzZlrBLVZeaaI9HSQm3LGj+FhwVLRLCaQ==
-X-Received: by 2002:a2e:5c09:: with SMTP id q9mr2499358ljb.120.1562339109281;
-        Fri, 05 Jul 2019 08:05:09 -0700 (PDT)
+        bh=h0qJMdNciD39g3Q1jo3+1MbbNG9llP7wamgm8+ijc+0=;
+        b=X3MHK7EOQi66ikWebStBsFslj+VRfFmLflznx402JK8XecMGt8o0UTeNXaAx/cGp/J
+         eQ0NqXITszqqIbZe3LGAoHDSHjk1lb6pGGS6edpZJ8Z/oh2AV6a0iDK/TC2PWFXO+mLz
+         USLtBBN+H+dgt4EAu4ZtK58rcr7FZvEc1R3GAAFQCMXNfphQxofNT1CvpGnNBZ/2Gft+
+         LmHBD6cfCRdFWfqSsfet/7+nLPmqAGEZRS9HbZedHyxsc7pQgopbSJ0HXiUoTvg41BeN
+         0N2b+RqB2tMzl84FtzFDItQINRL9jVzHkq5tgt74HPjkQY4HvM7emCtVbm0AK2kPJUmo
+         ahRw==
+X-Gm-Message-State: APjAAAXReDvmH71xtYApOUIs7bBY6tEYqu60GzUQ5baU8xqD6jNDEroy
+        HbKuqjI6Y6LkaZ7fFAGyKFznVA==
+X-Google-Smtp-Source: APXvYqzQfwbBeTQKyZdYAG35Uh8Vra3vPjcNMNKZk9DOT4QKJnpXvwesQAlh7D0yawCUdKeVyP7mGA==
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr2285518lfp.61.1562339110625;
+        Fri, 05 Jul 2019 08:05:10 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id y4sm1433660lfc.56.2019.07.05.08.05.08
+        by smtp.gmail.com with ESMTPSA id y4sm1433660lfc.56.2019.07.05.08.05.09
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 05 Jul 2019 08:05:08 -0700 (PDT)
+        Fri, 05 Jul 2019 08:05:10 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
 Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v8 net-next 3/5] net: ethernet: ti: davinci_cpdma: allow desc split while down
-Date:   Fri,  5 Jul 2019 18:05:00 +0300
-Message-Id: <20190705150502.6600-4-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v8 net-next 4/5] net: ethernet: ti: cpsw_ethtool: allow res split while down
+Date:   Fri,  5 Jul 2019 18:05:01 +0300
+Message-Id: <20190705150502.6600-5-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190705150502.6600-1-ivan.khoronzhuk@linaro.org>
 References: <20190705150502.6600-1-ivan.khoronzhuk@linaro.org>
@@ -62,108 +62,31 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-That's possible to set ring params while interfaces are down. When
-interface gets up it uses number of descs to fill rx queue and on
-later on changes to create rx pools. Usually, this resplit can happen
-after phy is up, but it can be needed before this, so allow it to
-happen while setting number of rx descs, when interfaces are down.
-Also, if no dependency on intf state, move it to cpdma layer, where
-it should be.
+That's possible to set channel num while interfaces are down. When
+interface gets up it should resplit budget. This resplit can happen
+after phy is up but only if speed is changed, so should be set before
+this, for this allow it to happen while changing number of channels,
+when interfaces are down.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/net/ethernet/ti/cpsw_ethtool.c  | 17 +++++++++++------
- drivers/net/ethernet/ti/davinci_cpdma.c | 17 ++++++++++++++++-
- drivers/net/ethernet/ti/davinci_cpdma.h |  3 +--
- 3 files changed, 28 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/ti/cpsw_ethtool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index f60dc1dfc443..c477e6b620d6 100644
+index c477e6b620d6..e4d7185fde49 100644
 --- a/drivers/net/ethernet/ti/cpsw_ethtool.c
 +++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -650,7 +650,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
- {
- 	struct cpsw_priv *priv = netdev_priv(ndev);
- 	struct cpsw_common *cpsw = priv->cpsw;
--	int ret;
-+	int descs_num, ret;
- 
- 	/* ignore ering->tx_pending - only rx_pending adjustment is supported */
- 
-@@ -659,20 +659,25 @@ int cpsw_set_ringparam(struct net_device *ndev,
- 	    ering->rx_pending > (cpsw->descs_pool_size - CPSW_MAX_QUEUES))
- 		return -EINVAL;
- 
--	if (ering->rx_pending == cpdma_get_num_rx_descs(cpsw->dma))
-+	descs_num = cpdma_get_num_rx_descs(cpsw->dma);
-+	if (ering->rx_pending == descs_num)
- 		return 0;
- 
- 	cpsw_suspend_data_pass(ndev);
- 
--	cpdma_set_num_rx_descs(cpsw->dma, ering->rx_pending);
-+	ret = cpdma_set_num_rx_descs(cpsw->dma, ering->rx_pending);
-+	if (ret) {
-+		if (cpsw_resume_data_pass(ndev))
-+			goto err;
+@@ -620,8 +620,7 @@ int cpsw_set_channels_common(struct net_device *ndev,
+ 		}
+ 	}
  
 -	if (cpsw->usage_count)
--		cpdma_chan_split_pool(cpsw->dma);
-+		return ret;
-+	}
+-		cpsw_split_res(cpsw);
++	cpsw_split_res(cpsw);
  
  	ret = cpsw_resume_data_pass(ndev);
  	if (!ret)
- 		return 0;
--
-+err:
-+	cpdma_set_num_rx_descs(cpsw->dma, descs_num);
- 	dev_err(cpsw->dev, "cannot set ring params, closing device\n");
- 	dev_close(ndev);
- 	return ret;
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 8da46394c0e7..a3b6aeb4e935 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1423,8 +1423,23 @@ int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr)
- 	return ctlr->num_tx_desc;
- }
- 
--void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
-+int cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
- {
-+	unsigned long flags;
-+	int temp, ret;
-+
-+	spin_lock_irqsave(&ctlr->lock, flags);
-+
-+	temp = ctlr->num_rx_desc;
- 	ctlr->num_rx_desc = num_rx_desc;
- 	ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
-+	ret = cpdma_chan_split_pool(ctlr);
-+	if (ret) {
-+		ctlr->num_rx_desc = temp;
-+		ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
-+	}
-+
-+	spin_unlock_irqrestore(&ctlr->lock, flags);
-+
-+	return ret;
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 0271a20c2e09..d3cfe234d16a 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -116,8 +116,7 @@ enum cpdma_control {
- int cpdma_control_get(struct cpdma_ctlr *ctlr, int control);
- int cpdma_control_set(struct cpdma_ctlr *ctlr, int control, int value);
- int cpdma_get_num_rx_descs(struct cpdma_ctlr *ctlr);
--void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc);
-+int cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc);
- int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr);
--int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr);
- 
- #endif
 -- 
 2.17.1
 
