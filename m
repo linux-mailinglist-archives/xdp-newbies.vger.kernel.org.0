@@ -2,45 +2,45 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2AC362642
-	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 18:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 463C062643
+	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 18:32:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390421AbfGHQb5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 12:31:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36422 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389403AbfGHQb4 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 12:31:56 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so176605wme.1
-        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 09:31:55 -0700 (PDT)
+        id S2391265AbfGHQcA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Jul 2019 12:32:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54391 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389821AbfGHQb6 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 12:31:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id p74so146065wme.4
+        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 09:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Z2q/9DY/eMlLakYA2goJPIRtdbZUH+0KxlPnLmYNTOY=;
-        b=f3sofSU/bXru9qax++aOgBk+uAlSYw6diTvQz4Zb6xU+ePOE1k+PF6XybmrF8zA8Lm
-         cxUhOmVfIKOmnI0trsImIeXpuUUW+sKjTOhPWo3MCCGcHCf+iQIseb8AfeR7KKbyPnKH
-         4z9UWgWFHpp2PrqssJUgvo0yyedi5hHUcIboQ=
+        bh=85UmCqjB/2q4FemAi0uqOHeKcTywLVBMQcPg1IVAqAM=;
+        b=Dfct8cMtJ3z8OuDpeDpsjRAF6WXSTiaH+K294/muggipqhmBYGNxaI8Of4vzfovnWd
+         araJpc0PBcJ2t3N22S6Ai2IPrId9rxQmWqKV1zBEiXjqowqjmg/g1mcNqux1teEWW98B
+         jNJCpOG+OC0EloVzoloxZiHXdRx1tzoJis7HQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Z2q/9DY/eMlLakYA2goJPIRtdbZUH+0KxlPnLmYNTOY=;
-        b=SPZ6MP9HVJETDI9Y8CBf4noR63ZqIqZePdlpv+/XyrAu+n+HDfVcHVle5uJ0ipA3KR
-         Cz1E6rM7+zJkUOKUeakatf6BPYCHdDf6glOhFGJamWRmzuPtXSCcokVWNIrCnmOlu564
-         efMcp6ZmXSkLS2T7vBfbFcl6eJB27j1t2ZRadyDhCwVpSCssdj4CqQLF7VUj9HZNRqrK
-         2TpljFp6ID5jlm1mbknui2yoxddA+oi+UtdITlRLtuttyDk1vUPbg/SR7+AgVPiW8lbb
-         fCoRU7PZcsMXXTGbp6+QqEx+43bR1kOt5RV72ncD3oNF9XE/F72XfBAiAqoXNrghaSno
-         CI/A==
-X-Gm-Message-State: APjAAAWmfIkgyKTFByMR8JxFNlPJ7BzHYyi8ImeK64vC/t4Gj1ojTb1i
-        gG/s7Xa++nEr2r8LjpAxmlKQbg==
-X-Google-Smtp-Source: APXvYqwgF4eK6PEywYbJMZghzfU39cx60C67Re6v5ey3Aa4/20vDkjnYdTfyPjo4Ljm9od9zONwd/g==
-X-Received: by 2002:a1c:2314:: with SMTP id j20mr17401953wmj.152.1562603514984;
-        Mon, 08 Jul 2019 09:31:54 -0700 (PDT)
+        bh=85UmCqjB/2q4FemAi0uqOHeKcTywLVBMQcPg1IVAqAM=;
+        b=hAFbNNp7pH55y2iWuhZJVAZy168OdCjthOx/CM79305wMd3nntFmnWv7uogckDZoCb
+         DYToqW8N9KkbaIu8XgMX5+CwXPJTlo1eBNfTq9Mp8uZOAqtdAyh/p5VXTLPtMJpwFd3j
+         /RTUznyUpMvhqfG/7M5c5yXkHr5MImPvU1OWkHdTjrGyi3zTWJWVwLuJczs2p0laKrHB
+         aALLCX9AYoodojLqwStX0tx1ACLcXeToRCNPlgGJdSCcPNWB22n9kJBI8IrdQj8tRg8R
+         AxbAAfUnjoN8w9l0mzWPiPymN1XcJwTeUpGn+ZtSP2wt9KHdAQjqogiBT9G3qgXAKzGi
+         mviw==
+X-Gm-Message-State: APjAAAW68/oOKbM8EWIXekrubNnSV72dvIY6pHHONsJhEjnOUmYLsPZN
+        EgN5USYPM2/18W4NK1GrBPNGtQ==
+X-Google-Smtp-Source: APXvYqyj4c3lEISNKOfADRNSxJClIv1MsBpCK5ZQjZI88b+WTlVEnLoE4ff4qUL/ArYdaGtzNigjjg==
+X-Received: by 2002:a1c:305:: with SMTP id 5mr18180038wmd.101.1562603516202;
+        Mon, 08 Jul 2019 09:31:56 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedbe.dynamic.kabel-deutschland.de. [95.90.237.190])
-        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.53
+        by smtp.gmail.com with ESMTPSA id e6sm18255086wrw.23.2019.07.08.09.31.55
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 08 Jul 2019 09:31:54 -0700 (PDT)
+        Mon, 08 Jul 2019 09:31:55 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -56,9 +56,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v3 07/12] tools headers: Adopt compiletime_assert from kernel sources
-Date:   Mon,  8 Jul 2019 18:31:16 +0200
-Message-Id: <20190708163121.18477-8-krzesimir@kinvolk.io>
+Subject: [bpf-next v3 08/12] tools headers: Sync struct bpf_perf_event_data
+Date:   Mon,  8 Jul 2019 18:31:17 +0200
+Message-Id: <20190708163121.18477-9-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190708163121.18477-1-krzesimir@kinvolk.io>
 References: <20190708163121.18477-1-krzesimir@kinvolk.io>
@@ -69,51 +69,29 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This will come in handy to verify that the hardcoded size of the
-context data in bpf_test struct is high enough to hold some struct.
+struct bpf_perf_event_data in kernel headers has the addr field, which
+is missing in the tools version of the struct. This will be important
+for the bpf prog test run implementation for perf events as it will
+expect data to be an instance of struct bpf_perf_event_data, so the
+size of the data needs to match sizeof(bpf_perf_event_data).
 
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/include/linux/compiler.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ tools/include/uapi/linux/bpf_perf_event.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
-index 1827c2f973f9..b4e97751000a 100644
---- a/tools/include/linux/compiler.h
-+++ b/tools/include/linux/compiler.h
-@@ -172,4 +172,32 @@ static __always_inline void __write_once_size(volatile void *p, void *res, int s
- # define __fallthrough
- #endif
+diff --git a/tools/include/uapi/linux/bpf_perf_event.h b/tools/include/uapi/linux/bpf_perf_event.h
+index 8f95303f9d80..eb1b9d21250c 100644
+--- a/tools/include/uapi/linux/bpf_perf_event.h
++++ b/tools/include/uapi/linux/bpf_perf_event.h
+@@ -13,6 +13,7 @@
+ struct bpf_perf_event_data {
+ 	bpf_user_pt_regs_t regs;
+ 	__u64 sample_period;
++	__u64 addr;
+ };
  
-+
-+#ifdef __OPTIMIZE__
-+# define __compiletime_assert(condition, msg, prefix, suffix)		\
-+	do {								\
-+		extern void prefix ## suffix(void) __compiletime_error(msg); \
-+		if (!(condition))					\
-+			prefix ## suffix();				\
-+	} while (0)
-+#else
-+# define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
-+#endif
-+
-+#define _compiletime_assert(condition, msg, prefix, suffix) \
-+	__compiletime_assert(condition, msg, prefix, suffix)
-+
-+/**
-+ * compiletime_assert - break build and emit msg if condition is false
-+ * @condition: a compile-time constant condition to check
-+ * @msg:       a message to emit if condition is false
-+ *
-+ * In tradition of POSIX assert, this macro will break the build if the
-+ * supplied condition is *false*, emitting the supplied error message if the
-+ * compiler has support to do so.
-+ */
-+#define compiletime_assert(condition, msg) \
-+	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-+
-+
- #endif /* _TOOLS_LINUX_COMPILER_H */
+ #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
 -- 
 2.20.1
 
