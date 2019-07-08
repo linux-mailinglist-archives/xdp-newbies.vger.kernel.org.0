@@ -2,114 +2,89 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DB3862A62
-	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 22:33:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AECD862AF2
+	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 23:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbfGHUdC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 16:33:02 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45565 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbfGHUc7 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 16:32:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so17261705lje.12
-        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 13:32:58 -0700 (PDT)
+        id S1732287AbfGHVZ6 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Jul 2019 17:25:58 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33973 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfGHVZ5 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 17:25:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t8so14504149qkt.1;
+        Mon, 08 Jul 2019 14:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QmhLmLZUpQw51TcWj6xz/UWa7Fe+O+3V90DXK/aEFco=;
-        b=guiXzaD+Q8k8J8Y2zzy+eGlckI4Qfj/1ia32W8QPEpVyDxD+5hgsVF1EBjtMcdA2s/
-         5R6J5f6GgfGC+nFAbBkYPeDw/XfsFDCoboRXhsd0sXhsudSf3059LbepmLdXf+bGovGT
-         qc6zCll9qpQztznsNGoUo1/z6sIst7IWs3z+Pv7nR02bMmC5DCviI65aoqFu1kzeunE8
-         sJFWmex7qjLe3ziuuenXDF2zBUBKL8qpBXz1MQYcrJEwVtkCqsinEygD57Y8dbRhrT+j
-         eNRMf0cE5rKvU5kEP5hfxK9mWRVAK1SjUcuMmd409q26ptgM28q5w2oyc86eWpf2IN5O
-         UeiQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
+        b=rWWOnVX/gGIKyfUtaGpmot+HNvA3cWtH0kVO0h4nl6tXbcIquARDq4K26S34Z+yLSt
+         KEymIIbwKOsR2MSPrTptFunTkS886ieLQW8eLX4xHg4NImEfiwT9bZ/2qohqwFF/l2Lr
+         ayJvIuw6+8NpOTb6k0WbGIy/YCs/BHvl2cDlDYf9A74AylUKTwivq2or6XJpYn4UHJih
+         6qf5VXPpM9Iy8rffFKoXRWB04wHiXVNE8HC5XIlzb7ovwrP7Gjc6Sce3Z50iit7CDHVu
+         rRCyn8hXPB7LGtdY/BUIJHdfKtA31poSQtFyzaDW81y0biywXp/wAE1SLCQqu4gP9Pku
+         7Rig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=QmhLmLZUpQw51TcWj6xz/UWa7Fe+O+3V90DXK/aEFco=;
-        b=DwgZQdaqZrZ/A5vMMKYBSk03el7vhQaa+MHz4i0Lz1rDogNc3FrKTS5tYI3JUqnmXq
-         Kx2XNzU1vMkkctE9mrylAMJoDAdcxjCw0cFCxGrLHnhVdXbH2nu5fF8pDv1QONJxFPig
-         cvT8g1WrkSqexKwWo1nyvB0t108GYkB3p+Ntn5N9yOLngYX25SkWmWP1Bwi0dN9uXrW6
-         Of7srziplRT/XIF5FMleDamLA9WAClXYrAz43CZ3HATTssIfT1LlNaIHMbc/0pAx/puK
-         VqKvIMF3Tj0xjQ9tx/wpfcso1nnhwnAwQ6F4KVSErd98wpZUlYig6JJ4F/ZLWRlwD5Pt
-         1luw==
-X-Gm-Message-State: APjAAAVc18i8ky0VzsDEUWn8Te/ypAYEjDfTXYjbCO4uJNDNFJkotY4l
-        GirA3arx940lTUY7TQm+XWsLZg==
-X-Google-Smtp-Source: APXvYqwVRisXI+W1yDsrFdBvfB5lZcfxm6xx+YU6rvWYruaiHxMRpCBIx1t+9hogA9dGSL6dnfZZgQ==
-X-Received: by 2002:a2e:981:: with SMTP id 123mr11792658ljj.66.1562617977232;
-        Mon, 08 Jul 2019 13:32:57 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id z23sm2925562lfq.77.2019.07.08.13.32.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jul 2019 13:32:56 -0700 (PDT)
-Date:   Mon, 8 Jul 2019 23:32:54 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH v8 net-next 0/5] net: ethernet: ti: cpsw: Add XDP support
-Message-ID: <20190708203252.GA12580@khorivan>
-Mail-Followup-To: David Miller <davem@davemloft.net>,
-        grygorii.strashko@ti.com, hawk@kernel.org, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-References: <20190705150502.6600-1-ivan.khoronzhuk@linaro.org>
- <20190707.183146.1123763637704790378.davem@davemloft.net>
- <20190707.183511.503486832061897586.davem@davemloft.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
+        b=scBuc1+xmHvWbbDJ/BDG6a6c/dmzdepPZHhaOXoF/t9WfI62d3bbO0VpL9y+YdNZQl
+         d0z9nYMCqWPHQ361TDps0izE53nytbLPY2gwjYZXkidVhhl8q+WM/LHwNNhbHg87r6VK
+         uQdC+GsELLpw7FpMaie8hpRSirYFT/BIN4x5ZPBaHCK0zL6zE2Kenwh2I/qwA3frdkZz
+         gwK977gmvn+4BRSNC/GfyZL/Lkgfv0d8JdLRZtV1Nsz29bzKgOzVqC6aAWj05H8TKyvP
+         QNEkBhMl6iZkJU2oa7zjnOo4D+cW9AHFCjEh8YXf2VilSARGz+C/QyGn6ZP6nJm6A5nO
+         GJxA==
+X-Gm-Message-State: APjAAAUZid8i28aEvFuSF7obdHZYDWF2BOE+5CQpf9Z4vkkTOOMRE1jW
+        9IkcYNa7g+loTTAlZkj9ZRH1vQ54hMf01Rx6dtY=
+X-Google-Smtp-Source: APXvYqwulGSqlqNeD6kh5CTROsEPVi3dGZ1cSE/R5NXoTMe6Mr8ScvM8gHkHmsWbgHbuNefYNtUh9BpV/qdomz9XXbw=
+X-Received: by 2002:ae9:de05:: with SMTP id s5mr13692127qkf.184.1562621156638;
+ Mon, 08 Jul 2019 14:25:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190707.183511.503486832061897586.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CGME20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642@eucas1p2.samsung.com>
+ <20190704142503.23501-1-i.maximets@samsung.com> <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
+In-Reply-To: <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
+From:   William Tu <u9012063@gmail.com>
+Date:   Mon, 8 Jul 2019 14:25:20 -0700
+Message-ID: <CALDO+SYaR+txmTq_xhaw1cD4v7svtE7BD3mOsBx-X=MEVeZzzA@mail.gmail.com>
+Subject: Re: [PATCH bpf] xdp: fix possible cq entry leak
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     Ilya Maximets <i.maximets@samsung.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sun, Jul 07, 2019 at 06:35:11PM -0700, David Miller wrote:
->From: David Miller <davem@davemloft.net>
->Date: Sun, 07 Jul 2019 18:31:46 -0700 (PDT)
+On Thu, Jul 4, 2019 at 11:49 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
+m> wrote:
 >
->> From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> Date: Fri,  5 Jul 2019 18:04:57 +0300
->>
->>> This patchset adds XDP support for TI cpsw driver and base it on
->>> page_pool allocator. It was verified on af_xdp socket drop,
->>> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
->>>
->>> It was verified with following configs enabled:
->>  ...
->>
->> I'm applying this to net-next, please deal with whatever follow-ups are
->> necessary.
+> On Thu, 4 Jul 2019 at 16:25, Ilya Maximets <i.maximets@samsung.com> wrote=
+:
+> >
+> > Completion queue address reservation could not be undone.
+> > In case of bad 'queue_id' or skb allocation failure, reserved entry
+> > will be leaked reducing the total capacity of completion queue.
+> >
+> > Fix that by moving reservation to the point where failure is not
+> > possible. Additionally, 'queue_id' checking moved out from the loop
+> > since there is no point to check it there.
+> >
 >
->Nevermind, you really have to fix this:
+> Good catch, Ilya! Thanks for the patch!
 >
->drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_submit_si’:
->drivers/net/ethernet/ti/davinci_cpdma.c:1047:12: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
->   buffer = (u32)si->data;
->            ^
->drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_idle_submit_mapped’:
->drivers/net/ethernet/ti/davinci_cpdma.c:1114:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->  si.data = (void *)(u32)data;
->            ^
->drivers/net/ethernet/ti/davinci_cpdma.c: In function ‘cpdma_chan_submit_mapped’:
->drivers/net/ethernet/ti/davinci_cpdma.c:1164:12: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
->  si.data = (void *)(u32)data;
->            ^
-Actrually that's fixed in reply v9 patch.
-But, nevermind, i will send v9 for whole series.
-
--- 
-Regards,
-Ivan Khoronzhuk
+> Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+>
+Thanks
+Tested-by: William Tu <u9012063@gmail.com>
