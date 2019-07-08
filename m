@@ -2,160 +2,142 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E64A362530
-	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 17:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E957F6242F
+	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 17:41:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbfGHPQb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 11:16:31 -0400
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:43911
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732518AbfGHPQa (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 8 Jul 2019 11:16:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=szryYw/ssBwin6LDL6+dPN58gyoZ1qWOAyBDfomEVD0=;
- b=j3UMPqQDxppkN86ThovUKWWKwvO5te4Vhpqydi5/TMQKnYGVBR77ZryM2a1FKeDKQw1yqFE5ZJ8QJszmByoCEZXCXqmu9p21xToh/Yb4jm3T9encV0GSj3f0qvkq787b9zPMkm/UHdJ2wxThvb9Z9ozXGD54lRh8J/cuWvaMnPA=
-Received: from AM6PR05MB5879.eurprd05.prod.outlook.com (20.179.0.76) by
- AM6PR05MB6325.eurprd05.prod.outlook.com (20.179.5.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.17; Mon, 8 Jul 2019 15:16:26 +0000
-Received: from AM6PR05MB5879.eurprd05.prod.outlook.com
- ([fe80::4923:8635:3371:e4f0]) by AM6PR05MB5879.eurprd05.prod.outlook.com
- ([fe80::4923:8635:3371:e4f0%3]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
- 15:16:26 +0000
-From:   Maxim Mikityanskiy <maximmi@mellanox.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>
-CC:     Leon Romanovsky <leon@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH] [net-next] net/mlx5e: xsk: dynamically allocate
- mlx5e_channel_param
-Thread-Topic: [PATCH] [net-next] net/mlx5e: xsk: dynamically allocate
- mlx5e_channel_param
-Thread-Index: AQHVNYx/Ypx2Y7+f3k6VGsR33x4yYqbA1RmA
-Date:   Mon, 8 Jul 2019 15:16:26 +0000
-Message-ID: <543fa599-8ea1-dbc8-d94a-f90af2069edd@mellanox.com>
-References: <20190708125554.3863901-1-arnd@arndb.de>
-In-Reply-To: <20190708125554.3863901-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR07CA0026.eurprd07.prod.outlook.com
- (2603:10a6:7:66::12) To AM6PR05MB5879.eurprd05.prod.outlook.com
- (2603:10a6:20b:a2::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=maximmi@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.67.35.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ffa479e-41b6-4b9b-6991-08d703b73e7e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR05MB6325;
-x-ms-traffictypediagnostic: AM6PR05MB6325:
-x-microsoft-antispam-prvs: <AM6PR05MB63250E61C772D07AB61812DED1F60@AM6PR05MB6325.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00922518D8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(136003)(366004)(376002)(52314003)(199004)(189003)(316002)(3846002)(54906003)(110136005)(66066001)(6486002)(86362001)(305945005)(4326008)(6436002)(478600001)(6116002)(7736002)(31696002)(229853002)(486006)(25786009)(2616005)(11346002)(476003)(6512007)(2906002)(446003)(64756008)(256004)(73956011)(66556008)(66476007)(66946007)(66446008)(102836004)(68736007)(31686004)(14444005)(6246003)(5660300002)(71190400001)(8676002)(53936002)(81156014)(71200400001)(81166006)(8936002)(6636002)(52116002)(186003)(26005)(36756003)(7416002)(76176011)(14454004)(386003)(6506007)(53546011)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6325;H:AM6PR05MB5879.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: L0jn5JMpDcbM+WJO2PmbDYudQcZtIEXeMpDWrc96peri8CxrYGXhkZtFl6RwVuzsQknISDpXp40ex4RQuW9w5o+b8jYBB4jttPsTXe0oWkHJurkOq+k2M790gqqPrViaabcNwayJTGDb11E25MLmt+hkbTPTYkr1LSma1CgPfMmMa31dCuBA4FRFnrLDG03nvZ5VK/8IQCVGw+OB+wQjnQG+XPn87OkERiwUSglsNwXug2PwUjE7IXnWjH0/1WFlay1Q5qceaaYz8o6k0h9v2Vl01ydyWgqcoBzBbTeBW7ezOq+2fizzG24W+DOHMaaEM3TQxiZoTcm43rH4WCJyGKGOl837wcUmLC5CT/Ocgyp6/3pWwHg6TEX8ELEJSmh9DUcxbxCUneNHFucJQ1QGC+IVk6u70tmmpBXOOe7BD1Q=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EDBEA50B673B32448D8087847B960C7E@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S2388503AbfGHP1J (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Jul 2019 11:27:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:45209 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388445AbfGHP1H (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 11:27:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id e20so8520173ioe.12
+        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 08:27:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=3nI8UbSCiooQf96iEA6wfjiUATlcUVGksrHHHOQhhhs=;
+        b=kOXqh3GcIl8BdUl5J+A6r+x+FRJ6vE+zMVTXAjHF9RM0nHjTcqmGv+BfB64PNyqyVB
+         TwNdQLv1oXDuWDnsfWdIelPPGy+vs4XUYidYAZe1vty3zLD3ri/TLRPA2U7u6e/vkeDn
+         WdlYGlh/b/Ajo+NkcaEuKzwk4RbbP/NgMoh74NEsIxeHZIVVSqUoZS/Rv4Uvti3IiIpg
+         1MbJUnEPVh21ch69IPt9ViJY6S1mVmCUDPO9DeAcUFjZFxnQ71c3VlhKExSoNJh7P9hn
+         YqVijT243+Ptmie3sgAcbZjQV+HuJVaYgQfND2KDxyKXii9S3vwZ+hOv6b0GWxXwu0y8
+         wHrw==
+X-Gm-Message-State: APjAAAWRcw60z2JiFvCcnxe2LWqI7bWrciEpUcvEJ+Wf3SXABfIo3NVo
+        dgi9yoYBhqEYhXdCf7GZyqarj4fk6yMVvtHufj7VsqfGM3nF
+X-Google-Smtp-Source: APXvYqycAClhmc4W0ti+D9tCXsNSD9MBYwivSwqYPI1u7OpcYY3vXDxVd8tgt++cGt0IhLdRDc+zw5sPnC7pY0b56WN6EB5QWVnz
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ffa479e-41b6-4b9b-6991-08d703b73e7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 15:16:26.0333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: maximmi@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6325
+X-Received: by 2002:a5d:8ad0:: with SMTP id e16mr14295286iot.262.1562599626231;
+ Mon, 08 Jul 2019 08:27:06 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 08:27:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a5d738058d2d1396@google.com>
+Subject: WARNING in __mark_chain_precision
+From:   syzbot <syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bcrl@kvack.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-T24gMjAxOS0wNy0wOCAxNTo1NSwgQXJuZCBCZXJnbWFubiB3cm90ZToNCj4gVGhlIHN0cnVjdHVy
-ZSBpcyB0b28gbGFyZ2UgdG8gcHV0IG9uIHRoZSBzdGFjaywgcmVzdWx0aW5nIGluIGENCj4gd2Fy
-bmluZyBvbiAzMi1iaXQgQVJNOg0KPiANCj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
-bWx4NS9jb3JlL2VuL3hzay9zZXR1cC5jOjU5OjU6IGVycm9yOiBzdGFjayBmcmFtZSBzaXplIG9m
-IDEzNDQgYnl0ZXMgaW4gZnVuY3Rpb24NCj4gICAgICAgICdtbHg1ZV9vcGVuX3hzaycgWy1XZXJy
-b3IsLVdmcmFtZS1sYXJnZXItdGhhbj1dDQo+IA0KPiBVc2Uga3phbGxvYygpIGluc3RlYWQuDQo+
-IA0KPiBGaXhlczogYTAzOGU5Nzk0NTQxICgibmV0L21seDVlOiBBZGQgWFNLIHplcm8tY29weSBz
-dXBwb3J0IikNCj4gU2lnbmVkLW9mZi1ieTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4N
-Cj4gLS0tDQo+ICAgLi4uL21lbGxhbm94L21seDUvY29yZS9lbi94c2svc2V0dXAuYyAgICAgICAg
-IHwgMjUgKysrKysrKysrKysrLS0tLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRp
-b25zKCspLCA5IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbi94c2svc2V0dXAuYyBiL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbi94c2svc2V0dXAuYw0KPiBpbmRleCBhYWZmYTZm
-NjhkYzAuLmRiOWJiZWM2OGRiZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-bWVsbGFub3gvbWx4NS9jb3JlL2VuL3hzay9zZXR1cC5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lbi94c2svc2V0dXAuYw0KPiBAQCAtNjAsMjQgKzYw
-LDI4IEBAIGludCBtbHg1ZV9vcGVuX3hzayhzdHJ1Y3QgbWx4NWVfcHJpdiAqcHJpdiwgc3RydWN0
-IG1seDVlX3BhcmFtcyAqcGFyYW1zLA0KPiAgIAkJICAgc3RydWN0IG1seDVlX3hza19wYXJhbSAq
-eHNrLCBzdHJ1Y3QgeGRwX3VtZW0gKnVtZW0sDQo+ICAgCQkgICBzdHJ1Y3QgbWx4NWVfY2hhbm5l
-bCAqYykNCj4gICB7DQo+IC0Jc3RydWN0IG1seDVlX2NoYW5uZWxfcGFyYW0gY3BhcmFtID0ge307
-DQo+ICsJc3RydWN0IG1seDVlX2NoYW5uZWxfcGFyYW0gKmNwYXJhbTsNCj4gICAJc3RydWN0IGRp
-bV9jcV9tb2RlciBpY29jcV9tb2RlciA9IHt9Ow0KPiAgIAlpbnQgZXJyOw0KPiAgIA0KPiAgIAlp
-ZiAoIW1seDVlX3ZhbGlkYXRlX3hza19wYXJhbShwYXJhbXMsIHhzaywgcHJpdi0+bWRldikpDQo+
-ICAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gICANCj4gLQltbHg1ZV9idWlsZF94c2tfY3BhcmFtKHBy
-aXYsIHBhcmFtcywgeHNrLCAmY3BhcmFtKTsNCj4gKwljcGFyYW0gPSBremFsbG9jKHNpemVvZigq
-Y3BhcmFtKSwgR0ZQX0tFUk5FTCk7DQoNClNpbWlsYXIgY29kZSBpbiBtbHg1ZV9vcGVuX2NoYW5u
-ZWxzIChlbl9tYWluLmMpIHVzZXMga3Z6YWxsb2MuIEFsdGhvdWdoIA0KdGhlIHN0cnVjdCBpcyBj
-dXJyZW50bHkgc21hbGxlciB0aGFuIGEgcGFnZSBhbnl3YXksIGFuZCB0aGVyZSBzaG91bGQgYmUg
-DQpubyBkaWZmZXJlbmNlIGluIGJlaGF2aW9yIG5vdywgSSBzdWdnZXN0IHVzaW5nIHRoZSBzYW1l
-IGFsbG9jIGZ1bmN0aW9uIA0KdG8ga2VlcCBjb2RlIHVuaWZvcm0uDQoNCj4gKwlpZiAoIWNwYXJh
-bSkNCj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ICAgDQo+IC0JZXJyID0gbWx4NWVfb3Blbl9jcShj
-LCBwYXJhbXMtPnJ4X2NxX21vZGVyYXRpb24sICZjcGFyYW0ucnhfY3EsICZjLT54c2tycS5jcSk7
-DQo+ICsJbWx4NWVfYnVpbGRfeHNrX2NwYXJhbShwcml2LCBwYXJhbXMsIHhzaywgY3BhcmFtKTsN
-Cj4gKw0KPiArCWVyciA9IG1seDVlX29wZW5fY3EoYywgcGFyYW1zLT5yeF9jcV9tb2RlcmF0aW9u
-LCAmY3BhcmFtLT5yeF9jcSwgJmMtPnhza3JxLmNxKTsNCj4gICAJaWYgKHVubGlrZWx5KGVycikp
-DQo+IC0JCXJldHVybiBlcnI7DQo+ICsJCWdvdG8gZXJyX2tmcmVlX2NwYXJhbTsNCj4gICANCj4g
-LQllcnIgPSBtbHg1ZV9vcGVuX3JxKGMsIHBhcmFtcywgJmNwYXJhbS5ycSwgeHNrLCB1bWVtLCAm
-Yy0+eHNrcnEpOw0KPiArCWVyciA9IG1seDVlX29wZW5fcnEoYywgcGFyYW1zLCAmY3BhcmFtLT5y
-cSwgeHNrLCB1bWVtLCAmYy0+eHNrcnEpOw0KPiAgIAlpZiAodW5saWtlbHkoZXJyKSkNCj4gICAJ
-CWdvdG8gZXJyX2Nsb3NlX3J4X2NxOw0KPiAgIA0KPiAtCWVyciA9IG1seDVlX29wZW5fY3EoYywg
-cGFyYW1zLT50eF9jcV9tb2RlcmF0aW9uLCAmY3BhcmFtLnR4X2NxLCAmYy0+eHNrc3EuY3EpOw0K
-PiArCWVyciA9IG1seDVlX29wZW5fY3EoYywgcGFyYW1zLT50eF9jcV9tb2RlcmF0aW9uLCAmY3Bh
-cmFtLT50eF9jcSwgJmMtPnhza3NxLmNxKTsNCj4gICAJaWYgKHVubGlrZWx5KGVycikpDQo+ICAg
-CQlnb3RvIGVycl9jbG9zZV9ycTsNCj4gICANCj4gQEAgLTg3LDE4ICs5MSwxOCBAQCBpbnQgbWx4
-NWVfb3Blbl94c2soc3RydWN0IG1seDVlX3ByaXYgKnByaXYsIHN0cnVjdCBtbHg1ZV9wYXJhbXMg
-KnBhcmFtcywNCj4gICAJICogaXMgZGlzYWJsZWQgYW5kIHRoZW4gcmVlbmFibGVkLCBidXQgdGhl
-IFNRIGNvbnRpbnVlcyByZWNlaXZpbmcgQ1FFcw0KPiAgIAkgKiBmcm9tIHRoZSBvbGQgVU1FTS4N
-Cj4gICAJICovDQo+IC0JZXJyID0gbWx4NWVfb3Blbl94ZHBzcShjLCBwYXJhbXMsICZjcGFyYW0u
-eGRwX3NxLCB1bWVtLCAmYy0+eHNrc3EsIHRydWUpOw0KPiArCWVyciA9IG1seDVlX29wZW5feGRw
-c3EoYywgcGFyYW1zLCAmY3BhcmFtLT54ZHBfc3EsIHVtZW0sICZjLT54c2tzcSwgdHJ1ZSk7DQo+
-ICAgCWlmICh1bmxpa2VseShlcnIpKQ0KPiAgIAkJZ290byBlcnJfY2xvc2VfdHhfY3E7DQo+ICAg
-DQo+IC0JZXJyID0gbWx4NWVfb3Blbl9jcShjLCBpY29jcV9tb2RlciwgJmNwYXJhbS5pY29zcV9j
-cSwgJmMtPnhza2ljb3NxLmNxKTsNCj4gKwllcnIgPSBtbHg1ZV9vcGVuX2NxKGMsIGljb2NxX21v
-ZGVyLCAmY3BhcmFtLT5pY29zcV9jcSwgJmMtPnhza2ljb3NxLmNxKTsNCj4gICAJaWYgKHVubGlr
-ZWx5KGVycikpDQo+ICAgCQlnb3RvIGVycl9jbG9zZV9zcTsNCj4gICANCj4gICAJLyogQ3JlYXRl
-IGEgZGVkaWNhdGVkIFNRIGZvciBwb3N0aW5nIE5PUHMgd2hlbmV2ZXIgd2UgbmVlZCBhbiBJUlEg
-dG8gYmUNCj4gICAJICogdHJpZ2dlcmVkIGFuZCBOQVBJIHRvIGJlIGNhbGxlZCBvbiB0aGUgY29y
-cmVjdCBDUFUuDQo+ICAgCSAqLw0KPiAtCWVyciA9IG1seDVlX29wZW5faWNvc3EoYywgcGFyYW1z
-LCAmY3BhcmFtLmljb3NxLCAmYy0+eHNraWNvc3EpOw0KPiArCWVyciA9IG1seDVlX29wZW5faWNv
-c3EoYywgcGFyYW1zLCAmY3BhcmFtLT5pY29zcSwgJmMtPnhza2ljb3NxKTsNCj4gICAJaWYgKHVu
-bGlrZWx5KGVycikpDQo+ICAgCQlnb3RvIGVycl9jbG9zZV9pY29jcTsNCj4gICANCg0KSGVyZSBp
-cyBrZnJlZSBtaXNzaW5nLiBJdCdzIGEgbWVtb3J5IGxlYWsgaW4gdGhlIGdvb2QgcGF0aC4NCg0K
-VGhhbmtzIQ0KDQo+IEBAIC0xMjMsNiArMTI3LDkgQEAgaW50IG1seDVlX29wZW5feHNrKHN0cnVj
-dCBtbHg1ZV9wcml2ICpwcml2LCBzdHJ1Y3QgbWx4NWVfcGFyYW1zICpwYXJhbXMsDQo+ICAgZXJy
-X2Nsb3NlX3J4X2NxOg0KPiAgIAltbHg1ZV9jbG9zZV9jcSgmYy0+eHNrcnEuY3EpOw0KPiAgIA0K
-PiArZXJyX2tmcmVlX2NwYXJhbToNCj4gKwlrZnJlZShjcGFyYW0pOw0KPiArDQo+ICAgCXJldHVy
-biBlcnI7DQo+ICAgfQ0KPiAgIA0KPiANCg0K
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    e5a3e259 Merge branch 'bpf-tcp-rtt-hook'
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14190c2da00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dd16b8dc9d0d210c
+dashboard link: https://syzkaller.appspot.com/bug?extid=4da3ff23081bafe74fc2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1409ce0da00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17226a0da00000
+
+The bug was bisected to:
+
+commit b53119f13a04879c3bf502828d99d13726639ead
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Mar 7 01:22:54 2019 +0000
+
+     pin iocb through aio.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11427b8ba00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13427b8ba00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15427b8ba00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com
+Fixes: b53119f13a04 ("pin iocb through aio.")
+
+------------[ cut here ]------------
+verifier backtracking bug
+WARNING: CPU: 0 PID: 9104 at kernel/bpf/verifier.c:1785  
+__mark_chain_precision+0x19bb/0x1ee0 kernel/bpf/verifier.c:1785
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9104 Comm: syz-executor284 Not tainted 5.2.0-rc5+ #34
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:__mark_chain_precision+0x19bb/0x1ee0 kernel/bpf/verifier.c:1785
+Code: 08 31 ff 89 de e8 95 ba f2 ff 84 db 0f 85 ce fe ff ff e8 48 b9 f2 ff  
+48 c7 c7 e0 44 91 87 c6 05 1c 15 1f 08 01 e8 03 f1 c4 ff <0f> 0b 41 bc f2  
+ff ff ff e9 af fe ff ff e8 d3 3c 2c 00 e9 c2 e7 ff
+RSP: 0018:ffff88809f04f380 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ad926 RDI: ffffed1013e09e62
+RBP: ffff88809f04f4d0 R08: ffff88809987a540 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88809af0c280 R14: 0000000000000001 R15: ffff88809f65cb00
+  mark_chain_precision kernel/bpf/verifier.c:1822 [inline]
+  check_cond_jmp_op+0xcd8/0x3c30 kernel/bpf/verifier.c:5842
+  do_check+0x60f4/0x8a20 kernel/bpf/verifier.c:7782
+  bpf_check+0x6f99/0x9950 kernel/bpf/verifier.c:9293
+  bpf_prog_load+0xe68/0x1670 kernel/bpf/syscall.c:1698
+  __do_sys_bpf+0xa20/0x42d0 kernel/bpf/syscall.c:2849
+  __se_sys_bpf kernel/bpf/syscall.c:2808 [inline]
+  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2808
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440369
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffca85a2fa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440369
+RDX: 0000000000000048 RSI: 0000000020000200 RDI: 0000000000000005
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401bf0
+R13: 0000000000401c80 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
