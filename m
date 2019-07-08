@@ -2,89 +2,63 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AECD862AF2
-	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 23:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B90B062AFE
+	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Jul 2019 23:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732287AbfGHVZ6 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 17:25:58 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33973 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729474AbfGHVZ5 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 17:25:57 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t8so14504149qkt.1;
-        Mon, 08 Jul 2019 14:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
-        b=rWWOnVX/gGIKyfUtaGpmot+HNvA3cWtH0kVO0h4nl6tXbcIquARDq4K26S34Z+yLSt
-         KEymIIbwKOsR2MSPrTptFunTkS886ieLQW8eLX4xHg4NImEfiwT9bZ/2qohqwFF/l2Lr
-         ayJvIuw6+8NpOTb6k0WbGIy/YCs/BHvl2cDlDYf9A74AylUKTwivq2or6XJpYn4UHJih
-         6qf5VXPpM9Iy8rffFKoXRWB04wHiXVNE8HC5XIlzb7ovwrP7Gjc6Sce3Z50iit7CDHVu
-         rRCyn8hXPB7LGtdY/BUIJHdfKtA31poSQtFyzaDW81y0biywXp/wAE1SLCQqu4gP9Pku
-         7Rig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YdeqtZytdEyqoIG26b8RfEFGIJ1HXoW9pGi40CoP3hY=;
-        b=scBuc1+xmHvWbbDJ/BDG6a6c/dmzdepPZHhaOXoF/t9WfI62d3bbO0VpL9y+YdNZQl
-         d0z9nYMCqWPHQ361TDps0izE53nytbLPY2gwjYZXkidVhhl8q+WM/LHwNNhbHg87r6VK
-         uQdC+GsELLpw7FpMaie8hpRSirYFT/BIN4x5ZPBaHCK0zL6zE2Kenwh2I/qwA3frdkZz
-         gwK977gmvn+4BRSNC/GfyZL/Lkgfv0d8JdLRZtV1Nsz29bzKgOzVqC6aAWj05H8TKyvP
-         QNEkBhMl6iZkJU2oa7zjnOo4D+cW9AHFCjEh8YXf2VilSARGz+C/QyGn6ZP6nJm6A5nO
-         GJxA==
-X-Gm-Message-State: APjAAAUZid8i28aEvFuSF7obdHZYDWF2BOE+5CQpf9Z4vkkTOOMRE1jW
-        9IkcYNa7g+loTTAlZkj9ZRH1vQ54hMf01Rx6dtY=
-X-Google-Smtp-Source: APXvYqwulGSqlqNeD6kh5CTROsEPVi3dGZ1cSE/R5NXoTMe6Mr8ScvM8gHkHmsWbgHbuNefYNtUh9BpV/qdomz9XXbw=
-X-Received: by 2002:ae9:de05:: with SMTP id s5mr13692127qkf.184.1562621156638;
- Mon, 08 Jul 2019 14:25:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190704142509eucas1p268eb9ca87bcc0bffb60891f88f3f6642@eucas1p2.samsung.com>
- <20190704142503.23501-1-i.maximets@samsung.com> <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
-In-Reply-To: <CAJ+HfNi2EdLwtq9SfccZBymDMv_cW5+vxB-JLqxyvYS_TG3ScA@mail.gmail.com>
-From:   William Tu <u9012063@gmail.com>
-Date:   Mon, 8 Jul 2019 14:25:20 -0700
-Message-ID: <CALDO+SYaR+txmTq_xhaw1cD4v7svtE7BD3mOsBx-X=MEVeZzzA@mail.gmail.com>
-Subject: Re: [PATCH bpf] xdp: fix possible cq entry leak
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     Ilya Maximets <i.maximets@samsung.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1730140AbfGHVbs (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Jul 2019 17:31:48 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58716 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbfGHVbs (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 17:31:48 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD5E11340AD4F;
+        Mon,  8 Jul 2019 14:31:47 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 14:31:47 -0700 (PDT)
+Message-Id: <20190708.143147.1283579050790858840.davem@davemloft.net>
+To:     zeffron@riotgames.com
+Cc:     brouer@redhat.com, xdp-newbies@vger.kernel.org
+Subject: Re: Should we remove xdp-newbies from kernel patch CC-list?
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAC1LvL2Rx4+9QCDPPFYhi3kZj_srEcfw9n6ODAM2yC5jgZvE5A@mail.gmail.com>
+References: <20190704161900.43cec3a7@carbon>
+        <CAC1LvL2Rx4+9QCDPPFYhi3kZj_srEcfw9n6ODAM2yC5jgZvE5A@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 08 Jul 2019 14:31:47 -0700 (PDT)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 11:49 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
-m> wrote:
->
-> On Thu, 4 Jul 2019 at 16:25, Ilya Maximets <i.maximets@samsung.com> wrote=
-:
-> >
-> > Completion queue address reservation could not be undone.
-> > In case of bad 'queue_id' or skb allocation failure, reserved entry
-> > will be leaked reducing the total capacity of completion queue.
-> >
-> > Fix that by moving reservation to the point where failure is not
-> > possible. Additionally, 'queue_id' checking moved out from the loop
-> > since there is no point to check it there.
-> >
->
-> Good catch, Ilya! Thanks for the patch!
->
-> Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
->
-Thanks
-Tested-by: William Tu <u9012063@gmail.com>
+From: Zvi Effron <zeffron@riotgames.com>
+Date: Mon, 8 Jul 2019 12:28:52 -0500
+
+> On Thu, Jul 4, 2019 at 9:19 AM Jesper Dangaard Brouer <brouer@redhat.com> wrote:
+>>
+>>
+>> Question to people subscribed to xdp-newbies@vger.kernel.org mailing
+>> list.  As you likely have noticed, patches and kbuild-bot is sending
+>> XDP related kernel stuff to this mailing list.  This is caused by being
+>> listed in the kernel MAINTAINERS file[1].
+>>
+> 
+> I cast my vote for both. Having the named newbies channel send many,
+> many messages with kernel patches is intimidating to new people (and
+> somewhat spammy) which makes it harder to convince my team to sign up
+> for the list. At the same time, I've appreciated being able to see
+> what's happening on patches as well as questions and discussions.
+> 
+> Would it make sense/be possible to create a mailing list for the
+> maintainers file and discussions on patches that is separate from the
+> newbies channel? I have to say, the newbies channel is the only newbie
+> friendly kernel mailing list I've seen, and it's a big part of why I
+> pushed for my company to use XDP over DPDK.
+
+The bpf and netdev lists act as incubators for XDP discussion, so I don't
+know if it's worth making an xdp-devel or something like that.
