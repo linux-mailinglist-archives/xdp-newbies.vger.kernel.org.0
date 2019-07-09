@@ -2,65 +2,70 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD9FA62CF5
-	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 02:14:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8971D62F0B
+	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 05:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfGIANb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 20:13:31 -0400
-Received: from www62.your-server.de ([213.133.104.62]:50184 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfGIANb (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 20:13:31 -0400
-Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hkdl5-0007Yh-3I; Tue, 09 Jul 2019 02:13:23 +0200
-Received: from [178.193.45.231] (helo=linux.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hkdl4-00029D-QR; Tue, 09 Jul 2019 02:13:22 +0200
-Subject: Re: [PATCH bpf v2] xdp: fix race on generic receive path
-To:     Ilya Maximets <i.maximets@samsung.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>
-References: <CGME20190703120922eucas1p2d97e3b994425ecdd2dadd13744ac2a77@eucas1p2.samsung.com>
- <20190703120916.19973-1-i.maximets@samsung.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <1ac9c018-09c0-1123-ed97-b230a2117533@iogearbox.net>
-Date:   Tue, 9 Jul 2019 02:13:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        id S1727255AbfGIDtU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Jul 2019 23:49:20 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33303 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfGIDtU (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 23:49:20 -0400
+Received: by mail-qk1-f196.google.com with SMTP id r6so15054392qkc.0;
+        Mon, 08 Jul 2019 20:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KskYFE/Ug0iwkacs3vqwqivOLXYCEi71ZnQKnzUX30M=;
+        b=i/lSK/sGsCjIv7NK4j211T9EVDJQrekIqOlLKS6Af+/tyS/4Ah6LC0pzIwcthHOpeK
+         kRaiXZb5zhaAM2qbBCPR5S8atFRKJW3nKToNFaCoPnneeLk0+lcohoqx9vFvpKq8+QJR
+         +K4nhp3FsPuapZykCCpDfGKFEi0qeZUii3AIeq62G7E9rSUEnKXJ2gJlj83ueS/igMWc
+         KsUdHwFWPFkdpFoAa7+0+dsj4UT8YesXMUjlCBEVVbnFtnsv6XOx24Spgz+BW/yb863o
+         QJ1r//PQeNA2NKa/kpvhDBs3E6CWZe7QGnU5tNSSPX1SkzqXvXebS4+WH9W/G0uOivf/
+         76ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KskYFE/Ug0iwkacs3vqwqivOLXYCEi71ZnQKnzUX30M=;
+        b=qZ7Tu7y2MYBXuNzQiF+bAfpeUx1dMesYimOwBD8mfWwVLMzFl9BRmwLdWhxa5K5oTT
+         +wCYeAbtnIKfwMeKHqBD3bOumTBFU1AvgHHnmmmJb0oR8XV7wMZxfETEDU+IarNiqSSq
+         kNLCyeLoM3FPivaJVlYn9JPon/OhSQxOS0m61hrQXEQIkENZPbkrmLLFsPisBYrB1u4P
+         ViwfezMYhCWQPv/ucXYRpSJFWcwxIwoHuIZmZcsoDTKCvfNNrhyCYhLnYkfEZ/s4Wj7f
+         i3cuT1vMBs2OoNIjeHymnbjInqAs7qHmOGarYOIdu3z2MTxZ3EbAKDbusJwetUpIDKoU
+         ppLA==
+X-Gm-Message-State: APjAAAU9I500JMcjhXUW3A9rdqy98JrBLniBANAjwnqpETovAcBjbmiB
+        O0KXfKly3a/oQ6kQ5B2w22y+7fw1CEhPxTjjjGw=
+X-Google-Smtp-Source: APXvYqyHEPt11qvDNytVkWwFfFQJWbcpFr7QvnTFs5hkJOjlcIKBKaKfbxKCFFuklVb6b7rIZsFc549dQgGP5eJ6qiM=
+X-Received: by 2002:a37:660d:: with SMTP id a13mr17326893qkc.36.1562644159307;
+ Mon, 08 Jul 2019 20:49:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190703120916.19973-1-i.maximets@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25504/Mon Jul  8 10:05:57 2019)
+References: <000000000000a5d738058d2d1396@google.com>
+In-Reply-To: <000000000000a5d738058d2d1396@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 8 Jul 2019 20:49:08 -0700
+Message-ID: <CAEf4BzZfqnFZRbDVo1-=Vph=NpOm1g=wGuV_O5Cniuxj9f9CsQ@mail.gmail.com>
+Subject: Re: WARNING in __mark_chain_precision
+To:     syzbot <syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bcrl@kvack.org,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, xdp-newbies@vger.kernel.org,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 07/03/2019 02:09 PM, Ilya Maximets wrote:
-> Unlike driver mode, generic xdp receive could be triggered
-> by different threads on different CPU cores at the same time
-> leading to the fill and rx queue breakage. For example, this
-> could happen while sending packets from two processes to the
-> first interface of veth pair while the second part of it is
-> open with AF_XDP socket.
-> 
-> Need to take a lock for each generic receive to avoid race.
-> 
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-
-Applied, thanks!
+#syz test: https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
