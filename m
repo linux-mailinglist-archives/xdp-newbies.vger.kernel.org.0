@@ -2,103 +2,78 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 179A262F81
-	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 06:25:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE69E63B78
+	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 20:55:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbfGIEZB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 9 Jul 2019 00:25:01 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37599 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfGIEZB (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Jul 2019 00:25:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id v3so15123217ios.4
-        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 21:25:01 -0700 (PDT)
+        id S1729371AbfGISza (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 9 Jul 2019 14:55:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43270 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfGISza (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Jul 2019 14:55:30 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so16813029qka.10;
+        Tue, 09 Jul 2019 11:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f9RwapZGzyFkNT+dfGo5wVJbdzZuRB3mHC5GSj9LmJ8=;
+        b=BmHqjFAfGGPLYECr2mLWMITHeNaZHCOuICzgPdidHDiuAYl1DuB9BIHuF8L9YXZZBN
+         32fRp3SSz8YfQ9ebbRhi1MUTYnu1W5q4U5padrZzDoWDxjK6w4+GHDvFUEwCbWXuKhqQ
+         V7H7zH65QGE6QRGOlLq4y3gwm6gwv1/GmzVS2ZP7A0B+6NObpJq/lCNkAoMvopXqhkZ4
+         +hUhPTWV+2R/amH37Qw08ey3hykfYDMrk12/z8xg6aea9RvC6oPbm/ESUCy8qmGl44pc
+         DPUY9/SJ4EOJ+RqTBxKQnK7lqFCMmjI8al7q6nuhAW9Tq7Wo/bHQ1F97J72/Ae8WDwOt
+         gDqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ThTKrBZsQ1JlWFlPRVe4RXWJ3j4uyiYja7ipCGiZOCQ=;
-        b=b8BzZ+ByGYQHcqEf/gQqJ5SJo7vZcxpsS3vtKStlhdoVkmY7a1AgKfoLZwKcfEBSBd
-         YK5nXMC10SwtJa/hQqQRkFIqcAhhNkeb3ZQoQZBOvr7hh1uxgi1xxJgOK7r3uFRogBdL
-         x2AhuO9asxxPy3EUAD2+zoTZwgByYA0QNgf2fz5/Zb8aIb2g/KNzgQmsoHmlqf4vHB7c
-         MuOMqa47QNpfMnKGRRbAxbvHlENi+X2klL0hdKeuaCrCniuzvAB3HbV2odsUuBP/YXmg
-         AueVVfCz7fnSP6SFIjxc+s3MjsKCe3fZTpeAGuPElVtAPMjUr3b1B4oHPKUJa//AlxOi
-         CnGw==
-X-Gm-Message-State: APjAAAWudK3YO40P1x40HUA/wt8A/v2AVP5jgvrsy51xEQqLaxGd2hL1
-        eY2OyhuGDqUX3Mf3hjmNPiSWVgxHU6sfR/S2Evei3ZwhfRKv
-X-Google-Smtp-Source: APXvYqym5DaYVguOnx/vYC+8fr3X5IKtdXXfy6a1e9Ff48wtiCtsWW98PTt6iX6sFsLg9KiiCV1ve2K7VjNJJcGzMyGUA2cQGoZr
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f9RwapZGzyFkNT+dfGo5wVJbdzZuRB3mHC5GSj9LmJ8=;
+        b=lqg16nVC/bz+2PTeyO8sWBlLajeDTXNwHulKb9uaxWyriUQHbLGSR6TTMR4xKSFM6N
+         XkYtVmjluqmr4wrAHHMvQt6S31Is9HLKRxe0UbNeO83bc1+EzvqK3weYN7XvCw8FMqgo
+         hNxf50/jAfuNPHS3Tg4QuprTAyA0U9+k6bleFgTB2X24OwxMOx9xoGFHtfC+WLWN5IfS
+         Zo9hy72V3YDX1JJ835wQ4nUMC134i2fBgi1C+4SHMQ5Ip5U0o5iEzT2tsZC2GqrRPQ7w
+         2ZZ0bOC5bfgZRoDK88fy2zHZfXy/mN42FH5aJNTZKY5Fxqlgox/TJ13cikagl5Dy3goO
+         szwQ==
+X-Gm-Message-State: APjAAAV+sMML6jXhbFyoaJr+a2WSwdRI7bgEMrl1uCQycjXDEdh6VT1Z
+        asH9G1kzYcd+xRhPr77hWgiM5T4wWJ0QR0lsCPI=
+X-Google-Smtp-Source: APXvYqy2K48JPuWKCtWjDTYwAWXMIBHAHIA2ef38g1U6AO2efdVySfxR3FLKDJCS+JpAxv2GrF7QjA5Xj7T/w8AyjhQ=
+X-Received: by 2002:a37:660d:: with SMTP id a13mr20589208qkc.36.1562698528762;
+ Tue, 09 Jul 2019 11:55:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:641a:: with SMTP id t26mr916082iog.3.1562646300671;
- Mon, 08 Jul 2019 21:25:00 -0700 (PDT)
-Date:   Mon, 08 Jul 2019 21:25:00 -0700
-In-Reply-To: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a94981058d37f1a4@google.com>
+References: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
+ <000000000000a94981058d37f1a4@google.com>
+In-Reply-To: <000000000000a94981058d37f1a4@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 9 Jul 2019 11:55:17 -0700
+Message-ID: <CAEf4BzYTGuXgN+vNJEoMbH_GFAVnSsBvq_YhvoFOeGG5Y+N_ug@mail.gmail.com>
 Subject: Re: WARNING in mark_chain_precision
-From:   syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
-To:     aaron.f.brown@intel.com, andrii.nakryiko@gmail.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, intel-wired-lan@lists.osuosl.org,
-        jakub.kicinski@netronome.com, jeffrey.t.kirsher@intel.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        sasha.neftin@intel.com, songliubraving@fb.com,
+To:     syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
+Cc:     aaron.f.brown@intel.com, Alexei Starovoitov <ast@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        jeffrey.t.kirsher@intel.com,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, sasha.neftin@intel.com,
+        Song Liu <songliubraving@fb.com>,
         syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
-        yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello,
+Original reproducer is almost identical to the one that is fixed by
+https://patchwork.ozlabs.org/patch/1129479/.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-WARNING in bpf_jit_free
+bpf_prog_free_deferred bug that's undeterministically exposed after
+this fix seems to be the cause of a bunch of other bug reports and is
+not related to verifier precision tracking.
 
-WARNING: CPU: 0 PID: 9077 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9077 Comm: kworker/0:3 Not tainted 5.2.0-rc6+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events bpf_prog_free_deferred
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x744 kernel/panic.c:219
-  __warn.cold+0x20/0x4d kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:bpf_jit_free+0x157/0x1b0
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00  
-00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 09 7f f4 ff <0f> 0b e9 f9 fe  
-ff ff e8 2d 02 2e 00 e9 d9 fe ff ff 48 89 7d e0 e8
-RSP: 0018:ffff888084affcb0 EFLAGS: 00010293
-RAX: ffff88808a622100 RBX: ffff88809639d580 RCX: ffffffff817b0b0d
-RDX: 0000000000000000 RSI: ffffffff817c4557 RDI: ffff88809639d5f0
-RBP: ffff888084affcd0 R08: 1ffffffff150daa8 R09: fffffbfff150daa9
-R10: fffffbfff150daa8 R11: ffffffff8a86d547 R12: ffffc90001921000
-R13: ffff88809639d5e8 R14: ffff8880a0589800 R15: ffff8880ae834d40
-  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1982
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
-Tested on:
-
-commit:         b9321614 bpf: fix precision bit propagation for BPF_ST ins..
-git tree:       https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
-console output: https://syzkaller.appspot.com/x/log.txt?x=112f0dfda00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6bb3e6e7997c14f9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
+#syz dup: WARNING in __mark_chain_precision
