@@ -2,70 +2,68 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6DD62F0F
-	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 05:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE1A62F26
+	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 06:08:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfGIDti (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 8 Jul 2019 23:49:38 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44748 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfGIDth (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Jul 2019 23:49:37 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d79so10731996qke.11;
-        Mon, 08 Jul 2019 20:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KskYFE/Ug0iwkacs3vqwqivOLXYCEi71ZnQKnzUX30M=;
-        b=cIPz3WCgEnb0VMxGUsvqL96sOL9BnY0u5UhIhfuMiadfYLJnB528+qruGwr0ZaHgQ2
-         Qe+wyJ78woji2ZfoTBDiEgz/JCwRuzcLC3qAqOqVYrPG+nMgSYRZjX8RLqYJ6bFYyjfw
-         dA54FcvAlWqoRgA/v26irblTCRQK/q6PlR3rOM6o66b9KrkN2qNfjduUEQLkoDQL6T/Z
-         BHc3ZV3jjRVZd+i0/hF49PLAaTib/RsC00xGy/hZ5O+Bnd5oUgYCI8aDCkYzNbuQYUdI
-         lOLNsLdzBBpwi712iaaq3cqH0NWj7cgrjD+Ec7U4lShSWfBE+ZS7SXvXt/Lz+PwBi65p
-         dJWQ==
+        id S1726018AbfGIEIB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 9 Jul 2019 00:08:01 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35696 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfGIEIB (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Jul 2019 00:08:01 -0400
+Received: by mail-io1-f69.google.com with SMTP id w17so21597017iom.2
+        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 21:08:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KskYFE/Ug0iwkacs3vqwqivOLXYCEi71ZnQKnzUX30M=;
-        b=BDLjCxgtOtym8FlqLx2YRZktLmnWDle4KqMOYUXxsSuu2elONAORodgvrgOM8oB0oz
-         Z8fR1WOuIxV9ipYSIXkpVJghYJB2lFHyHPQAxFIc5GOnytO7alEqCg6Z3pLqUzFtxZuT
-         bb5TCmRkE6U81HA8fuq3hQ+xJFqdnVPXdS2CEYvdmGXD4Sa8mR/QD9j5AoPU9D86eoKM
-         reBfKsiOWa3TDLAsdlWxQOZxk30BBJGcrS4vZ0pGRf+o/pS7ePnEWuvVBWDhVncOQBRd
-         Q1kWlcQ0m+hfm2fjegGgLbGD9q6bYJJ/eH4/ahf9ZDBhrYL6Bo7m3pnTyhyqSSHoWDGS
-         lzDg==
-X-Gm-Message-State: APjAAAWdYs33t5zOohULLq/Qb5wkNLnXj8pl1LUjLTLYWO8CMJzSYsxo
-        0o2PqgcHzIt3yuQ5Aepolh+rNNRmwNVZsZM1Pvw=
-X-Google-Smtp-Source: APXvYqzjbKB8azSowHGtx9AS51EbPcJglyrtLqksfB1ogI0ZeH6D2CKl94ZNbdBM9ZNpiQydQYeVO7NEm1xV0pXMIfk=
-X-Received: by 2002:a37:bf42:: with SMTP id p63mr17248085qkf.437.1562644176501;
- Mon, 08 Jul 2019 20:49:36 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Tojd49K4TWJ2ahCpfLjRNApjFre4XIEC+uxSBIyo+38=;
+        b=E6AXn3D6URKNVREe5oBiO8lkba2Umx9FK+2VDPVcKjZSQALbUesuff8Z4WEJcRMhxG
+         Voy6+8V46GJ/ScVH/CFL3nH/m8YjVMj1BlcKPHLCni1Nnrb5jfng/eUilDxxJx/7STqr
+         QZWcBkymg9lbdYeIZY0wAy8FhboeSJOU00k0lGyMbP2BMIf7B7ytOGtW3+owoQ9YRvC2
+         S9XGN/CsIbJFcjf3FQBVUhgHknMLJozeG9BnBTq2LxTYl3Ndko050arerQgviJ13ZUbo
+         dbcbu8/ODeo0XABcK2GO9ssqcVfutrp8PLjEgtFy6bh5oT81ITr0gottvbbAncaljG3L
+         thPw==
+X-Gm-Message-State: APjAAAX/nGR/wbjQGblER0TiLauMJIDGhJSmg8jRJn5VRFkW8kcoc2O4
+        A1fEoExGDn+9ZZx368OJ/KPokecKfCqxAssd5n9VRdZerFnO
+X-Google-Smtp-Source: APXvYqxm/mXCoJ5Hk6y8vR6v2IS4oj/n6X0W9JquEY5V/Gz6bIh3qzQKuPRQYew4ljT/GIOxZ10ZAdEqTPIVIKbtLtZFlys15uqe
 MIME-Version: 1.0
-References: <000000000000b13e1d058d2da276@google.com>
-In-Reply-To: <000000000000b13e1d058d2da276@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 8 Jul 2019 20:49:25 -0700
-Message-ID: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
-Subject: Re: WARNING in mark_chain_precision
-To:     syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
-Cc:     aaron.f.brown@intel.com, Alexei Starovoitov <ast@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        jeffrey.t.kirsher@intel.com,
-        john fastabend <john.fastabend@gmail.com>,
-        Martin Lau <kafai@fb.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, sasha.neftin@intel.com,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:cf17:: with SMTP id o23mr791127ioa.176.1562645280222;
+ Mon, 08 Jul 2019 21:08:00 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 21:08:00 -0700
+In-Reply-To: <CAEf4BzZfqnFZRbDVo1-=Vph=NpOm1g=wGuV_O5Cniuxj9f9CsQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d676f2058d37b4a9@google.com>
+Subject: Re: WARNING in __mark_chain_precision
+From:   syzbot <syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com>
+To:     andrii.nakryiko@gmail.com, ast@kernel.org, bcrl@kvack.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, kafai@fb.com, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-#syz test: https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
+Hello,
+
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
+
+Reported-and-tested-by:  
+syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         b9321614 bpf: fix precision bit propagation for BPF_ST ins..
+git tree:       https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6bb3e6e7997c14f9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Note: testing is done by a robot and is best-effort only.
