@@ -2,49 +2,50 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE1A62F26
-	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 06:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 179A262F81
+	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Jul 2019 06:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726018AbfGIEIB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 9 Jul 2019 00:08:01 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:35696 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfGIEIB (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Jul 2019 00:08:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id w17so21597017iom.2
-        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 21:08:00 -0700 (PDT)
+        id S1726043AbfGIEZB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 9 Jul 2019 00:25:01 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37599 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfGIEZB (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Jul 2019 00:25:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id v3so15123217ios.4
+        for <xdp-newbies@vger.kernel.org>; Mon, 08 Jul 2019 21:25:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=Tojd49K4TWJ2ahCpfLjRNApjFre4XIEC+uxSBIyo+38=;
-        b=E6AXn3D6URKNVREe5oBiO8lkba2Umx9FK+2VDPVcKjZSQALbUesuff8Z4WEJcRMhxG
-         Voy6+8V46GJ/ScVH/CFL3nH/m8YjVMj1BlcKPHLCni1Nnrb5jfng/eUilDxxJx/7STqr
-         QZWcBkymg9lbdYeIZY0wAy8FhboeSJOU00k0lGyMbP2BMIf7B7ytOGtW3+owoQ9YRvC2
-         S9XGN/CsIbJFcjf3FQBVUhgHknMLJozeG9BnBTq2LxTYl3Ndko050arerQgviJ13ZUbo
-         dbcbu8/ODeo0XABcK2GO9ssqcVfutrp8PLjEgtFy6bh5oT81ITr0gottvbbAncaljG3L
-         thPw==
-X-Gm-Message-State: APjAAAX/nGR/wbjQGblER0TiLauMJIDGhJSmg8jRJn5VRFkW8kcoc2O4
-        A1fEoExGDn+9ZZx368OJ/KPokecKfCqxAssd5n9VRdZerFnO
-X-Google-Smtp-Source: APXvYqxm/mXCoJ5Hk6y8vR6v2IS4oj/n6X0W9JquEY5V/Gz6bIh3qzQKuPRQYew4ljT/GIOxZ10ZAdEqTPIVIKbtLtZFlys15uqe
+        bh=ThTKrBZsQ1JlWFlPRVe4RXWJ3j4uyiYja7ipCGiZOCQ=;
+        b=b8BzZ+ByGYQHcqEf/gQqJ5SJo7vZcxpsS3vtKStlhdoVkmY7a1AgKfoLZwKcfEBSBd
+         YK5nXMC10SwtJa/hQqQRkFIqcAhhNkeb3ZQoQZBOvr7hh1uxgi1xxJgOK7r3uFRogBdL
+         x2AhuO9asxxPy3EUAD2+zoTZwgByYA0QNgf2fz5/Zb8aIb2g/KNzgQmsoHmlqf4vHB7c
+         MuOMqa47QNpfMnKGRRbAxbvHlENi+X2klL0hdKeuaCrCniuzvAB3HbV2odsUuBP/YXmg
+         AueVVfCz7fnSP6SFIjxc+s3MjsKCe3fZTpeAGuPElVtAPMjUr3b1B4oHPKUJa//AlxOi
+         CnGw==
+X-Gm-Message-State: APjAAAWudK3YO40P1x40HUA/wt8A/v2AVP5jgvrsy51xEQqLaxGd2hL1
+        eY2OyhuGDqUX3Mf3hjmNPiSWVgxHU6sfR/S2Evei3ZwhfRKv
+X-Google-Smtp-Source: APXvYqym5DaYVguOnx/vYC+8fr3X5IKtdXXfy6a1e9Ff48wtiCtsWW98PTt6iX6sFsLg9KiiCV1ve2K7VjNJJcGzMyGUA2cQGoZr
 MIME-Version: 1.0
-X-Received: by 2002:a6b:cf17:: with SMTP id o23mr791127ioa.176.1562645280222;
- Mon, 08 Jul 2019 21:08:00 -0700 (PDT)
-Date:   Mon, 08 Jul 2019 21:08:00 -0700
-In-Reply-To: <CAEf4BzZfqnFZRbDVo1-=Vph=NpOm1g=wGuV_O5Cniuxj9f9CsQ@mail.gmail.com>
+X-Received: by 2002:a6b:641a:: with SMTP id t26mr916082iog.3.1562646300671;
+ Mon, 08 Jul 2019 21:25:00 -0700 (PDT)
+Date:   Mon, 08 Jul 2019 21:25:00 -0700
+In-Reply-To: <CAEf4BzaUEWwGL3k0VeiFYFqyJexQU9cDZWN69jSDpBjP1ZEcpw@mail.gmail.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d676f2058d37b4a9@google.com>
-Subject: Re: WARNING in __mark_chain_precision
-From:   syzbot <syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com>
-To:     andrii.nakryiko@gmail.com, ast@kernel.org, bcrl@kvack.org,
+Message-ID: <000000000000a94981058d37f1a4@google.com>
+Subject: Re: WARNING in mark_chain_precision
+From:   syzbot <syzbot+f21251a7468cd46efc60@syzkaller.appspotmail.com>
+To:     aaron.f.brown@intel.com, andrii.nakryiko@gmail.com, ast@kernel.org,
         bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, xdp-newbies@vger.kernel.org, yhs@fb.com
+        hawk@kernel.org, intel-wired-lan@lists.osuosl.org,
+        jakub.kicinski@netronome.com, jeffrey.t.kirsher@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        sasha.neftin@intel.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
+        yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
@@ -53,17 +54,51 @@ X-Mailing-List: xdp-newbies@vger.kernel.org
 
 Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
+syzbot has tested the proposed patch but the reproducer still triggered  
 crash:
+WARNING in bpf_jit_free
 
-Reported-and-tested-by:  
-syzbot+4da3ff23081bafe74fc2@syzkaller.appspotmail.com
+WARNING: CPU: 0 PID: 9077 at kernel/bpf/core.c:851 bpf_jit_free+0x157/0x1b0
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9077 Comm: kworker/0:3 Not tainted 5.2.0-rc6+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events bpf_prog_free_deferred
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:bpf_jit_free+0x157/0x1b0
+Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 5d 48 b8 00 02 00 00  
+00 00 ad de 48 39 43 70 0f 84 05 ff ff ff e8 09 7f f4 ff <0f> 0b e9 f9 fe  
+ff ff e8 2d 02 2e 00 e9 d9 fe ff ff 48 89 7d e0 e8
+RSP: 0018:ffff888084affcb0 EFLAGS: 00010293
+RAX: ffff88808a622100 RBX: ffff88809639d580 RCX: ffffffff817b0b0d
+RDX: 0000000000000000 RSI: ffffffff817c4557 RDI: ffff88809639d5f0
+RBP: ffff888084affcd0 R08: 1ffffffff150daa8 R09: fffffbfff150daa9
+R10: fffffbfff150daa8 R11: ffffffff8a86d547 R12: ffffc90001921000
+R13: ffff88809639d5e8 R14: ffff8880a0589800 R15: ffff8880ae834d40
+  bpf_prog_free_deferred+0x27a/0x350 kernel/bpf/core.c:1982
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
 
 Tested on:
 
 commit:         b9321614 bpf: fix precision bit propagation for BPF_ST ins..
 git tree:       https://github.com/anakryiko/linux bpf-fix-precise-bpf_st
+console output: https://syzkaller.appspot.com/x/log.txt?x=112f0dfda00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=6bb3e6e7997c14f9
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Note: testing is done by a robot and is best-effort only.
