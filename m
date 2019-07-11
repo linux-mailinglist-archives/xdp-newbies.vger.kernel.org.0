@@ -2,197 +2,62 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D4B6660AD
-	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jul 2019 22:31:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A356B66158
+	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jul 2019 23:43:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfGKUbG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 11 Jul 2019 16:31:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41073 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbfGKUbG (ORCPT
+        id S1728538AbfGKVnN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 11 Jul 2019 17:43:13 -0400
+Received: from mail-ed1-f42.google.com ([209.85.208.42]:38673 "EHLO
+        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfGKVnN (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 11 Jul 2019 16:31:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m9so3595208pls.8
-        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jul 2019 13:31:05 -0700 (PDT)
+        Thu, 11 Jul 2019 17:43:13 -0400
+Received: by mail-ed1-f42.google.com with SMTP id r12so7323484edo.5
+        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jul 2019 14:43:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TV2jSvn5SJbiANqesUZ+all03sCywDkc0brqJHcrz/s=;
-        b=AQ3DbKxl1VudFwp2u0IRGvRKW0ik5qJpVbipJChEW6DyoxnPSNQmHAV/H5i6kL76WF
-         ZTj5PmgZHQ+Us8ylLM97QgZFpqYL8ZlRtYjJjZrJPE83dV2zmTv7ldWIQRJfPx2cgdrJ
-         91yMy5y+Fc5ZL2nQr7uABfRScoBToPqUQC+5zQJKQ5qzpUqV9gqWM9shlCUZca4vqGva
-         CIa7yvmdP/CyV25Y1szokHevNdrtgRmsVXAvYxv32I/79hY2/Z0SfgOaO9CBUQyLTWn4
-         NjQayNG+PwaHvmB7loPSmM7/mnn4YO5zAcV7znJTLoRU79XWs+p/0gZCIL9Dkd9IbTUB
-         eXEA==
+        d=riotgames.com; s=riotgames;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=DRCn8H8kLeTyMi4eunBj8o1tDca9BKTt6tZHu0klNH0=;
+        b=iHE33qCgFf/nX1pnt2acLm8l27L8l7yhKKjw7+mlvtX18ZObxW+/Q7EYRx9FsHaTIn
+         29mhWZvyitCJoGH4Y6LTbiC/RRgb1K1mtsIphwriggJUHQzj9wTfTVNvwIyp27+FUdRR
+         87Rkhv/to2Flbkh2TLcsLTy+1ZgVDfK1xRrTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TV2jSvn5SJbiANqesUZ+all03sCywDkc0brqJHcrz/s=;
-        b=JozB6nBZzYdduy2iDcDHlnuMisRcJInsJ/be/i4Gmp/6F0gVrUJFprMNMwSGpeZ0CR
-         Ddo84pexqsbnEmBJDb3YWyi4hXEl4LB+0HCGK8ZkrGVcuIenexOIykc2/71uyod6J5mQ
-         fYX25PjiWfds/sBxtPQVX7HRgQ88+SQ37IlzMQQs/CgzavqXJAqJDu4PLmrvovlW2JMj
-         GBEt9mvA6hSI0Fao4aEkcJekKO6Nkl5wylhvPyC+7ttWtYUOkg+o9FH+uvIghc9sil3r
-         jOTb2r3hN3+yrkbbwJu/yuK51269xEyXrVOQlOcODPTQzpv64b/4XTRIiptfm8qlkIXe
-         cTRQ==
-X-Gm-Message-State: APjAAAW35Awdb72rsAW34PwNJmAQXZIcEEsBl17Y5e/lQz7fi5I02m+f
-        pPkdUOVApLjCWMBvkasyb7o=
-X-Google-Smtp-Source: APXvYqz1HiiGkIF3jM4roVcn1A3U9HeG/I2Oi5xsnkmPIbL4o2zcAH8p7IgPBemIwtw1cVptETOBMg==
-X-Received: by 2002:a17:902:3283:: with SMTP id z3mr6758105plb.176.1562877065317;
-        Thu, 11 Jul 2019 13:31:05 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id s66sm7073008pfs.8.2019.07.11.13.30.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 11 Jul 2019 13:30:59 -0700 (PDT)
-Date:   Thu, 11 Jul 2019 13:30:59 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     linux-kernel@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
-        Iago =?iso-8859-1?Q?L=F3pez?= Galeiras <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org
-Subject: Re: [bpf-next v3 10/12] bpf: Implement bpf_prog_test_run for perf
- event programs
-Message-ID: <20190711203059.GB16709@mini-arch>
-References: <20190708163121.18477-1-krzesimir@kinvolk.io>
- <20190708163121.18477-11-krzesimir@kinvolk.io>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=DRCn8H8kLeTyMi4eunBj8o1tDca9BKTt6tZHu0klNH0=;
+        b=Azh9Rc1WgXOXvnw8hQcyHeIRoUTVA9C26ZISjy/rVNeUz8212EOaMm/hKlLix+7sdR
+         Sx638AUKFQMOx+tjJfjuMx0ZkHQHQQUUF4st539cs87II5+uK9HFZJOJLBnVFKoKGiX4
+         WBxhYJEzPb0fyQwpPpv3XIpx7pebZAaBXvQCe6ozM/ft2kb6ncRkaWl9uvh352jPBzub
+         wq4r2RMMHZGzq1acPu0qupXDc8VbjlIyakZLcuJ8XACE0XNtLRd7Pwlq/QDZzpEO7GGc
+         +UPqMfpIQOvKgUscdk5KErMeRIKGOE/m5SSbJdk8JoCgtrZK/GPBYQ1EI5e9x+pZqwif
+         nbyg==
+X-Gm-Message-State: APjAAAVd1jtzl8X6kBYzvMG30E+/OUjhdzsV5WjQncoMjvm4uQErg/pr
+        DOYHcfR8DzWEavOP3p3AAKnnHntAZ2njWpLWWLutCtHPMmk=
+X-Google-Smtp-Source: APXvYqzHVaqFtEELwJM3xmjcWyAKmmDe7EYVKVUQh68jZH1r36bBModVHKeIPo9YMrviX6RND02FWUn9tUrvQBNpYX0=
+X-Received: by 2002:a17:906:1845:: with SMTP id w5mr5413227eje.0.1562881392054;
+ Thu, 11 Jul 2019 14:43:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190708163121.18477-11-krzesimir@kinvolk.io>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+From:   Cody Haas <chaas@riotgames.com>
+Date:   Thu, 11 Jul 2019 14:43:01 -0700
+Message-ID: <CAH7f-UJUTUT0YKYVMCjNaQzwN3=sFh62Bx7sBO85XyjuNyy4Fg@mail.gmail.com>
+Subject: x710 Checksum Offloading with XDP
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 07/08, Krzesimir Nowak wrote:
-> As an input, test run for perf event program takes struct
-> bpf_perf_event_data as ctx_in and struct bpf_perf_event_value as
-> data_in. For an output, it basically ignores ctx_out and data_out.
-> 
-> The implementation sets an instance of struct bpf_perf_event_data_kern
-> in such a way that the BPF program reading data from context will
-> receive what we passed to the bpf prog test run in ctx_in. Also BPF
-> program can call bpf_perf_prog_read_value to receive what was passed
-> in data_in.
-> 
-> Changes since v2:
-> - drop the changes in perf event verifier test - they are not needed
->   anymore after reworked ctx size handling
-> 
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
->  kernel/trace/bpf_trace.c | 60 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index ca1255d14576..b870fc2314d0 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -19,6 +19,8 @@
->  #include "trace_probe.h"
->  #include "trace.h"
->  
-> +#include <trace/events/bpf_test_run.h>
-> +
->  #define bpf_event_rcu_dereference(p)					\
->  	rcu_dereference_protected(p, lockdep_is_held(&bpf_event_mutex))
->  
-> @@ -1160,7 +1162,65 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
->  	.convert_ctx_access	= pe_prog_convert_ctx_access,
->  };
->  
-> +static int pe_prog_test_run(struct bpf_prog *prog,
-> +			    const union bpf_attr *kattr,
-> +			    union bpf_attr __user *uattr)
-> +{
-> +	struct bpf_perf_event_data_kern real_ctx = {0, };
-> +	struct perf_sample_data sample_data = {0, };
-> +	struct bpf_perf_event_data *fake_ctx;
-> +	struct bpf_perf_event_value *value;
-> +	struct perf_event event = {0, };
-> +	u32 retval = 0, duration = 0;
-> +	int err;
-> +
-> +	if (kattr->test.data_size_out || kattr->test.data_out)
-> +		return -EINVAL;
-> +	if (kattr->test.ctx_size_out || kattr->test.ctx_out)
-> +		return -EINVAL;
-> +
-> +	fake_ctx = bpf_receive_ctx(kattr, sizeof(struct bpf_perf_event_data));
-> +	if (IS_ERR(fake_ctx))
-> +		return PTR_ERR(fake_ctx);
-> +
-> +	value = bpf_receive_data(kattr, sizeof(struct bpf_perf_event_value));
-> +	if (IS_ERR(value)) {
-> +		kfree(fake_ctx);
-> +		return PTR_ERR(value);
-> +	}
-nit: maybe use bpf_test_ prefix for receive_ctx/data:
-* bpf_test_receive_ctx
-* bpf_test_receive_data
+Hey,
 
-? To signify that they are used for tests only.
+Trying to utilize TX checksum offloading while running an XDP
+application; We're running on Fedora 28, using Intel x710 Network
+Adapters in unison with the Intel i40e drivers and we've verified that
+the Fedora sees that TX checksum offloading is enabled. On the
+receiving side of an XDP_TX we don't see a proper checksum in the
+transmitted packet. Is this due to XDP bypassing the Linux network
+stack? If so, is there a way to have XDP instruct the driver to
+conduct the TX checksum? Or is this intended behavior?
 
-> +
-> +	real_ctx.regs = &fake_ctx->regs;
-> +	real_ctx.data = &sample_data;
-> +	real_ctx.event = &event;
-> +	perf_sample_data_init(&sample_data, fake_ctx->addr,
-> +			      fake_ctx->sample_period);
-> +	event.cpu = smp_processor_id();
-> +	event.oncpu = -1;
-> +	event.state = PERF_EVENT_STATE_OFF;
-> +	local64_set(&event.count, value->counter);
-> +	event.total_time_enabled = value->enabled;
-> +	event.total_time_running = value->running;
-> +	/* make self as a leader - it is used only for checking the
-> +	 * state field
-> +	 */
-> +	event.group_leader = &event;
-> +	err = bpf_test_run(prog, &real_ctx, kattr->test.repeat,
-> +			   BPF_TEST_RUN_PLAIN, &retval, &duration);
-> +	if (err) {
-> +		kfree(value);
-> +		kfree(fake_ctx);
-> +		return err;
-> +	}
-> +
-> +	err = bpf_test_finish(uattr, retval, duration);
-> +	trace_bpf_test_finish(&err);
-Can probably do:
-
-	err = bpf_test_run(...)
-	if (!err) {
-		err = bpf_test_finish(uattr, retval, duration);
-		trace_bpf_test_finish(&err);
-	}
-	kfree(..);
-	kfree(..);
-	return err;
-
-So you don't have to copy-paste the error handling.
-
-> +	kfree(value);
-> +	kfree(fake_ctx);
-> +	return err;
-> +}
-> +
->  const struct bpf_prog_ops perf_event_prog_ops = {
-> +	.test_run	= pe_prog_test_run,
->  };
->  
->  static DEFINE_MUTEX(bpf_event_mutex);
-> -- 
-> 2.20.1
-> 
+Thanks,
+Cody
