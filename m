@@ -2,50 +2,51 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72B7865661
-	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jul 2019 14:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77326656AC
+	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jul 2019 14:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbfGKMHl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 11 Jul 2019 08:07:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43021 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728530AbfGKMHh (ORCPT
+        id S1728730AbfGKMR5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 11 Jul 2019 08:17:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41425 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbfGKMR5 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 11 Jul 2019 08:07:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 16so5491751ljv.10
-        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jul 2019 05:07:36 -0700 (PDT)
+        Thu, 11 Jul 2019 08:17:57 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 62so3912243lfa.8
+        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jul 2019 05:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=/GkyJO/XzCdLnefrckS27eNcOWh/ymnRvDaUSAxjqU8=;
-        b=ektyVvNoHno+vGzdhSyNvexrE2XG1HdIQjty5SZHH7PS1BFMLEd9bZ81vw7XjKeA4d
-         UapLshT+pX16Xoyw5FdEWffeXedaspH6Q5KXdfoJfSBzRQQbVXsHKOs/NrzEDeCvzSIy
-         YQdagHOcmHKLQ2NAJx6GwCW8s9RwY9K0qshog=
+        bh=RrsD3KUbljKvcn/hTr1tzlZHGQrSAvr0S9K4UihQZu8=;
+        b=gPFFOd4m36WM6dZd5CejiVx7RdfnZc4j/86D1XlTScWoQsHCx2yBODthaivogk8816
+         bB2hGxI+PMmzsRKI2aOTxeNpcNXyzHXuM9GL7E+KILvF98Zcs1qaOKfKqWbj9ME7mYPQ
+         YowjcBp2AzvI8k5puyqJMwVxLeeaU+mTDht+w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/GkyJO/XzCdLnefrckS27eNcOWh/ymnRvDaUSAxjqU8=;
-        b=olYiJqL7TPb2jAfDf8ObJpAFm14JQUtLwtvo+CYzeYgEyX6LezbuP8aCxOWpghUbIh
-         n8EIRAtKcRt8UOiOAtGi97Gu/A56rwrDTaaivNw9ojW7hxsq6E9HxL13xZcenro1DuRz
-         dGO+C9ZRrcnaSvD2QGOFb4zF5z/CzrNAcTHQ27Cg0SyB9bHtyzzEZwO/0I1btdF3co1w
-         00Rtzf0DxlGksRmBJch3TiVME/CDr3UimUZcluOZlMUf9i4vNYEDJ2KNWHvA9r2Amtc2
-         ju7wZB5R2d4+6tJ/Q4z1vKmgBRw8YO+5CAQ4dQ7cjOOAm/zTit17y03MMheTMcAQ3uFc
-         rj8A==
-X-Gm-Message-State: APjAAAUBUmo4ct70qEF1FIdkraMDdY/3HGeDzwxXicFfvUu+PR8KPtBo
-        DlEHnqjWA+VdgGcY79mv1tA8zhsTP+kwgfEIhCqsRw==
-X-Google-Smtp-Source: APXvYqzP22RRcZcUhDujyqUU5IP2zXoX9fJ3k2M6/GT1tQ3bZzzFR2TqUW6TndXcmnVlqSvHUPDoPdHjVwPeutIGhko=
-X-Received: by 2002:a2e:9754:: with SMTP id f20mr2293534ljj.151.1562846855331;
- Thu, 11 Jul 2019 05:07:35 -0700 (PDT)
+        bh=RrsD3KUbljKvcn/hTr1tzlZHGQrSAvr0S9K4UihQZu8=;
+        b=n3GWy8IUr/+BWeb35GZguLiAOg543htyd6xOumhM7ZGb5QGypNMufhdSjjiTMg3kFs
+         tLeriTfpCqWeJQjdLo5loplqDVW6LKqjFi02k/cIIf9P/g6NFtmNSfUz/DTcP3byy677
+         zcOKPbtB2RGx+chaaSZDSl5agu0HG+gcj9KNot6F9pvZBuxw6MMsNPlgV5asoaLUJY37
+         MTCQ1tFVBB37u8LPrXpaMvhq0u62KhPZZmH9GGSQ8IPpV10Jd26Rdf1G5sYXUjQSHxwl
+         Z1NDySuRS29efJk9S8V08qJgXcZONY9uHugysNF3fHJ6dkEoyFCP1/JTIvnVrGuY3h8o
+         pREg==
+X-Gm-Message-State: APjAAAWyCM36XxdTkxyJQV9ewuHE+1H11eY6vNe6NOW6Mbfy2LBaFUd3
+        HlM6Mw5ZrUSM3GAPe7uI3cAq5IvEO8qzWiJij2SQ5g==
+X-Google-Smtp-Source: APXvYqw/AFHC6mXj2InF033lRSoV20fz1hXzm0KNG263CeACzfnfgIlYQMKtoMaN8NEU5ji7jend5en4rm8fFfDzCP4=
+X-Received: by 2002:a19:8c08:: with SMTP id o8mr1709672lfd.57.1562847474848;
+ Thu, 11 Jul 2019 05:17:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-5-krzesimir@kinvolk.io>
- <CAEf4BzZoOw=1B8vV53iAxz8LDULOPVF-he4C_usoUQSdXU+oSg@mail.gmail.com>
-In-Reply-To: <CAEf4BzZoOw=1B8vV53iAxz8LDULOPVF-he4C_usoUQSdXU+oSg@mail.gmail.com>
+References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-6-krzesimir@kinvolk.io>
+ <CAEf4BzYYdrcwJKg271ZL7kPJNYyZEGdxQeuUNbfPk=EjewuHeQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYYdrcwJKg271ZL7kPJNYyZEGdxQeuUNbfPk=EjewuHeQ@mail.gmail.com>
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
-Date:   Thu, 11 Jul 2019 14:07:24 +0200
-Message-ID: <CAGGp+cGUYbdEeHJxVCk0VZvOMSoR6Fz5aUJD0Ye71w5dxETXMA@mail.gmail.com>
-Subject: Re: [bpf-next v3 04/12] selftests/bpf: Use bpf_prog_test_run_xattr
+Date:   Thu, 11 Jul 2019 14:17:44 +0200
+Message-ID: <CAGGp+cHoujaAF_DSFitwgV3sshjj6_q6CL_hKPZUDhZC825PUQ@mail.gmail.com>
+Subject: Re: [bpf-next v3 05/12] selftests/bpf: Allow passing more information
+ to BPF prog test run
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     open list <linux-kernel@vger.kernel.org>,
         Alban Crequy <alban@kinvolk.io>,
@@ -68,85 +69,268 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 2:03 AM Andrii Nakryiko
+On Thu, Jul 11, 2019 at 3:17 AM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
 >
-> On Mon, Jul 8, 2019 at 3:43 PM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
+> On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> wro=
 te:
 > >
-> > The bpf_prog_test_run_xattr function gives more options to set up a
-> > test run of a BPF program than the bpf_prog_test_run function.
+> > The test case can now specify a custom length of the data member,
+> > context data and its length, which will be passed to
+> > bpf_prog_test_run_xattr. For backward compatilibity, if the data
+> > length is 0 (which is what will happen when the field is left
+> > unspecified in the designated initializer of a struct), then the
+> > length passed to the bpf_prog_test_run_xattr is TEST_DATA_LEN.
 > >
-> > We will need this extra flexibility to pass ctx data later.
+> > Also for backward compatilibity, if context data length is 0, NULL is
+> > passed as a context to bpf_prog_test_run_xattr. This is to avoid
+> > breaking other tests, where context data being NULL and context data
+> > length being 0 is handled differently from the case where context data
+> > is not NULL and context data length is 0.
+> >
+> > Custom lengths still can't be greater than hardcoded 64 bytes for data
+> > and 192 for context data.
+> >
+> > 192 for context data was picked to allow passing struct
+> > bpf_perf_event_data as a context for perf event programs. The struct
+> > is quite large, because it contains struct pt_regs.
+> >
+> > Test runs for perf event programs will not allow the copying the data
+> > back to data_out buffer, so they require data_out_size to be zero and
+> > data_out to be NULL. Since test_verifier hardcodes it, make it
+> > possible to override the size. Overriding the size to zero will cause
+> > the buffer to be NULL.
+> >
+> > Changes since v2:
+> > - Allow overriding the data out size and buffer.
 > >
 > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 > > ---
->
-> lgtm, with some nits below
->
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
->
-> >  tools/testing/selftests/bpf/test_verifier.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >  tools/testing/selftests/bpf/test_verifier.c | 105 +++++++++++++++++---
+> >  1 file changed, 93 insertions(+), 12 deletions(-)
 > >
 > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testin=
 g/selftests/bpf/test_verifier.c
-> > index c7541f572932..1640ba9f12c1 100644
+> > index 1640ba9f12c1..6f124cc4ee34 100644
 > > --- a/tools/testing/selftests/bpf/test_verifier.c
 > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > @@ -822,14 +822,20 @@ static int do_prog_test_run(int fd_prog, bool unp=
-riv, uint32_t expected_val,
-> >  {
-> >         __u8 tmp[TEST_DATA_LEN << 2];
-> >         __u32 size_tmp =3D sizeof(tmp);
->
-> nit: this is now is not needed as a separate local variable, inline?
-
-I think I'm using this variable in a followup commit, but I'll look closely=
-.
-
->
-> > -       uint32_t retval;
-> >         int saved_errno;
-> >         int err;
-> > +       struct bpf_prog_test_run_attr attr =3D {
-> > +               .prog_fd =3D fd_prog,
-> > +               .repeat =3D 1,
-> > +               .data_in =3D data,
-> > +               .data_size_in =3D size_data,
-> > +               .data_out =3D tmp,
-> > +               .data_size_out =3D size_tmp,
-> > +       };
+> > @@ -54,6 +54,7 @@
+> >  #define MAX_TEST_RUNS  8
+> >  #define POINTER_VALUE  0xcafe4all
+> >  #define TEST_DATA_LEN  64
+> > +#define TEST_CTX_LEN   192
 > >
+> >  #define F_NEEDS_EFFICIENT_UNALIGNED_ACCESS     (1 << 0)
+> >  #define F_LOAD_WITH_STRICT_ALIGNMENT           (1 << 1)
+> > @@ -96,7 +97,12 @@ struct bpf_test {
+> >         enum bpf_prog_type prog_type;
+> >         uint8_t flags;
+> >         __u8 data[TEST_DATA_LEN];
+> > +       __u32 data_len;
+> > +       __u8 ctx[TEST_CTX_LEN];
+> > +       __u32 ctx_len;
+> >         void (*fill_helper)(struct bpf_test *self);
+> > +       bool override_data_out_len;
+> > +       __u32 overridden_data_out_len;
+> >         uint8_t runs;
+> >         struct {
+> >                 uint32_t retval, retval_unpriv;
+> > @@ -104,6 +110,9 @@ struct bpf_test {
+> >                         __u8 data[TEST_DATA_LEN];
+> >                         __u64 data64[TEST_DATA_LEN / 8];
+> >                 };
+> > +               __u32 data_len;
+> > +               __u8 ctx[TEST_CTX_LEN];
+> > +               __u32 ctx_len;
+> >         } retvals[MAX_TEST_RUNS];
+> >  };
+> >
+> > @@ -818,21 +827,35 @@ static int set_admin(bool admin)
+> >  }
+> >
+> >  static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expecte=
+d_val,
+> > -                           void *data, size_t size_data)
+> > +                           void *data, size_t size_data, void *ctx,
+> > +                           size_t size_ctx, u32 *overridden_data_out_s=
+ize)
+> >  {
+> > -       __u8 tmp[TEST_DATA_LEN << 2];
+> > -       __u32 size_tmp =3D sizeof(tmp);
+> > -       int saved_errno;
+> > -       int err;
+> >         struct bpf_prog_test_run_attr attr =3D {
+> >                 .prog_fd =3D fd_prog,
+> >                 .repeat =3D 1,
+> >                 .data_in =3D data,
+> >                 .data_size_in =3D size_data,
+> > -               .data_out =3D tmp,
+> > -               .data_size_out =3D size_tmp,
+> > +               .ctx_in =3D ctx,
+> > +               .ctx_size_in =3D size_ctx,
+> >         };
+> > +       __u8 tmp[TEST_DATA_LEN << 2];
+> > +       __u32 size_tmp =3D sizeof(tmp);
+> > +       __u32 size_buf =3D size_tmp;
+> > +       __u8 *buf =3D tmp;
+> > +       int saved_errno;
+> > +       int err;
+> >
+> > +       if (overridden_data_out_size)
+> > +               size_buf =3D *overridden_data_out_size;
+> > +       if (size_buf > size_tmp) {
+> > +               printf("FAIL: out data size (%d) greater than a buffer =
+size (%d) ",
+> > +                      size_buf, size_tmp);
+> > +               return -EINVAL;
+> > +       }
+> > +       if (!size_buf)
+> > +               buf =3D NULL;
+> > +       attr.data_size_out =3D size_buf;
+> > +       attr.data_out =3D buf;
 > >         if (unpriv)
 > >                 set_admin(true);
-> > -       err =3D bpf_prog_test_run(fd_prog, 1, data, size_data,
-> > -                               tmp, &size_tmp, &retval, NULL);
-> > +       err =3D bpf_prog_test_run_xattr(&attr);
-> >         saved_errno =3D errno;
-> >         if (unpriv)
-> >                 set_admin(false);
-> > @@ -846,9 +852,9 @@ static int do_prog_test_run(int fd_prog, bool unpri=
-v, uint32_t expected_val,
-> >                         return err;
-> >                 }
-> >         }
-> > -       if (retval !=3D expected_val &&
-> > +       if (attr.retval !=3D expected_val &&
-> >             expected_val !=3D POINTER_VALUE) {
->
-> this if condition now fits one line, can you please combine? thanks!
-
-Sure.
-
->
-> > -               printf("FAIL retval %d !=3D %d ", retval, expected_val)=
-;
-> > +               printf("FAIL retval %d !=3D %d ", attr.retval, expected=
-_val);
-> >                 return 1;
-> >         }
+> >         err =3D bpf_prog_test_run_xattr(&attr);
+> > @@ -956,13 +979,45 @@ static void do_test_single(struct bpf_test *test,=
+ bool unpriv,
+> >         if (!alignment_prevented_execution && fd_prog >=3D 0) {
+> >                 uint32_t expected_val;
+> >                 int i;
+> > +               __u32 size_data;
+> > +               __u32 size_ctx;
+> > +               bool bad_size;
+> > +               void *ctx;
+> > +               __u32 *overridden_data_out_size;
 > >
+> >                 if (!test->runs) {
+> > +                       if (test->data_len > 0)
+> > +                               size_data =3D test->data_len;
+> > +                       else
+> > +                               size_data =3D sizeof(test->data);
+> > +                       if (test->override_data_out_len)
+> > +                               overridden_data_out_size =3D &test->ove=
+rridden_data_out_len;
+> > +                       else
+> > +                               overridden_data_out_size =3D NULL;
+> > +                       size_ctx =3D test->ctx_len;
+> > +                       bad_size =3D false;
+>
+> I hated all this duplication of logic, which with this patch becomes
+> even more expansive, so I removed it. Please see [0]. Can you please
+> apply that patch and add all this new logic only once?
+>
+>   [0] https://patchwork.ozlabs.org/patch/1130601/
+
+Will do.
+
+>
+> >                         expected_val =3D unpriv && test->retval_unpriv =
+?
+> >                                 test->retval_unpriv : test->retval;
+> >
+> > -                       err =3D do_prog_test_run(fd_prog, unpriv, expec=
+ted_val,
+> > -                                              test->data, sizeof(test-=
+>data));
+> > +                       if (size_data > sizeof(test->data)) {
+> > +                               printf("FAIL: data size (%u) greater th=
+an TEST_DATA_LEN (%lu) ", size_data, sizeof(test->data));
+> > +                               bad_size =3D true;
+> > +                       }
+> > +                       if (size_ctx > sizeof(test->ctx)) {
+> > +                               printf("FAIL: ctx size (%u) greater tha=
+n TEST_CTX_LEN (%lu) ", size_ctx, sizeof(test->ctx));
+>
+> These look like way too long lines, wrap them?
+
+Ah, yeah, these can be wrapped easily. Will do.
+
+>
+> > +                               bad_size =3D true;
+> > +                       }
+> > +                       if (size_ctx)
+> > +                               ctx =3D test->ctx;
+> > +                       else
+> > +                               ctx =3D NULL;
+>
+> nit: single line:
+>
+> ctx =3D size_ctx ? test->ctx : NULL;
+>
+> > +                       if (bad_size)
+> > +                               err =3D 1;
+> > +                       else
+> > +                               err =3D do_prog_test_run(fd_prog, unpri=
+v, expected_val,
+> > +                                                      test->data, size=
+_data,
+> > +                                                      ctx, size_ctx,
+> > +                                                      overridden_data_=
+out_size);
+> >                         if (err)
+> >                                 run_errs++;
+> >                         else
+> > @@ -970,14 +1025,40 @@ static void do_test_single(struct bpf_test *test=
+, bool unpriv,
+> >                 }
+> >
+> >                 for (i =3D 0; i < test->runs; i++) {
+> > +                       if (test->retvals[i].data_len > 0)
+> > +                               size_data =3D test->retvals[i].data_len=
+;
+> > +                       else
+> > +                               size_data =3D sizeof(test->retvals[i].d=
+ata);
+> > +                       if (test->override_data_out_len)
+> > +                               overridden_data_out_size =3D &test->ove=
+rridden_data_out_len;
+> > +                       else
+> > +                               overridden_data_out_size =3D NULL;
+> > +                       size_ctx =3D test->retvals[i].ctx_len;
+> > +                       bad_size =3D false;
+> >                         if (unpriv && test->retvals[i].retval_unpriv)
+> >                                 expected_val =3D test->retvals[i].retva=
+l_unpriv;
+> >                         else
+> >                                 expected_val =3D test->retvals[i].retva=
+l;
+> >
+> > -                       err =3D do_prog_test_run(fd_prog, unpriv, expec=
+ted_val,
+> > -                                              test->retvals[i].data,
+> > -                                              sizeof(test->retvals[i].=
+data));
+> > +                       if (size_data > sizeof(test->retvals[i].data)) =
+{
+> > +                               printf("FAIL: data size (%u) at run %i =
+greater than TEST_DATA_LEN (%lu) ", size_data, i + 1, sizeof(test->retvals[=
+i].data));
+> > +                               bad_size =3D true;
+> > +                       }
+> > +                       if (size_ctx > sizeof(test->retvals[i].ctx)) {
+> > +                               printf("FAIL: ctx size (%u) at run %i g=
+reater than TEST_CTX_LEN (%lu) ", size_ctx, i + 1, sizeof(test->retvals[i].=
+ctx));
+> > +                               bad_size =3D true;
+> > +                       }
+> > +                       if (size_ctx)
+> > +                               ctx =3D test->retvals[i].ctx;
+> > +                       else
+> > +                               ctx =3D NULL;
+> > +                       if (bad_size)
+> > +                               err =3D 1;
+> > +                       else
+> > +                               err =3D do_prog_test_run(fd_prog, unpri=
+v, expected_val,
+> > +                                                      test->retvals[i]=
+.data, size_data,
+> > +                                                      ctx, size_ctx,
+> > +                                                      overridden_data_=
+out_size);
+> >                         if (err) {
+> >                                 printf("(run %d/%d) ", i + 1, test->run=
+s);
+> >                                 run_errs++;
 > > --
 > > 2.20.1
 > >
