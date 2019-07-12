@@ -2,171 +2,76 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8662666333
-	for <lists+xdp-newbies@lfdr.de>; Fri, 12 Jul 2019 03:00:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 037B866B1E
+	for <lists+xdp-newbies@lfdr.de>; Fri, 12 Jul 2019 12:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfGLA76 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 11 Jul 2019 20:59:58 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33953 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfGLA76 (ORCPT
+        id S1726138AbfGLKxW (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 12 Jul 2019 06:53:22 -0400
+Received: from mail-ed1-f46.google.com ([209.85.208.46]:38949 "EHLO
+        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfGLKxW (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 11 Jul 2019 20:59:58 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k10so6501567qtq.1;
-        Thu, 11 Jul 2019 17:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vyRvdglp9w3WMAVwpZ8V5acwRWpsWl+iTtdEW4rvar4=;
-        b=txxE7X8WbuCKhCRBQru177MjuZze+pZCDz3RdJ4rEwr3Eb96rvgOhODAT0S/Xjmp9e
-         Gni8eX3BUNl8IyyKLVNknIJmMObUbzLUuNH/mDHhD6JyPrICshHweZEWKFuAaN4pXJqu
-         dKSFAFdAYFPnXuC05uU0QeDj2E2cDBR920oDu4WAC2m0w63JVhMS6umkNXSJoKcIvO7E
-         GtDhanc7eUXsVAQN8rpwJALT0FWxmqPXAmW7RpsJ9suJEVumWCIqt8BIIrVLFyRHY3Ax
-         nsj1kcysn/Rrm7zxT6MKFnlsKE+P7PXWYbTFGdeuXzwp1L7E1R9ryUtnWXFEsMXxuoE3
-         8IeQ==
+        Fri, 12 Jul 2019 06:53:22 -0400
+Received: by mail-ed1-f46.google.com with SMTP id m10so8809349edv.6
+        for <xdp-newbies@vger.kernel.org>; Fri, 12 Jul 2019 03:53:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vyRvdglp9w3WMAVwpZ8V5acwRWpsWl+iTtdEW4rvar4=;
-        b=SssxtIbtCDllkKez6ptjmVSp0H372ZQvY+Z63xCNV/UIF9B90kt31nH9MrcslffUPE
-         S0X4ZpXwuERvmnBJl8j0lX653ByYS7JRylfffgxsh79Mmm85TunNOESS1DOpAsUnxgJG
-         Gxh5mWfnRWqk3rbRAkBfSRI7dx1ezsJ3vv2i0Vtzp/5EhuXwze0yOR2u8WlfiRIwShX7
-         2olgKjo4eO+RHnc878J6YSYKeV88/uoB2RA+j0d6L7hod8sIYLvRo3yrxQpOg/hdzOnl
-         uaoEX20k9WCk4xyY35t/qsPOtK+OdWzXtD/NNoPinLm7KgFaEHDEGC6z2zPzWYRLP0zL
-         OVrw==
-X-Gm-Message-State: APjAAAWob6Jad1/6pK5Gy4+3rWWG/vdkYx04FOhr3JLkcrwfZfSsVfyD
-        gAVYQEtR477eLf7Nf6VT8rUukmAg9Nfme3XjKKM=
-X-Google-Smtp-Source: APXvYqx/nmtN0ibOY1gKjWppu+MVnXd5hpjXGLRUTESB0ttPXoJNPVWlFkEp6N20LfxCuAlfqEqOIkKtHWjb2rkA+5M=
-X-Received: by 2002:ac8:6601:: with SMTP id c1mr3869170qtp.93.1562893196956;
- Thu, 11 Jul 2019 17:59:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=x1rGW2KIt8gbhakbJaPkgnix7nFSeLCaNi1cNFarWQU=;
+        b=DAchBlDzlQFNlpDWeid7El9kVpuxmpf+njmKhE7yCCP2SlfOgifTfedyGdzJed8Aua
+         x3iO95K10p18CHwwtgrMS2JHEaAT8taueAc5//JIXaCVdp/i5llSWajTEePUzbjiAY+g
+         fhWR1JUSriViq1iTkYA+tpbFtSeWXTF9yBDZ9Mx2ssYKgAAT4JgxLn5tzGKATlkfCEB7
+         yXmCpf71vjd7na4+fjwZgjx3+umoxzC/+nVXWYC4keN44qth5UrUYpmZlFz9YqSZt2Kx
+         Eq/U+/k9ACywknw5GJi5R7/eEnPzBUNhaRjll9ofgjta5lvhq9mmUYGEor1BoPGxDyjM
+         ekcg==
+X-Gm-Message-State: APjAAAVT0eQP3B0hMl2ZLexz3sz8sUQGi/3Mr3jDb2QcLerkieaDn0iC
+        z4EUwFhgfYjFoLS9cHOTTspFSQ==
+X-Google-Smtp-Source: APXvYqzaJmwTEb8jnQpYR6GXbRZ+w2ipZtuQH/M4oacYOtX91EDlsWmneTY/ORi9kdd4bj0vcYd0eQ==
+X-Received: by 2002:a17:906:4354:: with SMTP id z20mr7397443ejm.163.1562928800419;
+        Fri, 12 Jul 2019 03:53:20 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id r44sm2456293edd.20.2019.07.12.03.53.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 03:53:19 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 0352F181CE6; Fri, 12 Jul 2019 12:53:18 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Cody Haas <chaas@riotgames.com>, xdp-newbies@vger.kernel.org
+Subject: Re: x710 Checksum Offloading with XDP
+In-Reply-To: <CAH7f-UJUTUT0YKYVMCjNaQzwN3=sFh62Bx7sBO85XyjuNyy4Fg@mail.gmail.com>
+References: <CAH7f-UJUTUT0YKYVMCjNaQzwN3=sFh62Bx7sBO85XyjuNyy4Fg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 12 Jul 2019 12:53:18 +0200
+Message-ID: <87ims7v80x.fsf@toke.dk>
 MIME-Version: 1.0
-References: <20190708163121.18477-1-krzesimir@kinvolk.io> <20190708163121.18477-3-krzesimir@kinvolk.io>
- <CAEf4BzYra9njHOB8t6kxRu6n5NJdjjAG541OLt8ci=0zbbcUSg@mail.gmail.com> <CAGGp+cGnEBFoPAuhTPa_JFCW6Vbjp2NN0ZPqC3qGfWEXwTyVOQ@mail.gmail.com>
-In-Reply-To: <CAGGp+cGnEBFoPAuhTPa_JFCW6Vbjp2NN0ZPqC3qGfWEXwTyVOQ@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 11 Jul 2019 17:59:46 -0700
-Message-ID: <CAEf4Bzb-KW+p1zFcz39OSUuH0=DLFRNLa3NYT4V_-zz0Q_TJ5g@mail.gmail.com>
-Subject: Re: [bpf-next v3 02/12] selftests/bpf: Avoid a clobbering of errno
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 5:04 AM Krzesimir Nowak <krzesimir@kinvolk.io> wrot=
-e:
->
-> On Thu, Jul 11, 2019 at 1:52 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jul 8, 2019 at 3:42 PM Krzesimir Nowak <krzesimir@kinvolk.io> w=
-rote:
-> > >
-> > > Save errno right after bpf_prog_test_run returns, so we later check
-> > > the error code actually set by bpf_prog_test_run, not by some libcap
-> > > function.
-> > >
-> > > Changes since v1:
-> > > - Fix the "Fixes:" tag to mention actual commit that introduced the
-> > >   bug
-> > >
-> > > Changes since v2:
-> > > - Move the declaration so it fits the reverse christmas tree style.
-> > >
-> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > > Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in=
- test_verifier")
-> > > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > > ---
-> > >  tools/testing/selftests/bpf/test_verifier.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/test=
-ing/selftests/bpf/test_verifier.c
-> > > index b8d065623ead..3fe126e0083b 100644
-> > > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > > @@ -823,16 +823,18 @@ static int do_prog_test_run(int fd_prog, bool u=
-npriv, uint32_t expected_val,
-> > >         __u8 tmp[TEST_DATA_LEN << 2];
-> > >         __u32 size_tmp =3D sizeof(tmp);
-> > >         uint32_t retval;
-> > > +       int saved_errno;
-> > >         int err;
-> > >
-> > >         if (unpriv)
-> > >                 set_admin(true);
-> > >         err =3D bpf_prog_test_run(fd_prog, 1, data, size_data,
-> > >                                 tmp, &size_tmp, &retval, NULL);
-> >
-> > Given err is either 0 or -1, how about instead making err useful right
-> > here without extra variable?
-> >
-> > if (bpf_prog_test_run(...))
-> >         err =3D errno;
->
-> I change it later to bpf_prog_test_run_xattr, which can also return
-> -EINVAL and then errno is not set. But this one probably should not be
+Cody Haas <chaas@riotgames.com> writes:
 
-This is wrong. bpf_prog_test_run/bpf_prog_test_run_xattr should either
-always return -1 and set errno to actual error (like syscalls do), or
-always use return code with proper error. Give they are pretending to
-be just pure syscall, it's probably better to set errno to EINVAL and
-return -1 on invalid input args?
+> Hey,
+>
+> Trying to utilize TX checksum offloading while running an XDP
+> application; We're running on Fedora 28, using Intel x710 Network
+> Adapters in unison with the Intel i40e drivers and we've verified that
+> the Fedora sees that TX checksum offloading is enabled. On the
+> receiving side of an XDP_TX we don't see a proper checksum in the
+> transmitted packet. Is this due to XDP bypassing the Linux network
+> stack? If so, is there a way to have XDP instruct the driver to
+> conduct the TX checksum? Or is this intended behavior?
 
-> triggered by the test code. So not sure, probably would be better to
-> keep it as is for consistency?
->
-> >
-> > > +       saved_errno =3D errno;
-> > >         if (unpriv)
-> > >                 set_admin(false);
-> > >         if (err) {
-> > > -               switch (errno) {
-> > > +               switch (saved_errno) {
-> > >                 case 524/*ENOTSUPP*/:
-> >
-> > ENOTSUPP is defined in include/linux/errno.h, is there any problem
-> > with using this in selftests?
->
-> I just used whatever there was earlier. Seems like <linux/errno.h> is
-> not copied to tools include directory.
+You are quite right that this is because XDP bypasses the stack
+entirely. There is currently no support for interacting with hardware
+offload features from XDP, so if you're using XDP_TX you need to fix up
+the checksum in your eBPF program. There's a bpf_csum_diff() helper
+which may be helpful in this regard.
 
-Ok, let's leave it as is, thanks!
+Getting better support for hardware offloads in concert with XDP is
+something we'd like to get to eventually, but we're not there yet,
+unfortunately.
 
->
-> >
-> > >                         printf("Did not run the program (not supporte=
-d) ");
-> > >                         return 0;
-> > > --
-> > > 2.20.1
-> > >
->
->
->
-> --
-> Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-> Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago =
-L=C3=B3pez Galeiras
-> Registergericht/Court of registration: Amtsgericht Charlottenburg
-> Registernummer/Registration number: HRB 171414 B
-> Ust-ID-Nummer/VAT ID number: DE302207000
+-Toke
