@@ -2,27 +2,27 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A38569121
-	for <lists+xdp-newbies@lfdr.de>; Mon, 15 Jul 2019 16:27:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA186972B
+	for <lists+xdp-newbies@lfdr.de>; Mon, 15 Jul 2019 17:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391403AbfGOO04 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 15 Jul 2019 10:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59768 "EHLO mail.kernel.org"
+        id S1732751AbfGON5c (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 15 Jul 2019 09:57:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391030AbfGOOZF (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:25:05 -0400
+        id S1732702AbfGON5c (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:57:32 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0BF9206B8;
-        Mon, 15 Jul 2019 14:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A6DE20C01;
+        Mon, 15 Jul 2019 13:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200703;
-        bh=oRRZGUkIuPvHBH6aKfmz3V1QKESktJkD4PpLZ+lWzDs=;
+        s=default; t=1563199051;
+        bh=E3eGmKm5nu0OPb0GNpkfQOq2G2P0cK/daWQvt8RA8sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfFJOCAVbeV9Wg5ejppUT9pRFYQEUXAwDqzxOlgxF2TWZ5L03L+QLENKxHfb3AIME
-         UOrnFaHdsL39u+cebn+NJ9Fw2Y1a7djFzkYczLq1Dg9fczWt+7ad88z073TG5h7pv1
-         HwFPgxrKtYPoEM2lLqPIY2imci9RRIyMjkWhTqSA=
+        b=jX02P9PZv/7bPJfl/R8+vNNBcgvXJo6zrg7QuZMsaXDejjqXs4bD7jxzqQA1JWaVn
+         aMGXv9ty402bLhV4CkT59c2/29ULvSsxl4kIPruh+o8PbUJciRxdw32VynvBqCI9yd
+         Yzn+cdtYXf1qxvMtZvNxCXskkQO0UNpq7TsEfsY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
@@ -34,12 +34,12 @@ Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 114/158] xsk: Properly terminate assignment in xskq_produce_flush_desc
-Date:   Mon, 15 Jul 2019 10:17:25 -0400
-Message-Id: <20190715141809.8445-114-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 175/249] xsk: Properly terminate assignment in xskq_produce_flush_desc
+Date:   Mon, 15 Jul 2019 09:45:40 -0400
+Message-Id: <20190715134655.4076-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
+References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -83,12 +83,12 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-index 8a64b150be54..fe96c0d039f2 100644
+index 88b9ae24658d..cba4a640d5e8 100644
 --- a/net/xdp/xsk_queue.h
 +++ b/net/xdp/xsk_queue.h
-@@ -239,7 +239,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
+@@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
  	/* Order producer and data */
- 	smp_wmb();
+ 	smp_wmb(); /* B, matches C */
  
 -	q->prod_tail = q->prod_head,
 +	q->prod_tail = q->prod_head;
