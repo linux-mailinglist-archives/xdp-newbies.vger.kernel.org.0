@@ -2,46 +2,43 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FA186972B
-	for <lists+xdp-newbies@lfdr.de>; Mon, 15 Jul 2019 17:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE1D69704
+	for <lists+xdp-newbies@lfdr.de>; Mon, 15 Jul 2019 17:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732751AbfGON5c (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 15 Jul 2019 09:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35550 "EHLO mail.kernel.org"
+        id S1733116AbfGON6R (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 15 Jul 2019 09:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732702AbfGON5c (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:57:32 -0400
+        id S1733106AbfGON6O (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 15 Jul 2019 09:58:14 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6DE20C01;
-        Mon, 15 Jul 2019 13:57:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A52212F5;
+        Mon, 15 Jul 2019 13:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563199051;
-        bh=E3eGmKm5nu0OPb0GNpkfQOq2G2P0cK/daWQvt8RA8sI=;
+        s=default; t=1563199093;
+        bh=Dods9Xqg4wn68YBG3bujgJMAonGAUVFm9QOofA2/0RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jX02P9PZv/7bPJfl/R8+vNNBcgvXJo6zrg7QuZMsaXDejjqXs4bD7jxzqQA1JWaVn
-         aMGXv9ty402bLhV4CkT59c2/29ULvSsxl4kIPruh+o8PbUJciRxdw32VynvBqCI9yd
-         Yzn+cdtYXf1qxvMtZvNxCXskkQO0UNpq7TsEfsY8=
+        b=YuSsyK3ADSmpR/96j/H6rAVzHkrXXReKVnkpQlI+hs/ycap1znhcRH4WNn4esskHZ
+         K5ZI0p3NmEP1ckbovQuSHS8AbF4P6hlOU5eAdS4zh7iKqpXX2ogS2ZWjTXSjo6gCDb
+         DnVrkqp8xFqeKiM3QJFoJO7rC4tnZlwkkhV4wu2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Song Liu <songliubraving@fb.com>,
+Cc:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 175/249] xsk: Properly terminate assignment in xskq_produce_flush_desc
-Date:   Mon, 15 Jul 2019 09:45:40 -0400
-Message-Id: <20190715134655.4076-175-sashal@kernel.org>
+        linux-rdma@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 189/249] net/mlx5e: Attach/detach XDP program safely
+Date:   Mon, 15 Jul 2019 09:45:54 -0400
+Message-Id: <20190715134655.4076-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
 References: <20190715134655.4076-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -50,51 +47,86 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit f7019b7b0ad14bde732b8953161994edfc384953 ]
+[ Upstream commit e18953240de8b46360a67090c87ee1ef8160b35d ]
 
-Clang warns:
+When an XDP program is set, a full reopen of all channels happens in two
+cases:
 
-In file included from net/xdp/xsk_queue.c:10:
-net/xdp/xsk_queue.h:292:2: warning: expression result unused
-[-Wunused-value]
-        WRITE_ONCE(q->ring->producer, q->prod_tail);
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
-        __u.__val;                                      \
-        ~~~ ^~~~~
-1 warning generated.
+1. When there was no program set, and a new one is being set.
 
-The q->prod_tail assignment has a comma at the end, not a semi-colon.
-Fix that so clang no longer warns and everything works as expected.
+2. When there was a program set, but it's being unset.
 
-Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/544
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Song Liu <songliubraving@fb.com>
+The full reopen is necessary, because the channel parameters may change
+if XDP is enabled or disabled. However, it's performed in an unsafe way:
+if the new channels fail to open, the old ones are already closed, and
+the interface goes down. Use the safe way to switch channels instead.
+The same way is already used for other configuration changes.
+
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk_queue.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/mellanox/mlx5/core/en_main.c | 31 ++++++++++++-------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-index 88b9ae24658d..cba4a640d5e8 100644
---- a/net/xdp/xsk_queue.h
-+++ b/net/xdp/xsk_queue.h
-@@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
- 	/* Order producer and data */
- 	smp_wmb(); /* B, matches C */
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index a8e8350b38aa..8db9fdbc03ea 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -4192,8 +4192,6 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
+ 	/* no need for full reset when exchanging programs */
+ 	reset = (!priv->channels.params.xdp_prog || !prog);
  
--	q->prod_tail = q->prod_head,
-+	q->prod_tail = q->prod_head;
- 	WRITE_ONCE(q->ring->producer, q->prod_tail);
- }
+-	if (was_opened && reset)
+-		mlx5e_close_locked(netdev);
+ 	if (was_opened && !reset) {
+ 		/* num_channels is invariant here, so we can take the
+ 		 * batched reference right upfront.
+@@ -4205,20 +4203,31 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
+ 		}
+ 	}
  
+-	/* exchange programs, extra prog reference we got from caller
+-	 * as long as we don't fail from this point onwards.
+-	 */
+-	old_prog = xchg(&priv->channels.params.xdp_prog, prog);
++	if (was_opened && reset) {
++		struct mlx5e_channels new_channels = {};
++
++		new_channels.params = priv->channels.params;
++		new_channels.params.xdp_prog = prog;
++		mlx5e_set_rq_type(priv->mdev, &new_channels.params);
++		old_prog = priv->channels.params.xdp_prog;
++
++		err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
++		if (err)
++			goto unlock;
++	} else {
++		/* exchange programs, extra prog reference we got from caller
++		 * as long as we don't fail from this point onwards.
++		 */
++		old_prog = xchg(&priv->channels.params.xdp_prog, prog);
++	}
++
+ 	if (old_prog)
+ 		bpf_prog_put(old_prog);
+ 
+-	if (reset) /* change RQ type according to priv->xdp_prog */
++	if (!was_opened && reset) /* change RQ type according to priv->xdp_prog */
+ 		mlx5e_set_rq_type(priv->mdev, &priv->channels.params);
+ 
+-	if (was_opened && reset)
+-		err = mlx5e_open_locked(netdev);
+-
+-	if (!test_bit(MLX5E_STATE_OPENED, &priv->state) || reset)
++	if (!was_opened || reset)
+ 		goto unlock;
+ 
+ 	/* exchanging programs w/o reset, we update ref counts on behalf
 -- 
 2.20.1
 
