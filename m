@@ -2,28 +2,28 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A34076CF51
-	for <lists+xdp-newbies@lfdr.de>; Thu, 18 Jul 2019 16:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A6F6D002
+	for <lists+xdp-newbies@lfdr.de>; Thu, 18 Jul 2019 16:43:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390241AbfGROBY (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 18 Jul 2019 10:01:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54550 "EHLO mx1.redhat.com"
+        id S1727623AbfGROm5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 18 Jul 2019 10:42:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37236 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726608AbfGROBY (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:01:24 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726040AbfGROm5 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 18 Jul 2019 10:42:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E5D9730C1E24;
-        Thu, 18 Jul 2019 14:01:22 +0000 (UTC)
-Received: from [10.72.12.199] (ovpn-12-199.pek2.redhat.com [10.72.12.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E45B61B7F;
-        Thu, 18 Jul 2019 14:01:13 +0000 (UTC)
-Subject: Re: [PATCH] virtio-net: parameterize min ring num_free for virtio
- receive
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        ? jiang <jiangkidd@hotmail.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 35C6DC065134;
+        Thu, 18 Jul 2019 14:42:56 +0000 (UTC)
+Received: from redhat.com (ovpn-120-147.rdu2.redhat.com [10.10.120.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 972C45D739;
+        Thu, 18 Jul 2019 14:42:48 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 10:42:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     ? jiang <jiangkidd@hotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
         "ast@kernel.org" <ast@kernel.org>,
         "daniel@iogearbox.net" <daniel@iogearbox.net>,
         "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
@@ -39,54 +39,69 @@ Cc:     "davem@davemloft.net" <davem@davemloft.net>,
         "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
         "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
         "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
+Subject: Re: [PATCH] virtio-net: parameterize min ring num_free for virtio
+ receive
+Message-ID: <20190718103641-mutt-send-email-mst@kernel.org>
 References: <BYAPR14MB32056583C4963342F5D817C4A6C80@BYAPR14MB3205.namprd14.prod.outlook.com>
  <20190718085836-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
-Date:   Thu, 18 Jul 2019 22:01:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190718085836-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 18 Jul 2019 14:01:24 +0000 (UTC)
+In-Reply-To: <bdd30ef5-4f69-8218-eed0-38c6daac42db@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 18 Jul 2019 14:42:56 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+On Thu, Jul 18, 2019 at 10:01:05PM +0800, Jason Wang wrote:
+> 
+> On 2019/7/18 下午9:04, Michael S. Tsirkin wrote:
+> > On Thu, Jul 18, 2019 at 12:55:50PM +0000, ? jiang wrote:
+> > > This change makes ring buffer reclaim threshold num_free configurable
+> > > for better performance, while it's hard coded as 1/2 * queue now.
+> > > According to our test with qemu + dpdk, packet dropping happens when
+> > > the guest is not able to provide free buffer in avail ring timely.
+> > > Smaller value of num_free does decrease the number of packet dropping
+> > > during our test as it makes virtio_net reclaim buffer earlier.
+> > > 
+> > > At least, we should leave the value changeable to user while the
+> > > default value as 1/2 * queue is kept.
+> > > 
+> > > Signed-off-by: jiangkidd<jiangkidd@hotmail.com>
+> > That would be one reason, but I suspect it's not the
+> > true one. If you need more buffer due to jitter
+> > then just increase the queue size. Would be cleaner.
+> > 
+> > 
+> > However are you sure this is the reason for
+> > packet drops? Do you see them dropped by dpdk
+> > due to lack of space in the ring? As opposed to
+> > by guest?
+> > 
+> > 
+> 
+> Besides those, this patch depends on the user to choose a suitable threshold
+> which is not good. You need either a good value with demonstrated numbers or
+> something smarter.
+> 
+> Thanks
 
-On 2019/7/18 下午9:04, Michael S. Tsirkin wrote:
-> On Thu, Jul 18, 2019 at 12:55:50PM +0000, ? jiang wrote:
->> This change makes ring buffer reclaim threshold num_free configurable
->> for better performance, while it's hard coded as 1/2 * queue now.
->> According to our test with qemu + dpdk, packet dropping happens when
->> the guest is not able to provide free buffer in avail ring timely.
->> Smaller value of num_free does decrease the number of packet dropping
->> during our test as it makes virtio_net reclaim buffer earlier.
->>
->> At least, we should leave the value changeable to user while the
->> default value as 1/2 * queue is kept.
->>
->> Signed-off-by: jiangkidd<jiangkidd@hotmail.com>
-> That would be one reason, but I suspect it's not the
-> true one. If you need more buffer due to jitter
-> then just increase the queue size. Would be cleaner.
->
->
-> However are you sure this is the reason for
-> packet drops? Do you see them dropped by dpdk
-> due to lack of space in the ring? As opposed to
-> by guest?
->
->
+I do however think that we have a problem right now: try_fill_recv can
+take up a long time during which net stack does not run at all. Imagine
+a 1K queue - we are talking 512 packets. That's exceessive.  napi poll
+weight solves a similar problem, so it might make sense to cap this at
+napi_poll_weight.
 
-Besides those, this patch depends on the user to choose a suitable 
-threshold which is not good. You need either a good value with 
-demonstrated numbers or something smarter.
+Which will allow tweaking it through a module parameter as a
+side effect :) Maybe just do NAPI_POLL_WEIGHT.
 
-Thanks
+Need to be careful though: queues can also be small and I don't think we
+want to exceed queue size / 2, or maybe queue size - napi_poll_weight.
+Definitely must not exceed the full queue size.
 
+-- 
+MST
