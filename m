@@ -2,70 +2,46 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 710DA7911A
-	for <lists+xdp-newbies@lfdr.de>; Mon, 29 Jul 2019 18:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BFC79136
+	for <lists+xdp-newbies@lfdr.de>; Mon, 29 Jul 2019 18:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfG2QhM (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 29 Jul 2019 12:37:12 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46993 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfG2QhL (ORCPT
+        id S1727617AbfG2Qjo (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 29 Jul 2019 12:39:44 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35638 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfG2Qjo (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:37:11 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so27695100plz.13
-        for <xdp-newbies@vger.kernel.org>; Mon, 29 Jul 2019 09:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=rQNwVWhr/iAWO1h6tJ7DvuuxwYrEzjOkIjTIxJSwEeM=;
-        b=CzxJQ8DfEZgEgBpwt3AL5iNRX2dHKgYQ2l1Fdl9DjYxLKA9QEjfLSAuwQ8f4ble5pp
-         w3UhiYarfOQ6+3GwSpTqL1Nq6uiAt3NJBW9hqig7p/QWWjE53iA9SjYWtQ0wqqcC71FU
-         emdUecmyeMSXHAIs044VY7RhUmspvRPwEOfql2Nz7iE9n1X/MksTH5/z3UV5fpuFTvuV
-         DbbF2jPQkVNTfA2ZOmRfatcF7vbDefGpvhk8VxyBKVu3YuXaw5tX9nhcbM+vtSE0MrKA
-         SP/500QNfGzgH1dEsfScd3Ff66xKZ2KqeLsRKVG0hc2XOmON+Gag3SQOTzYHYiMks5vk
-         /aMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=rQNwVWhr/iAWO1h6tJ7DvuuxwYrEzjOkIjTIxJSwEeM=;
-        b=gPHQ3ujy79u/5y6f0ma9FFbu7eWJ5WDbYpt/G9QkrxAcPT0bC3OElNUx4dWr88gbf+
-         yXdKqx29xCFJuuTHgmiXHCTuwT3AwA/9+UicaD4VK2MC8y/LE2UZaNaLNB6glhAqW55b
-         /2oml+J3Aj+z9+Sss4dKjd8wd8zUopirG5CTD/mY+C/useayjOYBNks8jlIy8QPWVt2Z
-         9s31gxLPfBIJb5LU/jT6TblWd4xYuEBfRYh8VgwFjFc/uDd2+E1vBPsFEcw/RVlL4aBx
-         kAbGrcEJJkhp+U33ZuEepw9oRkB/Kxs7titDjAzc79AivBO/gQBEDWK/PYYBKpW8HuG8
-         OB+w==
-X-Gm-Message-State: APjAAAW4AwcXeueKGlR/fJyBFri3K5ALdwXWu2FvX5dIyoAUuvHuHqdN
-        UzR2Fz/JmewDVSQ6wEe6k69DCg==
-X-Google-Smtp-Source: APXvYqxf5IrbxRXrgplVLx4tyGUqrNJe0VLQyF/nrJYjVyVRsG6XN4wmnW0oV3rs7b+I53AKL01jrA==
-X-Received: by 2002:a17:902:59c3:: with SMTP id d3mr107721634plj.22.1564418231023;
-        Mon, 29 Jul 2019 09:37:11 -0700 (PDT)
-Received: from cakuba.netronome.com (c-71-204-185-212.hsd1.ca.comcast.net. [71.204.185.212])
-        by smtp.gmail.com with ESMTPSA id h11sm62978725pfn.120.2019.07.29.09.37.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 29 Jul 2019 09:37:10 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:37:00 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
+        Mon, 29 Jul 2019 12:39:44 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 48ED112662B78;
+        Mon, 29 Jul 2019 09:39:43 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:39:42 -0700 (PDT)
+Message-Id: <20190729.093942.444986138886341871.davem@davemloft.net>
+To:     brouer@redhat.com
 Cc:     xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, john.fastabend@gmail.com
-Subject: Re: [PATCH net-next] MAINTAINERS: Remove mailing-list entry for XDP
- (eXpress Data Path)
-Message-ID: <20190729093341.2bdb04dd@cakuba.netronome.com>
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH net-next] MAINTAINERS: Remove mailing-list entry for
+ XDP (eXpress Data Path)
+From:   David Miller <davem@davemloft.net>
 In-Reply-To: <156440259790.6123.1563221733550893420.stgit@carbon>
 References: <156440259790.6123.1563221733550893420.stgit@carbon>
-Organization: Netronome Systems, Ltd.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:39:43 -0700 (PDT)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, 29 Jul 2019 14:16:37 +0200, Jesper Dangaard Brouer wrote:
+From: Jesper Dangaard Brouer <brouer@redhat.com>
+Date: Mon, 29 Jul 2019 14:16:37 +0200
+
 > This removes the mailing list xdp-newbies@vger.kernel.org from the XDP
 > kernel maintainers entry.
 > 
@@ -77,4 +53,4 @@ On Mon, 29 Jul 2019 14:16:37 +0200, Jesper Dangaard Brouer wrote:
 > 
 > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+I'll apply this to 'net', thanks Jesper.
