@@ -2,55 +2,59 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33BFC79136
-	for <lists+xdp-newbies@lfdr.de>; Mon, 29 Jul 2019 18:39:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74E5379CC9
+	for <lists+xdp-newbies@lfdr.de>; Tue, 30 Jul 2019 01:27:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfG2Qjo (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 29 Jul 2019 12:39:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35638 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfG2Qjo (ORCPT
+        id S1729419AbfG2X1O (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 29 Jul 2019 19:27:14 -0400
+Received: from mail-ed1-f42.google.com ([209.85.208.42]:40927 "EHLO
+        mail-ed1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbfG2X1O (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 29 Jul 2019 12:39:44 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 48ED112662B78;
-        Mon, 29 Jul 2019 09:39:43 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:39:42 -0700 (PDT)
-Message-Id: <20190729.093942.444986138886341871.davem@davemloft.net>
-To:     brouer@redhat.com
-Cc:     xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH net-next] MAINTAINERS: Remove mailing-list entry for
- XDP (eXpress Data Path)
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <156440259790.6123.1563221733550893420.stgit@carbon>
-References: <156440259790.6123.1563221733550893420.stgit@carbon>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jul 2019 09:39:43 -0700 (PDT)
+        Mon, 29 Jul 2019 19:27:14 -0400
+Received: by mail-ed1-f42.google.com with SMTP id k8so60852001eds.7
+        for <xdp-newbies@vger.kernel.org>; Mon, 29 Jul 2019 16:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riotgames.com; s=riotgames;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=p2e4ImxQ/Kk15SsdjKYn5yd8qaFPUIRi5GucmMdTyyg=;
+        b=URBbXDjKAB1/+ejcZM4GTSymY5VbNJDabaQu56uo1Zsivp1UM30mY4I4eP239qLPKO
+         TNwFxFVX981a5Ny02ZWMSnZE/B1yMKubDfEkOLEnwLoZlBi5T6sM7hUZ8/gOfpqMVY8S
+         T3BqhhY+6k0LSNrcx0dy3MjeyUdNNyHkabknQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=p2e4ImxQ/Kk15SsdjKYn5yd8qaFPUIRi5GucmMdTyyg=;
+        b=hUYykZuRYljmR8T6UKnBmfU8QZg+fxq1d8PYL4VQu8c+4T/Xb/1Rz3Qq/jLypNL1IF
+         ViGxeYOCTI3XlA9xwFA8ATmhDDpcxftoL7lliMWkNwlf1CRJQTIuKvHuh3DUl3ROd4o6
+         2lQ93zVACix94V9H0ausXnvHXGhBGTHmhdpZsxSPBQgans8JrLtIDs5B+IE+sS0VP7AD
+         2bmeCiz4tlDwIkJmLfLJN/s0Q8L0Fs2Faw4iKpu8Yvdu9BZgZGS4lgHnwawS57YigSlr
+         FDsGUb+Rm/uh7utctoU2mJZ+jQIMxINjaV5HOHCyBVgDu9Vg7Ydi+9U30o3lG58eYO7Q
+         aygA==
+X-Gm-Message-State: APjAAAVJl7rBEZZGwmF8teNKtLT9sQXOvNpITtfJ36HtfXmgMQ55W4lO
+        GvnjKQZV1NfLOr57neCoD+eBn0E1QgwAS3ujC0UY5DKasCo=
+X-Google-Smtp-Source: APXvYqyZB6+9VBbCPj4luSSKzf5I9RO3WLAKNApy0CxpGnas4JVtveZNSpooT7ORaPqep7akZxnjZnYvFuq5+bo860o=
+X-Received: by 2002:a50:871c:: with SMTP id i28mr99133368edb.29.1564442832429;
+ Mon, 29 Jul 2019 16:27:12 -0700 (PDT)
+MIME-Version: 1.0
+From:   Zvi Effron <zeffron@riotgames.com>
+Date:   Mon, 29 Jul 2019 16:27:01 -0700
+Message-ID: <CAC1LvL3xoHQo_oNJEVa4DeZ3G9R6Z61ukScRuMq5UrnRCHWo1g@mail.gmail.com>
+Subject: Intel 800 series 100Gbe NIC with XDP
+To:     Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
-Date: Mon, 29 Jul 2019 14:16:37 +0200
+Hello all,
 
-> This removes the mailing list xdp-newbies@vger.kernel.org from the XDP
-> kernel maintainers entry.
-> 
-> Being in the kernel MAINTAINERS file successfully caused the list to
-> receive kbuild bot warnings, syzbot reports and sometimes developer
-> patches. The level of details in these messages, doesn't match the
-> target audience of the XDP-newbies list. This is based on a survey on
-> the mailing list, where 73% voted for removal from MAINTAINERS file.
-> 
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+I was wondering if anyone knew if the upcoming 800 series Intel NICs
+with 100gbe support XDP? I don't yet see a new driver for them, but
+they may be reusing the i40e driver, or I may have missed it? If they
+do support it, do they maybe also support hardware mode (as opposed to
+driver mode)?
 
-I'll apply this to 'net', thanks Jesper.
+Thanks!
+--Zvi
