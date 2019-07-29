@@ -2,69 +2,79 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E0B78B8F
-	for <lists+xdp-newbies@lfdr.de>; Mon, 29 Jul 2019 14:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 710DA7911A
+	for <lists+xdp-newbies@lfdr.de>; Mon, 29 Jul 2019 18:37:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfG2MQp (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 29 Jul 2019 08:16:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:62911 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbfG2MQo (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 29 Jul 2019 08:16:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A4796C049E12;
-        Mon, 29 Jul 2019 12:16:44 +0000 (UTC)
-Received: from [192.168.42.247] (ovpn-200-29.brq.redhat.com [10.40.200.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FE266012A;
-        Mon, 29 Jul 2019 12:16:39 +0000 (UTC)
-Subject: [PATCH net-next] MAINTAINERS: Remove mailing-list entry for XDP
- (eXpress Data Path)
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        id S1726358AbfG2QhM (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 29 Jul 2019 12:37:12 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46993 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfG2QhL (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 29 Jul 2019 12:37:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so27695100plz.13
+        for <xdp-newbies@vger.kernel.org>; Mon, 29 Jul 2019 09:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=rQNwVWhr/iAWO1h6tJ7DvuuxwYrEzjOkIjTIxJSwEeM=;
+        b=CzxJQ8DfEZgEgBpwt3AL5iNRX2dHKgYQ2l1Fdl9DjYxLKA9QEjfLSAuwQ8f4ble5pp
+         w3UhiYarfOQ6+3GwSpTqL1Nq6uiAt3NJBW9hqig7p/QWWjE53iA9SjYWtQ0wqqcC71FU
+         emdUecmyeMSXHAIs044VY7RhUmspvRPwEOfql2Nz7iE9n1X/MksTH5/z3UV5fpuFTvuV
+         DbbF2jPQkVNTfA2ZOmRfatcF7vbDefGpvhk8VxyBKVu3YuXaw5tX9nhcbM+vtSE0MrKA
+         SP/500QNfGzgH1dEsfScd3Ff66xKZ2KqeLsRKVG0hc2XOmON+Gag3SQOTzYHYiMks5vk
+         /aMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=rQNwVWhr/iAWO1h6tJ7DvuuxwYrEzjOkIjTIxJSwEeM=;
+        b=gPHQ3ujy79u/5y6f0ma9FFbu7eWJ5WDbYpt/G9QkrxAcPT0bC3OElNUx4dWr88gbf+
+         yXdKqx29xCFJuuTHgmiXHCTuwT3AwA/9+UicaD4VK2MC8y/LE2UZaNaLNB6glhAqW55b
+         /2oml+J3Aj+z9+Sss4dKjd8wd8zUopirG5CTD/mY+C/useayjOYBNks8jlIy8QPWVt2Z
+         9s31gxLPfBIJb5LU/jT6TblWd4xYuEBfRYh8VgwFjFc/uDd2+E1vBPsFEcw/RVlL4aBx
+         kAbGrcEJJkhp+U33ZuEepw9oRkB/Kxs7titDjAzc79AivBO/gQBEDWK/PYYBKpW8HuG8
+         OB+w==
+X-Gm-Message-State: APjAAAW4AwcXeueKGlR/fJyBFri3K5ALdwXWu2FvX5dIyoAUuvHuHqdN
+        UzR2Fz/JmewDVSQ6wEe6k69DCg==
+X-Google-Smtp-Source: APXvYqxf5IrbxRXrgplVLx4tyGUqrNJe0VLQyF/nrJYjVyVRsG6XN4wmnW0oV3rs7b+I53AKL01jrA==
+X-Received: by 2002:a17:902:59c3:: with SMTP id d3mr107721634plj.22.1564418231023;
+        Mon, 29 Jul 2019 09:37:11 -0700 (PDT)
+Received: from cakuba.netronome.com (c-71-204-185-212.hsd1.ca.comcast.net. [71.204.185.212])
+        by smtp.gmail.com with ESMTPSA id h11sm62978725pfn.120.2019.07.29.09.37.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 29 Jul 2019 09:37:10 -0700 (PDT)
+Date:   Mon, 29 Jul 2019 09:37:00 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com
-Date:   Mon, 29 Jul 2019 14:16:37 +0200
-Message-ID: <156440259790.6123.1563221733550893420.stgit@carbon>
-User-Agent: StGit/unknown-version
+        davem@davemloft.net, john.fastabend@gmail.com
+Subject: Re: [PATCH net-next] MAINTAINERS: Remove mailing-list entry for XDP
+ (eXpress Data Path)
+Message-ID: <20190729093341.2bdb04dd@cakuba.netronome.com>
+In-Reply-To: <156440259790.6123.1563221733550893420.stgit@carbon>
+References: <156440259790.6123.1563221733550893420.stgit@carbon>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 29 Jul 2019 12:16:44 +0000 (UTC)
-To:     unlisted-recipients:; (no To-header on input)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This removes the mailing list xdp-newbies@vger.kernel.org from the XDP
-kernel maintainers entry.
+On Mon, 29 Jul 2019 14:16:37 +0200, Jesper Dangaard Brouer wrote:
+> This removes the mailing list xdp-newbies@vger.kernel.org from the XDP
+> kernel maintainers entry.
+> 
+> Being in the kernel MAINTAINERS file successfully caused the list to
+> receive kbuild bot warnings, syzbot reports and sometimes developer
+> patches. The level of details in these messages, doesn't match the
+> target audience of the XDP-newbies list. This is based on a survey on
+> the mailing list, where 73% voted for removal from MAINTAINERS file.
+> 
+> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 
-Being in the kernel MAINTAINERS file successfully caused the list to
-receive kbuild bot warnings, syzbot reports and sometimes developer
-patches. The level of details in these messages, doesn't match the
-target audience of the XDP-newbies list. This is based on a survey on
-the mailing list, where 73% voted for removal from MAINTAINERS file.
-
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- MAINTAINERS |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9cc156c58f0c..45cb4237eddc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17560,7 +17560,6 @@ M:	Jakub Kicinski <jakub.kicinski@netronome.com>
- M:	Jesper Dangaard Brouer <hawk@kernel.org>
- M:	John Fastabend <john.fastabend@gmail.com>
- L:	netdev@vger.kernel.org
--L:	xdp-newbies@vger.kernel.org
- L:	bpf@vger.kernel.org
- S:	Supported
- F:	net/core/xdp.c
-
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
