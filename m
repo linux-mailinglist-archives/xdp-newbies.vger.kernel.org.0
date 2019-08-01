@@ -2,91 +2,116 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C34C7E1D4
-	for <lists+xdp-newbies@lfdr.de>; Thu,  1 Aug 2019 20:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BDC27E211
+	for <lists+xdp-newbies@lfdr.de>; Thu,  1 Aug 2019 20:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732893AbfHASAd (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 1 Aug 2019 14:00:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51316 "EHLO mx1.redhat.com"
+        id S1727656AbfHASQ7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 1 Aug 2019 14:16:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60176 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbfHASAd (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 1 Aug 2019 14:00:33 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726818AbfHASQ7 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 1 Aug 2019 14:16:59 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 11D573151289;
-        Thu,  1 Aug 2019 18:00:33 +0000 (UTC)
-Received: from firesoul.localdomain (ovpn-200-21.brq.redhat.com [10.40.200.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0B4E60BEC;
-        Thu,  1 Aug 2019 18:00:32 +0000 (UTC)
-Received: from [10.10.10.1] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id DEECA31256FD1;
-        Thu,  1 Aug 2019 20:00:31 +0200 (CEST)
-Subject: [net v1 PATCH 4/4] net: fix bpf_xdp_adjust_head regression for
- generic-XDP
+        by mx1.redhat.com (Postfix) with ESMTPS id 462BDC0BAA3F;
+        Thu,  1 Aug 2019 18:16:59 +0000 (UTC)
+Received: from carbon (ovpn-200-29.brq.redhat.com [10.40.200.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6810A60922;
+        Thu,  1 Aug 2019 18:16:56 +0000 (UTC)
+Date:   Thu, 1 Aug 2019 20:16:16 +0200
 From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Cc:     xdp-newbies@vger.kernel.org,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        brandon.cazander@multapplied.net,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Date:   Thu, 01 Aug 2019 20:00:31 +0200
-Message-ID: <156468243184.27559.7002090473019021952.stgit@firesoul>
-In-Reply-To: <156468229108.27559.2443904494495785131.stgit@firesoul>
-References: <156468229108.27559.2443904494495785131.stgit@firesoul>
-User-Agent: StGit/0.17.1-dirty
+To:     Brandon Cazander <brandon.cazander@multapplied.net>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        David Miller <davem@davemloft.net>, brouer@redhat.com
+Subject: Re: xdpgeneric, XDP_PASS, and bpf_xdp_adjust_head decapsulation
+ dropping packets
+Message-ID: <20190801201612.3aef7783@carbon>
+In-Reply-To: <20190801173324.GA660183@multapplied.net>
+References: <20190731211211.GA87084@multapplied.net>
+        <20190801101746.702431fc@carbon>
+        <20190801173324.GA660183@multapplied.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 01 Aug 2019 18:00:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 01 Aug 2019 18:16:59 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-When generic-XDP was moved to a later processing step by commit
-458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
-a regression was introduced when using bpf_xdp_adjust_head.
+On Thu, 1 Aug 2019 17:33:36 +0000
+Brandon Cazander <brandon.cazander@multapplied.net> wrote:
 
-The issue is that after this commit the skb->network_header is now
-changed prior to calling generic XDP and not after. Thus, if the header
-is changed by XDP (via bpf_xdp_adjust_head), then skb->network_header
-also need to be updated again.  Fix by calling skb_reset_network_header().
+> Thank you very much for your prompt and detailed review of my report!
+> Some of these answers may be moot now that you have found the specific
+> commit that caused the issue.
 
-Fixes: 458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
-Reported-by: Brandon Cazander <brandon.cazander@multapplied.net>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- net/core/dev.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index fc676b2610e3..b5533795c3c1 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4374,12 +4374,17 @@ static u32 netif_receive_generic_xdp(struct sk_buff *skb,
+True.
  
- 	act = bpf_prog_run_xdp(xdp_prog, xdp);
- 
-+	/* check if bpf_xdp_adjust_head was used */
- 	off = xdp->data - orig_data;
--	if (off > 0)
--		__skb_pull(skb, off);
--	else if (off < 0)
--		__skb_push(skb, -off);
--	skb->mac_header += off;
-+	if (off) {
-+		if (off > 0)
-+			__skb_pull(skb, off);
-+		else if (off < 0)
-+			__skb_push(skb, -off);
-+
-+		skb->mac_header += off;
-+		skb_reset_network_header(skb);
-+	}
- 
- 	/* check if bpf_xdp_adjust_tail was used. it can only "shrink"
- 	 * pckt.
+> On Thu, Aug 01, 2019 at 10:18:49AM +0200, Jesper Dangaard Brouer wrote:
+> 
+> > Are you sure you are using "xdpgeneric" mode?
+> > As virtio_net do have "native" XDP mode.  
+> 
+> The program is loaded with XDP_FLAGS_SKB_MODE in this case. I'm having a
+> separate issue with "native" XDP on virtio_net that I'm working on but
+> it is more likely an issue with my code.
+> 
+> > Encapsulated packet starts at a funny offset, making it harder to follow.  
+> 
+> Sorry about that. I should have made it easier.
 
+No problem.
+
+> > Looking at the code, I think the packet will be dropped earlier than
+> > the pskb_trim_rcsum() call, in the check if (skb->len < len).  
+> 
+> I had the same suspicion but a probe in the corresponding drop showed no
+> results, and furthermore, the InTruncatedPkts SNMP counter was not
+> increasing.
+
+Strange.
+
+> > You only support IPv4 encapsulated packets?
+> > 
+> > Do you handle ARP requests separately?  
+> 
+> Sorry, I wanted a minimal example so this is stripped down.
+
+I figured, that you already handled that.
+ 
+> > Can you test an earlier kernel, specifically before: commit
+> > 458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
+> > (Author: Stephen Hemminger)
+> > 
+> > $ git describe --contains  458bf2f224f04
+> > v5.2-rc3~26^2~11^2
+> > 
+> > I fear that this commit, which moved generic-XDP to a later call point,
+> > might cause this.  Because it could be that the SKB network_header
+> > update, is now done before calling XDP program (... still looking at
+> > code details).  
+> 
+> You have already confirmed this but I can also confirm that a kernel
+> before commit 458bf2f224f0 works with no changes to my program.
+
+Thanks for also confirming. I've just send a patchset with fixes:
+ https://patchwork.ozlabs.org/project/netdev/list/?series=122796&state=%2a
+
+I can recommend that you look at the selftest script test_xdp_vlan.sh:
+ https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/test_xdp_vlan.sh
+
+Which uses veth and network namespaces for testing.  If you get the
+hint, then you can actually create these small scripts, that can
+function as unit and regression tests for XDP code snippets.
+
+Our XDP-tutorial also uses veth as a development environment:
+ https://github.com/xdp-project/xdp-tutorial/tree/master/testenv
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
