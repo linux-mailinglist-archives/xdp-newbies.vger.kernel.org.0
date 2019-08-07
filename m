@@ -2,88 +2,216 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27BFC85271
-	for <lists+xdp-newbies@lfdr.de>; Wed,  7 Aug 2019 19:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D01852A2
+	for <lists+xdp-newbies@lfdr.de>; Wed,  7 Aug 2019 20:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388697AbfHGRw7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 7 Aug 2019 13:52:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34214 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbfHGRw7 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 7 Aug 2019 13:52:59 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so41929564plt.1;
-        Wed, 07 Aug 2019 10:52:58 -0700 (PDT)
+        id S2389050AbfHGSEz (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 7 Aug 2019 14:04:55 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44526 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389041AbfHGSEz (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 7 Aug 2019 14:04:55 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b7so57677743otl.11;
+        Wed, 07 Aug 2019 11:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U9jURJQ1Uv/DDXBBVFiM0Yx2vC/nTJ5FNJbf0XwSXME=;
-        b=JP6n4lR/dA1+ETGt2vNBFvAISfXJKVyuZg3q4R+tYSDmwDIe7yVp/iDibgeINYmWjX
-         gF2B2+GNwy+XEcrIC5cBPeQBVJiFsn9BG4vCQ/Kdf31HayvW+y15/tr0dg32mfZj/6Xc
-         SLLdDO2oVu9By9/tp3SL+YwWoo2mo5G6v5rcdG3Y+9o2Xr1jvne7E0UA46pccZ13ETOZ
-         nr666LA0/Hdyk+cuO6XWiqG5VEf32YgDSlaE61gqJkNsgDX4Qml+JDoAp0Rd9/7Ik2CP
-         qXpRI+iqPMTsWrrM/BkZWTEZES2GgqxpZYinA3f354lpfsEV40SopQrjmY8f4/9RuPXL
-         V7sQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sUxeWLtE/Daiia7Q33MNTCsn83ernoCHj08yWaGtIJE=;
+        b=aPwpCUrpNOUzETiyFVOCTnwF1gaqOyv/BhjvaJqzCb6wzgnsrABMqVbe08Oyp1nt9n
+         Tn/Xr7TzuEN9IRzwy3kHOxa1qEkV3AJQZu7ab+BjG0A0sqmdGCKymhjTWbwqamIA2myh
+         GWcFCPBZmRAMQUcej+qsSTrff4tFIQYPzsKXndo8ucAT9ZNWB6GIvZa9obSnS9EbqMLt
+         Q/buaxzhbL88kXkeXOEvX/ztuSycCDIrjwTICaaz1TVrJY47FChY3S0IJ8Zo/l+VifET
+         Bs116d/oby/agW8CiUIuqVn44nqzS3qzI/VFAUbfHDlcF9Wo3f5WDTS7YwaCjAHigRCt
+         oteQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U9jURJQ1Uv/DDXBBVFiM0Yx2vC/nTJ5FNJbf0XwSXME=;
-        b=IE2aIclaxRrECUZrxnqlM0QvlmJv6sx4z61940JccTRubtscibbYN/gyCgm6B8KiQf
-         ucEnb0Bp1aGSo5RocsQJhYjoTmQ3z0X38nBNRmP94G2YQd1hlpGV7x9csORO7Y5npV/Z
-         vhaS6JxFmUgxJzQ/xHKH6FV/XyBBxgdwO3smUCab68s/B1HVa0CWt7W6YtYUZs7aopEv
-         o2jvoFE4qYJonJfpKLqTvGJrQBUKGwQN2QUB1+KWjkga67+PYpVTdKO/r2W/HOiVaCPe
-         2CYC7zN2lK7/7xaPmOogUtSxrqSko6u6JZSWzal1dFzO0gLKshJ69tzJhRHJlyvzI12W
-         8Q7Q==
-X-Gm-Message-State: APjAAAXrE93urVma50iHp6UOt7wwh5iPU+X2qE4JacyVeU82yn1wYSGR
-        dtMVYcjs2B3HGoaeS+VgAO8=
-X-Google-Smtp-Source: APXvYqzHGOJHyi88ZgDd3CqnuW2dE1+GFO/h5SZwZ+XpSaRFkHKmxNboOldlrSNAhD9CACisPs+23Q==
-X-Received: by 2002:a17:902:f213:: with SMTP id gn19mr9517558plb.35.1565200378479;
-        Wed, 07 Aug 2019 10:52:58 -0700 (PDT)
-Received: from [172.27.227.247] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id m6sm91652238pfb.151.2019.08.07.10.52.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Aug 2019 10:52:57 -0700 (PDT)
-Subject: Re: [bpf-next PATCH 3/3] samples/bpf: xdp_fwd explain bpf_fib_lookup
- return codes
-To:     Jesper Dangaard Brouer <brouer@redhat.com>, netdev@vger.kernel.org,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     xdp-newbies@vger.kernel.org, a.s.protopopov@gmail.com
-References: <156518133219.5636.728822418668658886.stgit@firesoul>
- <156518138817.5636.3626699603179533211.stgit@firesoul>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <aae3554f-2d55-d2d1-8cd8-2481ca923469@gmail.com>
-Date:   Wed, 7 Aug 2019 11:52:56 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sUxeWLtE/Daiia7Q33MNTCsn83ernoCHj08yWaGtIJE=;
+        b=XOJ2eLql3JapHdC9OdS2da740jT4yVvYaHoPUrQPFc0xKYpqLxmtIhUul4lYOMVYJm
+         hA2pCQfha4Kz9eFndTX0Phjv4SYIh2CFzi1zrISC2+KqRvIVtHZZc5A/I91l4MWkmoPw
+         7PpXpOyjQsuBwtw3gOYg0A/9NWeTd/Tre+dfXovgwKlehS+l1AZ8mLaZ4q3f1WvzYToJ
+         ntZVo2h4e9nmVDbcuNLEA0rqP4ovNbUFsFazSEW+harwCAs13aCX6nobCiBmsR366psX
+         +Gw2q2GnZIrjRIv8PSw15PyCTOlUlQyURAr6s1GoblZrnQPisUGQSLfhHEkpxIYeN5TO
+         qTjA==
+X-Gm-Message-State: APjAAAUYkgyB1+bEqd6kX/JCo0RtkUR1zZyJCBuFRm1l7HBVnxK9AKn8
+        KIHAGtuyEY6qJ+c3pJ0F9PhXjc2xX17DJREDXBc=
+X-Google-Smtp-Source: APXvYqweDPW+lawI/PIIpCrqS8/gZJaBuHDVbcaA4/VbRdGJxi84t2dJ0q6wHFUtCB7xgj+T8S2eGMpifPoxDNjOToA=
+X-Received: by 2002:a05:6638:81:: with SMTP id v1mr11179720jao.72.1565201093597;
+ Wed, 07 Aug 2019 11:04:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <156518138817.5636.3626699603179533211.stgit@firesoul>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <156518133219.5636.728822418668658886.stgit@firesoul> <156518138310.5636.13064696265479533742.stgit@firesoul>
+In-Reply-To: <156518138310.5636.13064696265479533742.stgit@firesoul>
+From:   Y Song <ys114321@gmail.com>
+Date:   Wed, 7 Aug 2019 11:04:17 -0700
+Message-ID: <CAH3MdRUf_2Sk8v2dPeQ_+LfKPPwX9N3QoMDMCGFehd5JQVktcw@mail.gmail.com>
+Subject: Re: [bpf-next PATCH 2/3] samples/bpf: make xdp_fwd more practically
+ usable via devmap lookup
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Xdp <xdp-newbies@vger.kernel.org>, a.s.protopopov@gmail.com,
+        David Ahern <dsahern@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 8/7/19 6:36 AM, Jesper Dangaard Brouer wrote:
-> Make it clear that this XDP program depend on the network
-> stack to do the ARP resolution.  This is connected with the
-> BPF_FIB_LKUP_RET_NO_NEIGH return code from bpf_fib_lookup().
-> 
-> Another common mistake (seen via XDP-tutorial) is that users
-> don't realize that sysctl net.ipv{4,6}.conf.all.forwarding
-> setting is honored by bpf_fib_lookup.
-> 
-> Reported-by: Anton Protopopov <a.s.protopopov@gmail.com>
+On Wed, Aug 7, 2019 at 5:37 AM Jesper Dangaard Brouer <brouer@redhat.com> wrote:
+>
+> This address the TODO in samples/bpf/xdp_fwd_kern.c, which points out
+> that the chosen egress index should be checked for existence in the
+> devmap. This can now be done via taking advantage of Toke's work in
+> commit 0cdbb4b09a06 ("devmap: Allow map lookups from eBPF").
+>
+> This change makes xdp_fwd more practically usable, as this allows for
+> a mixed environment, where IP-forwarding fallback to network stack, if
+> the egress device isn't configured to use XDP.
+>
 > Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 > ---
->  samples/bpf/xdp_fwd_kern.c |   19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
+>  samples/bpf/xdp_fwd_kern.c |   20 ++++++++++++++------
+>  samples/bpf/xdp_fwd_user.c |   36 +++++++++++++++++++++++++-----------
+>  2 files changed, 39 insertions(+), 17 deletions(-)
+>
+> diff --git a/samples/bpf/xdp_fwd_kern.c b/samples/bpf/xdp_fwd_kern.c
+> index e6ffc4ea06f4..4a5ad381ed2a 100644
+> --- a/samples/bpf/xdp_fwd_kern.c
+> +++ b/samples/bpf/xdp_fwd_kern.c
+> @@ -104,13 +104,21 @@ static __always_inline int xdp_fwd_flags(struct xdp_md *ctx, u32 flags)
+>
+>         rc = bpf_fib_lookup(ctx, &fib_params, sizeof(fib_params), flags);
+>
+> -       /* verify egress index has xdp support
+> -        * TO-DO bpf_map_lookup_elem(&tx_port, &key) fails with
+> -        *       cannot pass map_type 14 into func bpf_map_lookup_elem#1:
+> -        * NOTE: without verification that egress index supports XDP
+> -        *       forwarding packets are dropped.
+> -        */
+>         if (rc == 0) {
+> +               int *val;
+> +
+> +               /* Verify egress index has been configured as TX-port.
+> +                * (Note: User can still have inserted an egress ifindex that
+> +                * doesn't support XDP xmit, which will result in packet drops).
+> +                *
+> +                * Note: lookup in devmap supported since 0cdbb4b09a0.
+> +                * If not supported will fail with:
+> +                *  cannot pass map_type 14 into func bpf_map_lookup_elem#1:
+> +                */
+> +               val = bpf_map_lookup_elem(&tx_port, &fib_params.ifindex);
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+It should be "xdp_tx_ports". Otherwise, you will have compilation errors.
 
+> +               if (!val)
+> +                       return XDP_PASS;
 
+Also, maybe we can do
+         if (!bpf_map_lookup_elem(&tx_port, &fib_params.ifindex))
+            return XDP_PASS;
+so we do not need to define val at all.
+
+> +
+>                 if (h_proto == htons(ETH_P_IP))
+>                         ip_decrease_ttl(iph);
+>                 else if (h_proto == htons(ETH_P_IPV6))
+> diff --git a/samples/bpf/xdp_fwd_user.c b/samples/bpf/xdp_fwd_user.c
+> index ba012d9f93dd..20951bc27477 100644
+> --- a/samples/bpf/xdp_fwd_user.c
+> +++ b/samples/bpf/xdp_fwd_user.c
+> @@ -27,14 +27,20 @@
+>  #include "libbpf.h"
+>  #include <bpf/bpf.h>
+>
+> -
+> -static int do_attach(int idx, int fd, const char *name)
+> +static int do_attach(int idx, int prog_fd, int map_fd, const char *name)
+>  {
+>         int err;
+>
+> -       err = bpf_set_link_xdp_fd(idx, fd, 0);
+> -       if (err < 0)
+> +       err = bpf_set_link_xdp_fd(idx, prog_fd, 0);
+> +       if (err < 0) {
+>                 printf("ERROR: failed to attach program to %s\n", name);
+> +               return err;
+> +       }
+> +
+> +       /* Adding ifindex as a possible egress TX port */
+> +       err = bpf_map_update_elem(map_fd, &idx, &idx, 0);
+> +       if (err)
+> +               printf("ERROR: failed using device %s as TX-port\n", name);
+>
+>         return err;
+>  }
+> @@ -47,6 +53,9 @@ static int do_detach(int idx, const char *name)
+>         if (err < 0)
+>                 printf("ERROR: failed to detach program from %s\n", name);
+>
+> +       /* TODO: Remember to cleanup map, when adding use of shared map
+> +        *  bpf_map_delete_elem((map_fd, &idx);
+> +        */
+>         return err;
+>  }
+>
+> @@ -67,10 +76,10 @@ int main(int argc, char **argv)
+>         };
+>         const char *prog_name = "xdp_fwd";
+>         struct bpf_program *prog;
+> +       int prog_fd, map_fd = -1;
+>         char filename[PATH_MAX];
+>         struct bpf_object *obj;
+>         int opt, i, idx, err;
+> -       int prog_fd, map_fd;
+>         int attach = 1;
+>         int ret = 0;
+>
+> @@ -103,8 +112,17 @@ int main(int argc, char **argv)
+>                         return 1;
+>                 }
+>
+> -               if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+> +               err = bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd);
+> +               if (err) {
+> +                       if (err == -22) {
+
+-EINVAL?
+
+For -EINVAL, many things could go wrong. But maybe the blow error
+is the most common one so I am fine with that.
+
+> +                               printf("Does kernel support devmap lookup?\n");
+> +                               /* If not, the error message will be:
+> +                                * "cannot pass map_type 14 into func
+> +                                * bpf_map_lookup_elem#1"
+> +                                */
+> +                       }
+>                         return 1;
+> +               }
+>
+>                 prog = bpf_object__find_program_by_title(obj, prog_name);
+>                 prog_fd = bpf_program__fd(prog);
+> @@ -119,10 +137,6 @@ int main(int argc, char **argv)
+>                         return 1;
+>                 }
+>         }
+> -       if (attach) {
+> -               for (i = 1; i < 64; ++i)
+> -                       bpf_map_update_elem(map_fd, &i, &i, 0);
+> -       }
+>
+>         for (i = optind; i < argc; ++i) {
+>                 idx = if_nametoindex(argv[i]);
+> @@ -138,7 +152,7 @@ int main(int argc, char **argv)
+>                         if (err)
+>                                 ret = err;
+>                 } else {
+> -                       err = do_attach(idx, prog_fd, argv[i]);
+> +                       err = do_attach(idx, prog_fd, map_fd, argv[i]);
+>                         if (err)
+>                                 ret = err;
+>                 }
+>
