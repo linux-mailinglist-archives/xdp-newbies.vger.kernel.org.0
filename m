@@ -2,63 +2,68 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DF63824C5
-	for <lists+xdp-newbies@lfdr.de>; Mon,  5 Aug 2019 20:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C5484BBA
+	for <lists+xdp-newbies@lfdr.de>; Wed,  7 Aug 2019 14:38:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfHESTH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 5 Aug 2019 14:19:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:60310 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbfHESTH (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 5 Aug 2019 14:19:07 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D3A211540E30F;
-        Mon,  5 Aug 2019 11:19:06 -0700 (PDT)
-Date:   Mon, 05 Aug 2019 11:19:06 -0700 (PDT)
-Message-Id: <20190805.111906.1380210569649795922.davem@davemloft.net>
-To:     brouer@redhat.com
-Cc:     netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        borkmann@iogearbox.net, brandon.cazander@multapplied.net,
-        alexei.starovoitov@gmail.com
-Subject: Re: [net v1 PATCH 0/4] net: fix regressions for generic-XDP
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <156468229108.27559.2443904494495785131.stgit@firesoul>
-References: <20190731211211.GA87084@multapplied.net>
-        <156468229108.27559.2443904494495785131.stgit@firesoul>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        id S1729550AbfHGMgR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 7 Aug 2019 08:36:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45976 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728235AbfHGMgR (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 7 Aug 2019 08:36:17 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1262114AFAB;
+        Wed,  7 Aug 2019 12:36:17 +0000 (UTC)
+Received: from firesoul.localdomain (ovpn-200-48.brq.redhat.com [10.40.200.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56A13600C6;
+        Wed,  7 Aug 2019 12:36:14 +0000 (UTC)
+Received: from [10.10.10.1] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id 04EEE3002D560;
+        Wed,  7 Aug 2019 14:36:13 +0200 (CEST)
+Subject: [bpf-next PATCH 0/3] bpf: improvements to xdp_fwd sample
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     netdev@vger.kernel.org, Daniel Borkmann <borkmann@iogearbox.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     xdp-newbies@vger.kernel.org, a.s.protopopov@gmail.com,
+        dsahern@gmail.com, Jesper Dangaard Brouer <brouer@redhat.com>
+Date:   Wed, 07 Aug 2019 14:36:12 +0200
+Message-ID: <156518133219.5636.728822418668658886.stgit@firesoul>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 05 Aug 2019 11:19:07 -0700 (PDT)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 07 Aug 2019 12:36:17 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
-Date: Thu, 01 Aug 2019 20:00:11 +0200
+This patchset is focused on improvements for XDP forwarding sample
+named xdp_fwd, which leverage the existing FIB routing tables as
+described in LPC2018[1] talk by David Ahern.
 
-> Thanks to Brandon Cazander, who wrote a very detailed bug report that
-> even used perf probe's on xdp-newbies mailing list, we discovered that
-> generic-XDP contains some regressions when using bpf_xdp_adjust_head().
-> 
-> First issue were that my selftests script, that use bpf_xdp_adjust_head(),
-> by mistake didn't use generic-XDP any-longer. That selftest should have
-> caught the real regression introduced in commit 458bf2f224f0 ("net: core:
-> support XDP generic on stacked devices.").
-> 
-> To verify this patchset fix the regressions, you can invoked manually via:
-> 
->   cd tools/testing/selftests/bpf/
->   sudo ./test_xdp_vlan_mode_generic.sh
->   sudo ./test_xdp_vlan_mode_native.sh
-> 
-> Link: https://www.spinics.net/lists/xdp-newbies/msg01231.html
-> Fixes: 458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
-> Reported by: Brandon Cazander <brandon.cazander@multapplied.net>
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+The primary motivation is to illustrate how Toke's recent work
+improves usability of XDP_REDIRECT via lookups in devmap. The other
+patches are to help users understand the sample.
 
-Series applied and queued up for -stable, thanks.
+I have more improvements to xdp_fwd, but those might requires changes
+to libbpf.  Thus, sending these patches first as they are isolated.
+
+[1] http://vger.kernel.org/lpc-networking2018.html#session-1
+
+---
+
+Jesper Dangaard Brouer (3):
+      samples/bpf: xdp_fwd rename devmap name to be xdp_tx_ports
+      samples/bpf: make xdp_fwd more practically usable via devmap lookup
+      samples/bpf: xdp_fwd explain bpf_fib_lookup return codes
+
+
+ samples/bpf/xdp_fwd_kern.c |   42 +++++++++++++++++++++++++++++++++---------
+ samples/bpf/xdp_fwd_user.c |   38 ++++++++++++++++++++++++++------------
+ 2 files changed, 59 insertions(+), 21 deletions(-)
+
+--
