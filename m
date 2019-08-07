@@ -2,90 +2,63 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1550384BC1
-	for <lists+xdp-newbies@lfdr.de>; Wed,  7 Aug 2019 14:38:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC0284C06
+	for <lists+xdp-newbies@lfdr.de>; Wed,  7 Aug 2019 14:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387670AbfHGMgb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 7 Aug 2019 08:36:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54022 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387598AbfHGMg3 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 7 Aug 2019 08:36:29 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 617843174654;
-        Wed,  7 Aug 2019 12:36:29 +0000 (UTC)
-Received: from firesoul.localdomain (ovpn-200-48.brq.redhat.com [10.40.200.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BCE15C258;
-        Wed,  7 Aug 2019 12:36:29 +0000 (UTC)
-Received: from [10.10.10.1] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id 3A6DC3002D560;
-        Wed,  7 Aug 2019 14:36:28 +0200 (CEST)
-Subject: [bpf-next PATCH 3/3] samples/bpf: xdp_fwd explain bpf_fib_lookup
- return codes
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     netdev@vger.kernel.org, Daniel Borkmann <borkmann@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     xdp-newbies@vger.kernel.org, a.s.protopopov@gmail.com,
-        dsahern@gmail.com, Jesper Dangaard Brouer <brouer@redhat.com>
-Date:   Wed, 07 Aug 2019 14:36:28 +0200
-Message-ID: <156518138817.5636.3626699603179533211.stgit@firesoul>
-In-Reply-To: <156518133219.5636.728822418668658886.stgit@firesoul>
-References: <156518133219.5636.728822418668658886.stgit@firesoul>
-User-Agent: StGit/0.17.1-dirty
+        id S1729781AbfHGMtf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 7 Aug 2019 08:49:35 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:37106 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729722AbfHGMtf (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 7 Aug 2019 08:49:35 -0400
+Received: by mail-wr1-f45.google.com with SMTP id b3so150175wro.4
+        for <xdp-newbies@vger.kernel.org>; Wed, 07 Aug 2019 05:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dectris.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Ufdc1wiIkvEeJsPWjLQhX1ytiruiDNsHkddePOCBxMU=;
+        b=hoZwEnC7SUqkHyY0h+kEXxZEzBbcGNxFD5m1EX8f7cuaQBj4vbzIRD8vFlgoyXJKDy
+         s6qVNCISyChJ6wWGHZ33JiXQGOpTRPPb+F7TLBvXZvbJ2CJ6hGyeoDwJHQSOROETKPSr
+         EJw6CpiwgAaWcraVYrls9sePbHVxP1rVHrSnc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Ufdc1wiIkvEeJsPWjLQhX1ytiruiDNsHkddePOCBxMU=;
+        b=qF9qVB0TKLpLMhakwJ9IUghBnHoqMqEXANLrHiC8L4Ak792FGzNkDw4TjAJU8onPmV
+         ildp+4c2IalWCPB1fXi0p10SIuJ4KZC5DVoGlZpBY6CV2aR/J5bab047caiZWekDTbG6
+         j0zn4wjj0B5M1x8ar2f4fWU+qa5zW641dY3GLTbVPGBxLShQF1aiWH3F321wtCdF4vEq
+         v2TTDyTLIb7wukdkM4CctAqQQTufmLLCtolXKM+CCR6fiBfbpWv0HPDBsymzNAAq6b99
+         v6XqD81qbmy6x0mTt2QkqKpjHKrrLMZm8tngHXsKsOBaXgsiE8M/xzMP/mwphxywa/y4
+         9RgQ==
+X-Gm-Message-State: APjAAAVW4HpJAcNp1fBEhZhEHFyptvgT5CZx+YDKy8+DmHlW2K52qSqB
+        a5GT5mYB5362MmkxqZOl/PoZaphrlPXyTCI2sH8atkMcrCnvaw==
+X-Google-Smtp-Source: APXvYqzuq5nnpE6LmyzDSeGHexJM7uekR3VIgHKiCbW7iMkN9/s5DH7r1cuR0jPsSfOVHdFI9j4CCFU+JxYItMLye7s=
+X-Received: by 2002:adf:aac8:: with SMTP id i8mr11465374wrc.56.1565182173690;
+ Wed, 07 Aug 2019 05:49:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 07 Aug 2019 12:36:29 +0000 (UTC)
+From:   Kal Cutter Conley <kal.conley@dectris.com>
+Date:   Wed, 7 Aug 2019 14:49:22 +0200
+Message-ID: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
+Subject: net/mlx5e: bind() always returns EINVAL with XDP_ZEROCOPY
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Make it clear that this XDP program depend on the network
-stack to do the ARP resolution.  This is connected with the
-BPF_FIB_LKUP_RET_NO_NEIGH return code from bpf_fib_lookup().
+Hello,
+I am testing the mlx5e driver with AF_XDP. When I specify
+XDP_ZEROCOPY, bind() always returns EINVAL. I observe the same problem
+with the xdpsock sample:
 
-Another common mistake (seen via XDP-tutorial) is that users
-don't realize that sysctl net.ipv{4,6}.conf.all.forwarding
-setting is honored by bpf_fib_lookup.
+sudo samples/bpf/xdpsock -r -i dcb1-port1 -z
+samples/bpf/xdpsock_user.c:xsk_configure_socket:322: errno:
+22/"Invalid argument"
 
-Reported-by: Anton Protopopov <a.s.protopopov@gmail.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- samples/bpf/xdp_fwd_kern.c |   19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+Without XDP_ZEROCOPY, everything works as expected. Is this a known
+issue/limitation? I expected this to be supported looking at the
+code/commit history.
 
-diff --git a/samples/bpf/xdp_fwd_kern.c b/samples/bpf/xdp_fwd_kern.c
-index 4a5ad381ed2a..df11163454e7 100644
---- a/samples/bpf/xdp_fwd_kern.c
-+++ b/samples/bpf/xdp_fwd_kern.c
-@@ -103,8 +103,23 @@ static __always_inline int xdp_fwd_flags(struct xdp_md *ctx, u32 flags)
- 	fib_params.ifindex = ctx->ingress_ifindex;
- 
- 	rc = bpf_fib_lookup(ctx, &fib_params, sizeof(fib_params), flags);
--
--	if (rc == 0) {
-+	/*
-+	 * Some rc (return codes) from bpf_fib_lookup() are important,
-+	 * to understand how this XDP-prog interacts with network stack.
-+	 *
-+	 * BPF_FIB_LKUP_RET_NO_NEIGH:
-+	 *  Even if route lookup was a success, then the MAC-addresses are also
-+	 *  needed.  This is obtained from arp/neighbour table, but if table is
-+	 *  (still) empty then BPF_FIB_LKUP_RET_NO_NEIGH is returned.  To avoid
-+	 *  doing ARP lookup directly from XDP, then send packet to normal
-+	 *  network stack via XDP_PASS and expect it will do ARP resolution.
-+	 *
-+	 * BPF_FIB_LKUP_RET_FWD_DISABLED:
-+	 *  The bpf_fib_lookup respect sysctl net.ipv{4,6}.conf.all.forwarding
-+	 *  setting, and will return BPF_FIB_LKUP_RET_FWD_DISABLED if not
-+	 *  enabled this on ingress device.
-+	 */
-+	if (rc == BPF_FIB_LKUP_RET_SUCCESS) {
- 		int *val;
- 
- 		/* Verify egress index has been configured as TX-port.
-
+Thanks,
+Kal
