@@ -2,111 +2,84 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A60738A314
-	for <lists+xdp-newbies@lfdr.de>; Mon, 12 Aug 2019 18:12:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B76EA8A573
+	for <lists+xdp-newbies@lfdr.de>; Mon, 12 Aug 2019 20:13:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfHLQLq (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 12 Aug 2019 12:11:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40012 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfHLQLq (ORCPT
+        id S1726144AbfHLSNX (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 12 Aug 2019 14:13:23 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41909 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726200AbfHLSNX (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 12 Aug 2019 12:11:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=acc3WF35LR8BXEDMGJ13kNusezGrO1SutQPhnhxeBCw=; b=eWv3m7KcDGlqFNO3Yad5F/wta
-        m7r6ZVcp6p6MSp20w6n8sMza+rI0sCCtzdzvaJ3TzrPH21tYKbUNwBRcoKYULQcpISRzRUw85wPWX
-        PsDY+oNVtbEx/9pBa5rePj62z8keperADcjWaAvzkFnSsKY345OTrNIthz+2TUHzE5cOWR1nQL9pV
-        lY8CrO1+2H7TfGMCYSXJaR56QaxhZx/+FDrHEe8+SXzPddYMWzy1qxH9jq45Zx0MJpd8nC7dAwgyl
-        OP15PscPVMaZDv5PNPv33OCBIwPjsr/wUnwyfOFDKXWPo1I8DXPQZSi7T8L6pC6oze7JjUqqSr4Dh
-        I0o92n8GQ==;
-Received: from [179.182.166.35] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxCv9-0005tS-LL; Mon, 12 Aug 2019 16:11:43 +0000
-Date:   Mon, 12 Aug 2019 13:11:37 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Documentation: sphinx: Don't parse socket() as
- identifier reference
-Message-ID: <20190812131137.74a4ddf3@coco.lan>
-In-Reply-To: <20190812160708.32172-2-j.neuschaefer@gmx.net>
-References: <20190812160708.32172-1-j.neuschaefer@gmx.net>
-        <20190812160708.32172-2-j.neuschaefer@gmx.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 12 Aug 2019 14:13:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d24so99139517ljg.8
+        for <xdp-newbies@vger.kernel.org>; Mon, 12 Aug 2019 11:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=khomp.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=kL7a0v5HFcPRR8mMqLWLjsDtajuo9cc1vCUlJrsnvPc=;
+        b=pTMfRZ1vs4fhsj/JxOUo6tqUrYXemdOQtxh0aJ5/bq8Xts/udqV3R8NlqR06bLPeoU
+         Xt878rEahAHHSkEULo5bMvYDa/bAK6i1LoQkpr1Mf0np18N8JTLDuId1W3ow+HjzxHfp
+         BtgL9APRCiVy+PxMtgsMaTnXxZ36/ZjUWnMc0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=kL7a0v5HFcPRR8mMqLWLjsDtajuo9cc1vCUlJrsnvPc=;
+        b=pXVqdCQgA2Rl6UvG6jWjH2zAQjHRClovyljd7A8AoYN42B6nHa0Gvo3m86/uLwXMiJ
+         l6lX97U7FyXTQbX/iXw3Ux49uuCSXRufcvFzpe0Kzx2aNAL2PnE2xDZJe9uJiA5gR9F6
+         M0tczSpt7zB+PJDns5A8SUQWeHt5oGMp3J11pG195TWZRIa5cfbzarsmTW8qy718z4I9
+         dNEisefUl7B90YRCUNL4yXXpijfd0RLAzGYAOt5ta4jE9+ouh9o7+8QX9VCxuW/rz5IJ
+         hhAglXSJoDUmMs9p/dTLUM7HSS1tDTNZ0C1OzBPiQYPpkWtHeDWGC/r4ykz9K+rrUlFY
+         qSqw==
+X-Gm-Message-State: APjAAAU+v6cXK2jtci/stkWXiGCLE2/VhHoIneU8uLiImmD+YEfxNcz4
+        X8JWi9nhSJdsBq4Jn9kUmk3miyI8yz05cqLZxJGo7CIguy4n6Q==
+X-Google-Smtp-Source: APXvYqwqF+1IumQXDJtI2X7B7QQ7FDXSJpvQ9DbJSFkQvhC3s2dTb3jaZya+aXfpMphjPeNkYbcunoL/1A8KkCCtsoo=
+X-Received: by 2002:a2e:87d5:: with SMTP id v21mr2670489ljj.191.1565633600523;
+ Mon, 12 Aug 2019 11:13:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From:   Rafael Vargas <vargas@khomp.com>
+Date:   Mon, 12 Aug 2019 15:13:09 -0300
+Message-ID: <CAEaYocZ3awg1aW=7Z7Ut_G64Ov9ZdyOAeYWNMdTBTf7scJM6EQ@mail.gmail.com>
+Subject: libbpf expected backward compatibility
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Em Mon, 12 Aug 2019 18:07:05 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> escreveu:
+Hi,
+Reading the tools/lib/bpf/README.rst file, I could find what should be
+the expected backward compatibility of the library with older kernels.
 
-> With the introduction of Documentation/sphinx/automarkup.py, socket() is
-> parsed as a reference to the in-kernel definition of socket. Sphinx then
-> decides that struct socket is a good match, which is usually not
-> intended, when the syscall is meant instead. This was observed in
-> Documentation/networking/af_xdp.rst.
->=20
-> Prevent socket() from being misinterpreted by adding it to the Skipfuncs
-> list in automarkup.py.
->=20
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> ---
->=20
-> v2:
-> - block socket() in Documentation/sphinx/automarkup.py, as suggested by
->   Jonathan Corbet
->=20
-> v1:
-> - https://lore.kernel.org/lkml/20190810121738.19587-1-j.neuschaefer@gmx.n=
-et/
-> ---
->  Documentation/sphinx/automarkup.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/au=
-tomarkup.py
-> index a8798369e8f7..5b6119ff69f4 100644
-> --- a/Documentation/sphinx/automarkup.py
-> +++ b/Documentation/sphinx/automarkup.py
-> @@ -26,7 +26,8 @@ RE_function =3D re.compile(r'([\w_][\w\d_]+\(\))')
->  # just don't even try with these names.
->  #
->  Skipfuncs =3D [ 'open', 'close', 'read', 'write', 'fcntl', 'mmap',
-> -              'select', 'poll', 'fork', 'execve', 'clone', 'ioctl']
-> +              'select', 'poll', 'fork', 'execve', 'clone', 'ioctl',
-> +              'socket' ]
+Should I be able to use a libbpf compiled from a kernel newer than the
+one I will be running or vice-versa?
 
-Both patches sound OK on my eyes. Yet, I would just fold them into
-a single one.
-
-In any case:
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->=20
->  #
->  # Find all occurrences of function() and try to replace them with
-> --
-> 2.20.1
->=20
+I've noticed that the following diff (part of
+421ecf02c8e73e1d95e16e5e12aa19146561edba) makes the xsk_socket__create
+function return errno 95 'Operation not supported' on older kernels
+(5.1.0 in this particular case).
 
 
+diff --git a/src/xsk.c b/src/xsk.c
+index 7ef6293..bf15a80 100644
+@@ -597,6 +599,16 @@ int xsk_socket__create(struct xsk_socket
+**xsk_ptr, const char *ifname,
+        }
 
-Thanks,
-Mauro
+        xsk->prog_fd = -1;
++
++       optlen = sizeof(opts);
++       err = getsockopt(xsk->fd, SOL_XDP, XDP_OPTIONS, &opts, &optlen);
++       if (err) {
++               err = -errno;
++               goto out_mmap_tx;
++       }
++
++       xsk->zc = opts.flags & XDP_OPTIONS_ZEROCOPY;
+
+Should this really return Operation not supported or should it handle
+this particular error and set the zc flag as false?
+
+-- 
+Rafael Vargas
