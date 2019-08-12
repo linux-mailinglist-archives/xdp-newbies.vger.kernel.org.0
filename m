@@ -2,126 +2,98 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE0CE8918A
-	for <lists+xdp-newbies@lfdr.de>; Sun, 11 Aug 2019 13:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15AD189D2E
+	for <lists+xdp-newbies@lfdr.de>; Mon, 12 Aug 2019 13:34:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfHKLdH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 11 Aug 2019 07:33:07 -0400
-Received: from mout.gmx.net ([212.227.15.18]:53855 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfHKLdH (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 11 Aug 2019 07:33:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1565523160;
-        bh=5XNLSGLV/n8XATlDhvdkuJ0c9QjsZbpQ2b3uSxwJK6w=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=bYyr51s8eLybvh94uOtY1iy/RL+qrsRvhIqX/y4gU5zcOm4PQzksqf+zXKoslev7D
-         NP2u7cSloBXdFHSIX9LUiA3dVht1iTP26Jl9Oz+nmPJLrGqz5FoJT34A0i9VyyLL0D
-         oaUFb5e12LIj1zFqZYpF2oPRAO7y25HgbbTQcur0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.233.87]) by mail.gmx.com (mrgmx001
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MQ2Wx-1i0Kr52FzX-005KXD; Sun, 11
- Aug 2019 13:32:40 +0200
-Date:   Sun, 11 Aug 2019 13:32:25 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation/networking/af_xdp: Inhibit reference to
- struct socket
-Message-ID: <20190811113225.GD1966@latitude>
-References: <20190810121738.19587-1-j.neuschaefer@gmx.net>
- <20190810085821.11cee8b0@lwn.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
-Content-Disposition: inline
-In-Reply-To: <20190810085821.11cee8b0@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:WSlMOTVkTIxgNdANUM34B9Gmw91nDYkQ4iCc+WK1bcjyk8C1UVC
- xd4RXLqrHapjXCexH+vQ3NdTtgk03TD0vuPZ+zgdyQKcB/OBs1TdT7T6e7GZs9RfH1BUjvU
- 5eUraiD5cWDMFKmPen2rgxYhu409cLv5Vh/xJr3Nbhx36lwNMVCPzEGVKzIdS2mOH4PxxOH
- Gu1usr2e7Hg9gQhtvvCpA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:y64qkCK5mCY=:Ul8qM4rYjC/JIKtPh+C2QA
- O+NQ+dtV+T+uJHv+18CPWbiFdp5IvIJrqq6fEsC1/9rvOfRkPVTHlNy5+3hImBlfdj3tGASW8
- E9f8vcOr5XSqUf3uTwU993wHkK4hXX0yErTG18Yj3n1nc0h2vu6LBc6HGsDJm2YSl0XVm4sAs
- 6022eCI1cgEW9RH0v8t8CJkezSvr3GV0EgRTflBEFIVVmz9q1Y2ljSVGSeSCREXHJvemB2L3j
- ReTM+XO0LLZlM9vMVscZ63Rt+1uZYDVMqDyLYN9AXRa7uE+QdHpYlFGIVNMCABXUpoBCWiD1X
- GlFyqAr/1yOyfgDz/zbjAi0Y4wGO+J35M+dlDxt6kIPCMS/f8LyXpnRqu4Z1eKzOn6zw1fB9O
- /Psvu4iRxvr+HQ2n5EPbIj+ktG+It6+9O8vzdzj9d27Jhysy9ot3SNbZta0NiGbjsEHOodVqX
- Bq1BwSnK2sTgMTCAt/y/MvY0nDSyMQ3dOUwEYEWJk7y5/aTqD4R75QOrLQS0e5qlJmnwoMwRj
- +XRSU4ox8FyZMcL1f/3D1BFYNXr0BvlTHQgAwyxTS8UOIxnXVwoNVpzPmJ2npZGgbvzyPLNXw
- OwgK/F/13q9H1YKBzLUyK/4EUBB1Wybb44Eig2bK1XrEjXLWhdlsCCUoFvJjKonC6wQwRLPwx
- y8hGLVxZo7Po/KmLfrxNsSkZplVMK/5JcFP2KmHpTZ3Kt+89ZuE9XVJz9Gchtyova5jYMcOgv
- haCI5Qlc1+sTkqG81+pRSVtEt+LAG7j7SibahVhB+65QPdlIK87drPSmLJP6OFt0vZdJLqxBx
- sA1ozCd/ZGyIGGqHbyr8DrnjYVto5IIvltYEc7qMWNq7PD0xJvb4Kakd4i6Wfjjb9TRtvm6eV
- M03K7GPVhbmJFKL/DCQBRwaa7GU8Yc7eWBjeHe4svs3uJuM83FjEt5m7fHQAzwe2DL3TJNPHn
- n2vmD9BQgK45Z+2xVAU0mqlUmOaMBnQptu8bolR3EoqhyirC2Uo6P3DN58Vsz94zUGZyFsASX
- Bd/pRcUuJ8aWBDk5lQAfr46cLuIHrhEZDeSH/NOFy1UbJ7wZYB/1mE5UkA/OeDGPOchJaqxhR
- bTnOf675spHdrb7v6xdI7a6hpcU4oQ0mwv9aynbWG54b6EJT02E7gkc4Q==
+        id S1728002AbfHLLeg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 12 Aug 2019 07:34:36 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43508 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbfHLLef (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 12 Aug 2019 07:34:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c19so73993103lfm.10
+        for <xdp-newbies@vger.kernel.org>; Mon, 12 Aug 2019 04:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=IkqOR8n2+d0i33XDKFM1W8wAyFU3lbQkmsZ60SEYyPM=;
+        b=f9vf1iLtiab+eHV3kZOQO62bnPIg2kpxRLOsLdE2aePP2MavO1FwnSfZTKU2gG1Vid
+         FTSXW6pJnPelXkdyHDsD8HnaKbrZ8HBK1UrAEznDBMiKpWHgKIGy04tN/b/3O7U9FwxN
+         RkELHnQEtDoNEU47ZI+JgZeawx6ZbBzPTqYu3d0adXTAmWT+6iTmJSi0qFzbLiM94EKR
+         b1aOm9gYSrwfwhemeWN5g2PPwPKL9uwujCri85WIHhBMFRpsErG37m7EsTSDMq9v/XwW
+         wwlYlwM5ARj1kSy+dG3Ew25OoxHrFFHqWWqlcwYDkH+ysW1WQUH6cwos+LR+g4T3K/Vt
+         /7FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IkqOR8n2+d0i33XDKFM1W8wAyFU3lbQkmsZ60SEYyPM=;
+        b=Ud/qJmyn0Ne+efIFQkbwideQOJd15J7Z2DC3JuPmoNl3oncYgPpy7xokq7rt+PRz77
+         My3CfQrIVYLSf5c2fah1rOqc5GgzdxKeMQag4iPC8Nl1f412GQfhz4203+2mJzwJpRSk
+         CVnhi6TwnArd+J3iTWL8ig8ZlftcjtlCnzbPoHkWsiiOXUmWgFVMEhWwBSgLfxd9xWQH
+         mD6ZSfDxxC2CuHsjrbd/aSC47YjoHL/tz4THWCwun2qa1HTZ/t9MF9uEf1V9YL2WK0wm
+         Clp2PJ/zZjAlpFfNx60GnkoXliFiuIcXsPRGYpTyO/9k+k4MXj3onuwH58jhib1cBiPK
+         ySDw==
+X-Gm-Message-State: APjAAAV9NJ+wB0XpdLjsCYuhjFGeTTIl6Xi7qKn7vIP2NvAcLOONnysJ
+        hYf+GGvd6BxmZ3O2CsQyQMgXTA==
+X-Google-Smtp-Source: APXvYqzh1SErF8ryWdfIHPMHlE6ltaAF9sQ0IEXr2dph8iVua6PhVfFXYXM8qM4Dabgo4tBfsXhDBQ==
+X-Received: by 2002:ac2:4157:: with SMTP id c23mr19159300lfi.173.1565609673727;
+        Mon, 12 Aug 2019 04:34:33 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id a70sm20899745ljf.57.2019.08.12.04.34.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 12 Aug 2019 04:34:33 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     bjorn.topel@intel.com, linux-mm@kvack.org
+Cc:     xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, ast@kernel.org,
+        magnus.karlsson@intel.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf-next] mm: mmap: increase sockets maximum memory size pgoff for 32bits
+Date:   Mon, 12 Aug 2019 14:34:29 +0300
+Message-Id: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
+established already and are part of configuration interface.
 
---3Pql8miugIZX0722
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But for 32-bit systems, while AF_XDP socket configuration, the values
+are to large to pass maximum allowed file size verification.
+The offsets can be tuned ofc, but instead of changing existent
+interface - extend max allowed file size for sockets. The 64-bit
+systems seems like ok with this, so extend threshold only for
+32-bits for now.
 
-On Sat, Aug 10, 2019 at 08:58:21AM -0600, Jonathan Corbet wrote:
-> On Sat, 10 Aug 2019 14:17:37 +0200
-> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
->=20
-> > With the recent change to auto-detect function names, Sphinx parses
-> > socket() as a reference to the in-kernel definition of socket. It then
-> > decides that struct socket is a good match, which was obviously not
-> > intended in this case, because the text speaks about the syscall with
-> > the same name.
-> >=20
-> > Prevent socket() from being misinterpreted by wrapping it in ``inline
-> > literal`` quotes.
-> >=20
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
->=20
-> Thanks for looking at that.  The better fix, though, would be to add
-> socket() to the Skipfuncs array in Documentation/sphinx/automarkup.py.
-> Then it will do the right thing everywhere without the need to add markup
-> to the RST files.
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
 
-Alright, I'll do that for v2.
+Based on bpf-next/master
 
+ mm/mmap.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks,
-Jonathan Neusch=C3=A4fer
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 7e8c3e8ae75f..238ce6b71405 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1358,6 +1358,11 @@ static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
+ 	if (S_ISBLK(inode->i_mode))
+ 		return MAX_LFS_FILESIZE;
+ 
++#if BITS_PER_LONG == 32
++	if (S_ISSOCK(inode->i_mode))
++		return MAX_LFS_FILESIZE;
++#endif
++
+ 	/* Special "we do even unsigned file positions" case */
+ 	if (file->f_mode & FMODE_UNSIGNED_OFFSET)
+ 		return 0;
+-- 
+2.17.1
 
---3Pql8miugIZX0722
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl1P/IAACgkQCDBEmo7z
-X9sBYw//WDx7jJODlKacEnlPkuHTxAkanqNDkGnT1Ghh6pIMjM4kqaZSusMiTy77
-BCcw1O+iDfYLGZgBVuEeOZzaQtmKPGiaYvaOCGlEse5I/FR51qxXJmH6joU7ernN
-SktIdNBlV7GnisrZHoXvxVeBmnCtLUDX0mIdqstioLlkGNnu1zEduNhM+p/KkBzj
-iSxlNeQ/NEETCj2e4UHpLpYynix8j17T7X7uG/uO4b8gzoMBRe1bSOfKp45+AOoN
-0LwjbcS3rnsFqaYiP/7dJ8LaQUYCSWfUd4+f7yKgrvzA2cH3ObjYbDd8XeKHRm/R
-Gndzkxqm3SzxaUfAo8xYBqzD9tl/lfVVDYz0LUl1S+zMWAVK9v6rLXvdX7Ab7YRX
-dY3gRKCPYvL0jzyrLFHOZTBIlHqSHV9X/kECgVCS2ahOMIDx3ll8scb/Pw2XkM06
-bKQ/M/4SEaW4kxbhIj3H8y3lzngY46I5kFW/R64vhiH5KITQvqNd31V5ZUNzkdAT
-2+pQP1tBasxhur956ITqgW74t3KhwnqSTv8c7VS+VtmJQrB2QvXzaWT9RrodcrTo
-Tm5mWmfVBy8d0xfUu6RFNZN7SuQ2aUwb5WxDmzvNrB7FGD3vFpd42SJN2ub3qSDZ
-OeHDnYBFmcvbsYAi7JUi+Wg7yZzZoCeKsbKdgQdyxQG2UHYFpyg=
-=rjZu
------END PGP SIGNATURE-----
-
---3Pql8miugIZX0722--
