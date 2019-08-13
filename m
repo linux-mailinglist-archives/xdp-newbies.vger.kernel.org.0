@@ -2,132 +2,83 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBFC58B373
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Aug 2019 11:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 821308B56A
+	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Aug 2019 12:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfHMJMe (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 13 Aug 2019 05:12:34 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37829 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfHMJMe (ORCPT
+        id S1728888AbfHMKXs (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 13 Aug 2019 06:23:48 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34705 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbfHMKXs (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 13 Aug 2019 05:12:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z28so46654220ljn.4
-        for <xdp-newbies@vger.kernel.org>; Tue, 13 Aug 2019 02:12:33 -0700 (PDT)
+        Tue, 13 Aug 2019 06:23:48 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b29so69140040lfq.1
+        for <xdp-newbies@vger.kernel.org>; Tue, 13 Aug 2019 03:23:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fqm1qEXgId3LWA2NcOGNLytQeIXWcu4whGK205OK+oE=;
-        b=hfRt+z+D9yk1sJYudtDMXBHyY6D+2qiqV/Q0A5uC517NkQfhn84w03CEm+CUmcg/YO
-         xJPqvrGgLs16lDH/3dloHHlkGbp2h3r9rIgnDvmKfVTplppEulAeS2WQtVGZ8wWFs15M
-         R5qBYokxyKXI2Jfql/W33mwqvH+OuFprJVGNGTsHQu5VItj8aJMS6Ur6rJYb6Hy7WRn/
-         AX4hDuDNWmPdJr+yZFLhP6VsHFefhVLaK4WsyRhEk2D+tu0eVkerETdtQ8N8zpk4CR7G
-         z7+Z3ORP+em5lWvkHic+zqfbFKZVaZBuXDwrPHPXLdvyLr95YD3Zita8cZ6CQHogX55V
-         lS0A==
+        h=from:to:cc:subject:date:message-id;
+        bh=QNDFND62EBxa/CZRfT2L528o2r4UiKoyt1lXZ8Vl8r0=;
+        b=Sv074q9r6jjjV52+0QfZzuE3FVJ3Gnln117xHMSh0yUvexXHce7Ca19L/ufyAwW2HO
+         GIClTLInezjob7m5kYcfJp06RDsK5LbIt1PVa0yyOiPjYGT1MX0emf5Qw+8LsdQmqD4G
+         i7TyVRxmOnXFrQ2F1yS5yYC1UD4dqbZoqyS8f1FFm8zfVPnI/i10qZFH7zRYx62ei9PA
+         ouW68VPvY60rLwI0xusK8FygNzR41KW2tS6pxLqHVQUr1qWFq5yzk6VczQGboJWjG7lI
+         7+bMfcre/Fj5GJ8/+vMBLq84HkDazNq5iFBJTRQXEf934J6KXvaTZe8jxZMyBQKNoSGU
+         V00Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Fqm1qEXgId3LWA2NcOGNLytQeIXWcu4whGK205OK+oE=;
-        b=K16vR4HqINdl1GAvzEjb8++Q3AVPr/xG1VOvvJkyp5uc7LbNBAeabOqSjwsGHqjTjc
-         vXNuJRBK8ryGSeEW1AbTsk2f4IofylYXxeUUylUbX0ybnSyvlQHb6hRRXyGXW09UEYOd
-         cRYHgx42yNjUwj8Va96OrTaR9xiKobmoz/GhOyo7NIaB5hXFwUFvm+gpmMiwhsfE8rta
-         yHeq74vGdMELNNTzZmDXeKe7rfw44wU+MGwqWQd/oCdbepRoyqZyTtY0WRvT0I5sPrZy
-         Mohj3XflktQ0ofqnKD9+cx0RJ/IZK6PunBrfrXk+T3jL9/1N3X0wQavIWR2dfpAp1jwH
-         US0w==
-X-Gm-Message-State: APjAAAWOWr0smXi951v0As7Dk3Knz50ZC6WSfH/wgG9gMaUnJ2QWIx0Q
-        nSNxYoiAw1c1jjXKCRz+Gd/v/A==
-X-Google-Smtp-Source: APXvYqyEmjV0GBixJh0DVshdyHJJIKyBEfQHcoHLxMsbb6J1S0HM71TOzoTAcNAvNIqYowflXLcs+w==
-X-Received: by 2002:a2e:3a13:: with SMTP id h19mr20948011lja.220.1565687552537;
-        Tue, 13 Aug 2019 02:12:32 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id l23sm21497274lje.106.2019.08.13.02.12.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 13 Aug 2019 02:12:31 -0700 (PDT)
-Date:   Tue, 13 Aug 2019 12:12:29 +0300
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QNDFND62EBxa/CZRfT2L528o2r4UiKoyt1lXZ8Vl8r0=;
+        b=njqR/md176otFM7V8kgC2zuJ6rlm1ZL4jeA3AwTR6Ywv4dFZoS58douRnWwpZlUbmv
+         VSE/i95ShsxglkWqSlm4uxJuyZxiidReetcaU6LbZ0BSlAmUtTcWjruYSRPiF3EU78Hd
+         fZWkTghtuS9gyYJvu/oLWbCRtzHS58z38jdSMoEHjNDpUFNnyI+antTlUzHoO/Wrhl8A
+         nuqZGotLnUZyC9d1AGqvq4BBxit5Fox7TvLX7+rgmJGB1O9TKFETmVfJqit7ZaEwdwHw
+         dEbyEMA2pQKm89Ls1vTNZaLmpf3xM260ZxGu9AlloQZesLei+0V5qvSY3S/4Uh6aNned
+         0Skg==
+X-Gm-Message-State: APjAAAXx+eLTFfVmhOiGxu1ypSxz8pP/Xsaey9ChqVV0yi9C88auyPba
+        2faJGNa0plWbXVEF3a2I3L1+fQ==
+X-Google-Smtp-Source: APXvYqzIeZP4BTswUMbAIKKYK0uFCs4Sn6L/wWwzKIQ+KwsGx46yWPFum+AePDpFDtH7gV8rVc/mKw==
+X-Received: by 2002:a19:c213:: with SMTP id l19mr21590844lfc.83.1565691826113;
+        Tue, 13 Aug 2019 03:23:46 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id e87sm24796942ljf.54.2019.08.13.03.23.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 13 Aug 2019 03:23:45 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
-Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
- size pgoff for 32bits
-Message-ID: <20190813091228.GA6951@khorivan>
-Mail-Followup-To: Magnus Karlsson <magnus.karlsson@gmail.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        linux-mm@kvack.org, Xdp <xdp-newbies@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, Alexei Starovoitov <ast@kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>
-References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
- <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
- <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAJ8uoz0bBhdQSocQz8Y9tvrGCsCE9TDf3m1u6=sL4Eo5tZ17YQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+To:     magnus.karlsson@intel.com, bjorn.topel@intel.com
+Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        jakub.kicinski@netronome.com, daniel@iogearbox.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH bpf-next 0/3] xdpsock: allow mmap2 usage for 32bits
+Date:   Tue, 13 Aug 2019 13:23:15 +0300
+Message-Id: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 10:02:54AM +0200, Magnus Karlsson wrote:
->On Mon, Aug 12, 2019 at 2:45 PM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
->> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
->> established already and are part of configuration interface.
->>
->> But for 32-bit systems, while AF_XDP socket configuration, the values
->> are to large to pass maximum allowed file size verification.
->> The offsets can be tuned ofc, but instead of changing existent
->> interface - extend max allowed file size for sockets.
->
->Can you use mmap2() instead that takes a larger offset (2^44) even on
->32-bit systems?
+This patchset contains several improvements for af_xdp socket umem
+mappings for 32bit systems. Also, there is one more patch outside of
+othis series that can be applied to another tree and related to mmap2
+af_xdp umem offsets:
+"mm: mmap: increase sockets maximum memory size pgoff for 32bits"
+https://lkml.org/lkml/2019/8/12/549
 
-That's for mmap2.
+Based on bpf-next/master
 
->
->/Magnus
->
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>
->> Based on bpf-next/master
->>
->> v2..v1:
->>         removed not necessarily #ifdev as ULL and UL for 64 has same size
->>
->>  mm/mmap.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index 7e8c3e8ae75f..578f52812361 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -1358,6 +1358,9 @@ static inline u64 file_mmap_size_max(struct file *file, struct inode *inode)
->>         if (S_ISBLK(inode->i_mode))
->>                 return MAX_LFS_FILESIZE;
->>
->> +       if (S_ISSOCK(inode->i_mode))
->> +               return MAX_LFS_FILESIZE;
->> +
->>         /* Special "we do even unsigned file positions" case */
->>         if (file->f_mode & FMODE_UNSIGNED_OFFSET)
->>                 return 0;
->> --
->> 2.17.1
->>
+Ivan Khoronzhuk (3):
+  libbpf: add asm/unistd.h to xsk to get __NR_mmap2
+  xdp: xdp_umem: replace kmap on vmap for umem map
+  samples: bpf: syscal_nrs: use mmap2 if defined
+
+ net/xdp/xdp_umem.c         | 16 ++++++++++++----
+ samples/bpf/syscall_nrs.c  |  5 +++++
+ samples/bpf/tracex5_kern.c | 11 +++++++++++
+ tools/lib/bpf/xsk.c        |  1 +
+ 4 files changed, 29 insertions(+), 4 deletions(-)
 
 -- 
-Regards,
-Ivan Khoronzhuk
+2.17.1
+
