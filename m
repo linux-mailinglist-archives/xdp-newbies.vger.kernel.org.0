@@ -2,172 +2,164 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 935568C0A6
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Aug 2019 20:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD8588C129
+	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Aug 2019 20:59:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfHMSdV (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 13 Aug 2019 14:33:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34103 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfHMSdV (ORCPT
+        id S1726295AbfHMS7F (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 13 Aug 2019 14:59:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37500 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfHMS7F (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 13 Aug 2019 14:33:21 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so1571953pfp.1;
-        Tue, 13 Aug 2019 11:33:21 -0700 (PDT)
+        Tue, 13 Aug 2019 14:59:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t14so279343lji.4
+        for <xdp-newbies@vger.kernel.org>; Tue, 13 Aug 2019 11:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=w11YVFyoLhs+BNlDPKgWqoZJ95LEfsQBBxyoZnnFeNE=;
-        b=JXS1wIa7Asipg0jcfsj8uWKX+etctXxHpwJRJbAFNgqXrt3eObuuXS66gp5hdjk69D
-         osQZW+muNqqcBsj2hwEsdy/Nic3Wk+eBkWjETfGIxD4ovlMjcFYwsHFw63/lv6h4Hcd2
-         Fhepa7HRvjRjKwsWNYs9tx2jo3v02jq68xR6Z0krWE4Qk3zyelI6wT/5jyvpKPJHok4Y
-         Yk6ZMgkNKtK7qdbqgXAKWfhvCGhCxXl5QTBVxc+6O9ntTBXoUMD7Plf4DlDxz9rWzXh6
-         7RXgatQ/ExkJUVo62PW+mZ2UBlG7plWd91mSpeGLnnRWi6NuCjZcMW2oPvyCx1J1nhva
-         3zdg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0u7BN29CLMZnWfORCWS1hbiMyqbWKAOria45XT6FwOU=;
+        b=mJtgPvGBhkUvHoKaycDfPjauZ+0YHZj65HimqLO5OuLOGR3snn7HnQgEaAoDS4vomC
+         iU+m0UB3EgfX6iZSeiiQsrHp81onXlmYZIMT9gSwIAIKdWQ+h9Pe9cMsskki2GcA8j51
+         kt2UdlZViy6wUGzVsvJlEn8sidFz+Vt7AGOMYI2yp/xaGApOUAbKYDUDhURCMEv4njsh
+         16MmIp9a6IfZpMpY5xeIZxYCAh1DfBtb5gBQzeynZEBkOnODLiA/RaDXRZXTOjoTr+c1
+         1spfNPE0Qi9kK+Vnkrsoo3NqAW/aq9hh+Umhw7uNMiODUc8ybgfp2scdfLnRdycvxPvX
+         TQxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=w11YVFyoLhs+BNlDPKgWqoZJ95LEfsQBBxyoZnnFeNE=;
-        b=gOIGgU21W6vSk4LlkPaO7JRZNG2p+y+uAFMk5RM2/mcH/ns6QwNsRe8+ovEkDc/PXn
-         YiPmfO69HSf2FheC+PwkPeFJ6a+FhDXfj4/IyaGl0eqG1M8lSPvjRagbSa7mOAqlDrlN
-         jBRDbPjFaP8MuHH+fwJ2qgo96H2RFw7mKZSmDGGgIrPqJjjUSVzpiOv9bP5NYpx5OXKb
-         UVlSEKKrlSw+X4KmMb0xmRGLkFav0De4MlIAVCN0Ymx4gvQR/+YAMnMAY6FMoQdIuskK
-         BjVeR8rrBeqRO/m3RQu4F7XTjlGtsFaAnc6jyHuZA1+mzQ0MomwV01c1tF0IR4kyv8Cc
-         Bimw==
-X-Gm-Message-State: APjAAAVpH0lmqpQt3u1081voDHR59yMZee490dfGC8HTRFPbJtXUxIR1
-        ZOqkskxz2P1tOf1yPVqh63w=
-X-Google-Smtp-Source: APXvYqwAT2LtSdQBLIiqXEDE3epqcWCW/8drmQhiid5gI8BRWCHDuOAagb4aRZijqrEwz/mqbNSDIA==
-X-Received: by 2002:a65:43c2:: with SMTP id n2mr35769951pgp.110.1565721200412;
-        Tue, 13 Aug 2019 11:33:20 -0700 (PDT)
-Received: from [172.20.41.143] ([2620:10d:c090:200::3:ec2a])
-        by smtp.gmail.com with ESMTPSA id b68sm134603729pfb.149.2019.08.13.11.33.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 13 Aug 2019 11:33:19 -0700 (PDT)
-From:   "Jonathan Lemon" <jonathan.lemon@gmail.com>
-To:     "Ivan Khoronzhuk" <ivan.khoronzhuk@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=0u7BN29CLMZnWfORCWS1hbiMyqbWKAOria45XT6FwOU=;
+        b=dROIYXXwWdUK2igo7f6ntjw3M8v+iMlRYi4++0kVxxDHBNna3wQq/WKhrPw+P9PCnE
+         Iv3lsMfStLAtczqHVdi5KqUbrr5xdZEPGnB+7y4I7AvlRGDSevQS7SR/3Rn5DYnsDiTC
+         1taVoLkBgJ1+w97pYjBfAt/yu3/o06xEW0DLWxZCdgVeE0z7jn4I74RZpBGGnoQV9jrt
+         RfLJjiTRgWUrbMYcgMBniYH5dcgSBs79kJ6Vda8en03XzDQeUf+9gaqi7zW0RcnWVKpP
+         DevmtsVOo3KWPwxSWB7xfF7tNiG0tQQc1PGQhjjvOxDEz7MjDpdCQE16tqCJF8CJlIZX
+         QWEw==
+X-Gm-Message-State: APjAAAWFeyf2GbunHGt9Tytm0dwHrOOEBL+dTjyXrMqKTQOdljY0XUSd
+        DUS+m1Z6Bctw2kHYfgqQ1lXCQw==
+X-Google-Smtp-Source: APXvYqyRXtsoKu9SnfFnRKyYvn6LAfLvigbsl0ZaoJ2liTJsIIoMtB6k54ODKD/0bftwhoAPbedMfA==
+X-Received: by 2002:a2e:7a07:: with SMTP id v7mr8037467ljc.105.1565722743295;
+        Tue, 13 Aug 2019 11:59:03 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id i17sm19868876lfp.94.2019.08.13.11.59.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 13 Aug 2019 11:59:02 -0700 (PDT)
+Date:   Tue, 13 Aug 2019 21:59:00 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jonathan Lemon <jlemon@flugsvamp.com>
 Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com,
         davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
         jakub.kicinski@netronome.com, daniel@iogearbox.net,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/3] xdp: xdp_umem: replace kmap on vmap for umem
- map
-Date:   Tue, 13 Aug 2019 11:33:18 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <BC98A490-2892-452B-AC3E-C9B9F9BA121C@gmail.com>
-In-Reply-To: <20190813183023.GA2856@khorivan>
+Subject: Re: [PATCH bpf-next 3/3] samples: bpf: syscal_nrs: use mmap2 if
+ defined
+Message-ID: <20190813185859.GB2856@khorivan>
+Mail-Followup-To: Jonathan Lemon <jlemon@flugsvamp.com>,
+        magnus.karlsson@intel.com, bjorn.topel@intel.com,
+        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
+        jakub.kicinski@netronome.com, daniel@iogearbox.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-3-ivan.khoronzhuk@linaro.org>
- <9F98648A-8654-4767-97B5-CF4BC939393C@flugsvamp.com>
- <20190813183023.GA2856@khorivan>
+ <20190813102318.5521-4-ivan.khoronzhuk@linaro.org>
+ <036BCF4A-53D6-4000-BBDE-07C04B8B23FA@flugsvamp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <036BCF4A-53D6-4000-BBDE-07C04B8B23FA@flugsvamp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 13 Aug 2019, at 11:30, Ivan Khoronzhuk wrote:
+On Tue, Aug 13, 2019 at 10:41:54AM -0700, Jonathan Lemon wrote:
+>
+>
+>On 13 Aug 2019, at 3:23, Ivan Khoronzhuk wrote:
+>
+>> For arm32 xdp sockets mmap2 is preferred, so use it if it's defined.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>
+>Doesn't this change the application API?
+>-- 
+>Jonathan
 
-> On Tue, Aug 13, 2019 at 10:42:18AM -0700, Jonathan Lemon wrote:
->>
->>
->> On 13 Aug 2019, at 3:23, Ivan Khoronzhuk wrote:
->>
->>> For 64-bit there is no reason to use vmap/vunmap, so use 
->>> page_address
->>> as it was initially. For 32 bits, in some apps, like in samples
->>> xdpsock_user.c when number of pgs in use is quite big, the kmap
->>> memory can be not enough, despite on this, kmap looks like is
->>> deprecated in such cases as it can block and should be used rather
->>> for dynamic mm.
->>>
->>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->>
->> Seems a bit overkill - if not high memory, kmap() falls back
->> to just page_address(), unlike vmap().
->
->> -- Jonathan
->
-> So, as kmap has limitation... if I correctly understood, you propose
-> to avoid macros and do smth like kmap:
->
-> 	void *addr;
-> 	if (!PageHighMem(&umem->pgs[i]))
-> 		addr =  page_address(page);
-> 	else
-> 		addr = vmap(&umem->pgs[i], 1, VM_MAP, PAGE_KERNEL);
->
-> 	umem->pages[i].addr = addr;
->
-> and while unmap
->
-> 	if (!PageHighMem(&umem->pgs[i]))
-> 		vunmap(umem->pages[i].addr);
->
-> I can try it, and add this in v2 if no objection.
+From what I know there is no reason to use both, so if __NR_mmap2 is defined
+but not __NR_mmap. Despite the fact that it can be defined internally, say
+#define __NR_mmap (__NR_SYSCALL_BASE + 90)
+and be used anyway, at least arm use 2 definition one is for old abi and one is
+for new and names as their numbers are different:
 
-Seems like a reasonable compromise to me.
+#define __NR_mmap (__NR_SYSCALL_BASE + 90)
+#define __NR_mmap2 (__NR_SYSCALL_BASE + 192)
+
+, so they are not interchangeable and if eabi is used then only __NR_mmap2 is
+defined if oeabi then __NR_mmap only... But mmap() use only one and can hide
+this from user.
+
+In this patch, seems like here is direct access, so I have no declaration for
+__NR_mmap and it breaks build. So here several solutions, I can block __NR_mmap
+at all or replace it on __NR_mmap2...or define it by hand (for what then?).
+I decided to replace on real one.
+
+>
+>
+>> ---
+>>  samples/bpf/syscall_nrs.c  |  5 +++++
+>>  samples/bpf/tracex5_kern.c | 11 +++++++++++
+>>  2 files changed, 16 insertions(+)
+>>
+>> diff --git a/samples/bpf/syscall_nrs.c b/samples/bpf/syscall_nrs.c
+>> index 516e255cbe8f..2dec94238350 100644
+>> --- a/samples/bpf/syscall_nrs.c
+>> +++ b/samples/bpf/syscall_nrs.c
+>> @@ -9,5 +9,10 @@ void syscall_defines(void)
+>>  	COMMENT("Linux system call numbers.");
+>>  	SYSNR(__NR_write);
+>>  	SYSNR(__NR_read);
+>> +#ifdef __NR_mmap2
+>> +	SYSNR(__NR_mmap2);
+>> +#else
+>>  	SYSNR(__NR_mmap);
+>> +#endif
+>> +
+>>  }
+>> diff --git a/samples/bpf/tracex5_kern.c b/samples/bpf/tracex5_kern.c
+>> index f57f4e1ea1ec..300350ad299a 100644
+>> --- a/samples/bpf/tracex5_kern.c
+>> +++ b/samples/bpf/tracex5_kern.c
+>> @@ -68,12 +68,23 @@ PROG(SYS__NR_read)(struct pt_regs *ctx)
+>>  	return 0;
+>>  }
+>>
+>> +#ifdef __NR_mmap2
+>> +PROG(SYS__NR_mmap2)(struct pt_regs *ctx)
+>> +{
+>> +	char fmt[] = "mmap2\n";
+>> +
+>> +	bpf_trace_printk(fmt, sizeof(fmt));
+>> +	return 0;
+>> +}
+>> +#else
+>>  PROG(SYS__NR_mmap)(struct pt_regs *ctx)
+>>  {
+>>  	char fmt[] = "mmap\n";
+>> +
+>>  	bpf_trace_printk(fmt, sizeof(fmt));
+>>  	return 0;
+>>  }
+>> +#endif
+>>
+>>  char _license[] SEC("license") = "GPL";
+>>  u32 _version SEC("version") = LINUX_VERSION_CODE;
+>> --
+>> 2.17.1
+
 -- 
-Jonathan
-
-
->
->>
->>> ---
->>> net/xdp/xdp_umem.c | 16 ++++++++++++----
->>> 1 file changed, 12 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
->>> index a0607969f8c0..907c9019fe21 100644
->>> --- a/net/xdp/xdp_umem.c
->>> +++ b/net/xdp/xdp_umem.c
->>> @@ -14,7 +14,7 @@
->>> #include <linux/netdevice.h>
->>> #include <linux/rtnetlink.h>
->>> #include <linux/idr.h>
->>> -#include <linux/highmem.h>
->>> +#include <linux/vmalloc.h>
->>>
->>> #include "xdp_umem.h"
->>> #include "xsk_queue.h"
->>> @@ -167,10 +167,12 @@ void xdp_umem_clear_dev(struct xdp_umem *umem)
->>>
->>> static void xdp_umem_unmap_pages(struct xdp_umem *umem)
->>> {
->>> +#if BITS_PER_LONG == 32
->>> 	unsigned int i;
->>>
->>> 	for (i = 0; i < umem->npgs; i++)
->>> -		kunmap(umem->pgs[i]);
->>> +		vunmap(umem->pages[i].addr);
->>> +#endif
->>> }
->>>
->>> static void xdp_umem_unpin_pages(struct xdp_umem *umem)
->>> @@ -378,8 +380,14 @@ static int xdp_umem_reg(struct xdp_umem *umem, 
->>> struct xdp_umem_reg *mr)
->>> 		goto out_account;
->>> 	}
->>>
->>> -	for (i = 0; i < umem->npgs; i++)
->>> -		umem->pages[i].addr = kmap(umem->pgs[i]);
->>> +	for (i = 0; i < umem->npgs; i++) {
->>> +#if BITS_PER_LONG == 32
->>> +		umem->pages[i].addr = vmap(&umem->pgs[i], 1, VM_MAP,
->>> +					   PAGE_KERNEL);
->>> +#else
->>> +		umem->pages[i].addr = page_address(umem->pgs[i]);
->>> +#endif
->>> +	}
->>>
->>> 	return 0;
->>>
->>> -- 
->>> 2.17.1
->
-> -- 
-> Regards,
-> Ivan Khoronzhuk
+Regards,
+Ivan Khoronzhuk
