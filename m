@@ -2,249 +2,153 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EFCD8D4BF
-	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Aug 2019 15:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B5DC8D6E1
+	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Aug 2019 17:09:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfHNNci (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 14 Aug 2019 09:32:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46179 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfHNNch (ORCPT
+        id S1726047AbfHNPJp (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 14 Aug 2019 11:09:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42461 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbfHNPJl (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:32:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j15so16491973qtl.13;
-        Wed, 14 Aug 2019 06:32:36 -0700 (PDT)
+        Wed, 14 Aug 2019 11:09:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l14so2453432ljj.9
+        for <xdp-newbies@vger.kernel.org>; Wed, 14 Aug 2019 08:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=JuExSWsBtfAM5/29pBQpPsbNhQp3pZxTJtDhhkS2oNE=;
-        b=nQgN303e8SJv5otTtuvGf/lH9GHy1WKTL2cScOMOG3BhpfoAKksBRYdw9d9WLmX+eg
-         XQegHTCfaaTCB1g3zN0h9BZ2gLV0VvwgMUpKtzvjUT/zhSK4oImrXu4/nhgwO48TGu8R
-         zJBv5BqYRytIN4OOA0Ao+V42xj571m9Zi0RGZradkKB7dlRiwf2fMRCQkrPMZf+LmHMz
-         z0SXpNQXqaGWGUmYpC0kAcmpbPUOqZvP3Z+uFMdmFMf2ZQKMnEvw9o0ZlTXrSvba+Q+2
-         gb5PZlyQZRFvaABgy6BSV+OYmDk2OiFhQlk5FsPAaxGc0gqF5wWXoQrLOVtgpGF8XlFt
-         hbSA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2ptfAgVpyIEhhkDUXUHOQeIgB7V3ChTfM7YuAb134Kg=;
+        b=x2n6+rP6ZwrFCjfm8bFO/Vk4gMraybEkDtn/pwBnfQQjn651Lm6f83/MXyyR8JDaJE
+         0tRK/p9cifp44E0FTnkOFanairQJNzX1c1zeImZ08ypWdY+O3vhaXoleBFSqBlh1/WyQ
+         3nw5aLY8qaAOkW4Kr27WJdta4q7KRfmbDPzyjCe94MN8cML68DixxuMWmWQZsCDEP9vU
+         WZrbCO9PrBo1mpyeFxRE6BB+JsO9MV5inELKKQU+MM8jr/Dd+EPbD4squSjv2Euk0nKK
+         kgtq7iRzdyBwtJyGbcbx6KhvBupL4J3XvuPS4oMY2Ri/cWI5dK+TbVzUVWhCwFsKuonO
+         DJ6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=JuExSWsBtfAM5/29pBQpPsbNhQp3pZxTJtDhhkS2oNE=;
-        b=S9hzZYbTe5bBTJ20a/2Ha9hW5h0kfKs+CT4CVnDe4M+QLb0cA0kCVGph1PAgNW94qa
-         m1/7RFuBpW/27Fwr417hlJxKz5D2MNYekkkQkJLu0JzdRcl0qNfkHitlqwdfw0PT/guM
-         V1j6bx9OGECxalASxyhtneitRH7fFP8sGGOCNq09iFUZxq51C7aFEpXMzlg+P5Nma8xa
-         kJyiJca6A72ECrls/WReB9/JBhSgAFqKjkZ9VGYN9UtDvhJwLnqAoENtFHCf61r3y1XM
-         QOBEDQWHA7dJeB22Eoc9J53c4cfqxvhVRapBjS3jHWcaIC/BEKpsBF+mPTx8Qni2jpsZ
-         x08Q==
-X-Gm-Message-State: APjAAAU9pWBwyZ3opzht6weQxOBRKVW7L0aUQ4wAGp4oVwHE5Rw6OayV
-        vPnRvEUvauDNEb7Fo2vOzZF0wxP49Iz8Z2r/qxTDb7C0
-X-Google-Smtp-Source: APXvYqwftTZEQiFz68w3xUjf6UBOlrVY9j2B4qm77zeGbcpioedpyueIrbxwowjWeL+ozjGXmQcm4DOImaUs5M0EExo=
-X-Received: by 2002:a0c:f643:: with SMTP id s3mr2535550qvm.79.1565789556060;
- Wed, 14 Aug 2019 06:32:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=2ptfAgVpyIEhhkDUXUHOQeIgB7V3ChTfM7YuAb134Kg=;
+        b=KThqWdue1/GDCepVG+RGGdApiuZtOaKocffIXmnieOepj82sWR7lE1NqW613Tiu+yX
+         sx578ioBVmc/iuqxUtV9wiEz1eVfkDxf3tVRtmeyjqiMPL5noUYBkYGYNzcoPb5Kld1j
+         qnykhgystUroE/Gg9WXN6rrzjSWiFxn/QxYZvPmjLKpzKPhTo8BQax32BT+f4J+ph28I
+         CdmYMV3CfNZkaimwUWqCkfKVFtpt+48wB5eboN1l+0uaUH/fDFCW0RFnotZo1c98s0cb
+         HXcTCPhSHI6fxwHBEh1O+AWj+2AfQfjD7UeH8/wtow69jOXZNe9aOy2M/3Fl51e5T05Z
+         /7OA==
+X-Gm-Message-State: APjAAAVDrEP2x6sLI/IWugaIbsTsxza8bMdMVUBtStxAY4I8sE2hx+vJ
+        GgVxfRU8WBwHivzn8AY07bMjPg==
+X-Google-Smtp-Source: APXvYqyAM8eXnr+Jy6s24b158nlo/qNRMKZlplURPgkyhCKBGAc5pooN4Mik7Peninx/2IsQdmdO8w==
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr162966ljg.70.1565795378768;
+        Wed, 14 Aug 2019 08:09:38 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id l8sm2347lja.38.2019.08.14.08.09.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Aug 2019 08:09:38 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 18:09:36 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     bjorn.topel@intel.com, linux-mm@kvack.org,
+        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
+        magnus.karlsson@intel.com
+Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
+ size pgoff for 32bits
+Message-ID: <20190814150934.GD4142@khorivan>
+Mail-Followup-To: Andrew Morton <akpm@linux-foundation.org>,
+        bjorn.topel@intel.com, linux-mm@kvack.org,
+        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
+        magnus.karlsson@intel.com
+References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
+ <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
+ <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org> <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
- <20190814092403.GA4142@khorivan> <20190814115659.GC4142@khorivan>
-In-Reply-To: <20190814115659.GC4142@khorivan>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 14 Aug 2019 15:32:24 +0200
-Message-ID: <CAJ+HfNiqu7WEoBFnfK3znU4tVyAmpPVabTjTSKH1ZVo2W1rrXg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get __NR_mmap2
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 13:57, Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> On Wed, Aug 14, 2019 at 12:24:05PM +0300, Ivan Khoronzhuk wrote:
-> >On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
-> >
-> >Hi, Andrii
-> >
-> >>On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
-> >><ivan.khoronzhuk@linaro.org> wrote:
-> >>>
-> >>>That's needed to get __NR_mmap2 when mmap2 syscall is used.
-> >>>
-> >>>Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >>>---
-> >>> tools/lib/bpf/xsk.c | 1 +
-> >>> 1 file changed, 1 insertion(+)
-> >>>
-> >>>diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> >>>index 5007b5d4fd2c..f2fc40f9804c 100644
-> >>>--- a/tools/lib/bpf/xsk.c
-> >>>+++ b/tools/lib/bpf/xsk.c
-> >>>@@ -12,6 +12,7 @@
-> >>> #include <stdlib.h>
-> >>> #include <string.h>
-> >>> #include <unistd.h>
-> >>>+#include <asm/unistd.h>
-> >>
-> >>asm/unistd.h is not present in Github libbpf projection. Is there any
-> >
-> >Look on includes from
-> >tools/lib/bpf/libpf.c
-> >tools/lib/bpf/bpf.c
-> >
-> >That's how it's done... Copping headers to arch/arm will not
-> >solve this, it includes both of them anyway, and anyway it needs
-> >asm/unistd.h inclusion here, only because xsk.c needs __NR_*
-> >
-> >
->
-> There is one more radical solution for this I can send, but I'm not sure =
-how it
-> can impact on other syscals/arches...
->
-> Looks like:
->
->
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index 9312066a1ae3..8b2f8ff7ce44 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -113,6 +113,7 @@ override CFLAGS +=3D -Werror -Wall
->  override CFLAGS +=3D -fPIC
->  override CFLAGS +=3D $(INCLUDES)
->  override CFLAGS +=3D -fvisibility=3Dhidden
-> +override CFLAGS +=3D -D_FILE_OFFSET_BITS=3D64
->
+On Mon, Aug 12, 2019 at 02:19:24PM -0700, Andrew Morton wrote:
 
-Hmm, isn't this glibc-ism? Does is it work for, say, musl or bionic?
+Hi, Andrew
 
-If this is portable, and works on 32-, and 64-bit archs, I'm happy
-with the patch. :-)
+>On Mon, 12 Aug 2019 15:43:26 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+>
+>> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+>> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
+>> established already and are part of configuration interface.
+>>
+>> But for 32-bit systems, while AF_XDP socket configuration, the values
+>> are to large to pass maximum allowed file size verification.
+>> The offsets can be tuned ofc, but instead of changing existent
+>> interface - extend max allowed file size for sockets.
+>
+>
+>What are the implications of this?  That all code in the kernel which
+>handles mapped sockets needs to be audited (and tested) for correctly
+>handling mappings larger than 4G on 32-bit machines?  Has that been
+
+That's to allow only offset to be passed, mapping length is less than 4Gb.
+I have verified all list of mmap for sockets and all of them contain dummy
+cb sock_no_mmap() except the following:
+
+xsk_mmap()
+tcp_mmap()
+packet_mmap()
+
+xsk_mmap() - it's what this fix is needed for.
+tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+packet_mmap() - return -EINVAL if it's even set.
 
 
-Bj=C3=B6rn
+>done?  Are we confident that we aren't introducing user-visible buggy
+>behaviour into unsuspecting legacy code?
+>
+>Also...  what are the user-visible runtime effects of this change?
+>Please send along a paragraph which explains this, for the changelog.
+>Does this patch fix some user-visible problem?  If so, should be code
+>be backported into -stable kernels?
+It should go to linux-next, no one has been using it till this patch
+with 32 bits as w/o this fix af_xdp sockets can't be used at all.
+It unblocks af_xdp socket usage for 32bit systems.
 
->  ifeq ($(VERBOSE),1)
->    Q =3D
-> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> index f2fc40f9804c..ff2d03b8380d 100644
-> --- a/tools/lib/bpf/xsk.c
-> +++ b/tools/lib/bpf/xsk.c
-> @@ -75,23 +75,6 @@ struct xsk_nl_info {
->         int fd;
->  };
->
-> -/* For 32-bit systems, we need to use mmap2 as the offsets are 64-bit.
-> - * Unfortunately, it is not part of glibc.
-> - */
-> -static inline void *xsk_mmap(void *addr, size_t length, int prot, int fl=
-ags,
-> -                            int fd, __u64 offset)
-> -{
-> -#ifdef __NR_mmap2
-> -       unsigned int page_shift =3D __builtin_ffs(getpagesize()) - 1;
-> -       long ret =3D syscall(__NR_mmap2, addr, length, prot, flags, fd,
-> -                          (off_t)(offset >> page_shift));
-> -
-> -       return (void *)ret;
-> -#else
-> -       return mmap(addr, length, prot, flags, fd, offset);
-> -#endif
-> -}
-> -
->  int xsk_umem__fd(const struct xsk_umem *umem)
->  {
->         return umem ? umem->fd : -EINVAL;
-> @@ -211,10 +194,9 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, voi=
-d *umem_area, __u64 size,
->                 goto out_socket;
->         }
->
-> -       map =3D xsk_mmap(NULL, off.fr.desc +
-> -                      umem->config.fill_size * sizeof(__u64),
-> -                      PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
-> -                      umem->fd, XDP_UMEM_PGOFF_FILL_RING);
-> +       map =3D mmap(NULL, off.fr.desc + umem->config.fill_size * sizeof(=
-__u64),
-> +                  PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE, ume=
-m->fd,
-> +                  XDP_UMEM_PGOFF_FILL_RING);
->         if (map =3D=3D MAP_FAILED) {
->                 err =3D -errno;
->                 goto out_socket;
-> @@ -228,10 +210,9 @@ int xsk_umem__create(struct xsk_umem **umem_ptr, voi=
-d *umem_area, __u64 size,
->         fill->ring =3D map + off.fr.desc;
->         fill->cached_cons =3D umem->config.fill_size;
->
-> -       map =3D xsk_mmap(NULL,
-> -                      off.cr.desc + umem->config.comp_size * sizeof(__u6=
-4),
-> -                      PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE,
-> -                      umem->fd, XDP_UMEM_PGOFF_COMPLETION_RING);
-> +       map =3D mmap(NULL, off.cr.desc + umem->config.comp_size * sizeof(=
-__u64),
-> +                  PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE, ume=
-m->fd,
-> +                  XDP_UMEM_PGOFF_COMPLETION_RING);
->         if (map =3D=3D MAP_FAILED) {
->                 err =3D -errno;
->                 goto out_mmap;
-> @@ -552,11 +533,10 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr,=
- const char *ifname,
->         }
->
->         if (rx) {
-> -               rx_map =3D xsk_mmap(NULL, off.rx.desc +
-> -                                 xsk->config.rx_size * sizeof(struct xdp=
-_desc),
-> -                                 PROT_READ | PROT_WRITE,
-> -                                 MAP_SHARED | MAP_POPULATE,
-> -                                 xsk->fd, XDP_PGOFF_RX_RING);
-> +               rx_map =3D mmap(NULL, off.rx.desc +
-> +                             xsk->config.rx_size * sizeof(struct xdp_des=
-c),
-> +                             PROT_READ | PROT_WRITE, MAP_SHARED | MAP_PO=
-PULATE,
-> +                             xsk->fd, XDP_PGOFF_RX_RING);
->                 if (rx_map =3D=3D MAP_FAILED) {
->                         err =3D -errno;
->                         goto out_socket;
-> @@ -571,11 +551,10 @@ int xsk_socket__create(struct xsk_socket **xsk_ptr,=
- const char *ifname,
->         xsk->rx =3D rx;
->
->         if (tx) {
-> -               tx_map =3D xsk_mmap(NULL, off.tx.desc +
-> -                                 xsk->config.tx_size * sizeof(struct xdp=
-_desc),
-> -                                 PROT_READ | PROT_WRITE,
-> -                                 MAP_SHARED | MAP_POPULATE,
-> -                                 xsk->fd, XDP_PGOFF_TX_RING);
-> +               tx_map =3D mmap(NULL, off.tx.desc +
-> +                             xsk->config.tx_size * sizeof(struct xdp_des=
-c),
-> +                             PROT_READ | PROT_WRITE, MAP_SHARED | MAP_PO=
-PULATE,
-> +                             xsk->fd, XDP_PGOFF_TX_RING);
->                 if (tx_map =3D=3D MAP_FAILED) {
->                         err =3D -errno;
->                         goto out_mmap_rx;
->
->
-> If maintainers are ready to accept this I can send.
-> What do you say?
->
-> --
-> Regards,
-> Ivan Khoronzhuk
+
+That's example of potential next commit message:
+Subject: mm: mmap: increase sockets maximum memory size pgoff for 32bits
+
+The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+and XDP_UMEM_PGOFF_COMPLETION_RING offsets.  These offsets are established
+already and are part of the configuration interface.
+
+But for 32-bit systems, using AF_XDP socket configuration, these values
+are too large to pass the maximum allowed file size verification.  The
+offsets can be tuned off, but instead of changing the existing interface,
+let's extend the max allowed file size for sockets.
+
+No one has been using it till this patch with 32 bits as w/o this fix
+af_xdp sockets can't be used at all, so it unblocks af_xdp socket usage
+for 32bit systems.
+
+All list of mmap cbs for sockets were verified on side effects and
+all of them contain dummy cb - sock_no_mmap() at this moment, except the
+following:
+
+xsk_mmap() - it's what this fix is needed for.
+tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+packet_mmap() - return -EINVAL if it's even set.
+
+
+
+
+Is it ok to be replicated in PATCH v2 or this explanation is enough here
+to use v1?
+
+-- 
+Regards,
+Ivan Khoronzhuk
