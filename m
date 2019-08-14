@@ -2,153 +2,118 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBAA98CF4B
-	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Aug 2019 11:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AEAD8D09A
+	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Aug 2019 12:20:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfHNJYK (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 14 Aug 2019 05:24:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45853 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfHNJYK (ORCPT
+        id S1726121AbfHNKUI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 14 Aug 2019 06:20:08 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36927 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfHNKUC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 14 Aug 2019 05:24:10 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a30so15765256lfk.12
-        for <xdp-newbies@vger.kernel.org>; Wed, 14 Aug 2019 02:24:08 -0700 (PDT)
+        Wed, 14 Aug 2019 06:20:02 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t14so2031899lji.4
+        for <xdp-newbies@vger.kernel.org>; Wed, 14 Aug 2019 03:20:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
-        b=Ul21S1lis1op8IKkes8RTEHlbkQVCappEErZbRKZ/80yD1dIJHnrjhrJnVl4ZjcgQH
-         rErzc0XkGd3wrTdwfUdIqtGvVaKXlsAL1m25p/glBIDFtz01bh1s/XQsqo/IyGGEj5kP
-         RSxwcnLmToLQfB2ZKWBlOqKh0IPrXdJi5KrOiDyC+8W95WCPep6e3aHN44Zbuq2CcccP
-         f9Wd/C4An7+1P9XofbNvxTIhq317PFTTEav1onpxaVYmC8HJj+Zi6gHx+48H17X2Jhso
-         JeveMcqq/+MMTR/VleApLzuBEw8Z2wlSbWOQLjtVwogWboOdh3cwse5vyml1MlxjXGi4
-         ZDkg==
+        bh=LNONNFXrGqvOtXZDbhestEqwQXax/1n3/5TNvc5DICg=;
+        b=mlksZd0gBWCNSchq/6oBDjmyQUZ6kOe8L/P2I4bi1TJUahRnht34+T+2RqEKyNMgY7
+         YsjszEkrTju9J1/CBMIebMjOtA9fF5RfTRCaEuKmqsWuYw1w2aJaq0EMBO1n844voqrs
+         d+Tjt/K5G3Wo/W1f1FozlZZR9M+5fSjWGQKmtQD/OC/9xPWTbVp0Wad0ugJBltv2bFhX
+         jf71A7tGUJgiFOvPwXBeX5V8hrOJF/d7/x0wJ6k6Ah0V3mniO3qWFIdsxEwJNzaZwLud
+         1CjdbNoEsKg2cZqDCeAzG/xsOLaVD00eiRlVEzhjqLoOLBeu8iCBW4m0ysvnW7/tHsep
+         kZKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=aubLn8waLrcyH8GiaZ4/P2Bxuaos2txwyKIGB9Gh2j4=;
-        b=YCvkIbD3ecT99AIuh0DjMhxBqUFz+O8U3FKhh9ngOdMfraIRuQFGDTeOOHe3s3M97a
-         VMlDR34TCZaHvOYVBLCAKd4dGzZ2L7N8GgYxfsGrv/2ySh0tJkS3DOeh4zSUT62TZPs/
-         IoOdIlEJ9aQ3ZbvmbZjmi07dRPzLzT5D9qRBnNIa9WWb1D3r9maOsnBsVOgVw23YIaGr
-         pdJJhTKdhEB7FXI75/8tCP7sVGaztiV2qQlXaXxc63M4tgmz+Gpkc45z3w5H09KysQZq
-         pqte5h7WxVz9ip9aEt/wTeKVjG8u0OfVPFeq+o/xuVxQU4lTyGdt/uikJIf0mjOVnleC
-         MRXQ==
-X-Gm-Message-State: APjAAAVdHvJm2sjnsrecgmmd3yMTmeTip7vp4OmpsMcQwRNRRKO/tkWC
-        WfHOZ7LS4NsgYEO05eRDcTFkqw==
-X-Google-Smtp-Source: APXvYqw/IbZ9AUCs5SDIK+7WNXN+iu4AlM9c2hMq7+ZqfLDbxuqRkzN7aTSaafwrcI4AOd/xgKDPQg==
-X-Received: by 2002:a19:6d02:: with SMTP id i2mr24317533lfc.191.1565774648121;
-        Wed, 14 Aug 2019 02:24:08 -0700 (PDT)
+        bh=LNONNFXrGqvOtXZDbhestEqwQXax/1n3/5TNvc5DICg=;
+        b=rH2a5vMQQrOc2Oz84EC7Ad10ucaEuLToiy0QINv5K2fE6gwutAG+2GUxV+g8As+31r
+         yUyvmIwHGobVGn1kkpcIW/tQX/sl3mulXBIYVRFvkeUOFyvemIqsDEZLdz8MtfVfsA51
+         RzcotvLbP+QytYrvghQ0alFL1Wwvkh5lffk5d1+j5bR3N/fsakrsWr5dzc3+YiZovaNj
+         AJeOAbpMWGZ1I2h9HruNHprO43UvDPuqP2N2bnfe6UFB5wonyZZtXEvExecQ8DfaDgnh
+         tSdP6BaGRdPsIn7ynCNAwt6blz2l/T3o1lFLHaPXDN4UAUh7FHdEOnPR0A81+uDnZQIq
+         S+ng==
+X-Gm-Message-State: APjAAAXLTlfIDiiulIFTSI0lhljRXTMFgH+bW2VSAeQlvESuB9fjoH+6
+        UjNSdO/ImS2iB9MhI42oOLvdyw==
+X-Google-Smtp-Source: APXvYqyPW+JUeUyj8OH23+74Qvhhy6dvjThEquM3C2xwT+kZ++cix1fxH6nw1BxpuKzD+pif73Er/Q==
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr7672871lja.180.1565778000259;
+        Wed, 14 Aug 2019 03:20:00 -0700 (PDT)
 Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id r23sm228169ljm.59.2019.08.14.02.24.06
+        by smtp.gmail.com with ESMTPSA id j4sm1605560ljg.23.2019.08.14.03.19.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 14 Aug 2019 02:24:07 -0700 (PDT)
-Date:   Wed, 14 Aug 2019 12:24:05 +0300
+        Wed, 14 Aug 2019 03:19:59 -0700 (PDT)
+Date:   Wed, 14 Aug 2019 13:19:57 +0300
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+        "bjorn.topel@intel.com" <bjorn.topel@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get
  __NR_mmap2
-Message-ID: <20190814092403.GA4142@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
+Message-ID: <20190814101955.GB4142@khorivan>
+Mail-Followup-To: Yonghong Song <yhs@fb.com>,
+        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+        "bjorn.topel@intel.com" <bjorn.topel@intel.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
  <20190813102318.5521-2-ivan.khoronzhuk@linaro.org>
- <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
+ <05e5d15b-5ef9-b4dc-a76c-0d423fb2f15d@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
+In-Reply-To: <05e5d15b-5ef9-b4dc-a76c-0d423fb2f15d@fb.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
+On Wed, Aug 14, 2019 at 12:32:41AM +0000, Yonghong Song wrote:
 
-Hi, Andrii
+Hi, Yonghong Song
 
->On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
+>
+>
+>On 8/13/19 3:23 AM, Ivan Khoronzhuk wrote:
 >> That's needed to get __NR_mmap2 when mmap2 syscall is used.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  tools/lib/bpf/xsk.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
->> index 5007b5d4fd2c..f2fc40f9804c 100644
->> --- a/tools/lib/bpf/xsk.c
->> +++ b/tools/lib/bpf/xsk.c
->> @@ -12,6 +12,7 @@
->>  #include <stdlib.h>
->>  #include <string.h>
->>  #include <unistd.h>
->> +#include <asm/unistd.h>
 >
->asm/unistd.h is not present in Github libbpf projection. Is there any
+>It seems I did not have this issue on x64 machine e.g., Fedora 29.
+>My glibc version is 2.28. gcc 8.2.1.
 
-Look on includes from
-tools/lib/bpf/libpf.c
-tools/lib/bpf/bpf.c
-
-That's how it's done... Copping headers to arch/arm will not
-solve this, it includes both of them anyway, and anyway it needs
-asm/unistd.h inclusion here, only because xsk.c needs __NR_*
-
-
->way to avoid including this header? Generally, libbpf can't easily use
->all of kernel headers, we need to re-implemented all the extra used
->stuff for Github version of libbpf, so we try to minimize usage of new
->headers that are not just plain uapi headers from include/uapi.
-
-Yes I know, it's far away from real number of changes needed.
-I faced enough about this already and kernel headers, especially
-for arm32 it's a bit decency problem. But this patch it's part of
-normal one. I have couple issues despite this normally fixed mmap2
-that is the same even if uapi includes are coppied to tools/arch/arm.
-
-In continuation of kernel headers inclusion and arm build:
-
-For instance, what about this rough "kernel headers" hack:
-https://github.com/ikhorn/af_xdp_stuff/commit/aa645ccca4d844f404ec3c2b27402d4d7848d1b5
-
-or this one related for arm32 only:
-https://github.com/ikhorn/af_xdp_stuff/commit/2c6c6d538605aac39600dcb3c9b66de11c70b963
-
-I have more...
+On 64 there is no the issue.
 
 >
->>  #include <arpa/inet.h>
->>  #include <asm/barrier.h>
->>  #include <linux/compiler.h>
->> --
->> 2.17.1
->>
+>What is your particular system glibc version?
+>So needing kernel asm/unistd.h is because of older glibc on your
+>system, or something else? Could you clarify?
+
+It doesn't fix build issues, only runtime one on 32bits.
+
+If no such inclusion -> no __NR_mmap2 definition - just mmap() is used ->
+no problems on x64.
+
+Is the inclusion -> no NR_mmap2 or is NR_mmap2 -> no problems on x64
+
 
 -- 
 Regards,
