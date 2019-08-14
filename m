@@ -2,143 +2,128 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 202AD8DE27
-	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Aug 2019 21:56:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFC7B8E094
+	for <lists+xdp-newbies@lfdr.de>; Thu, 15 Aug 2019 00:18:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfHNT4p (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 14 Aug 2019 15:56:45 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45274 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbfHNT4p (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 14 Aug 2019 15:56:45 -0400
-Received: by mail-qt1-f195.google.com with SMTP id k13so14217221qtm.12;
-        Wed, 14 Aug 2019 12:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=ww+ukQWhq8T3zW2D5eMGHhBPEXg0kxg6O6YWVSbyLu0=;
-        b=Z5im4LRUTbqe71draDujv36ynaR5I7qnWRFDXujjJOzy8/wD1b7rPasp8FZ0ASV+FK
-         2TOMISmoOdJ7DuiiaFYlzb9BQAokUydp8ZyR4t3xhk1tZM5T4q89XGdp4vgvIz3wTBGN
-         ffr//kJA2Xy3cDRAURvIvGO8qv4/ro/22riaw2Bg/9dDRcetRHknLSh58Jf+0KNGPA6v
-         lgx6bGTaXn0l4GBe5ERN9ErTjrki/EPLWVrJ2B3fH2L2nj5WJoF9oQPcTGGr3zqbYi0M
-         dkSVvFrCEYMsPitD6HZNUOztYWReG85PTV3FVlII6yFD012SQJAF12TPOqyl9lHBi811
-         DFeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=ww+ukQWhq8T3zW2D5eMGHhBPEXg0kxg6O6YWVSbyLu0=;
-        b=gOIXH6EXbEq99u27/TqlAWtgJW640zSSJoqOG3WixZrPqD4BNwu83PMHGzIEczf1Pz
-         Aj0W4PUBaIh8G8CZ7gRMFz1Hxj4YBaeXVVyZrSRImK+OgYqCCKuZAiTVnFtJlrAQpEcH
-         TI6KhURiF43fNfbxoVX5B04Kvj3BOSpOhfOlYrPoahFC4osbNV5zcbEb0vZ+yDyoPnY0
-         qrosby1lVpnfpzYMPGHe063un0TGD/UTNiwJcesEzZJDkLIdp97TaiVIJhSGWUszZe1f
-         2MoCZLtQUaR4b7Zqmq/sqakTSEAwEDPmeDaQ5TtSAR9YCBPSvAhUrg4cf8qsd5WIB7As
-         9rsQ==
-X-Gm-Message-State: APjAAAVaDSh7YV2zmipsJT3Uc4M6gA5bG0sFvd16OfOQPP8lVms1Opez
-        DVc9os4hhPe70aiVLwdyqCMKIOm2RIW/ei/TL8c=
-X-Google-Smtp-Source: APXvYqxXSTAWwijyc9NlManHFj6IVa/Msxv4XU2yOuIwifQOSvJEefJBpvrsS3zKqV4PuA0PJ50+m8sLy2gTt5qDjGs=
-X-Received: by 2002:ac8:488a:: with SMTP id i10mr891426qtq.93.1565812603868;
- Wed, 14 Aug 2019 12:56:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190813102318.5521-1-ivan.khoronzhuk@linaro.org>
- <20190813102318.5521-2-ivan.khoronzhuk@linaro.org> <CAEf4BzZ2y_DmTXkVqFh6Hdcquo6UvntvCygw5h5WwrWYXRRg_g@mail.gmail.com>
- <20190814092403.GA4142@khorivan>
-In-Reply-To: <20190814092403.GA4142@khorivan>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 14 Aug 2019 12:56:32 -0700
-Message-ID: <CAEf4BzbyAHkL5pFoBCKPY7ia3voj7t2OkFDNKYqdyE1Fiuy4nQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/3] libbpf: add asm/unistd.h to xsk to get __NR_mmap2
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        xdp-newbies@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1727273AbfHNWSI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 14 Aug 2019 18:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfHNWSI (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 14 Aug 2019 18:18:08 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4107D20665;
+        Wed, 14 Aug 2019 22:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565821086;
+        bh=k8sF9ByxTFJt+xPpPS1ClUhI3arOUct3oMxaqPHO3MI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S/1z63Ov8CQ7Ns/DVtHuelIHzOPS4/tww77AgTZI+v2U7sLvnbEEPlv9WPhG4y32H
+         Ky5oGomVEEFvzPSSqxC0WdbhxRINJl5SXaHNr/fe/MyCpOGumxN+7Nu+yIVU/PM4I1
+         D0rTreqznnzPWBSf5XSM5YiCaXthUF0BkjISpeJc=
+Date:   Wed, 14 Aug 2019 15:18:05 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     bjorn.topel@intel.com, linux-mm@kvack.org,
+        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
+        magnus.karlsson@intel.com
+Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
+ size pgoff for 32bits
+Message-Id: <20190814151805.bbff7b08f3a4119750b3e9fd@linux-foundation.org>
+In-Reply-To: <20190814150934.GD4142@khorivan>
+References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
+        <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
+        <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
+        <20190814150934.GD4142@khorivan>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:24 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> On Tue, Aug 13, 2019 at 04:38:13PM -0700, Andrii Nakryiko wrote:
->
-> Hi, Andrii
->
-> >On Tue, Aug 13, 2019 at 3:24 AM Ivan Khoronzhuk
-> ><ivan.khoronzhuk@linaro.org> wrote:
-> >>
-> >> That's needed to get __NR_mmap2 when mmap2 syscall is used.
-> >>
-> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >> ---
-> >>  tools/lib/bpf/xsk.c | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/tools/lib/bpf/xsk.c b/tools/lib/bpf/xsk.c
-> >> index 5007b5d4fd2c..f2fc40f9804c 100644
-> >> --- a/tools/lib/bpf/xsk.c
-> >> +++ b/tools/lib/bpf/xsk.c
-> >> @@ -12,6 +12,7 @@
-> >>  #include <stdlib.h>
-> >>  #include <string.h>
-> >>  #include <unistd.h>
-> >> +#include <asm/unistd.h>
+On Wed, 14 Aug 2019 18:09:36 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
+
+> On Mon, Aug 12, 2019 at 02:19:24PM -0700, Andrew Morton wrote:
+> 
+> Hi, Andrew
+> 
+> >On Mon, 12 Aug 2019 15:43:26 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 > >
-> >asm/unistd.h is not present in Github libbpf projection. Is there any
->
-> Look on includes from
-> tools/lib/bpf/libpf.c
-> tools/lib/bpf/bpf.c
->
-
-Yeah, sorry for the noise. I missed that this is system header that's
-expected to be present, not internal kernel header, parts of which we
-need to re-implement for Github projection. Never mind my concerns.
-
-
-> That's how it's done... Copping headers to arch/arm will not
-> solve this, it includes both of them anyway, and anyway it needs
-> asm/unistd.h inclusion here, only because xsk.c needs __NR_*
->
->
-> >way to avoid including this header? Generally, libbpf can't easily use
-> >all of kernel headers, we need to re-implemented all the extra used
-> >stuff for Github version of libbpf, so we try to minimize usage of new
-> >headers that are not just plain uapi headers from include/uapi.
->
-> Yes I know, it's far away from real number of changes needed.
-> I faced enough about this already and kernel headers, especially
-> for arm32 it's a bit decency problem. But this patch it's part of
-> normal one. I have couple issues despite this normally fixed mmap2
-> that is the same even if uapi includes are coppied to tools/arch/arm.
->
-> In continuation of kernel headers inclusion and arm build:
->
-> For instance, what about this rough "kernel headers" hack:
-> https://github.com/ikhorn/af_xdp_stuff/commit/aa645ccca4d844f404ec3c2b27402d4d7848d1b5
->
-> or this one related for arm32 only:
-> https://github.com/ikhorn/af_xdp_stuff/commit/2c6c6d538605aac39600dcb3c9b66de11c70b963
->
-> I have more...
->
-> >
-> >>  #include <arpa/inet.h>
-> >>  #include <asm/barrier.h>
-> >>  #include <linux/compiler.h>
-> >> --
-> >> 2.17.1
+> >> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+> >> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
+> >> established already and are part of configuration interface.
 > >>
+> >> But for 32-bit systems, while AF_XDP socket configuration, the values
+> >> are to large to pass maximum allowed file size verification.
+> >> The offsets can be tuned ofc, but instead of changing existent
+> >> interface - extend max allowed file size for sockets.
+> >
+> >
+> >What are the implications of this?  That all code in the kernel which
+> >handles mapped sockets needs to be audited (and tested) for correctly
+> >handling mappings larger than 4G on 32-bit machines?  Has that been
+> 
+> That's to allow only offset to be passed, mapping length is less than 4Gb.
+> I have verified all list of mmap for sockets and all of them contain dummy
+> cb sock_no_mmap() except the following:
+> 
+> xsk_mmap()
+> tcp_mmap()
+> packet_mmap()
+> 
+> xsk_mmap() - it's what this fix is needed for.
+> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+> packet_mmap() - return -EINVAL if it's even set.
+
+Great, thanks.
+
+> 
+> >done?  Are we confident that we aren't introducing user-visible buggy
+> >behaviour into unsuspecting legacy code?
+> >
+> >Also...  what are the user-visible runtime effects of this change?
+> >Please send along a paragraph which explains this, for the changelog.
+> >Does this patch fix some user-visible problem?  If so, should be code
+> >be backported into -stable kernels?
+> It should go to linux-next, no one has been using it till this patch
+> with 32 bits as w/o this fix af_xdp sockets can't be used at all.
+> It unblocks af_xdp socket usage for 32bit systems.
+> 
+> 
+> That's example of potential next commit message:
+> Subject: mm: mmap: increase sockets maximum memory size pgoff for 32bits
+> 
+> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
+> and XDP_UMEM_PGOFF_COMPLETION_RING offsets.  These offsets are established
+> already and are part of the configuration interface.
+> 
+> But for 32-bit systems, using AF_XDP socket configuration, these values
+> are too large to pass the maximum allowed file size verification.  The
+> offsets can be tuned off, but instead of changing the existing interface,
+> let's extend the max allowed file size for sockets.
+> 
+> No one has been using it till this patch with 32 bits as w/o this fix
+> af_xdp sockets can't be used at all, so it unblocks af_xdp socket usage
+> for 32bit systems.
+> 
+> All list of mmap cbs for sockets were verified on side effects and
+> all of them contain dummy cb - sock_no_mmap() at this moment, except the
+> following:
+> 
+> xsk_mmap() - it's what this fix is needed for.
+> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
+> packet_mmap() - return -EINVAL if it's even set.
 >
-> --
-> Regards,
-> Ivan Khoronzhuk
+> ...
+>
+> Is it ok to be replicated in PATCH v2 or this explanation is enough here
+> to use v1?
+
+I have replaced the changlog in my tree with the above, thanks.
+
