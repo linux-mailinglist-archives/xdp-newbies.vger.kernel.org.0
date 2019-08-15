@@ -2,128 +2,89 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC7B8E094
-	for <lists+xdp-newbies@lfdr.de>; Thu, 15 Aug 2019 00:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 874A38E2FF
+	for <lists+xdp-newbies@lfdr.de>; Thu, 15 Aug 2019 05:01:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfHNWSI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 14 Aug 2019 18:18:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        id S1728944AbfHODBL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 14 Aug 2019 23:01:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42222 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfHNWSI (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 14 Aug 2019 18:18:08 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728014AbfHODBL (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 14 Aug 2019 23:01:11 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4107D20665;
-        Wed, 14 Aug 2019 22:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565821086;
-        bh=k8sF9ByxTFJt+xPpPS1ClUhI3arOUct3oMxaqPHO3MI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S/1z63Ov8CQ7Ns/DVtHuelIHzOPS4/tww77AgTZI+v2U7sLvnbEEPlv9WPhG4y32H
-         Ky5oGomVEEFvzPSSqxC0WdbhxRINJl5SXaHNr/fe/MyCpOGumxN+7Nu+yIVU/PM4I1
-         D0rTreqznnzPWBSf5XSM5YiCaXthUF0BkjISpeJc=
-Date:   Wed, 14 Aug 2019 15:18:05 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     bjorn.topel@intel.com, linux-mm@kvack.org,
-        xdp-newbies@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, ast@kernel.org,
-        magnus.karlsson@intel.com
-Subject: Re: [PATCH v2 bpf-next] mm: mmap: increase sockets maximum memory
- size pgoff for 32bits
-Message-Id: <20190814151805.bbff7b08f3a4119750b3e9fd@linux-foundation.org>
-In-Reply-To: <20190814150934.GD4142@khorivan>
-References: <20190812113429.2488-1-ivan.khoronzhuk@linaro.org>
-        <20190812124326.32146-1-ivan.khoronzhuk@linaro.org>
-        <20190812141924.32136e040904d0c5a819dcb1@linux-foundation.org>
-        <20190814150934.GD4142@khorivan>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 65AB066C46;
+        Thu, 15 Aug 2019 03:01:10 +0000 (UTC)
+Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 997847B6FC;
+        Thu, 15 Aug 2019 03:01:02 +0000 (UTC)
+Subject: Re: [PATCH] virtio-net: lower min ring num_free for efficiency
+To:     ? jiang <jiangkidd@hotmail.com>, "mst@redhat.com" <mst@redhat.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
+References: <BYAPR14MB3205E4E194942B0A1A91A222A6AD0@BYAPR14MB3205.namprd14.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <f61d9621-cc33-44a2-f297-43f8af8d759b@redhat.com>
+Date:   Thu, 15 Aug 2019 11:01:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <BYAPR14MB3205E4E194942B0A1A91A222A6AD0@BYAPR14MB3205.namprd14.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 15 Aug 2019 03:01:10 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 14 Aug 2019 18:09:36 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
 
-> On Mon, Aug 12, 2019 at 02:19:24PM -0700, Andrew Morton wrote:
-> 
-> Hi, Andrew
-> 
-> >On Mon, 12 Aug 2019 15:43:26 +0300 Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-> >
-> >> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
-> >> and XDP_UMEM_PGOFF_COMPLETION_RING offsets. The offsets seems like are
-> >> established already and are part of configuration interface.
-> >>
-> >> But for 32-bit systems, while AF_XDP socket configuration, the values
-> >> are to large to pass maximum allowed file size verification.
-> >> The offsets can be tuned ofc, but instead of changing existent
-> >> interface - extend max allowed file size for sockets.
-> >
-> >
-> >What are the implications of this?  That all code in the kernel which
-> >handles mapped sockets needs to be audited (and tested) for correctly
-> >handling mappings larger than 4G on 32-bit machines?  Has that been
-> 
-> That's to allow only offset to be passed, mapping length is less than 4Gb.
-> I have verified all list of mmap for sockets and all of them contain dummy
-> cb sock_no_mmap() except the following:
-> 
-> xsk_mmap()
-> tcp_mmap()
-> packet_mmap()
-> 
-> xsk_mmap() - it's what this fix is needed for.
-> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
-> packet_mmap() - return -EINVAL if it's even set.
+On 2019/8/14 上午10:06, ? jiang wrote:
+> This change lowers ring buffer reclaim threshold from 1/2*queue to budget
+> for better performance. According to our test with qemu + dpdk, packet
+> dropping happens when the guest is not able to provide free buffer in
+> avail ring timely with default 1/2*queue. The value in the patch has been
+> tested and does show better performance.
 
-Great, thanks.
 
-> 
-> >done?  Are we confident that we aren't introducing user-visible buggy
-> >behaviour into unsuspecting legacy code?
-> >
-> >Also...  what are the user-visible runtime effects of this change?
-> >Please send along a paragraph which explains this, for the changelog.
-> >Does this patch fix some user-visible problem?  If so, should be code
-> >be backported into -stable kernels?
-> It should go to linux-next, no one has been using it till this patch
-> with 32 bits as w/o this fix af_xdp sockets can't be used at all.
-> It unblocks af_xdp socket usage for 32bit systems.
-> 
-> 
-> That's example of potential next commit message:
-> Subject: mm: mmap: increase sockets maximum memory size pgoff for 32bits
-> 
-> The AF_XDP sockets umem mapping interface uses XDP_UMEM_PGOFF_FILL_RING
-> and XDP_UMEM_PGOFF_COMPLETION_RING offsets.  These offsets are established
-> already and are part of the configuration interface.
-> 
-> But for 32-bit systems, using AF_XDP socket configuration, these values
-> are too large to pass the maximum allowed file size verification.  The
-> offsets can be tuned off, but instead of changing the existing interface,
-> let's extend the max allowed file size for sockets.
-> 
-> No one has been using it till this patch with 32 bits as w/o this fix
-> af_xdp sockets can't be used at all, so it unblocks af_xdp socket usage
-> for 32bit systems.
-> 
-> All list of mmap cbs for sockets were verified on side effects and
-> all of them contain dummy cb - sock_no_mmap() at this moment, except the
-> following:
-> 
-> xsk_mmap() - it's what this fix is needed for.
-> tcp_mmap() - doesn't have obvious issues with pgoff - no any references on it.
-> packet_mmap() - return -EINVAL if it's even set.
+Please add your tests setup and result here.
+
+Thanks
+
+
 >
-> ...
+> Signed-off-by: jiangkidd <jiangkidd@hotmail.com>
+> ---
+>   drivers/net/virtio_net.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Is it ok to be replicated in PATCH v2 or this explanation is enough here
-> to use v1?
-
-I have replaced the changlog in my tree with the above, thanks.
-
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 0d4115c9e20b..bc08be7925eb 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1331,7 +1331,7 @@ static int virtnet_receive(struct receive_queue *rq, int budget,
+>   		}
+>   	}
+>   
+> -	if (rq->vq->num_free > virtqueue_get_vring_size(rq->vq) / 2) {
+> +	if (rq->vq->num_free > min((unsigned int)budget, virtqueue_get_vring_size(rq->vq)) / 2) {
+>   		if (!try_fill_recv(vi, rq, GFP_ATOMIC))
+>   			schedule_delayed_work(&vi->refill, 0);
+>   	}
