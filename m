@@ -2,86 +2,288 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A99B48E5C5
-	for <lists+xdp-newbies@lfdr.de>; Thu, 15 Aug 2019 09:51:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04DA68E813
+	for <lists+xdp-newbies@lfdr.de>; Thu, 15 Aug 2019 11:22:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbfHOHvv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 15 Aug 2019 03:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        id S1730464AbfHOJWa (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 15 Aug 2019 05:22:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60966 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfHOHvu (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 15 Aug 2019 03:51:50 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730204AbfHOJW3 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 15 Aug 2019 05:22:29 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9F92084D;
-        Thu, 15 Aug 2019 07:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565855509;
-        bh=OcToxkMk9gwSDl2BUebvNxigaLKXvR3X1ectJPWkRLE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ikYTm+Z+svls9M/L1vwCDEPOjor7PIuUJlBIMrqGDy5t9DD6cJBn+9lPsrRj4k/0A
-         YcWUquzHr2EfuIY9gSs9nyeux6mM5QAff0gLwWAHzYsYRDmxc9IYZ1sVFcTHXC8uDK
-         fRos8pRMya5Flsy5VvWWyluoO24ZWhf9SFNYxVZc=
-Date:   Thu, 15 Aug 2019 08:51:42 +0100
-From:   Will Deacon <will@kernel.org>
-To:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
-        bvanassche@acm.org
-Cc:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        bvanassche@acm.org, daniel@iogearbox.net, davem@davemloft.net,
-        dvyukov@google.com, hawk@kernel.org, hdanton@sina.com,
-        jakub.kicinski@netronome.com, johannes.berg@intel.com,
-        johannes@sipsolutions.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
-Subject: Re: WARNING in is_bpf_text_address
-Message-ID: <20190815075142.vuza32plqtiuhixx@willie-the-truck>
-References: <00000000000000ac4f058bd50039@google.com>
- <000000000000e56cb0058fcc6c28@google.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id AD9573082135;
+        Thu, 15 Aug 2019 09:22:28 +0000 (UTC)
+Received: from [10.72.12.184] (ovpn-12-184.pek2.redhat.com [10.72.12.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC5C35D9DC;
+        Thu, 15 Aug 2019 09:22:15 +0000 (UTC)
+Subject: Re: [PATCH] virtio-net: lower min ring num_free for efficiency
+To:     =?UTF-8?B?5YaJIGppYW5n?= <jiangkidd@hotmail.com>,
+        "mst@redhat.com" <mst@redhat.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
+References: <BYAPR14MB3205E4E194942B0A1A91A222A6AD0@BYAPR14MB3205.namprd14.prod.outlook.com>
+ <f61d9621-cc33-44a2-f297-43f8af8d759b@redhat.com>
+ <BYAPR14MB3205B734E554EACEEE337ADDA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
+ <38df7fdd-bd6a-cc82-534d-d7cbf3f1933c@redhat.com>
+ <BYAPR14MB320512CCA27487548DDAA57FA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e1ae87d7-546a-d8fb-8d76-97d44bfa3a13@redhat.com>
+Date:   Thu, 15 Aug 2019 17:22:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000e56cb0058fcc6c28@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <BYAPR14MB320512CCA27487548DDAA57FA6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 15 Aug 2019 09:22:28 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Bart,
 
-On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    451577f3 Merge tag 'kbuild-fixes-v5.3-3' of git://git.kern..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=120850a6600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130ffe4a600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17137d2c600000
-> 
-> The bug was bisected to:
-> 
-> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-> Author: Bart Van Assche <bvanassche@acm.org>
-> Date:   Thu Feb 14 23:00:46 2019 +0000
-> 
->     locking/lockdep: Free lock classes that are no longer in use
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
+On 2019/8/15 下午4:36, 冉 jiang wrote:
+> On 2019/8/15 11:17, Jason Wang wrote:
+>> On 2019/8/15 上午11:11, 冉 jiang wrote:
+>>> On 2019/8/15 11:01, Jason Wang wrote:
+>>>> On 2019/8/14 上午10:06, ? jiang wrote:
+>>>>> This change lowers ring buffer reclaim threshold from 1/2*queue to
+>>>>> budget
+>>>>> for better performance. According to our test with qemu + dpdk, packet
+>>>>> dropping happens when the guest is not able to provide free buffer in
+>>>>> avail ring timely with default 1/2*queue. The value in the patch has
+>>>>> been
+>>>>> tested and does show better performance.
+>>>> Please add your tests setup and result here.
+>>>>
+>>>> Thanks
+>>>>
+>>>>
+>>>>> Signed-off-by: jiangkidd <jiangkidd@hotmail.com>
+>>>>> ---
+>>>>>     drivers/net/virtio_net.c | 2 +-
+>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+>>>>> index 0d4115c9e20b..bc08be7925eb 100644
+>>>>> --- a/drivers/net/virtio_net.c
+>>>>> +++ b/drivers/net/virtio_net.c
+>>>>> @@ -1331,7 +1331,7 @@ static int virtnet_receive(struct receive_queue
+>>>>> *rq, int budget,
+>>>>>             }
+>>>>>         }
+>>>>>     -    if (rq->vq->num_free > virtqueue_get_vring_size(rq->vq) / 2) {
+>>>>> +    if (rq->vq->num_free > min((unsigned int)budget,
+>>>>> virtqueue_get_vring_size(rq->vq)) / 2) {
+>>>>>             if (!try_fill_recv(vi, rq, GFP_ATOMIC))
+>>>>>                 schedule_delayed_work(&vi->refill, 0);
+>>>>>         }
+>>> Sure, here are the details:
+>>
+>> Thanks for the details, but I meant it's better if you could summarize
+>> you test result in the commit log in a compact way.
+>>
+>> Btw, some comments, see below:
+>>
+>>
+>>>
+>>> Test setup & result:
+>>>
+>>> ----------------------------------------------------
+>>>
+>>> Below is the snippet from our test result. Test1 was done with default
+>>> driver with the value of 1/2 * queue, while test2 is with my patch. We
+>>> can see average
+>>> drop packets do decrease a lot in test2.
+>>>
+>>> test1Time    avgDropPackets    test2Time    avgDropPackets pps
+>>>
+>>> 16:21.0    12.295    56:50.4    0 300k
+>>> 17:19.1    15.244    56:50.4    0    300k
+>>> 18:17.5    18.789    56:50.4    0    300k
+>>> 19:15.1    14.208    56:50.4    0    300k
+>>> 20:13.2    20.818    56:50.4    0.267    300k
+>>> 21:11.2    12.397    56:50.4    0    300k
+>>> 22:09.3    12.599    56:50.4    0    300k
+>>> 23:07.3    15.531    57:48.4    0    300k
+>>> 24:05.5    13.664    58:46.5    0    300k
+>>> 25:03.7    13.158    59:44.5    4.73    300k
+>>> 26:01.1    2.486    00:42.6    0    300k
+>>> 26:59.1    11.241    01:40.6    0    300k
+>>> 27:57.2    20.521    02:38.6    0    300k
+>>> 28:55.2    30.094    03:36.7    0    300k
+>>> 29:53.3    16.828    04:34.7    0.963    300k
+>>> 30:51.3    46.916    05:32.8    0    400k
+>>> 31:49.3    56.214    05:32.8    0    400k
+>>> 32:47.3    58.69    05:32.8    0    400k
+>>> 33:45.3    61.486    05:32.8    0    400k
+>>> 34:43.3    72.175    05:32.8    0.598    400k
+>>> 35:41.3    56.699    05:32.8    0    400k
+>>> 36:39.3    61.071    05:32.8    0    400k
+>>> 37:37.3    43.355    06:30.8    0    400k
+>>> 38:35.4    44.644    06:30.8    0    400k
+>>> 39:33.4    72.336    06:30.8    0    400k
+>>> 40:31.4    70.676    06:30.8    0    400k
+>>> 41:29.4    108.009    06:30.8    0    400k
+>>> 42:27.4    65.216    06:30.8    0    400k
+>>
+>> Why there're difference in test time? Could you summarize them like:
+>>
+>> Test setup: e.g testpmd or pktgen to generate packets to guest
+>>
+>> avg packets drop before: XXX
+>>
+>> avg packets drop after: YYY(-ZZZ%)
+>>
+>> Thanks
+>>
+>>
+>>>
+>>> Data to prove why the patch helps:
+>>>
+>>> ----------------------------------------------------
+>>>
+>>> We did have completed several rounds of test with setting the value to
+>>> budget (64 as the default value). It does improve a lot with pps is
+>>> below 400pps for a single stream. We are confident that it runs out
+>>> of free
+>>> buffer in avail ring when packet dropping happens with below systemtap:
+>>>
+>>> Just a snippet:
+>>>
+>>> probe module("virtio_ring").function("virtqueue_get_buf")
+>>> {
+>>>         x = (@cast($_vq, "vring_virtqueue")->vring->used->idx)-
+>>> (@cast($_vq, "vring_virtqueue")->last_used_idx) ---> we use this one
+>>> to verify if the queue is full, which means guest is not able to take
+>>> buffer from the queue timely
+>>>
+>>>         if (x<0 && (x+65535)<4096)
+>>>             x = x+65535
+>>>
+>>>         if((x==1024) && @cast($_vq, "vring_virtqueue")->vq->callback ==
+>>> callback_addr)
+>>>             netrxcount[x] <<< gettimeofday_s()
+>>> }
+>>>
+>>>
+>>> probe module("virtio_ring").function("virtqueue_add_inbuf")
+>>> {
+>>>         y = (@cast($vq, "vring_virtqueue")->vring->avail->idx)-
+>>> (@cast($vq, "vring_virtqueue")->vring->used->idx) ---> we use this one
+>>> to verify if we run out of free buffer in avail ring
+>>>         if (y<0 && (y+65535)<4096)
+>>>             y = y+65535
+>>>
+>>>         if(@2=="debugon")
+>>>         {
+>>>             if(y==0 && @cast($vq, "vring_virtqueue")->vq->callback ==
+>>> callback_addr)
+>>>             {
+>>>                 netrxfreecount[y] <<< gettimeofday_s()
+>>>
+>>>                 printf("no avail ring left seen, printing most recent 5
+>>> num free, vq: %lx, current index: %d\n", $vq, recentfreecount)
+>>>                 for(i=recentfreecount; i!=((recentfreecount+4) % 5);
+>>> i=((i+1) % 5))
+>>>                 {
+>>>                     printf("index: %d, num free: %d\n", i,
+>>> recentfree[$vq,
+>>> i])
+>>>                 }
+>>>
+>>>                 printf("index: %d, num free: %d\n", i, recentfree[$vq,
+>>> i])
+>>>                 //exit()
+>>>             }
+>>>         }
+>>> }
+>>>
+>>>
+>>> probe
+>>> module("virtio_net").statement("virtnet_receive@drivers/net/virtio_net.c:732")
+>>>
+>>>
+>>> {
+>>>         recentfreecount++
+>>>         recentfreecount = recentfreecount % 5
+>>>         recentfree[$rq->vq, recentfreecount] = $rq->vq->num_free --->
+>>> record the num_free for the last 5 calls to virtnet_receive, so we can
+>>> see if lowering the bar helps.
+>>> }
+>>>
+>>>
+>>> Here is the result:
+>>>
+>>> no avail ring left seen, printing most recent 5 num free, vq:
+>>> ffff9c13c1200000, current index: 1
+>>> index: 1, num free: 561
+>>> index: 2, num free: 305
+>>> index: 3, num free: 369
+>>> index: 4, num free: 433
+>>> index: 0, num free: 497
+>>> no avail ring left seen, printing most recent 5 num free, vq:
+>>> ffff9c13c1200000, current index: 1
+>>> index: 1, num free: 543
+>>> index: 2, num free: 463
+>>> index: 3, num free: 469
+>>> index: 4, num free: 476
+>>> index: 0, num free: 479
+>>> no avail ring left seen, printing most recent 5 num free, vq:
+>>> ffff9c13c1200000, current index: 2
+>>> index: 2, num free: 555
+>>> index: 3, num free: 414
+>>> index: 4, num free: 420
+>>> index: 0, num free: 427
+>>> index: 1, num free: 491
+>>>
+>>> We can see in the last 4 calls to virtnet_receive before we run out
+>>> of free buffer and start to relaim, num_free is quite high. So if we
+>>> can do the reclaim earlier, it will certainly help.
+>>>
+>>> Jiang
+>>
+>> Right, but I think there's no need to put those thing in the commit log.
+>>
+>> Thanks
+>>
+>>
+> Sure, here is the info:
+>
+>
+> Test setup: iperf3 to generate packets to guest (total 30mins, pps 400k)
+>
+> avg packets drop before: 2842
+>
+> avg packets drop after: 360(-87.3%)
+>
+>
+> Just let me know if it looks good enough. Thx.
+>
+> Jiang
 
-I know you don't think much to these reports, but please could you have a
-look (even if it's just to declare it a false positive)?
 
-Cheers,
+Looks good, please post a V2 and include the above result in the commit log.
 
-Will
+Thanks
+
+>
