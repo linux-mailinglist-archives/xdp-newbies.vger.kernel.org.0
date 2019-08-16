@@ -2,140 +2,110 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C73A8F7D2
-	for <lists+xdp-newbies@lfdr.de>; Fri, 16 Aug 2019 02:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EE948F880
+	for <lists+xdp-newbies@lfdr.de>; Fri, 16 Aug 2019 03:42:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbfHPAHi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 15 Aug 2019 20:07:38 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:11682 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbfHPAHi (ORCPT
+        id S1726364AbfHPBmQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 15 Aug 2019 21:42:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44053 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfHPBmP (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 15 Aug 2019 20:07:38 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7G04bmi014228;
-        Thu, 15 Aug 2019 17:07:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=Vvxb8dywXEIu3tGxVQPeysTzapN5cjrzEXOWsQAKQHk=;
- b=hjH1R0hQMuMnY1q1T4qXZUsYFcqf8i9mvFo9zWfTdcMaKq/LxYDQ4R5GT4E0xA9x/fwe
- kgu06nYmEDghotTG5QyjVP1/Rbhs8Tibxlvvf8w+HIh4wh5gaHFaMeQ4wwjZse7Rm/Dg
- iMgj9zNrSMcasu5rua0J5vaXo/m6qaB85QE= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2udehmgxbn-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 15 Aug 2019 17:07:01 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 15 Aug 2019 17:06:59 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 15 Aug 2019 17:06:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VigKAG5hRHOm35b8e7BOhMnkpTCsYho6XzurL3aK0SvW5/0bkkQgVclIelci3SoTuzHLQqrBKzEdrKURl4cWgrEw7xC184Szp/Xfl8oVhWG1/5FRbjD5mNqmJLC0/7QAAhFu1ptssjDp5aEJkX2JvGTpPeNrxSqINfk2NblVUi+JXClltmtGLpdMYy3jVypfwkLxb/oC7U5HBT6eKX4OtywLpwDNZMsaDrFCYSjh/TCyP88flS0h3l4ozX6zUVHrjBo0AGKJXRRRk5ozpa4GTusFpnVTkyMbk6ebp6IhQsg5akFHIJbL7e9XARiW6C85KscyMM9SLUdL+hIZAdAq1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vvxb8dywXEIu3tGxVQPeysTzapN5cjrzEXOWsQAKQHk=;
- b=Fl2WU8uex1mf5Qw7rceS7eE5swjlUCZTcSZLPP3YbiBbjhLOnVmDlNTNJIFcew81q7UqtCDyDr7+WrfjmnvL/MGenNXQ5/u+tRmYv77oLR4leXkA7jHX0gAbOk5ChXVjg5a47n3iod3SWz18hOLj0LDQjeVuQhy3gSKoGxS4hTVc7kI9PDPNatCIm2L652lBu3bmlwIbKYrhQ8AoseUfxEgbv+A1G+sRvgxNyOthAWcB/0EdUjN4d6D8SqTwMlMisKyVXpktjjHcPOycJEGMXswL7AqoNeTQtVJ5Oc0QEjF86MKRpnsuwCsEjQ12KFteSN3o4BjPcpQSKGKN1CCmDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vvxb8dywXEIu3tGxVQPeysTzapN5cjrzEXOWsQAKQHk=;
- b=h+TVQs2XzJKoJnBZAqbgaHZguGZDLRLr7pLoQkvaSCDNmnuBzVfwqMNU/OE3lPHRm1gCWqT3c/6db0z6r6IAfvASnRw4q0p3rZt5UYsPaa3SKV7Mm+Qe2G01HcrX8XnU8uYeIQl0lTzIDUYPGr8GAQfSg3sw21DoZ9k+HBwmcqM=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
- BYAPR15MB2424.namprd15.prod.outlook.com (52.135.198.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2157.23; Fri, 16 Aug 2019 00:06:58 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978%5]) with mapi id 15.20.2157.022; Fri, 16 Aug 2019
- 00:06:57 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
-        "bjorn.topel@intel.com" <bjorn.topel@intel.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jlemon@flugsvamp.com" <jlemon@flugsvamp.com>,
-        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/3] libbpf: use LFS (_FILE_OFFSET_BITS)
- instead of direct mmap2 syscall
-Thread-Topic: [PATCH bpf-next v2 1/3] libbpf: use LFS (_FILE_OFFSET_BITS)
- instead of direct mmap2 syscall
-Thread-Index: AQHVU8aF/QvS/xH1r0S6gYrkS1Hn9A==
-Date:   Fri, 16 Aug 2019 00:06:57 +0000
-Message-ID: <7e323b73-8ed1-349f-4c08-49450854be0d@fb.com>
-References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
- <20190815121356.8848-2-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190815121356.8848-2-ivan.khoronzhuk@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO1PR15CA0104.namprd15.prod.outlook.com
- (2603:10b6:101:21::24) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:10e::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:11f2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 262d26f6-b640-4772-bd84-08d721dda769
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2424;
-x-ms-traffictypediagnostic: BYAPR15MB2424:
-x-microsoft-antispam-prvs: <BYAPR15MB24249009FF95057218789220D3AF0@BYAPR15MB2424.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0131D22242
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(346002)(39860400002)(366004)(396003)(189003)(199004)(4326008)(52116002)(386003)(31686004)(102836004)(53546011)(6506007)(486006)(316002)(71190400001)(476003)(186003)(2616005)(76176011)(6246003)(110136005)(53936002)(6116002)(71200400001)(11346002)(81156014)(25786009)(2906002)(81166006)(99286004)(54906003)(8936002)(66946007)(8676002)(64756008)(36756003)(478600001)(66476007)(229853002)(46003)(7736002)(14454004)(2201001)(7416002)(66556008)(6486002)(14444005)(6436002)(86362001)(31696002)(256004)(5660300002)(446003)(6512007)(4744005)(2501003)(305945005)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2424;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WUwJ7595xX2WmCSa1BaT6gq3XBJPwdH63Lxzs7f2FNAJt/kC2FUiz8CDSd9hNIZly4wqe4Zk3g4Qg/79tjRKFQIn6fgdJ4MAJbzmhVE+rF5UBejAYjlryOYoKezqxrAc17KlD+/8XYm90UDwmiD6MU1U6H/VlBny3Kxdg2hYVTfw6T6imlVN8HzjZ2GOHvHdViornjj4VIMn/hbfaJkHdT1AUEBVauETsTz2sNguoDHz/I/aUJa4kde6cFq74e7tyNJiFr0W6o7F0xhs7qxb4QS6TA10meSaUh5BHVfRjqYWbxNMO/fDw/GK8EK/TXlQvIznEi0Kd7HwkZFgXtlPD+HK1U763h0tvAhOqeicXyo8GDF6ARN4rOw7Io5PXHG8AeOp/ubMjRu4BkeSeM1LMOHYb6mjf4rlMPqR/5qhxdI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9A6445D787AF145A235E478231C6746@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 15 Aug 2019 21:42:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so1754428plr.11;
+        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k8X5XNXRgSXKmO3VOQ8oPM00/03Zvows7zPdkmU9biA=;
+        b=aROk4PAog43KKzSzEdNXIcp3J8XNmSZsboReH69vmjAmvV9iOIUp7gP1HxE0zEDFBc
+         tHcMZM34wYun1Ez/tcayTB7kqGGCmscVNLzpgRPy09ilN8azrIUaan5qj+ncswGkvBni
+         JJmMSD8HRx+NtdYLnYc4vPWW7gmmiHiUfnaRVQDMi418jr8iRkDNNDYDawwXXFYR0hCe
+         9zp/sdJMEQG9LmEJrV3SjKnJFV1EHe2yoA7myFmAEpNcmnaWCgvROmKHWPEcyf/JatoH
+         TCJ0edsbGZRlrnLH8tS/mCtiS1oDfdOKfN6trXFLF8p2HV7wLlQfYs23H7X+7Io/thZE
+         WCqw==
+X-Gm-Message-State: APjAAAWLHwf3nItQwelRITWF1Nn3WRbuAsiLOhmpNV+h01pDy5djfnsF
+        UsB1X19pHs2O5fQxPArw/AY=
+X-Google-Smtp-Source: APXvYqzdthTsvCneximr2FlTgb2rB0Wx9XSMPGr91Bxg4AsokELbkrzvGS5bsSs9hXPUJYzU3Noc1g==
+X-Received: by 2002:a17:902:a586:: with SMTP id az6mr6489841plb.298.1565919734407;
+        Thu, 15 Aug 2019 18:42:14 -0700 (PDT)
+Received: from asus.site (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id x17sm4211846pff.62.2019.08.15.18.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Aug 2019 18:42:12 -0700 (PDT)
+Subject: Re: WARNING in is_bpf_text_address
+To:     Will Deacon <will@kernel.org>,
+        syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
+        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
+        johannes.berg@intel.com, johannes@sipsolutions.net,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
+        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
+        torvalds@linux-foundation.org, will.deacon@arm.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com
+References: <00000000000000ac4f058bd50039@google.com>
+ <000000000000e56cb0058fcc6c28@google.com>
+ <20190815075142.vuza32plqtiuhixx@willie-the-truck>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
+Date:   Thu, 15 Aug 2019 18:39:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 262d26f6-b640-4772-bd84-08d721dda769
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2019 00:06:57.8497
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0VspcJshEQWC3r2QAIyoO0iEOzIVXkN8rc++C8ktNYlOSd04SiXkknxeSiE0nevn
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2424
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=891 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908150232
-X-FB-Internal: deliver
+In-Reply-To: <20190815075142.vuza32plqtiuhixx@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-DQoNCk9uIDgvMTUvMTkgNToxMyBBTSwgSXZhbiBLaG9yb256aHVrIHdyb3RlOg0KPiBEcm9wIF9f
-TlJfbW1hcDIgZm9yayBpbiBmbGF2b3Igb2YgTEZTLCB0aGF0IGlzIF9GSUxFX09GRlNFVF9CSVRT
-PTY0DQo+IChnbGliYyAmIGJpb25pYykgLyBMQVJHRUZJTEU2NF9TT1VSQ0UgKGZvciBtdXNsKSBk
-ZWNpc2lvbi4gSXQgYWxsb3dzDQo+IG1tYXAoKSB0byB1c2UgNjRiaXQgb2Zmc2V0IHRoYXQgaXMg
-cGFzc2VkIHRvIG1tYXAyIHN5c2NhbGwuIEFzIHJlc3VsdA0KPiBwZ29mZiBpcyBub3QgdHJ1bmNh
-dGVkIGFuZCBubyBuZWVkIHRvIHVzZSBkaXJlY3QgYWNjZXNzIHRvIG1tYXAyIGZvcg0KPiAzMiBi
-aXRzIHN5c3RlbXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBJdmFuIEtob3JvbnpodWsgPGl2YW4u
-a2hvcm9uemh1a0BsaW5hcm8ub3JnPg0KDQpBY2tlZC1ieTogWW9uZ2hvbmcgU29uZyA8eWhzQGZi
-LmNvbT4NCg==
+On 8/15/19 12:51 AM, Will Deacon wrote:
+> Hi Bart,
+> 
+> On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
+>> syzbot has found a reproducer for the following crash on:
+>>
+>> HEAD commit:    451577f3 Merge tag 'kbuild-fixes-v5.3-3' of git://git.kern..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=120850a6600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=2031e7d221391b8a
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=bd3bba6ff3fcea7a6ec6
+>> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+>> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=130ffe4a600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17137d2c600000
+>>
+>> The bug was bisected to:
+>>
+>> commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
+>> Author: Bart Van Assche <bvanassche@acm.org>
+>> Date:   Thu Feb 14 23:00:46 2019 +0000
+>>
+>>      locking/lockdep: Free lock classes that are no longer in use
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
+> 
+> I know you don't think much to these reports, but please could you have a
+> look (even if it's just to declare it a false positive)?
+
+Hi Will,
+
+Had you already noticed the following message?
+
+https://lore.kernel.org/bpf/d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net/
+
+ From that message: "Hey Bart, don't think it's related in any way to 
+your commit. I'll allocate some time on working on this issue today, 
+thanks!"
+
+Bart.
