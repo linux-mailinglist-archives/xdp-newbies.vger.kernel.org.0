@@ -2,84 +2,118 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44A3D8FDB0
-	for <lists+xdp-newbies@lfdr.de>; Fri, 16 Aug 2019 10:22:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5515F9154D
+	for <lists+xdp-newbies@lfdr.de>; Sun, 18 Aug 2019 09:10:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfHPIVk (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 16 Aug 2019 04:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        id S1726175AbfHRHKp (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 18 Aug 2019 03:10:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37656 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbfHPIVk (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 16 Aug 2019 04:21:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726079AbfHRHKp (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Sun, 18 Aug 2019 03:10:45 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEA64206C2;
-        Fri, 16 Aug 2019 08:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565943699;
-        bh=45xE287d0eM04My2txp6SH/3Wubo253uv59ZVJNr3VE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NbVyzIfb5MQEr6j7Y68FkNmVHLmnWhZAp/RXXMr37iQb7uEdjcJvTGpAm3OWaxMn7
-         KoZ3FgZA1MSqEEQUvlKLIfdxnG694Hk9b/RtcaQLEazfJWAb/lFHzrw0i10uDKqAm5
-         Oqz/4mXpbrFX8rP3Lo6HqdOoJTJbjvoDqsxD3s+g=
-Date:   Fri, 16 Aug 2019 09:21:31 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     syzbot <syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dvyukov@google.com,
-        hawk@kernel.org, hdanton@sina.com, jakub.kicinski@netronome.com,
-        johannes.berg@intel.com, johannes@sipsolutions.net,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, longman@redhat.com, mingo@kernel.org,
-        netdev@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, tj@kernel.org,
-        torvalds@linux-foundation.org, will.deacon@arm.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com
-Subject: Re: WARNING in is_bpf_text_address
-Message-ID: <20190816082130.2shhirk53qofn6bj@willie-the-truck>
-References: <00000000000000ac4f058bd50039@google.com>
- <000000000000e56cb0058fcc6c28@google.com>
- <20190815075142.vuza32plqtiuhixx@willie-the-truck>
- <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 343FF85365
+        for <xdp-newbies@vger.kernel.org>; Sun, 18 Aug 2019 07:10:44 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id z15so409230qts.0
+        for <xdp-newbies@vger.kernel.org>; Sun, 18 Aug 2019 00:10:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pG67TpAucqj+QXErTkQVEhnyrRaRpklq4dlSH5XWxbY=;
+        b=MtkZC6M6GdH78o5gGDm2JOH7Wy185bXXqr/eXO3eG25skjMpmNxkXyfaNL0geI2NZ3
+         DSNeqSXUnNJHp6agZXnw0ve27rOVXaWFvlZf1sXDdm4fRfG2lFshZNK8FygkFKHeJaJ1
+         xAjPofJj3F3XrVC+EDLKxmVqZLk9kiF8OhnYuLLMAPZitdi0uIu1iS1FBsg3ritHwZRK
+         kOc32CGH7TVhkYl5k2O6HDfAl5jF7vcM08gjYaDYlM/Rz3A4FSJ43+owDMfPvvYUPxkJ
+         JcOaWUYMZR/cHhQp669EAHVR7vGUuIK6600TqUPJ13p0bRSfMJYGvvo6TK/SUw6UJXyW
+         Yb0w==
+X-Gm-Message-State: APjAAAViOqVxw0XkLS9DRYibQgNM8tve5x/y/Fl3x2NlmK44Nsweq+FN
+        yJlfMwaplL0Gmnu4oQKPDLJlrjXToHoY8qWHar/Pw6/p7p3nwQNGdvtPhhFFZpFRf4F7a+kgexz
+        GQmNC6U/yDzz95qJBBaqu9iQ=
+X-Received: by 2002:a37:a013:: with SMTP id j19mr16437429qke.401.1566112243568;
+        Sun, 18 Aug 2019 00:10:43 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw+lwpHXPdpc20v/W4ahvahjXp7xvnN6kcPiBu5Jkb2fdOBr/0eK82rKArgosyck6pKhjs7pA==
+X-Received: by 2002:a37:a013:: with SMTP id j19mr16437415qke.401.1566112243373;
+        Sun, 18 Aug 2019 00:10:43 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id h4sm4900625qtq.82.2019.08.18.00.10.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Aug 2019 00:10:42 -0700 (PDT)
+Date:   Sun, 18 Aug 2019 03:10:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     ? jiang <jiangkidd@hotmail.com>
+Cc:     "jasowang@redhat.com" <jasowang@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "kafai@fb.com" <kafai@fb.com>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "yhs@fb.com" <yhs@fb.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "jiangran.jr@alibaba-inc.com" <jiangran.jr@alibaba-inc.com>
+Subject: Re: [PATCH v2] virtio-net: lower min ring num_free for efficiency
+Message-ID: <20190818030410-mutt-send-email-mst@kernel.org>
+References: <BYAPR14MB32058F4B2AD162F5421BB9B4A6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <456d0da6-3e16-d3fc-ecf6-7abb410bf689@acm.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <BYAPR14MB32058F4B2AD162F5421BB9B4A6AC0@BYAPR14MB3205.namprd14.prod.outlook.com>
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 06:39:56PM -0700, Bart Van Assche wrote:
-> On 8/15/19 12:51 AM, Will Deacon wrote:
-> > On Sat, Aug 10, 2019 at 05:24:06PM -0700, syzbot wrote:
-> > > The bug was bisected to:
-> > > 
-> > > commit a0b0fd53e1e67639b303b15939b9c653dbe7a8c4
-> > > Author: Bart Van Assche <bvanassche@acm.org>
-> > > Date:   Thu Feb 14 23:00:46 2019 +0000
-> > > 
-> > >      locking/lockdep: Free lock classes that are no longer in use
-> > > 
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=152f6a9da00000
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=172f6a9da00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=132f6a9da00000
-> > 
-> > I know you don't think much to these reports, but please could you have a
-> > look (even if it's just to declare it a false positive)?
+On Thu, Aug 15, 2019 at 09:42:40AM +0000, ? jiang wrote:
+> This change lowers ring buffer reclaim threshold from 1/2*queue to budget
+> for better performance. According to our test with qemu + dpdk, packet
+> dropping happens when the guest is not able to provide free buffer in
+> avail ring timely with default 1/2*queue. The value in the patch has been
+> tested and does show better performance.
 > 
-> Had you already noticed the following message?
+> Test setup: iperf3 to generate packets to guest (total 30mins, pps 400k, UDP)
+> avg packets drop before: 2842
+> avg packets drop after: 360(-87.3%)
 > 
-> https://lore.kernel.org/bpf/d76d7a63-7854-e92d-30cb-52546d333ffe@iogearbox.net/
-> 
-> From that message: "Hey Bart, don't think it's related in any way to your
-> commit. I'll allocate some time on working on this issue today, thanks!"
+> Signed-off-by: jiangkidd <jiangkidd@hotmail.com>
 
-Apologies, but I hadn't received that when I sent my initial email. Anyway,
-just wanted to make sure somebody was looking into it!
+To add to that:
 
-Will
+Further, current code suffers from a starvation problem: the amount of
+work done by try_fill_recv is not bounded by the budget parameter, thus
+(with large queues) once in a while userspace gets blocked for a long
+time while queue is being refilled. Trigger refills earlier to make sure
+the amount of work to do is limited.
+
+With this addition to the log:
+
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+
+> ---
+>  drivers/net/virtio_net.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index 0d4115c9e20b..bc08be7925eb 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1331,7 +1331,7 @@ static int virtnet_receive(struct receive_queue *rq, int budget,
+>  		}
+>  	}
+>  
+> -	if (rq->vq->num_free > virtqueue_get_vring_size(rq->vq) / 2) {
+> +	if (rq->vq->num_free > min((unsigned int)budget, virtqueue_get_vring_size(rq->vq)) / 2) {
+>  		if (!try_fill_recv(vi, rq, GFP_ATOMIC))
+>  			schedule_delayed_work(&vi->refill, 0);
+>  	}
+> -- 
+> 2.11.0
