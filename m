@@ -2,104 +2,153 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA7AA94FB2
-	for <lists+xdp-newbies@lfdr.de>; Mon, 19 Aug 2019 23:17:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E6C79531A
+	for <lists+xdp-newbies@lfdr.de>; Tue, 20 Aug 2019 03:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfHSVR0 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 19 Aug 2019 17:17:26 -0400
-Received: from smtp5.emailarray.com ([65.39.216.39]:15010 "EHLO
-        smtp5.emailarray.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfHSVR0 (ORCPT
+        id S1728777AbfHTBSH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 19 Aug 2019 21:18:07 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:53004 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfHTBSH (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 19 Aug 2019 17:17:26 -0400
-Received: (qmail 35079 invoked by uid 89); 19 Aug 2019 21:17:25 -0000
-Received: from unknown (HELO ?172.20.53.208?) (amxlbW9uQGZsdWdzdmFtcC5jb21AMTk5LjIwMS42NC4xMzk=) (POLARISLOCAL)  
-  by smtp5.emailarray.com with (AES256-GCM-SHA384 encrypted) SMTP; 19 Aug 2019 21:17:25 -0000
-From:   "Jonathan Lemon" <jlemon@flugsvamp.com>
-To:     "Ivan Khoronzhuk" <ivan.khoronzhuk@linaro.org>
-Cc:     magnus.karlsson@intel.com, bjorn.topel@intel.com,
-        davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
-        jakub.kicinski@netronome.com, daniel@iogearbox.net,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yhs@fb.com, andrii.nakryiko@gmail.com
-Subject: Re: [PATCH bpf-next v2 3/3] samples: bpf: syscal_nrs: use mmap2 if
- defined
-Date:   Mon, 19 Aug 2019 14:17:19 -0700
-X-Mailer: MailMate (1.12.5r5635)
-Message-ID: <644F885D-101C-4244-BD10-E9B312AA4380@flugsvamp.com>
-In-Reply-To: <20190815121356.8848-4-ivan.khoronzhuk@linaro.org>
-References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
- <20190815121356.8848-4-ivan.khoronzhuk@linaro.org>
+        Mon, 19 Aug 2019 21:18:07 -0400
+Received: by mail-io1-f72.google.com with SMTP id q5so4797635iof.19
+        for <xdp-newbies@vger.kernel.org>; Mon, 19 Aug 2019 18:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aapZa0aWZhJLmZbO8tbDCnMW4n/uSxRYhoOWmflvYeI=;
+        b=UdyEZyWB3dGct95ezt1vhTDBxFh7LrRFnc1X729XGOKbFetDXO+eP6gptwyOBvjdFW
+         3del5/lF3d6HKcX6qORQ1ovK148brOvqKxetxBUF6mjYGj6OqWrXJBusXiZ6m76X+vDK
+         hI9eEt7phWCHS7WCfGjMujAE0mzt/cPsLRNfcOER0Ka5Y78l0ApbfZrHCOxtmjsLRfQA
+         d7twmlbOF0Qebr1GwrSYJS44VZqDeeHu6mn1SyZaYMGShlk2NKEVK9EKJ7SRYI9bu7rk
+         +S6a6wSSdeEAPtmShsrgJZFkhkiX+dm898kJX2SY7BxEY3TNLR7IA+hNAFNmc+6VR8gx
+         Vr1A==
+X-Gm-Message-State: APjAAAX9OYbxFUNQOHjsEnR8DTQUfQ2zl5JFzfJNo3OG49vOz7Xa/Lhx
+        ei9eNZPLcTdp5CsC9fDlyoo3glIsNqSa2j8DiwjellcVF5WP
+X-Google-Smtp-Source: APXvYqx7ASRpFwP5v9LMLT+L3CDmS2N+a/epXEs1yURQsv0MuOD1wm6GJbWBTXdXer9T5iX+m3F0TTTCiwqN3aZjB/AMnbIaVs3k
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a6b:b8d7:: with SMTP id i206mr10982249iof.229.1566263886306;
+ Mon, 19 Aug 2019 18:18:06 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 18:18:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009167320590823a8c@google.com>
+Subject: general protection fault in xsk_poll
+From:   syzbot <syzbot+c82697e3043781e08802@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bjorn.topel@intel.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        jonathan.lemon@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    da657043 Add linux-next specific files for 20190819
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16af124c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=739a9b3ab3d8c770
+dashboard link: https://syzkaller.appspot.com/bug?extid=c82697e3043781e08802
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109e1922600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1445bf02600000
+
+The bug was bisected to:
+
+commit 77cd0d7b3f257fd0e3096b4fdcff1a7d38e99e10
+Author: Magnus Karlsson <magnus.karlsson@intel.com>
+Date:   Wed Aug 14 07:27:17 2019 +0000
+
+     xsk: add support for need_wakeup flag in AF_XDP rings
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e1ea4c600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17e1ea4c600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e1ea4c600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
+Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP  
+rings")
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7959 Comm: syz-executor611 Not tainted 5.3.0-rc5-next-20190819  
+#68
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:xsk_poll+0x95/0x540 net/xdp/xsk.c:386
+Code: 80 3c 02 00 0f 85 70 04 00 00 4c 8b a3 88 04 00 00 48 b8 00 00 00 00  
+00 fc ff df 49 8d bc 24 96 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 bf 03 00 00
+RSP: 0018:ffff8880926f7850 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff88809a141700 RCX: ffffffff859b07aa
+RDX: 0000000000000012 RSI: ffffffff859b07c4 RDI: 0000000000000096
+RBP: ffff8880926f7880 R08: ffff88809698a580 R09: ffffed1013428329
+R10: ffffed1013428328 R11: ffff88809a141947 R12: 0000000000000000
+R13: 0000000000000304 R14: ffff888095d4d840 R15: ffff888092bdd020
+FS:  0000555557529880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 0000000098281000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  sock_poll+0x15e/0x480 net/socket.c:1256
+  vfs_poll include/linux/poll.h:90 [inline]
+  do_pollfd fs/select.c:859 [inline]
+  do_poll fs/select.c:907 [inline]
+  do_sys_poll+0x7c2/0xde0 fs/select.c:1001
+  __do_sys_ppoll fs/select.c:1101 [inline]
+  __se_sys_ppoll fs/select.c:1081 [inline]
+  __x64_sys_ppoll+0x259/0x310 fs/select.c:1081
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440159
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd9fbd16e8 EFLAGS: 00000246 ORIG_RAX: 000000000000010f
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000020000280
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019e0
+R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace da907175426b4065 ]---
+RIP: 0010:xsk_poll+0x95/0x540 net/xdp/xsk.c:386
+Code: 80 3c 02 00 0f 85 70 04 00 00 4c 8b a3 88 04 00 00 48 b8 00 00 00 00  
+00 fc ff df 49 8d bc 24 96 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48  
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 bf 03 00 00
+RSP: 0018:ffff8880926f7850 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff88809a141700 RCX: ffffffff859b07aa
+RDX: 0000000000000012 RSI: ffffffff859b07c4 RDI: 0000000000000096
+RBP: ffff8880926f7880 R08: ffff88809698a580 R09: ffffed1013428329
+R10: ffffed1013428328 R11: ffff88809a141947 R12: 0000000000000000
+R13: 0000000000000304 R14: ffff888095d4d840 R15: ffff888092bdd020
+FS:  0000555557529880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 0000000098281000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 15 Aug 2019, at 5:13, Ivan Khoronzhuk wrote:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> For arm32 xdp sockets mmap2 is preferred, so use it if it's defined.
-> Declaration of __NR_mmap can be skipped and it breaks build.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-
-
-> ---
->  samples/bpf/syscall_nrs.c  |  6 ++++++
->  samples/bpf/tracex5_kern.c | 13 +++++++++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/samples/bpf/syscall_nrs.c b/samples/bpf/syscall_nrs.c
-> index 516e255cbe8f..88f940052450 100644
-> --- a/samples/bpf/syscall_nrs.c
-> +++ b/samples/bpf/syscall_nrs.c
-> @@ -9,5 +9,11 @@ void syscall_defines(void)
->  	COMMENT("Linux system call numbers.");
->  	SYSNR(__NR_write);
->  	SYSNR(__NR_read);
-> +#ifdef __NR_mmap2
-> +	SYSNR(__NR_mmap2);
-> +#endif
-> +#ifdef __NR_mmap
->  	SYSNR(__NR_mmap);
-> +#endif
-> +
->  }
-> diff --git a/samples/bpf/tracex5_kern.c b/samples/bpf/tracex5_kern.c
-> index f57f4e1ea1ec..35cb0eed3be5 100644
-> --- a/samples/bpf/tracex5_kern.c
-> +++ b/samples/bpf/tracex5_kern.c
-> @@ -68,12 +68,25 @@ PROG(SYS__NR_read)(struct pt_regs *ctx)
->  	return 0;
->  }
->
-> +#ifdef __NR_mmap2
-> +PROG(SYS__NR_mmap2)(struct pt_regs *ctx)
-> +{
-> +	char fmt[] = "mmap2\n";
-> +
-> +	bpf_trace_printk(fmt, sizeof(fmt));
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#ifdef __NR_mmap
->  PROG(SYS__NR_mmap)(struct pt_regs *ctx)
->  {
->  	char fmt[] = "mmap\n";
-> +
->  	bpf_trace_printk(fmt, sizeof(fmt));
->  	return 0;
->  }
-> +#endif
->
->  char _license[] SEC("license") = "GPL";
->  u32 _version SEC("version") = LINUX_VERSION_CODE;
-> -- 
-> 2.17.1
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
