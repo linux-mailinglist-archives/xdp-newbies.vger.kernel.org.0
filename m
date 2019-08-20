@@ -2,159 +2,94 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A2FB95ACC
-	for <lists+xdp-newbies@lfdr.de>; Tue, 20 Aug 2019 11:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A8095BF4
+	for <lists+xdp-newbies@lfdr.de>; Tue, 20 Aug 2019 12:05:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbfHTJRz (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 20 Aug 2019 05:17:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:52917 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfHTJRz (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:17:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:17:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="169026483"
-Received: from arappl-mobl2.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.252.53.140])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2019 02:17:47 -0700
-Subject: Re: general protection fault in xsk_poll
-To:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+c82697e3043781e08802@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        id S1728771AbfHTKFA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 20 Aug 2019 06:05:00 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36341 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbfHTKFA (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:05:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so2096289plr.3;
+        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
+        b=JtxtXgiVKCdj2zs5yiCEZ1rb2h6TGGbtd1BbgNGzkqTztKQhEWYmE6Jqk/73FBDcUx
+         4sBlBKTihdiMJR/PLabdINYC5RoZxzXHYlOVTJDqqEa/6kGdZItMPfzYNx8F3Ny3urDy
+         BX5/bCANsTwNA9aKKSJeCl/KmsU9F934H0EWSUxtWdk6FW7u4CQJTn9lcIFNIeJoCX8D
+         N2Qs2+eKE9a6gQAVCJOtLeHOVYDgJt6Pg1I2W0GaO6qQQVZUiZyyB4K6YoGXBMhuF15H
+         hUE7lO/IHljvng6B9MXGWmB0pcdbJLRSjN/+UdetUIcGnNY9lpDN/F5K6WlzOJkgFzB/
+         x5ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Rj7SDym9UNxyg0oSA1OfNeIBnB06iO8MD1npAu2+BTI=;
+        b=szgkW24OvZ8BqmEVW2Cxmx6SCeqe3wf+AskofwMtNRlkP3H17OzDcIFm+sK5+iTIuY
+         gslVB3uuK+NeWiTPIMZY3Yc5ZLnFtmgxBJ9lmJOlWEFVWD2irGJ9z23Spq6yW0lAyQOs
+         tt2wY+kQQYWcEcnPCPmowR8DKS/EIgafc0knkSLmtcIBzD9qz7rzY0KjuQ9wjVOrTBmL
+         yMlraxX+uUkRHRfN24JiwGeeclbSVfDkPGOHcHlq1HkOGd8B6spqRbBRfkAuzFNw60ZX
+         OfRH/oq6uT92FErYFV63gv/sYbvLnc8G2W3PGi9dmoJ3+lEZZXtR6IlXI96yhmp2qyYv
+         EA0Q==
+X-Gm-Message-State: APjAAAWrGgxGCMlCJs7Ut97tufq5KBIvuJg+XzXl1erH0figDAzTfF9s
+        nEF14iwo13+PQmCMVUEXaJM=
+X-Google-Smtp-Source: APXvYqy+/CbGkRnUzDNk57X5X3BHv5GNk/qLIHNfAWzPlLXSaatbk93fURQJsdlf3TYSO/YYPt58kA==
+X-Received: by 2002:a17:902:7d82:: with SMTP id a2mr28078362plm.57.1566295499426;
+        Tue, 20 Aug 2019 03:04:59 -0700 (PDT)
+Received: from btopel-mobl.ger.intel.com ([192.55.54.42])
+        by smtp.gmail.com with ESMTPSA id c2sm9078201pjs.13.2019.08.20.03.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 03:04:58 -0700 (PDT)
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>
+To:     syzbot+c82697e3043781e08802@syzkaller.appspotmail.com,
+        ast@kernel.org, daniel@iogearbox.net, netdev@vger.kernel.org
+Cc:     bjorn.topel@intel.com, bpf@vger.kernel.org, davem@davemloft.net,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com, jonathan.lemon@gmail.com, kafai@fb.com,
         linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
-        yhs@fb.com
-References: <20190820033154.9112-1-hdanton@sina.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Message-ID: <8a10ea50-fe61-55fd-0be4-5dff56d7effd@intel.com>
-Date:   Tue, 20 Aug 2019 11:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com, hdanton@sina.com
+Subject: [PATCH bpf-next] xsk: proper socket state check in xsk_poll
+Date:   Tue, 20 Aug 2019 12:04:05 +0200
+Message-Id: <20190820100405.25564-1-bjorn.topel@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <0000000000009167320590823a8c@google.com>
+References: <0000000000009167320590823a8c@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190820033154.9112-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 2019-08-20 05:31, Hillf Danton wrote:
-> 
-> On Mon, 19 Aug 2019 18:18:06 -0700
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    da657043 Add linux-next specific files for 20190819
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=16af124c600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=739a9b3ab3d8c770
->> dashboard link: https://syzkaller.appspot.com/bug?extid=c82697e3043781e08802
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109e1922600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1445bf02600000
->>
->> The bug was bisected to:
->>
->> commit 77cd0d7b3f257fd0e3096b4fdcff1a7d38e99e10
->> Author: Magnus Karlsson <magnus.karlsson@intel.com>
->> Date:   Wed Aug 14 07:27:17 2019 +0000
->>
->>       xsk: add support for need_wakeup flag in AF_XDP rings
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e1ea4c600000
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=17e1ea4c600000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=13e1ea4c600000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
->> Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
->>
->> kasan: CONFIG_KASAN_INLINE enabled
->> kasan: GPF could be caused by NULL-ptr deref or user memory access
->> general protection fault: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 1 PID: 7959 Comm: syz-executor611 Not tainted 5.3.0-rc5-next-20190819 #68
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> RIP: 0010:xsk_poll+0x95/0x540 net/xdp/xsk.c:386
->> Code: 80 3c 02 00 0f 85 70 04 00 00 4c 8b a3 88 04 00 00 48 b8 00 00 00 00
->> 00 fc ff df 49 8d bc 24 96 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
->> 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 bf 03 00 00
->> RSP: 0018:ffff8880926f7850 EFLAGS: 00010207
->> RAX: dffffc0000000000 RBX: ffff88809a141700 RCX: ffffffff859b07aa
->> RDX: 0000000000000012 RSI: ffffffff859b07c4 RDI: 0000000000000096
->> RBP: ffff8880926f7880 R08: ffff88809698a580 R09: ffffed1013428329
->> R10: ffffed1013428328 R11: ffff88809a141947 R12: 0000000000000000
->> R13: 0000000000000304 R14: ffff888095d4d840 R15: ffff888092bdd020
->> FS:  0000555557529880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 0000000020000280 CR3: 0000000098281000 CR4: 00000000001406e0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> Call Trace:
->>    sock_poll+0x15e/0x480 net/socket.c:1256
->>    vfs_poll include/linux/poll.h:90 [inline]
->>    do_pollfd fs/select.c:859 [inline]
->>    do_poll fs/select.c:907 [inline]
->>    do_sys_poll+0x7c2/0xde0 fs/select.c:1001
->>    __do_sys_ppoll fs/select.c:1101 [inline]
->>    __se_sys_ppoll fs/select.c:1081 [inline]
->>    __x64_sys_ppoll+0x259/0x310 fs/select.c:1081
->>    do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x440159
->> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
->> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
->> ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007ffd9fbd16e8 EFLAGS: 00000246 ORIG_RAX: 000000000000010f
->> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440159
->> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000020000280
->> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
->> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004019e0
->> R13: 0000000000401a70 R14: 0000000000000000 R15: 0000000000000000
->> Modules linked in:
->> ---[ end trace da907175426b4065 ]---
-> 
-> Add umem check.
-> 
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -381,9 +381,9 @@ static unsigned int xsk_poll(struct file
->   	struct sock *sk = sock->sk;
->   	struct xdp_sock *xs = xdp_sk(sk);
->   	struct net_device *dev = xs->dev;
-> -	struct xdp_umem *umem = xs->umem;
-> +	struct xdp_umem *umem = READ_ONCE(xs->umem);
->   
-> -	if (umem->need_wakeup)
-> +	if (umem && umem->need_wakeup)
->   		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
->   						umem->need_wakeup);
->   
-> --
-> 
+From: Björn Töpel <bjorn.topel@intel.com>
 
-Thanks!
+The poll() implementation for AF_XDP sockets did not perform the
+proper state checks, prior accessing the socket umem. This patch fixes
+that by performing a xsk_is_bound() check.
 
-What do you think about making it a bit more generic, like:
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
+Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+---
+ net/xdp/xsk.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
 index ee4428a892fa..08bed5e92af4 100644
 --- a/net/xdp/xsk.c
 +++ b/net/xdp/xsk.c
-@@ -356,13 +356,20 @@ static int xsk_generic_xmit(struct sock *sk, 
-struct msghdr *m,
-  	return err;
-  }
-
+@@ -356,13 +356,20 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+ 	return err;
+ }
+ 
 +static bool xsk_is_bound(struct xdp_sock *xs)
 +{
 +	struct net_device *dev = READ_ONCE(xs->dev);
@@ -162,35 +97,36 @@ struct msghdr *m,
 +	return dev && xs->state == XSK_BOUND;
 +}
 +
-  static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t 
-total_len)
-  {
-  	bool need_wait = !(m->msg_flags & MSG_DONTWAIT);
-  	struct sock *sk = sock->sk;
-  	struct xdp_sock *xs = xdp_sk(sk);
-
+ static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
+ {
+ 	bool need_wait = !(m->msg_flags & MSG_DONTWAIT);
+ 	struct sock *sk = sock->sk;
+ 	struct xdp_sock *xs = xdp_sk(sk);
+ 
 -	if (unlikely(!xs->dev))
 +	if (unlikely(!xsk_is_bound(xs)))
-  		return -ENXIO;
-  	if (unlikely(!(xs->dev->flags & IFF_UP)))
-  		return -ENETDOWN;
-@@ -383,6 +390,9 @@ static unsigned int xsk_poll(struct file *file, 
-struct socket *sock,
-  	struct net_device *dev = xs->dev;
-  	struct xdp_umem *umem = xs->umem;
-
+ 		return -ENXIO;
+ 	if (unlikely(!(xs->dev->flags & IFF_UP)))
+ 		return -ENETDOWN;
+@@ -383,6 +390,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
+ 	struct net_device *dev = xs->dev;
+ 	struct xdp_umem *umem = xs->umem;
+ 
 +	if (unlikely(!xsk_is_bound(xs)))
 +		return mask;
 +
-  	if (umem->need_wakeup)
-  		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
-  						umem->need_wakeup);
+ 	if (umem->need_wakeup)
+ 		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
+ 						umem->need_wakeup);
 @@ -417,7 +427,7 @@ static void xsk_unbind_dev(struct xdp_sock *xs)
-  {
-  	struct net_device *dev = xs->dev;
-
+ {
+ 	struct net_device *dev = xs->dev;
+ 
 -	if (!dev || xs->state != XSK_BOUND)
 +	if (!xsk_is_bound(xs))
-  		return;
+ 		return;
+ 
+ 	xs->state = XSK_UNBOUND;
+-- 
+2.20.1
 
-  	xs->state = XSK_UNBOUND;
