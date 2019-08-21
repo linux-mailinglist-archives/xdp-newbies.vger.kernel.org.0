@@ -2,81 +2,74 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78FF99798A
-	for <lists+xdp-newbies@lfdr.de>; Wed, 21 Aug 2019 14:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C58697F30
+	for <lists+xdp-newbies@lfdr.de>; Wed, 21 Aug 2019 17:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbfHUMfc (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 21 Aug 2019 08:35:32 -0400
-Received: from www62.your-server.de ([213.133.104.62]:42416 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfHUMfc (ORCPT
+        id S1727195AbfHUPnP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 21 Aug 2019 11:43:15 -0400
+Received: from forward102j.mail.yandex.net ([5.45.198.243]:59476 "EHLO
+        forward102j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbfHUPnP (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:35:32 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i0Ppg-0007MX-QA; Wed, 21 Aug 2019 14:35:20 +0200
-Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=pc-66.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i0Ppg-000PkR-Hr; Wed, 21 Aug 2019 14:35:20 +0200
-Subject: Re: [PATCH bpf-next v2 0/3] xdpsock: allow mmap2 usage for 32bits
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        magnus.karlsson@intel.com, bjorn.topel@intel.com
-Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
-        jakub.kicinski@netronome.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jlemon@flugsvamp.com, yhs@fb.com,
-        andrii.nakryiko@gmail.com
-References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <95fb201c-1623-149b-a72e-ed4860f742e1@iogearbox.net>
-Date:   Wed, 21 Aug 2019 14:35:19 +0200
+        Wed, 21 Aug 2019 11:43:15 -0400
+X-Greylist: delayed 362 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Aug 2019 11:43:15 EDT
+Received: from mxback18j.mail.yandex.net (mxback18j.mail.yandex.net [IPv6:2a02:6b8:0:1619::94])
+        by forward102j.mail.yandex.net (Yandex) with ESMTP id AE98AF204DF
+        for <xdp-newbies@vger.kernel.org>; Wed, 21 Aug 2019 18:37:11 +0300 (MSK)
+Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
+        by mxback18j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id ZmjgncDLkX-bB8WHR7c;
+        Wed, 21 Aug 2019 18:37:11 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1566401831;
+        bh=5/JCK/n2cmo6lBfPhgPUYGYUQQ3Ee8w5Xcc4sS87c+U=;
+        h=Message-ID:Subject:From:To:Date;
+        b=hSQ3S+2D865bZ/XKKrKGviXn00qRT69nmA9Nw+e1zOBa0WnALYuNca/9S/u5bWDB9
+         VUFk/hOreJasPDRrQGznlNHIzT45T+wvhAXbe2QSP1EnJ6K+nYnTx9wCZwm5WmyIAa
+         FJQ74woyf7t1NahRqvcJWb+eTKDHezw/V5oRhbBU=
+Authentication-Results: mxback18j.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id JTQkkwHjfr-bB54v2lq;
+        Wed, 21 Aug 2019 18:37:11 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+To:     xdp-newbies@vger.kernel.org
+From:   Ilya Golshtein <ilejn@yandex.ru>
+Subject: l2fwd between interfaces
+Message-ID: <c4ba6c71-89e0-e8c3-1353-184b2e9f99a8@yandex.ru>
+Date:   Wed, 21 Aug 2019 18:37:10 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25548/Wed Aug 21 10:27:18 2019)
+Content-Language: en-US
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 8/15/19 2:13 PM, Ivan Khoronzhuk wrote:
-> This patchset contains several improvements for af_xdp socket umem
-> mappings for 32bit systems. Also, there is one more patch outside of
-> this series that on linux-next tree and related to mmap2 af_xdp umem
-> offsets: "mm: mmap: increase sockets maximum memory size pgoff for 32bits"
-> https://lkml.org/lkml/2019/8/12/549
-> 
-> Based on bpf-next/master
-> 
-> Prev: https://lkml.org/lkml/2019/8/13/437
-> 
-> v2..v1:
-> 	- replaced "libbpf: add asm/unistd.h to xsk to get __NR_mmap2" on
-> 	 "libbpf: use LFS (_FILE_OFFSET_BITS) instead of direct mmap2
-> 	 syscall"
-> 	- use vmap along with page_address to avoid overkill
-> 	- define mmap syscall trace5 for mmap if defined
-> 
-> Ivan Khoronzhuk (3):
->    libbpf: use LFS (_FILE_OFFSET_BITS) instead of direct mmap2 syscall
->    xdp: xdp_umem: replace kmap on vmap for umem map
->    samples: bpf: syscal_nrs: use mmap2 if defined
-> 
->   net/xdp/xdp_umem.c         | 36 +++++++++++++++++++++++-----
->   samples/bpf/syscall_nrs.c  |  6 +++++
->   samples/bpf/tracex5_kern.c | 13 ++++++++++
->   tools/lib/bpf/Makefile     |  1 +
->   tools/lib/bpf/xsk.c        | 49 +++++++++++---------------------------
->   5 files changed, 64 insertions(+), 41 deletions(-)
-> 
+Hello,
 
-Applied, and fixed up typo in last one's subject, thanks!
+l2fwd mode of xdpsock sample puts a packet back into the same interface. 
+Is there a good example how xdpsock can be modified to read a packet 
+from one interface and to send it to another?
+
+I've failed to find such example and created my own app 
+https://github.com/ilejn/xdpbridge.
+
+Do hope that such a thing already exists.
+
+If not, I appreciate if anyone can review the code of my application. In 
+particular I am concerned about the ENOSPC case in xq_enq_copy.
+
+Basically the thing works Ok, but not as fast as I expected.
+
+I've tried to share umem to get rid of memcpy, but bind returns EINVAL 
+in this case. Exploring xsk_bind (net/xdp/xsk.c) in 4.18 kernel I can 
+see, that there is an explicit check umem_xs->dev != dev . Is it a 
+fundamental limitaion?
+
+Thanks.
+
+-- 
+Regards,
+Ilya Golshtein
+
