@@ -2,98 +2,162 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E6797F91
-	for <lists+xdp-newbies@lfdr.de>; Wed, 21 Aug 2019 18:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB6149AA3D
+	for <lists+xdp-newbies@lfdr.de>; Fri, 23 Aug 2019 10:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfHUQAx (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 21 Aug 2019 12:00:53 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:36609 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHUQAw (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:00:52 -0400
-Received: by mail-ot1-f43.google.com with SMTP id k18so2555503otr.3
-        for <xdp-newbies@vger.kernel.org>; Wed, 21 Aug 2019 09:00:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zd5B+jmj+czgoa06n1HLf1FtCHjVm5xFjkWgWU9Rdro=;
-        b=UgP9WuUKra3krF83X8M0s+W5YMYZ5Nc2JsdmJsZu0z0gbndCNdamJllLCyZCKgKsUb
-         hpPSCATlDcfhavnwByC9crEl4tlIRH9EusScFPJA5aARHO1/y0hYTHlAnStjM5XkKDqG
-         wmd8AF5XhluX0ZGW4SIXgxKoE989QCGDdtZUhjmqcaz4bjJ6pdTei+wwb8HAXZmM1t1K
-         H6bbannOrqO6uSnpiwRA/e391XSsbgY8UmE/t3APLrg+p7KVhQRB6ZbXs7U9GtQOm9a8
-         UoT3g/O/i4CYHjD8dEGHWIKVKXmRQG9AfqOR7v92P45tSHgFJIQwi23MTUKNXSSEm7bd
-         IBkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zd5B+jmj+czgoa06n1HLf1FtCHjVm5xFjkWgWU9Rdro=;
-        b=aqXwjZuQnLYsidGIZmzvRs2Sdvxg1vv7nGREl5yuncdsiFQ7KRozlyWQJPzgw5ny4S
-         A8h99lFMtCnL8f5aFG/z/NVDnG88a2Qkm0Nx9VCNZ5iJn1YjC+nBAgitALR8k9/aubrz
-         f6My6ueLy8nVe18u52YLrXFYFRwPrGHgrNTO1qDRyypfaqbZBsHvFBWNScdxmRMY/2JF
-         GgVFi+eklJ1TLjF2aKKqmPrdFCpuE3rfWXzk670QAiFpNnR8aJTElU2dSbyr3SAjV83T
-         Wjt6SUhigpaO7PN592Cww47Nv4f1B/NBEH+cUwrSVrhNB+Was/f7Vct1thf6Z4U9O6zW
-         sACQ==
-X-Gm-Message-State: APjAAAXXOD45a6A8yKOzopqe5ZrUApq2BpyAvqf0W/QYIrHYrSwjuYaA
-        OB6efaGXbL5iYo7v4xUq45WABh8pjDLAn46IEdU=
-X-Google-Smtp-Source: APXvYqzuR3ohygJXEFco8fRR1ep5u1rZeWPHSDxZyeayz/MRFRoKuKLCdU5r8NSgx2Bgs97k1LLpXASRrr5Y0o05RXY=
-X-Received: by 2002:a9d:459d:: with SMTP id x29mr28270910ote.39.1566403250817;
- Wed, 21 Aug 2019 09:00:50 -0700 (PDT)
+        id S1732398AbfHWIWf convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 23 Aug 2019 04:22:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59766 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390278AbfHWIWf (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 23 Aug 2019 04:22:35 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 12E7C30832DA;
+        Fri, 23 Aug 2019 08:22:34 +0000 (UTC)
+Received: from carbon (ovpn-200-29.brq.redhat.com [10.40.200.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 557BE6092D;
+        Fri, 23 Aug 2019 08:22:25 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 10:22:24 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     brouer@redhat.com,
+        =?UTF-8?B?SsO6bGl1cw==?= Milan <Julius.Milan@pantheon.tech>,
+        Marek =?UTF-8?B?WsOhdm9kc2vDvQ==?= <marek.zavodsky@pantheon.tech>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Thomas F Herbert <therbert@redhat.com>,
+        William Tu <u9012063@gmail.com>
+Subject: AF_XDP integration with FDio VPP? (Was: Questions about XDP)
+Message-ID: <20190823102224.16141c87@carbon>
+In-Reply-To: <CA+_TK733RPSU=sEqSFpk-La6RNuJJM4m7xsDgOZ-EnaRAwKwKA@mail.gmail.com>
+References: <889477ed79c44e6a9395cf961f782209@pantheon.tech>
+        <CA+_TK733RPSU=sEqSFpk-La6RNuJJM4m7xsDgOZ-EnaRAwKwKA@mail.gmail.com>
 MIME-Version: 1.0
-References: <c4ba6c71-89e0-e8c3-1353-184b2e9f99a8@yandex.ru>
-In-Reply-To: <c4ba6c71-89e0-e8c3-1353-184b2e9f99a8@yandex.ru>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Wed, 21 Aug 2019 18:00:39 +0200
-Message-ID: <CAJ8uoz1LyGyUwKzkLsAr+__ch+immBHvWHEfd5UApLELpb16pA@mail.gmail.com>
-Subject: Re: l2fwd between interfaces
-To:     Ilya Golshtein <ilejn@yandex.ru>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 23 Aug 2019 08:22:34 +0000 (UTC)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 5:52 PM Ilya Golshtein <ilejn@yandex.ru> wrote:
->
-> Hello,
->
-> l2fwd mode of xdpsock sample puts a packet back into the same interface.
-> Is there a good example how xdpsock can be modified to read a packet
-> from one interface and to send it to another?
->
-> I've failed to find such example and created my own app
-> https://github.com/ilejn/xdpbridge.
->
-> Do hope that such a thing already exists.
 
-None exists as far as I know, so great that you are contributing
-this.But could you please move your implementation over to the libbpf
-interface? This will simplify it greatly.
+Bringing these questions to the xdp-newbies list, where they belong.
+Answers inlined below.
 
-> If not, I appreciate if anyone can review the code of my application. In
-> particular I am concerned about the ENOSPC case in xq_enq_copy.
-
-Do you not just come back and retry in this case? Looks correct, or am
-I missing something?
-
-> Basically the thing works Ok, but not as fast as I expected.
+On Tue, 20 Aug 2019 21:17:57 +0200 Július Milan <Julius.Milan@pantheon.tech>
+> 
+> I am writing AF_XDP driver for FDio VPP. I have 2 questions.
 >
-> I've tried to share umem to get rid of memcpy, but bind returns EINVAL
-> in this case. Exploring xsk_bind (net/xdp/xsk.c) in 4.18 kernel I can
-> see, that there is an explicit check umem_xs->dev != dev . Is it a
-> fundamental limitaion?
 
-Can you try supplying the same umem memory range to two different
-sockets and their respective setsockopts?
+That sounds excellent.  I was hoping someone would do this for FDio VPP.
+Do notice that DPDK now also got AF_XDP support.  IHMO it makes a lot
+of sense to implement AF_XDP for FDio, and avoid the DPDK dependency.
+(AFAIK FDio already got other back-ends than DPDK).
+ 
 
-Thanks: Magnus
+> 1 - I created a simple driver according to sample in kernel. I load my XDP
+> program and pin the maps.
+> 
+>   Then in user application I create a socket, mmap the memory and
+> push it to xskmap in program. All fine yet.
+> 
+>   Then I start another instance of user application and do the
+> same, create socket, mmap the memory and trying to
+> 
+>   push it somewhere else into the map. But I got  errno: 16
+> "Device or resource busy" when trying to bind.
+> 
+>   I guess the memory can’t be mmaped 2 times, but should be
+> shared, is that correct?
 
-> Thanks.
+I'm cc'ing the AF_XDP experts, as I'm not sure myself.  I mostly deal
+with the in-kernel XDP path.  (AF_XDP is essentially kernel bypass :-O)
+
+ 
+>   If so, I am wondering how to solve this nicely.
+> 
+>   Can I store the value of first socket (that created the mmaped
+> memory) in some special map in my XDP program to avoid complicated
+> inter-process communication?
+> 
+>   And what happens if this first socket is closed while any other
+> sockets are still alive (using its shared mmaped memory)?
+> 
+>   What would you recommend? Maybe you have some sample.
+
+We just added a sample (by Eelco Cc'ed) into XDP-tutorial:
+ https://github.com/xdp-project/xdp-tutorial/tree/master/advanced03-AF_XDP  
+
+At-least read the README.org file... to get over the common gotchas.
+
+AFAIK the sample doesn't cover your use-case.  I guess, we/someone
+should extend the sample, to illustrate how how multiple interfaces can
+share the same UMEM.
+
+The official documentation is:
+ https://www.kernel.org/doc/html/latest/networking/af_xdp.html
+
+
+>   Can I do also atomic operations? (I want it just for such rare
+> cases as initialization of next socket, to check if there already is
+> one, that mmaped the memory)
+> 
+> 
+> 
+> 2 – We want to do also some decap/encap on XDP layer, before
+> redirecting it to the socket.
+> 
+
+Decap on XDP layer is an excellent use-case, that demonstrate
+cooperation between XDP and AF_XDP kernel-bypass facility.
+
+
+>   On RX way it is easy, I do what I want and redirect it to the
+> socket, but can I achieve the same also on TX?
+> 
+
+(Yes, RX case is easy)
+
+We don't have an XDP TX hook yet... but so many people have requested
+this, that we should add this.
+
+>   Can I catch the packet while TX in XDP and do something with it
+> (encapsulate it) before sending it out?
+
+Usually, we recommend people use the TC egress BPF hook to do the encap
+in TX.  For the AF_XDP use-case, the TC hook isn't there... so that is
+not an option.  Again an argument for an XDP-TX hook.  You, could
+of-cause add the encap header in your AF_XDP userspace program, but I
+do understand it would make architectural sense that in-kernel XDP
+would act as a decap/encap layer.
+
+ 
+>   If so what about performance?
+> 
+
+For AF_XDP RX-side is really really fast, even in copy-mode.
+
+For AF_XDP TX-side in copy-mode, it is rather slow, as it allocates
+SKBs etc.  We could optimize this further but we have not.  When
+enabling AF_XDP zero-copy mode, the TX-side is also super fast.
+
+Another hint, for AF_XDP TX-side, remember to "produce" several packets
+before doing the sendmsg system call.  Thus, effectively doing bulking
+on the TX-ring.
+
+
 >
-> --
-> Regards,
-> Ilya Golshtein
->
+> By the way, great job with XDP ;)
+
+Thanks! 
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
