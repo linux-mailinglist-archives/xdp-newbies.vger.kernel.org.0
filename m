@@ -2,116 +2,94 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C01D1A4392
-	for <lists+xdp-newbies@lfdr.de>; Sat, 31 Aug 2019 11:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23FC4A4AB1
+	for <lists+xdp-newbies@lfdr.de>; Sun,  1 Sep 2019 18:47:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbfHaJOA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 31 Aug 2019 05:14:00 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19885 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfHaJOA (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 31 Aug 2019 05:14:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Aug 2019 02:14:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,450,1559545200"; 
-   d="scan'208";a="333103717"
-Received: from monikash-mobl.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.252.39.33])
-  by orsmga004.jf.intel.com with ESMTP; 31 Aug 2019 02:13:57 -0700
-Subject: Re: AF_XDP integration with FDio VPP? (Was: Questions about XDP)
-To:     =?UTF-8?Q?J=c3=balius_Milan?= <Julius.Milan@pantheon.tech>,
-        William Tu <u9012063@gmail.com>,
-        =?UTF-8?Q?Marek_Z=c3=a1vodsk=c3=bd?= <marek.zavodsky@pantheon.tech>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Thomas F Herbert <therbert@redhat.com>
-References: <889477ed79c44e6a9395cf961f782209@pantheon.tech>
- <CA+_TK733RPSU=sEqSFpk-La6RNuJJM4m7xsDgOZ-EnaRAwKwKA@mail.gmail.com>
- <20190823102224.16141c87@carbon>
- <87d6d1ccab164292bb050c55f2cd81f8@pantheon.tech>
- <CALDO+SZRLUopFfiP7C2_Q3LRHDMLQ6_BBN=xw+BQ6FQWGFpVQw@mail.gmail.com>
- <c58d5612-052c-cab1-ad9a-0e0e1a838f5b@intel.com>
- <a6d5b3562fd148619c09ffbed54d84ea@pantheon.tech>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Message-ID: <6a5a1ce1-29ff-0d11-1b07-8472d5e3f32d@intel.com>
-Date:   Sat, 31 Aug 2019 11:13:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728877AbfIAQrb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 1 Sep 2019 12:47:31 -0400
+Received: from mail-wm1-f42.google.com ([209.85.128.42]:56287 "EHLO
+        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbfIAQrb (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Sun, 1 Sep 2019 12:47:31 -0400
+Received: by mail-wm1-f42.google.com with SMTP id g207so8138893wmg.5
+        for <xdp-newbies@vger.kernel.org>; Sun, 01 Sep 2019 09:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dectris.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=miorOBFk3ql5nJeCyuEp9B1Zv9bvXkljYrWCZcwlOjE=;
+        b=ky3p2pelJStYotGdkpZ2qEAfamdAXGUT/Tfxai0a8kbFwc0Ekis9YaZ6zyNTX/D/g5
+         s3ezlvwni6yf/H6lEJzC1AUg5e5C/Av1q4kGyRPK4EYF2k6TJ+WhTOG0B2OZf8uYAA0f
+         KY5VePCadFTixc2PmV9iSVtl+qyVHvCjpqIZE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=miorOBFk3ql5nJeCyuEp9B1Zv9bvXkljYrWCZcwlOjE=;
+        b=Qsru7bCMBrXYzZrSEUwoNt9YTfTI9ypzHL3dGXcg7lGFUchdjRcBLxXdpLd1Pf3dOE
+         KMUlsK1LxrTK95F3MM+KZvvjxdYW3grOTgA4ekbznjUenyYltC58c8k6Rfxx2hjPDimu
+         TX3NltyZk4S4Oq14RMPktJ0OWc9eqH/DAIm1rZ6DXgWMhwEt4jhxJ4etDnhQ4XmcKxz5
+         9I8OS9//tMjKQ2cnX6IUgcmD7E22EJ07jpLATfWFY6spH7L1yRFppENt9xjvcxRp//Dr
+         gRZbbir6osuyDCSyKRSINLllfECV3R54Oswp9mBa3AD5qNsm6vhfQyGtAU+/1iyw1hP1
+         b6Jg==
+X-Gm-Message-State: APjAAAVNWw8GTAg/UMCL6W+1eqHF+C3kCbRJ8mSWaFybomdNMSlWqetV
+        12vz5xodkiQ3OAdJmKNzwMnSYY5YmoFjSEKsrVbaLfI4UFo=
+X-Google-Smtp-Source: APXvYqyko6DRFD4Dni0G0DCq2FMB4rVk2GxxNfMK/IrIRp9HTCKRIsSBJyUZMRowG/bOduR3jZgsXrd2NubWehIrHkY=
+X-Received: by 2002:a1c:1dd4:: with SMTP id d203mr15356462wmd.45.1567356448578;
+ Sun, 01 Sep 2019 09:47:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a6d5b3562fd148619c09ffbed54d84ea@pantheon.tech>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
+In-Reply-To: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
+From:   Kal Cutter Conley <kal.conley@dectris.com>
+Date:   Sun, 1 Sep 2019 18:47:15 +0200
+Message-ID: <CAHApi-=YSo=sOTkRxmY=fct3TePFFdG9oPTRHWYd1AXjk0ACfw@mail.gmail.com>
+Subject: Re: net/mlx5e: bind() always returns EINVAL with XDP_ZEROCOPY
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 2019-08-30 18:37, Július Milan wrote:
-> Hi all
-> 
-> Regarding 4K frame size constraint of AF_XDP, what does AF_XDP when receives frame bigger than 4K? Drops it or cut it or split it between more frames?
-> Thinking about what to do with them on TX side.
+Hi,
+I figured out the problem. Let me document the issue here for others
+and hopefully start a discussion.
+
+The mlx5 driver uses special queue ids for ZC. If N is the number of
+configured queues, then for XDP_ZEROCOPY the queue ids start at N. So
+queue ids [0..N) can only be used with XDP_COPY and queue ids [N..2N)
+can only be used with XDP_ZEROCOPY.
+
+sudo ethtool -L eth0 combined 16
+sudo samples/bpf/xdpsock -r -i eth0 -c -q 0   # OK
+sudo samples/bpf/xdpsock -r -i eth0 -z -q 0   # ERROR
+sudo samples/bpf/xdpsock -r -i eth0 -c -q 16  # ERROR
+sudo samples/bpf/xdpsock -r -i eth0 -z -q 16  # OK
+
+Why was this done? To use zerocopy if available and fallback on copy
+mode normally you would set sxdp_flags=0. However, here this is no
+longer possible. To support this driver, you have to first try binding
+with XDP_ZEROCOPY and the special queue id, then if that fails, you
+have to try binding again with a normal queue id. Peculiarities like
+this complicate the XDP user api. Maybe someone can explain the
+benefits?
+
+Kal
+
+
+On Wed, Aug 7, 2019 at 2:49 PM Kal Cutter Conley <kal.conley@dectris.com> wrote:
 >
-
-AF_XDP stands on XDP's shoulders, and currently XDP does not support
-frames larger than a page (4k). This will most likely change for AF_XDP.
-
-
-> If you are interested in mentioned AF_XDP driver for vpp, here you can find it: https://gerrit.fd.io/r/c/vpp/+/21606
-> It is still work in progress, I submitted it for review just yesterday and rebased it on recently found code in review of Damjan.
+> Hello,
+> I am testing the mlx5e driver with AF_XDP. When I specify
+> XDP_ZEROCOPY, bind() always returns EINVAL. I observe the same problem
+> with the xdpsock sample:
 >
-
-Very cool! Will check it out!
-
-
-Cheers,
-Björn
-
-> To run it, you need to have compatible XDP program loaded on interface you want to attach to.
-> This separation is here because we want user to be able to create custom XDP programs independently.
-> We also consider automatic loading of some default XDP program (that just redirects) if none is loaded in time of interface creation, but that is of minor priority for us yet.
-> For loading you can use attached loader (it will be added for review soon as well). It just loads the program and pins its maps.
-> As XDP program, we use yet xdpsock_kern.c from kernel v5.0.0 sources (attached).
-> XDP program compatibility requirements (from vpp point of view) are:
-> having xskmap called "xsks_map" and pinned at /sys/fs/bpf/<ifname>/
-> 
-> I added support for multiple queues into my patch for vpp, as we discussed (1 NIC, n sockets on different queues), but I didn't test it yet. Other things should work fine.
-> Tested on kernel 5.0.0.
-> 
-> Július
-> 
->> Many thanks guys, very appretiated.
->>
->> Going to take a look at OVS implementation, but I would like to ensure something before.
->>
->>>> I took the _user part and split it into two:
->>>>
->>>> "loader" -  Executed once to setup environment and once to cleanup, loads _kern.o, attaches it to interface and pin maps under /sys/fs/bpf.
->>>>
->>>> and
->>>>
->>>> "worker" - Executed as many as required. Every instance loads maps from /sys/fs/bpf, create one AF_XDP sock, update xsks record and start listen/process packets from AF_XDP (in test scenario we are using l2fwd because of write-back). I had to add missing cleanups there( close(fd), munmap()). This should be vpp in final solution.
->>>>
->>>> So far so good.
->>>>
->>>> I'm unable to start more than one worker due to previously mentioned error. First instance works properly, every other fails on bind (lineno may not match due to local changes):
->>>>
->>>> xdpsock_user.c:xsk_configure:595: Assertion failed: bind(sfd, (struct sockaddr *)&sxdp, sizeof(sxdp)) == 0: errno: 16/"Device or resource busy"
->>>>
->>>>
->>> I don't think you can have multiple threads binding one XSK, see
->>> xsk_bind() in kernel source.
->>> For AF_XDP in OVS, we create multiple XSKs, non-shared umem and each
->>> has its thread.
->>
->> In OVS, can you bind two sockets with non-shared umem to the same interface?
->> Our goal is to have 2 or more processes (VPPs) listening on the same interface via XDP socket, while XDP program decides where to redirect the packets at the moment.
->>
->> Best Regards
->> Julius
-> 
+> sudo samples/bpf/xdpsock -r -i dcb1-port1 -z
+> samples/bpf/xdpsock_user.c:xsk_configure_socket:322: errno:
+> 22/"Invalid argument"
+>
+> Without XDP_ZEROCOPY, everything works as expected. Is this a known
+> issue/limitation? I expected this to be supported looking at the
+> code/commit history.
+>
+> Thanks,
+> Kal
