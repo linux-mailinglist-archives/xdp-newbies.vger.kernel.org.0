@@ -2,82 +2,88 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D83ECAEC9B
-	for <lists+xdp-newbies@lfdr.de>; Tue, 10 Sep 2019 16:06:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14580AECDF
+	for <lists+xdp-newbies@lfdr.de>; Tue, 10 Sep 2019 16:22:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfIJOGS (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 10 Sep 2019 10:06:18 -0400
-Received: from forward103o.mail.yandex.net ([37.140.190.177]:55094 "EHLO
-        forward103o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731801AbfIJOGR (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:06:17 -0400
-X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Sep 2019 10:06:16 EDT
-Received: from mxback16o.mail.yandex.net (mxback16o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::67])
-        by forward103o.mail.yandex.net (Yandex) with ESMTP id BF9F65F80756
-        for <xdp-newbies@vger.kernel.org>; Tue, 10 Sep 2019 17:01:11 +0300 (MSK)
-Received: from smtp3p.mail.yandex.net (smtp3p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:8])
-        by mxback16o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id wBbSTCF3KY-1BtaRa0J;
-        Tue, 10 Sep 2019 17:01:11 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1568124071;
-        bh=P+scgDRO/3DA+XbSbkZPmvQ5Qc8d4CTEPjSdVYhgFIg=;
-        h=Subject:From:To:Date:Message-ID;
-        b=Q8Nf0/OqsvjZGERF1S5ryjL4TveZAE5tA2VtR6UXEzg2b/3GnGm2FeU5lgc/g4Sbp
-         b8UZtFHB1L8YbHZZzmmcUa/S6ohJLl1bvmg76RgHGo2a2VkO9CfEO6p+HDAOw57jn2
-         NNsTaqfUyRbP9o6Mu2txprrT/8xE7K/CYKY4TSmM=
-Authentication-Results: mxback16o.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by smtp3p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id ttKOQByrzi-1Bj0bbKw;
-        Tue, 10 Sep 2019 17:01:11 +0300
+        id S1726060AbfIJOVy convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Tue, 10 Sep 2019 10:21:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38182 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730779AbfIJOVv (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 10 Sep 2019 10:21:51 -0400
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-To:     xdp-newbies@vger.kernel.org
-From:   Ilya Goslhtein <ilejn@yandex.ru>
-Subject: bidirectional: => AF_XDP , <= XDP_REDIRECT
-Message-ID: <d52b5b48-06cf-42dc-180d-896601cf3efb@yandex.ru>
-Date:   Tue, 10 Sep 2019 17:01:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 769B789AC2
+        for <xdp-newbies@vger.kernel.org>; Tue, 10 Sep 2019 14:21:51 +0000 (UTC)
+Received: by mail-ed1-f69.google.com with SMTP id p55so10519765edc.5
+        for <xdp-newbies@vger.kernel.org>; Tue, 10 Sep 2019 07:21:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=k+YOxrrPUHbsyC/ZHR9oKoNsAiPY8f1OB++5nte8R0c=;
+        b=lBFKDJ7GDAJzc9Ini0t4ezWzH/1p3XcG6cPn4A0d2JVPgcoNSMmD86EVroZVpvW+8N
+         bg7kFs0VIsHY6WU02BC9ZwlQncUl6f/NN0l4jEzwE/TuW5k9oGtGRpHVMZfcEhs9tx/r
+         04WDau+1HAAzC8/YUFE6Wky9dAvK5a/RNYqD0Ye/rQdiFzv0fnr7E79wRFp7fRLeoV7o
+         644NuUhOAISTchAtFTjkkEGwDGi7DXSrECSlznA2126xbh+E2Qe+JeySdRpVPoGoTyED
+         DNTo0p32kEHRhhpOe8oaEhMtEpojq+DOIIwIJf6FI2jWArMDLkJ1w/f6Hqf4c7wkzkNC
+         TcrQ==
+X-Gm-Message-State: APjAAAWYrNzZRoiZiWQtxNum+jQb21KGaskOrcqILrq5p9uZnMo9Ju/x
+        j50BMOcCrNaryc/MxkJOU0XdrCMrAa1RC95vY4clsNyBfagVyYsW4lZ/B2exqiu5S8GvkRw9COX
+        6mATecmAAGXZ80vAu/vWFZAA=
+X-Received: by 2002:a17:906:3fc7:: with SMTP id k7mr25520479ejj.208.1568125309850;
+        Tue, 10 Sep 2019 07:21:49 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqx273arVC324L/G2Q0tNrif92XJXHP+3wntkJX5n/n3KtdLi/64pILh+7JCjolWNyPHOUpIiw==
+X-Received: by 2002:a17:906:3fc7:: with SMTP id k7mr25520458ejj.208.1568125309652;
+        Tue, 10 Sep 2019 07:21:49 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
+        by smtp.gmail.com with ESMTPSA id z20sm402099edb.3.2019.09.10.07.21.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2019 07:21:48 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id A7BFF1804C7; Tue, 10 Sep 2019 15:21:46 +0100 (WEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Ilya Goslhtein <ilejn@yandex.ru>, xdp-newbies@vger.kernel.org
+Subject: Re: bidirectional: => AF_XDP , <= XDP_REDIRECT
+In-Reply-To: <d52b5b48-06cf-42dc-180d-896601cf3efb@yandex.ru>
+References: <d52b5b48-06cf-42dc-180d-896601cf3efb@yandex.ru>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Tue, 10 Sep 2019 15:21:46 +0100
+Message-ID: <87imq0ut8l.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello,
+Ilya Goslhtein <ilejn@yandex.ru> writes:
 
-I am trying to use a network interface to
-(1) send packets via AF_XDP
-(2) receive packets and redirect to another interface via xdp_redirect_map
+> Hello,
+>
+> I am trying to use a network interface to
+> (1) send packets via AF_XDP
+> (2) receive packets and redirect to another interface via xdp_redirect_map
+>
+> Basically, I am making xdpbridge https://github.com/ilejn/xdpbridge.
+>   bidirectional. My goal is to process packets in one direction in 
+> kernelspace (xdp_redirect_map) and to pass packets in opposite direction 
+> via userspace (recieve via AF_XDP then send via AF_XDP, rings are not 
+> shared, so I perform memcpy).
+>
+> For test purposes I ran two applications: my xdpbridge and 
+> xdp_redirect_map bpf sample.
+>
+> It does not work. Only few packets are received, then the thing stops. 
+> Redirecting works until xdpbridge does 'bind' against the interface.
 
-Basically, I am making xdpbridge https://github.com/ilejn/xdpbridge.
-  bidirectional. My goal is to process packets in one direction in 
-kernelspace (xdp_redirect_map) and to pass packets in opposite direction 
-via userspace (recieve via AF_XDP then send via AF_XDP, rings are not 
-shared, so I perform memcpy).
+This is because the AF_XDP application loads another XDP program on the
+interface that redirects the traffic into the socket. It is possible to
+write an XDP program that can do both (i.e., for each packet, decide
+whether to redirect it into the AF_XDP socket, or to another interface),
+but obviously none of the example programs know how to do this, so they
+end up stepping on each other's toes...
 
-For test purposes I ran two applications: my xdpbridge and 
-xdp_redirect_map bpf sample.
-
-It does not work. Only few packets are received, then the thing stops. 
-Redirecting works until xdpbridge does 'bind' against the interface.
-
- From XDP point of view we have:
-application one: bind with PF_XDP
-application two: XDP program
-
-What is the nature of the problem? Is it fundamental, 
-environment/hardware specific, or I am simply doing something wrong?
-
-ubuntu 18.04, 5.0.0-27-generic,
-Ethernet controller: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ 
-Network Connection (rev 01)
-
-Thanks.
-
--- 
-Best regards,
-Ilya Golshtein
-
+-Toke
