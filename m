@@ -2,90 +2,148 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35FD4AED42
-	for <lists+xdp-newbies@lfdr.de>; Tue, 10 Sep 2019 16:39:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC69B44A3
+	for <lists+xdp-newbies@lfdr.de>; Tue, 17 Sep 2019 01:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfIJOi4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 10 Sep 2019 10:38:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbfIJOi4 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 10 Sep 2019 10:38:56 -0400
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D427D9820
-        for <xdp-newbies@vger.kernel.org>; Tue, 10 Sep 2019 14:38:56 +0000 (UTC)
-Received: by mail-ed1-f72.google.com with SMTP id a7so6435019edt.13
-        for <xdp-newbies@vger.kernel.org>; Tue, 10 Sep 2019 07:38:55 -0700 (PDT)
+        id S1726386AbfIPXjJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 16 Sep 2019 19:39:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:44237 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfIPXjJ (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 16 Sep 2019 19:39:09 -0400
+Received: by mail-io1-f69.google.com with SMTP id m3so2659619ion.11
+        for <xdp-newbies@vger.kernel.org>; Mon, 16 Sep 2019 16:39:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=MGx+E7/vDr8q/xK+PtRwNKtWVheVGgkIU63AMYMD22E=;
-        b=ujZI+cIMMRxokH1Imo9/ozW4La1/ifal3n9dimcC+VJEInLlF+JEX1cEjjBeaUEvMH
-         THKIUAaAv2iHQ1p02GjJLbhibJbaTcJ3cy+WlaroeDqoDV0zqtsOb1/JhySTY+lz98ET
-         1yuE1J5F51Ez8Xve7HBvEyoWYe1QpeosRVomwacPhFk3eneRQqvsWhFdR9gA2wN1lRaY
-         7mikQCl/HEQFZ5u4nwwv1+MzHngK2fqi1yKvTQksKD544JkNiuVJNSgHpDmkGbPkiRr/
-         C5sEh7HW94XmmOktSfi9T8yJ2SiFESLWDRyS9Tww0pGYo0y2QrDIKFneQgRTClaJlUmb
-         ldWg==
-X-Gm-Message-State: APjAAAVg6Livk1x41X4mwwt8Auby7oxZ0LE417/70XRKU+y+fbbvU6tG
-        fjY0hfsZaWrMIkhB0xM7xoQI/NbuICN+GSVYfieAR0I03/6JiDD45Vo5sU+1Smx+OL94Qdz7sbZ
-        VMFgdypKYdg3FP/RCGd9qCYU=
-X-Received: by 2002:a17:906:4cc3:: with SMTP id q3mr25421321ejt.127.1568126334539;
-        Tue, 10 Sep 2019 07:38:54 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxfg57776JSQUnvbOFJyxBun6d4Zcdu772R+KIgNo22SpNeVG01WtQz/xIa7/5D5PKpDogrdQ==
-X-Received: by 2002:a17:906:4cc3:: with SMTP id q3mr25421304ejt.127.1568126334388;
-        Tue, 10 Sep 2019 07:38:54 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id h11sm3577549edq.74.2019.09.10.07.38.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Sep 2019 07:38:53 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 81E9F1804C6; Tue, 10 Sep 2019 15:38:52 +0100 (WEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Ilya Goslhtein <ilejn@yandex.ru>, xdp-newbies@vger.kernel.org
-Subject: Re: bidirectional: => AF_XDP , <= XDP_REDIRECT
-In-Reply-To: <e83a6f5d-785e-d3c7-6bd8-63d972973427@yandex.ru>
-References: <d52b5b48-06cf-42dc-180d-896601cf3efb@yandex.ru> <87imq0ut8l.fsf@toke.dk> <e83a6f5d-785e-d3c7-6bd8-63d972973427@yandex.ru>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Tue, 10 Sep 2019 15:38:52 +0100
-Message-ID: <87a7bcusg3.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dsEiraNwRgm8wyCXDp8ZxBjw4VcDAPzRPxd6mM9u8sk=;
+        b=H3a5dBQzvL55wse0TWQegqvQ267mzmR4/oa7dUWkxBh4U1aaHwesPORtjyc4y4zlle
+         y/1DcXAUDu49P+8hHModLT/+V5OgnzsMKeSh/XyLrBseocwZlMQhhmOz/xrfz6Xlfy4b
+         26ZnnPQCDyXsAKaroUJpfDBb1PAZtuBEQu4A+6u70dK4SJgZhoJ4qnqPnrSP19lTgugZ
+         PueYBNmMbA1r2lsu4FhN8FNGrlrArIoUo2pWgmHJJPdm2RUTdXMr/amLXFN6v8HjolCh
+         CwujwzHJKlWHTdOUWNJTCyEQu4DPR0BfLLEgosO0ZhZrSCpLTbxE8hb9BVvMDCrdB9dG
+         P9dw==
+X-Gm-Message-State: APjAAAVOY48eEqvckSIso7xqx3YXKj1fdSHDHtgeBhVNXb12JqPZe/Ya
+        3MQb8aL1fim+6zIMJhd2h7yCmDgQHGve1fkV3+7qpxzqRap0
+X-Google-Smtp-Source: APXvYqzSXv5F2fQ/LzsIQs5lD5I/baH0tP7f0G11VUkAh30cRzTKJIYiqwhn0ozvdI14GUhHsXxhZUsmLgDiP38cOIBmedzS5SYb
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a6b:3804:: with SMTP id f4mr519700ioa.166.1568677147810;
+ Mon, 16 Sep 2019 16:39:07 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 16:39:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000029a3a00592b41c48@google.com>
+Subject: BUG: sleeping function called from invalid context in tcf_chain0_head_change_cb_del
+From:   syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        dsahern@gmail.com, f.fainelli@gmail.com, hawk@kernel.org,
+        idosch@mellanox.com, jakub.kicinski@netronome.com,
+        jhs@mojatatu.com, jiri@mellanox.com, jiri@resnulli.us,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        nikolay@cumulusnetworks.com, petrm@mellanox.com,
+        roopa@cumulusnetworks.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, vladbu@mellanox.com,
+        xdp-newbies@vger.kernel.org, xiyou.wangcong@gmail.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Ilya Goslhtein <ilejn@yandex.ru> writes:
+Hello,
 
-> Hello Toke,
->
-> thanks for the response.
->
-> I do not think that it is the case.
->
-> The interface I am trying to share is outgoing for xdpbridge and 
-> incoming for xdp_bridge_map.
->
-> xdpbridge does not load xdp program for outgoing interface (while loads 
-> for incoming).
->
-> xdp_bridge_map loads dummy XDP program for outgoing redirect, while it 
-> is Ok if it is already exists.
->
->
-> It seems that if I use different queues for incoming and outgoing 
-> packets, everything is Ok, while I am not 100% sure yet. Does it look 
-> realistic?
+syzbot found the following crash on:
 
-Oh, right, yeah, the AF_XDP socket will need to configure a hardware
-queue to use; depending on your hardware, that could be incompatible
-with running a regular XDP program on the same hardware queue.
+HEAD commit:    1609d760 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10236abe600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed2b148cd67382ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=ac54455281db908c581e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116c4b11600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ff270d600000
 
-Incidently, we are working on a way to make this work better; talk
-starts in five minutes at LPC:
-https://linuxplumbersconf.org/event/4/contributions/462/
+The bug was bisected to:
 
--Toke
+commit c266f64dbfa2a970a13b0574246c0ddfec492365
+Author: Vlad Buslov <vladbu@mellanox.com>
+Date:   Mon Feb 11 08:55:32 2019 +0000
+
+     net: sched: protect block state with mutex
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e7ca65600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15e7ca65600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e7ca65600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ac54455281db908c581e@syzkaller.appspotmail.com
+Fixes: c266f64dbfa2 ("net: sched: protect block state with mutex")
+
+BUG: sleeping function called from invalid context at  
+kernel/locking/mutex.c:909
+in_atomic(): 1, irqs_disabled(): 0, pid: 9297, name: syz-executor942
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8604de24>] spin_lock_bh include/linux/spinlock.h:343 [inline]
+[<ffffffff8604de24>] sch_tree_lock include/net/sch_generic.h:570 [inline]
+[<ffffffff8604de24>] sfb_change+0x284/0xd30 net/sched/sch_sfb.c:519
+CPU: 0 PID: 9297 Comm: syz-executor942 Not tainted 5.3.0-rc8+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  ___might_sleep+0x3ff/0x530 kernel/sched/core.c:6608
+  __might_sleep+0x8f/0x100 kernel/sched/core.c:6561
+  __mutex_lock_common+0x4e/0x2820 kernel/locking/mutex.c:909
+  __mutex_lock kernel/locking/mutex.c:1077 [inline]
+  mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1092
+  tcf_chain0_head_change_cb_del+0x30/0x390 net/sched/cls_api.c:932
+  tcf_block_put_ext+0x3d/0x2a0 net/sched/cls_api.c:1502
+  tcf_block_put+0x6e/0x90 net/sched/cls_api.c:1515
+  sfb_destroy+0x47/0x70 net/sched/sch_sfb.c:467
+  qdisc_destroy+0x147/0x4d0 net/sched/sch_generic.c:968
+  qdisc_put+0x58/0x90 net/sched/sch_generic.c:992
+  sfb_change+0x52d/0xd30 net/sched/sch_sfb.c:522
+  qdisc_change net/sched/sch_api.c:1321 [inline]
+  tc_modify_qdisc+0x184d/0x1ea0 net/sched/sch_api.c:1623
+  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5223
+  netlink_rcv_skb+0x19e/0x3d0 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5241
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x787/0x900 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x993/0xc50 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x17c/0x200 net/socket.c:2363
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x447509
+Code: e8 5c 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f49d6c94db8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dcc78 RCX: 0000000000447509
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000007
+RBP: 00000000006dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00000000006dcc7c
+R13: 00007ffc5c2e9dff R14: 00007f49d6c959c0 R15: 000000000000002d
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
