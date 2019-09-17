@@ -2,58 +2,48 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E72CB4569
-	for <lists+xdp-newbies@lfdr.de>; Tue, 17 Sep 2019 03:58:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 550A4B4977
+	for <lists+xdp-newbies@lfdr.de>; Tue, 17 Sep 2019 10:29:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbfIQB6c (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 16 Sep 2019 21:58:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44321 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbfIQB6c (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:58:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q21so1135514pfn.11;
-        Mon, 16 Sep 2019 18:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FbKxLWX3JPFIIzFE77Ice2U9N6MP/oTE/0xanmBTVEM=;
-        b=TWNBx+wRDX7/m460etv+xpVyxOwLEUNODbpxHigbl7vxU56KcKeXgJ5Tqz5xrOkNaw
-         IwIVridSikx1MvI+8kT1x6tTG2jJBUX6RAMui/OOVgp5IDNy0zBKhoIUgQOR6PCJ0ME8
-         oTxtRGXjHZ73CV+rX8Lvs1wXDZUbOozlvjiOgZF493W/Rdok2JNDSHMs69Neno6I16Sa
-         T/QiNRoboMB0Y0TsDqDihzcRmkZQjQ6LfVV9hsZ33c5TGyayAPDw3WRLohohbua4g3/W
-         7MHVYA8M+sEFZxFYQmu0/ZpI6aP8EqxvAQX3GQsDjz3BDK4jYYDEC7G7WUlNKEzld4q+
-         65cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FbKxLWX3JPFIIzFE77Ice2U9N6MP/oTE/0xanmBTVEM=;
-        b=Z4d8sP6mJZj8Lr4IHJNNZ/52b6mZMM+Gl8xAZlT8xvaMCo61tcnyD6IslmEk4/puFn
-         WOqfKe+tA4ROBtA7U630wXBCXVDGnsDDlOZT1w326teco/YZz5QnW6JornWbRiIIYoT6
-         k0F0C/YtBh/iXCKP7k3dsfK3u6x2BJ//jGu7WLt2gmP/ktzBxWwrxAhxSLtRFIzGDVys
-         lSoBc59pJslDWXQWSWu+3WJe+JIU6cl6TFvHwB9hYUMSeXmK34Y1zj7UeXORBTZhPAJV
-         uVPqpryocpIQi6kS3DM7AFnORL2I/SNtamEmBGELN7zATq/vL5kbKiNfdKBJrYs8CZdl
-         peZQ==
-X-Gm-Message-State: APjAAAV0ylD+Dh40nDmV0bBwjOzFC2YEaJxzIM5R7h7b9HIqgJgfdj1a
-        qiFOWq45o9IiMHdlWXn+aEAGDYYjEd7mojFlYyw=
-X-Google-Smtp-Source: APXvYqz+a4twHAYoY82TM+yGf6syqRRU+LiLyFVifT8j995xCuO9W18YBTswJAAa7Zi+c/xCIyeZ4usPHZKsinS1R6U=
-X-Received: by 2002:a62:4d45:: with SMTP id a66mr1582183pfb.24.1568685510924;
- Mon, 16 Sep 2019 18:58:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000029a3a00592b41c48@google.com>
-In-Reply-To: <00000000000029a3a00592b41c48@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 16 Sep 2019 18:58:19 -0700
-Message-ID: <CAM_iQpX0FAvhcZgKjRd=3Rbp8cbfYiUqkF2KnmF9Pd0U4EkSDw@mail.gmail.com>
-Subject: Re: BUG: sleeping function called from invalid context in tcf_chain0_head_change_cb_del
-To:     syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
+        id S1730101AbfIQI2C (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 17 Sep 2019 04:28:02 -0400
+Received: from mail-eopbgr150057.outbound.protection.outlook.com ([40.107.15.57]:21566
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728127AbfIQI2B (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:28:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L+rtfvgrLQobjSEtDcwK+XxnXs2sIqbKyZwRavTBqRXBLH1pFfvkqW9FigFf6XhvrNdfdNvZDD2EFZKbWBcO3Q7ojv4L1CzYli8w8g00KyfWkYzKZD/aJqRkhc1OsG8C6IXcT9yzeele9Ge5O9x7aSGyoIFBPm9Vz1Za5OPPFbl/UJpbBv6VIqxOj/CMnsu48RXsVctXd6fDOlxVbg6yGELeCvEbon918yrrWfuaMJUGexid5oBE/spJPRzIc1WPXjf2G8hbVKDjiHjH+NSydhkvUJvZHlwH+AYu1BqrpYOwzG+e/8bUoKBaf6XdL+qLkSwnb9HQxyxkIEQ1HFQIZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iGgZRmHg8bUoZc3rCWzMu+54qIfekgpQj/oBaejGMhs=;
+ b=XPmOBc4l0fywyIdYDq/gvdjqMC2N+PBqp8B661dTSupHDytz/CKWRCK6X8R2pDbqTo4X1CS0s2xip+tcHDVjbiSZdkA4PNTlr+HkvhD80f3O2GNrYdViIWhSSPVmYy/qd/Mfilp7mLLy9oUcjeccfdsCSzfuvzrEeRi2zVrcHwY7gF7Edm+HOXFkkVFB+aa0CJIFIoYNnc5cQASad3nzGVQpZ0VlFyACBtzl9hInk13WI9N3U/JqdMAPcVxh9sQDMK06h99I/stAMS6V7cVNo5uxdj0uCkFnriOnDPGPbNPQOjJuaaTR9M1Yf61BXl3xyHashQ0pSu7KMBZekfV5+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iGgZRmHg8bUoZc3rCWzMu+54qIfekgpQj/oBaejGMhs=;
+ b=ML5yt2KA1MOPfdyeC4k0w9a8kHX2U/TE6e8p3+UV3r/YSohRzl1T/U4nzAkYYZNP/SkAIkWE6rauU+bgow3JWlYyU+eI56yXJzqVsV15MRFtR8ScYc9hY9WoP2+2yDQFDlK1fy+PGfdjP5YRFvriUXhqQdBUUhPbyqdThZL+iwA=
+Received: from VI1PR05MB5295.eurprd05.prod.outlook.com (20.178.12.80) by
+ VI1PR05MB5535.eurprd05.prod.outlook.com (20.177.201.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.23; Tue, 17 Sep 2019 08:27:55 +0000
+Received: from VI1PR05MB5295.eurprd05.prod.outlook.com
+ ([fe80::f910:e7e:8717:f59d]) by VI1PR05MB5295.eurprd05.prod.outlook.com
+ ([fe80::f910:e7e:8717:f59d%6]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 08:27:55 +0000
+From:   Vlad Buslov <vladbu@mellanox.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         David Miller <davem@davemloft.net>,
         David Ahern <dsahern@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, hawk@kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
         Ido Schimmel <idosch@mellanox.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jamal Hadi Salim <jhs@mojatatu.com>,
@@ -63,109 +53,184 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux Kernel Network Developers <netdev@vger.kernel.org>,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        petrm@mellanox.com, Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
         Song Liu <songliubraving@fb.com>,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlad Buslov <vladbu@mellanox.com>, xdp-newbies@vger.kernel.org,
-        yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        Vlad Buslov <vladbu@mellanox.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "yhs@fb.com" <yhs@fb.com>
+Subject: Re: BUG: sleeping function called from invalid context in
+ tcf_chain0_head_change_cb_del
+Thread-Topic: BUG: sleeping function called from invalid context in
+ tcf_chain0_head_change_cb_del
+Thread-Index: AQHVbOfxS+4wZTnw/UG0HWKBhwV4mKcvHPGAgABs04A=
+Date:   Tue, 17 Sep 2019 08:27:55 +0000
+Message-ID: <vbfk1a7cooq.fsf@mellanox.com>
+References: <00000000000029a3a00592b41c48@google.com>
+ <CAM_iQpX0FAvhcZgKjRd=3Rbp8cbfYiUqkF2KnmF9Pd0U4EkSDw@mail.gmail.com>
+In-Reply-To: <CAM_iQpX0FAvhcZgKjRd=3Rbp8cbfYiUqkF2KnmF9Pd0U4EkSDw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0239.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:b::35) To VI1PR05MB5295.eurprd05.prod.outlook.com
+ (2603:10a6:803:b1::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vladbu@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.142.13.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 36c7d97b-d23d-4f5f-863e-08d73b48f038
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5535;
+x-ms-traffictypediagnostic: VI1PR05MB5535:|VI1PR05MB5535:
+x-ms-exchange-purlcount: 8
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB5535F80DFE4F1858073A29F8AD8F0@VI1PR05MB5535.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(189003)(199004)(11346002)(229853002)(6512007)(316002)(2616005)(54906003)(446003)(4326008)(6306002)(81156014)(81166006)(8936002)(8676002)(476003)(7736002)(36756003)(64756008)(66446008)(66556008)(305945005)(5660300002)(66946007)(66476007)(6246003)(86362001)(14454004)(99286004)(14444005)(186003)(66066001)(26005)(6486002)(256004)(2906002)(386003)(478600001)(6436002)(52116002)(76176011)(102836004)(25786009)(6506007)(53546011)(71200400001)(6916009)(486006)(966005)(7416002)(71190400001)(6116002)(3846002)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5535;H:VI1PR05MB5295.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KrlkLv6njugdOXrmMAlsm0ObiJ1rxdJR97YzGov/FB0v8yJJZrFaLQR7euj2KcqdwiPLMAMvzrBKtuL0o+g3LOBptUiPICP+qTr5VvBr94z0S3IKm4SaukVJuv8jnTUfkaFjfoMgvmAK2LXT/pyy0eK8SlM+WDoje/YHGU1unWc+OLikHwxlWSvgtlOODxLViYHR+Vb4Baw504K4CQjYwKFLytliMuEFHm1rhK3iIg/8Buvs2CGjqoC2XiARpMsQ1ufT8OGuyLhWBaO/MgRExSQMhll9wk0CwOWlWc4Ar1/tCZ3VGmBqv4hGFXxQG6+G9UUYZl1nRtf4sJKzsZE02yhauaScZXv8BkptmUKQFD2gzh9aX2NvymfQZ96i8E49Q3MsGGG1JB+U710W7n6WU28mJwBlLET+mjIrLC176ZU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36c7d97b-d23d-4f5f-863e-08d73b48f038
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 08:27:55.3313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fETXdrXCVt/o0th/W2D3HO53OkfpdWBPVwwU2h5EgxoWjzCVY4p8kB7BWUdU/MwPkJ/LeWHv8z428vQgyC8piw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5535
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 4:39 PM syzbot
-<syzbot+ac54455281db908c581e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    1609d760 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10236abe600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ed2b148cd67382ec
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ac54455281db908c581e
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116c4b11600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ff270d600000
->
-> The bug was bisected to:
->
-> commit c266f64dbfa2a970a13b0574246c0ddfec492365
-> Author: Vlad Buslov <vladbu@mellanox.com>
-> Date:   Mon Feb 11 08:55:32 2019 +0000
->
->      net: sched: protect block state with mutex
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e7ca65600000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15e7ca65600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11e7ca65600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+ac54455281db908c581e@syzkaller.appspotmail.com
-> Fixes: c266f64dbfa2 ("net: sched: protect block state with mutex")
->
-> BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:909
-> in_atomic(): 1, irqs_disabled(): 0, pid: 9297, name: syz-executor942
-> INFO: lockdep is turned off.
-> Preemption disabled at:
-> [<ffffffff8604de24>] spin_lock_bh include/linux/spinlock.h:343 [inline]
-> [<ffffffff8604de24>] sch_tree_lock include/net/sch_generic.h:570 [inline]
-> [<ffffffff8604de24>] sfb_change+0x284/0xd30 net/sched/sch_sfb.c:519
-> CPU: 0 PID: 9297 Comm: syz-executor942 Not tainted 5.3.0-rc8+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
->   ___might_sleep+0x3ff/0x530 kernel/sched/core.c:6608
->   __might_sleep+0x8f/0x100 kernel/sched/core.c:6561
->   __mutex_lock_common+0x4e/0x2820 kernel/locking/mutex.c:909
->   __mutex_lock kernel/locking/mutex.c:1077 [inline]
->   mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1092
->   tcf_chain0_head_change_cb_del+0x30/0x390 net/sched/cls_api.c:932
->   tcf_block_put_ext+0x3d/0x2a0 net/sched/cls_api.c:1502
->   tcf_block_put+0x6e/0x90 net/sched/cls_api.c:1515
->   sfb_destroy+0x47/0x70 net/sched/sch_sfb.c:467
->   qdisc_destroy+0x147/0x4d0 net/sched/sch_generic.c:968
->   qdisc_put+0x58/0x90 net/sched/sch_generic.c:992
->   sfb_change+0x52d/0xd30 net/sched/sch_sfb.c:522
 
-I don't think we have to hold the qdisc tree lock when destroying
-the old qdisc. Does the following change make sense?
+On Tue 17 Sep 2019 at 04:58, Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> On Mon, Sep 16, 2019 at 4:39 PM syzbot
+> <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com> wrote:
+>>
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    1609d760 Merge tag 'for-linus' of git://git.kernel.org/p=
+ub..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D10236abe6000=
+00
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Ded2b148cd673=
+82ec
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dac54455281db90=
+8c581e
+>> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+>> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D116c4b1160=
+0000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15ff270d6000=
+00
+>>
+>> The bug was bisected to:
+>>
+>> commit c266f64dbfa2a970a13b0574246c0ddfec492365
+>> Author: Vlad Buslov <vladbu@mellanox.com>
+>> Date:   Mon Feb 11 08:55:32 2019 +0000
+>>
+>>      net: sched: protect block state with mutex
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D16e7ca656=
+00000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D15e7ca656=
+00000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11e7ca656000=
+00
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commi=
+t:
+>> Reported-by: syzbot+ac54455281db908c581e@syzkaller.appspotmail.com
+>> Fixes: c266f64dbfa2 ("net: sched: protect block state with mutex")
+>>
+>> BUG: sleeping function called from invalid context at
+>> kernel/locking/mutex.c:909
+>> in_atomic(): 1, irqs_disabled(): 0, pid: 9297, name: syz-executor942
+>> INFO: lockdep is turned off.
+>> Preemption disabled at:
+>> [<ffffffff8604de24>] spin_lock_bh include/linux/spinlock.h:343 [inline]
+>> [<ffffffff8604de24>] sch_tree_lock include/net/sch_generic.h:570 [inline=
+]
+>> [<ffffffff8604de24>] sfb_change+0x284/0xd30 net/sched/sch_sfb.c:519
+>> CPU: 0 PID: 9297 Comm: syz-executor942 Not tainted 5.3.0-rc8+ #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+>>   ___might_sleep+0x3ff/0x530 kernel/sched/core.c:6608
+>>   __might_sleep+0x8f/0x100 kernel/sched/core.c:6561
+>>   __mutex_lock_common+0x4e/0x2820 kernel/locking/mutex.c:909
+>>   __mutex_lock kernel/locking/mutex.c:1077 [inline]
+>>   mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1092
+>>   tcf_chain0_head_change_cb_del+0x30/0x390 net/sched/cls_api.c:932
+>>   tcf_block_put_ext+0x3d/0x2a0 net/sched/cls_api.c:1502
+>>   tcf_block_put+0x6e/0x90 net/sched/cls_api.c:1515
+>>   sfb_destroy+0x47/0x70 net/sched/sch_sfb.c:467
+>>   qdisc_destroy+0x147/0x4d0 net/sched/sch_generic.c:968
+>>   qdisc_put+0x58/0x90 net/sched/sch_generic.c:992
+>>   sfb_change+0x52d/0xd30 net/sched/sch_sfb.c:522
+>
+> I don't think we have to hold the qdisc tree lock when destroying
+> the old qdisc. Does the following change make sense?
+>
+> diff --git a/net/sched/sch_sfb.c b/net/sched/sch_sfb.c
+> index 1dff8506a715..726d0fa956b1 100644
+> --- a/net/sched/sch_sfb.c
+> +++ b/net/sched/sch_sfb.c
+> @@ -488,7 +488,7 @@ static int sfb_change(struct Qdisc *sch, struct nlatt=
+r *opt,
+>                       struct netlink_ext_ack *extack)
+>  {
+>         struct sfb_sched_data *q =3D qdisc_priv(sch);
+> -       struct Qdisc *child;
+> +       struct Qdisc *child, *tmp;
+>         struct nlattr *tb[TCA_SFB_MAX + 1];
+>         const struct tc_sfb_qopt *ctl =3D &sfb_default_ops;
+>         u32 limit;
+> @@ -519,7 +519,7 @@ static int sfb_change(struct Qdisc *sch, struct nlatt=
+r *opt,
+>         sch_tree_lock(sch);
+>
+>         qdisc_tree_flush_backlog(q->qdisc);
+> -       qdisc_put(q->qdisc);
+> +       tmp =3D q->qdisc;
+>         q->qdisc =3D child;
+>
+>         q->rehash_interval =3D msecs_to_jiffies(ctl->rehash_interval);
+> @@ -543,6 +543,7 @@ static int sfb_change(struct Qdisc *sch, struct nlatt=
+r *opt,
+>
+>         sch_tree_unlock(sch);
+>
+> +       qdisc_put(tmp);
+>         return 0;
+>  }
+>
+>
+> What do you think, Vlad?
 
-diff --git a/net/sched/sch_sfb.c b/net/sched/sch_sfb.c
-index 1dff8506a715..726d0fa956b1 100644
---- a/net/sched/sch_sfb.c
-+++ b/net/sched/sch_sfb.c
-@@ -488,7 +488,7 @@ static int sfb_change(struct Qdisc *sch, struct nlattr *opt,
-                      struct netlink_ext_ack *extack)
- {
-        struct sfb_sched_data *q = qdisc_priv(sch);
--       struct Qdisc *child;
-+       struct Qdisc *child, *tmp;
-        struct nlattr *tb[TCA_SFB_MAX + 1];
-        const struct tc_sfb_qopt *ctl = &sfb_default_ops;
-        u32 limit;
-@@ -519,7 +519,7 @@ static int sfb_change(struct Qdisc *sch, struct nlattr *opt,
-        sch_tree_lock(sch);
+Hi Cong,
 
-        qdisc_tree_flush_backlog(q->qdisc);
--       qdisc_put(q->qdisc);
-+       tmp = q->qdisc;
-        q->qdisc = child;
+Don't see why we would need qdisc tree lock while releasing the
+reference to (or destroying) previous Qdisc. I've skimmed through other
+scheds and it looks like sch_multiq, sch_htb and sch_tbf are also
+affected. Do you want me to send patches?
 
-        q->rehash_interval = msecs_to_jiffies(ctl->rehash_interval);
-@@ -543,6 +543,7 @@ static int sfb_change(struct Qdisc *sch, struct nlattr *opt,
-
-        sch_tree_unlock(sch);
-
-+       qdisc_put(tmp);
-        return 0;
- }
-
-
-What do you think, Vlad?
+Regards,
+Vlad
