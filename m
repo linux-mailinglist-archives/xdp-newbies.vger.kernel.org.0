@@ -2,187 +2,75 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1923CBEC49
-	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Sep 2019 09:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06135BF2C6
+	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Sep 2019 14:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfIZHFJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 26 Sep 2019 03:05:09 -0400
-Received: from lb.pantheon.sk ([46.229.239.20]:48488 "EHLO lb.pantheon.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfIZHFJ (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:05:09 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lb.pantheon.sk (Postfix) with ESMTP id AFEC3138004;
-        Thu, 26 Sep 2019 09:05:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at siecit.sk
-Received: from lb.pantheon.sk ([127.0.0.1])
-        by localhost (lb.pantheon.sk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Y1-fx-tTWjv4; Thu, 26 Sep 2019 09:05:02 +0200 (CEST)
-Received: from mail.pantheon.sk (srvw-ptex2.pantheon.local [10.101.4.6])
-        by lb.pantheon.sk (Postfix) with ESMTPS id 73DEA1376EB;
-        Thu, 26 Sep 2019 09:05:02 +0200 (CEST)
-Received: from srvw-ptex1.pantheon.local (10.101.4.5) by
- srvw-ptex2.pantheon.local (10.101.4.6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 26 Sep 2019 09:05:02 +0200
-Received: from srvw-ptex1.pantheon.local ([::1]) by srvw-ptex1.pantheon.local
- ([fe80::409e:7148:12ab:5c7a%7]) with mapi id 15.01.1779.002; Thu, 26 Sep 2019
- 09:05:02 +0200
-From:   =?utf-8?B?SsO6bGl1cyBNaWxhbg==?= <Julius.Milan@pantheon.tech>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>,
-        William Tu <u9012063@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-CC:     =?utf-8?B?TWFyZWsgWsOhdm9kc2vDvQ==?= <marek.zavodsky@pantheon.tech>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        Thomas F Herbert <therbert@redhat.com>
-Subject: bug? or how to properly clean up AF_XDP socket
-Thread-Topic: bug? or how to properly clean up AF_XDP socket
-Thread-Index: AdV0OBCqGiwNaIJQRUysIs632p6m2w==
-Date:   Thu, 26 Sep 2019 07:05:02 +0000
-Message-ID: <8292781f95b84d97a5e40684a4202175@pantheon.tech>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.101.4.10]
-Content-Type: multipart/mixed;
-        boundary="_002_8292781f95b84d97a5e40684a4202175pantheontech_"
+        id S1726295AbfIZMSC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 26 Sep 2019 08:18:02 -0400
+Received: from mail-vs1-f42.google.com ([209.85.217.42]:33569 "EHLO
+        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfIZMSB (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:18:01 -0400
+Received: by mail-vs1-f42.google.com with SMTP id p13so1459615vso.0
+        for <xdp-newbies@vger.kernel.org>; Thu, 26 Sep 2019 05:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bXVf9RZ1GrmrnpD6Y7BTrJGa48Rnl1VXaQMaLdug/Ak=;
+        b=hKwhcf8+4O2FDEkLrx1L/60SdSBa8P0bFcQtjQDeI8K4/yY/FtWaf8g2JYpwPZcIJx
+         hFbk+wpPMel/VVoWEmQztsSpdBBPo9I6KWeol+2Y8jmYYW2G0s0a3S2XJfjJ8lmpTdjX
+         PEnf9Nhrd1t4IBqbEEcNppt45Uv7oefhSwwXSJkCW49SZoKnrZI/Occj7dyasTQ4erC9
+         tsDj68OQbmHQZmoOMCiBkkzMnutfR5rqNgmZytklD4EgezO0lypKQWChjBTeopnKhWAW
+         dngYJ3qRhoXlNung1SUi2rbBPM6BtiP5trOAaAVhfx2dzkn5Nhi/BiyfKAxvQTm2iFc6
+         zJRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bXVf9RZ1GrmrnpD6Y7BTrJGa48Rnl1VXaQMaLdug/Ak=;
+        b=ZUkrhrfWTAPdn5frWME4aPzh6Y2VxB80g16ENpCFYsZFSUaKkG5rgOWUceVJnlypWV
+         gOYbAlebmy8DpAkYnof/GHfr8iD3pblTB98KWktaNRDp2cBSAbzWtKq1F1ejIi9/QZPV
+         N97nNJlYmUGmOeGTiQ+3C5ESJEXL3WJ5F9yhkrgxuA6ytomUs+tJ+HI0yfHGS1Ora770
+         hWfuHCbxLIK/nPTIN9iCv4Ew/vEsHCbharCYg9n1ZmBg5XTrJuKPcPDmVilTul0prnFh
+         8tTo60d7NenWgMO0ljmYSBPFZgdac+mCLNW5crUmCdo/qKagfcocfOkW9IVlbDb2s3hA
+         eTDg==
+X-Gm-Message-State: APjAAAXqIm3I9FZM52FL0RZONsFE5lj0w4lfXWw0Z0GI91tZ4u/QBykQ
+        P7RnYKG/mgX0O/WTgya8T3NLAw4l2qyvVemHchY=
+X-Google-Smtp-Source: APXvYqww5mX984U8N+KiowGEm1qvPD2Zop6OPbGU4s6jRWIWRZOH0Pwi+qRjCa5igwvX69ZwX+5Lq0s22QptBrnvbkM=
+X-Received: by 2002:a67:6147:: with SMTP id v68mr1559801vsb.233.1569500279512;
+ Thu, 26 Sep 2019 05:17:59 -0700 (PDT)
 MIME-Version: 1.0
+References: <0cbbc2e2-9eba-ad40-d819-d092b2015707@univ-lille.fr>
+In-Reply-To: <0cbbc2e2-9eba-ad40-d819-d092b2015707@univ-lille.fr>
+From:   Anton Protopopov <aspsk2@gmail.com>
+Date:   Thu, 26 Sep 2019 08:17:48 -0400
+Message-ID: <CAGn_ityTBjJ+erYRrvoFCCVYM9qwztg3tkmRuShs60xACQhvbQ@mail.gmail.com>
+Subject: Re: [xdp-tutorial] : permission denied when I try to execute a program
+To:     =?UTF-8?Q?Th=C3=A9o_Mainguet?= <theo.mainguet.etu@univ-lille.fr>
+Cc:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
---_002_8292781f95b84d97a5e40684a4202175pantheontech_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+=D1=87=D1=82, 26 =D1=81=D0=B5=D0=BD=D1=82. 2019 =D0=B3. =D0=B2 05:22, Th=C3=
+=A9o Mainguet <theo.mainguet.etu@univ-lille.fr>:
+>
+> Hi,
+>
+>
+> Thank you very much for your xdp tutorial. Currently, I try to write a
+> simple xdp program to count the number of TCP and UDP packets I receive.
+> For that, I created a BPF_MAP_TYPE_ARRAY map in my kern.c file. I can
+> read into this map with the bpf_map_lookup_elem function but when I try
+> to update a value, I have an error message "libbpf: load bpf program
+> failed: Permission denied". To solve this issue, I've try to run it in
+> sudo, I've verify my kernel configuration (everything needed seems
+> enable) ....
 
-SGkgZm9sa3MNCg0KSSBhbSBzdHVjayB3aXRoIHByb3BlciBjbGVhbnVwIG9mIEFGX1hEUCBzb2Nr
-ZXQuIE5vdCBzdXJlIGlmIEkgYW0gZG9pbmcgc29tZXRoaW5nIHdyb25nIG9yIGlzIGl0IGEgYnVn
-Lg0KSSBjcmVhdGUgeGRwIHNvY2tldCwgdGhlbiBJIHJlbW92ZSBpdCBhbmQgdGhlbiBJIGFtIHRy
-eWluZyB0byBjcmVhdGUgaXQgYWdhaW4gaW4gdGhlIHNhbWUgcHJvY2VzcyBidXQgZ2V0dGluZyAt
-RUJVU1kgZnJvbSBiaW5kIHN5c2NhbGwNCm9mIHhza19zb2NrZXRfX2NyZWF0ZS4NCg0KTXkgY2xl
-YW51cCBsb29rcyBsaWtlIHRoaXM6DQp4c2tfc29ja2V0X19kZWxldGUoKTsNCnhza191bWVtX19k
-ZWxldGUoKTsNCmJwZl9zZXRfbGlua194ZHBfZmQoaWZpbmRleCwgLTEsIG9wdF94ZHBfZmxhZ3Mp
-Ow0KDQpBdHRhY2hpbmcgc2ltcGxlIHRlc3QgY2FzZS4gSXTigJlzIGp1c3QgcmVkdWNlZCBhbmQg
-c2xpZ2h0bHkgbW9kaWZpZWQgeGRwc29ja191c2VyLmMgZm9ybSBrZXJuZWwgc2FtcGxlcy4gDQpU
-ZXN0ZWQgb24ga2VybmVsIHY1LjMgNGQ4NTZmNzJjMTBlY2IwNjA4NjhlZDEwZmYxYjE0NTM5NDNm
-YzZjOCBhbmQgcmVsYXRlZCBsaWJicGYuDQoNClRoYW5rcyBhIGxvdA0KSnVsaXVzDQoNCg==
-
---_002_8292781f95b84d97a5e40684a4202175pantheontech_
-Content-Type: text/plain; name="xdpsock_user.c"
-Content-Description: xdpsock_user.c
-Content-Disposition: attachment; filename="xdpsock_user.c"; size=6077;
-	creation-date="Wed, 25 Sep 2019 15:40:17 GMT";
-	modification-date="Wed, 25 Sep 2019 15:40:20 GMT"
-Content-Transfer-Encoding: base64
-
-Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKLyogQ29weXJpZ2h0KGMpIDIwMTcg
-LSAyMDE4IEludGVsIENvcnBvcmF0aW9uLiAqLwoKI2luY2x1ZGUgPGFzbS9iYXJyaWVyLmg+CiNp
-bmNsdWRlIDxlcnJuby5oPgojaW5jbHVkZSA8Z2V0b3B0Lmg+CiNpbmNsdWRlIDxsaWJnZW4uaD4K
-I2luY2x1ZGUgPGxpbnV4L2JwZi5oPgojaW5jbHVkZSA8bGludXgvY29tcGlsZXIuaD4KI2luY2x1
-ZGUgPGxpbnV4L2lmX2xpbmsuaD4KI2luY2x1ZGUgPGxpbnV4L2lmX3hkcC5oPgojaW5jbHVkZSA8
-bGludXgvaWZfZXRoZXIuaD4KI2luY2x1ZGUgPGxvY2FsZS5oPgojaW5jbHVkZSA8bmV0L2V0aGVy
-bmV0Lmg+CiNpbmNsdWRlIDxuZXQvaWYuaD4KI2luY2x1ZGUgPHBvbGwuaD4KI2luY2x1ZGUgPHB0
-aHJlYWQuaD4KI2luY2x1ZGUgPHNpZ25hbC5oPgojaW5jbHVkZSA8c3RkYm9vbC5oPgojaW5jbHVk
-ZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNs
-dWRlIDxzeXMvbW1hbi5oPgojaW5jbHVkZSA8c3lzL3Jlc291cmNlLmg+CiNpbmNsdWRlIDxzeXMv
-c29ja2V0Lmg+CiNpbmNsdWRlIDxzeXMvdHlwZXMuaD4KI2luY2x1ZGUgPHRpbWUuaD4KI2luY2x1
-ZGUgPHVuaXN0ZC5oPgoKI2luY2x1ZGUgImxpYmJwZi5oIgojaW5jbHVkZSAieHNrLmgiCiNpbmNs
-dWRlIDxicGYvYnBmLmg+CgojaWZuZGVmIFNPTF9YRFAKI2RlZmluZSBTT0xfWERQIDI4MwojZW5k
-aWYKCiNpZm5kZWYgQUZfWERQCiNkZWZpbmUgQUZfWERQIDQ0CiNlbmRpZgoKI2lmbmRlZiBQRl9Y
-RFAKI2RlZmluZSBQRl9YRFAgQUZfWERQCiNlbmRpZgoKI2RlZmluZSBOVU1fRlJBTUVTICg0ICog
-MTAyNCkKI2RlZmluZSBCQVRDSF9TSVpFIDY0CgojZGVmaW5lIE1BWF9TT0NLUyAxCgp0eXBlZGVm
-IF9fdTY0IHU2NDsKdHlwZWRlZiBfX3UzMiB1MzI7CgpzdGF0aWMgdTMyIG9wdF94ZHBfZmxhZ3Mg
-PSBYRFBfRkxBR1NfVVBEQVRFX0lGX05PRVhJU1Q7CnN0YXRpYyBjb25zdCBjaGFyICpvcHRfaWYg
-PSAiIjsKc3RhdGljIGludCBvcHRfaWZpbmRleDsKc3RhdGljIGludCBvcHRfcXVldWU7CnN0YXRp
-YyB1MzIgb3B0X3hkcF9iaW5kX2ZsYWdzOwpzdGF0aWMgaW50IG9wdF94c2tfZnJhbWVfc2l6ZSA9
-IFhTS19VTUVNX19ERUZBVUxUX0ZSQU1FX1NJWkU7CnN0YXRpYyBfX3UzMiBwcm9nX2lkOwoKc3Ry
-dWN0IHhza191bWVtX2luZm8gewoJc3RydWN0IHhza19yaW5nX3Byb2QgZnE7CglzdHJ1Y3QgeHNr
-X3JpbmdfY29ucyBjcTsKCXN0cnVjdCB4c2tfdW1lbSAqdW1lbTsKCXZvaWQgKmJ1ZmZlcjsKfTsK
-CnN0cnVjdCB4c2tfc29ja2V0X2luZm8gewoJc3RydWN0IHhza19yaW5nX2NvbnMgcng7CglzdHJ1
-Y3QgeHNrX3JpbmdfcHJvZCB0eDsKCXN0cnVjdCB4c2tfdW1lbV9pbmZvICp1bWVtOwoJc3RydWN0
-IHhza19zb2NrZXQgKnhzazsKCXVuc2lnbmVkIGxvbmcgcnhfbnBrdHM7Cgl1bnNpZ25lZCBsb25n
-IHR4X25wa3RzOwoJdW5zaWduZWQgbG9uZyBwcmV2X3J4X25wa3RzOwoJdW5zaWduZWQgbG9uZyBw
-cmV2X3R4X25wa3RzOwoJdTMyIG91dHN0YW5kaW5nX3R4Owp9OwoKc3RydWN0IHhza19zb2NrZXRf
-aW5mbyAqeHNrc1tNQVhfU09DS1NdOwoKc3RhdGljIHZvaWQgcmVtb3ZlX3hkcF9wcm9ncmFtKHZv
-aWQpCnsKCV9fdTMyIGN1cnJfcHJvZ19pZCA9IDA7CgoJaWYgKGJwZl9nZXRfbGlua194ZHBfaWQo
-b3B0X2lmaW5kZXgsICZjdXJyX3Byb2dfaWQsIG9wdF94ZHBfZmxhZ3MpKSB7CgkJcHJpbnRmKCJi
-cGZfZ2V0X2xpbmtfeGRwX2lkIGZhaWxlZFxuIik7CgkJZXhpdChFWElUX0ZBSUxVUkUpOwoJfQoJ
-aWYgKHByb2dfaWQgPT0gY3Vycl9wcm9nX2lkKQoJCWJwZl9zZXRfbGlua194ZHBfZmQob3B0X2lm
-aW5kZXgsIC0xLCBvcHRfeGRwX2ZsYWdzKTsKCWVsc2UgaWYgKCFjdXJyX3Byb2dfaWQpCgkJcHJp
-bnRmKCJjb3VsZG4ndCBmaW5kIGEgcHJvZyBpZCBvbiBhIGdpdmVuIGludGVyZmFjZVxuIik7Cgll
-bHNlCgkJcHJpbnRmKCJwcm9ncmFtIG9uIGludGVyZmFjZSBjaGFuZ2VkLCBub3QgcmVtb3Zpbmdc
-biIpOwp9CgpzdGF0aWMgdm9pZCBfX2V4aXRfd2l0aF9lcnJvcihpbnQgZXJyb3IsIGNvbnN0IGNo
-YXIgKmZpbGUsIGNvbnN0IGNoYXIgKmZ1bmMsCgkJCSAgICAgIGludCBsaW5lKQp7CglmcHJpbnRm
-KHN0ZGVyciwgIiVzOiVzOiVpOiBlcnJubzogJWQvXCIlc1wiXG4iLCBmaWxlLCBmdW5jLAoJCWxp
-bmUsIGVycm9yLCBzdHJlcnJvcihlcnJvcikpOwoJcmVtb3ZlX3hkcF9wcm9ncmFtKCk7CglleGl0
-KEVYSVRfRkFJTFVSRSk7Cn0KCiNkZWZpbmUgZXhpdF93aXRoX2Vycm9yKGVycm9yKSBfX2V4aXRf
-d2l0aF9lcnJvcihlcnJvciwgX19GSUxFX18sIF9fZnVuY19fLCBcCgkJCQkJCSBfX0xJTkVfXykK
-CnN0YXRpYyBzdHJ1Y3QgeHNrX3VtZW1faW5mbyAqeHNrX2NvbmZpZ3VyZV91bWVtKHZvaWQgKmJ1
-ZmZlciwgdTY0IHNpemUpCnsKCXN0cnVjdCB4c2tfdW1lbV9pbmZvICp1bWVtOwoJc3RydWN0IHhz
-a191bWVtX2NvbmZpZyBjZmcgPSB7CgkJLmZpbGxfc2l6ZSA9IFhTS19SSU5HX1BST0RfX0RFRkFV
-TFRfTlVNX0RFU0NTLAoJCS5jb21wX3NpemUgPSBYU0tfUklOR19DT05TX19ERUZBVUxUX05VTV9E
-RVNDUywKCQkuZnJhbWVfc2l6ZSA9IG9wdF94c2tfZnJhbWVfc2l6ZSwKCQkuZnJhbWVfaGVhZHJv
-b20gPSBYU0tfVU1FTV9fREVGQVVMVF9GUkFNRV9IRUFEUk9PTSwKCX07CglpbnQgcmV0OwoKCXVt
-ZW0gPSBjYWxsb2MoMSwgc2l6ZW9mKCp1bWVtKSk7CglpZiAoIXVtZW0pCgkJZXhpdF93aXRoX2Vy
-cm9yKGVycm5vKTsKCglyZXQgPSB4c2tfdW1lbV9fY3JlYXRlKCZ1bWVtLT51bWVtLCBidWZmZXIs
-IHNpemUsICZ1bWVtLT5mcSwgJnVtZW0tPmNxLAoJCQkgICAgICAgJmNmZyk7CglpZiAocmV0KQoJ
-CWV4aXRfd2l0aF9lcnJvcigtcmV0KTsKCgl1bWVtLT5idWZmZXIgPSBidWZmZXI7CglyZXR1cm4g
-dW1lbTsKfQoKc3RhdGljIHN0cnVjdCB4c2tfc29ja2V0X2luZm8gKnhza19jb25maWd1cmVfc29j
-a2V0KHN0cnVjdCB4c2tfdW1lbV9pbmZvICp1bWVtKQp7CglzdHJ1Y3QgeHNrX3NvY2tldF9jb25m
-aWcgY2ZnOwoJc3RydWN0IHhza19zb2NrZXRfaW5mbyAqeHNrOwoJaW50IHJldDsKCXUzMiBpZHg7
-CglpbnQgaTsKCgl4c2sgPSBjYWxsb2MoMSwgc2l6ZW9mKCp4c2spKTsKCWlmICgheHNrKQoJCWV4
-aXRfd2l0aF9lcnJvcihlcnJubyk7CgoJeHNrLT51bWVtID0gdW1lbTsKCWNmZy5yeF9zaXplID0g
-WFNLX1JJTkdfQ09OU19fREVGQVVMVF9OVU1fREVTQ1M7CgljZmcudHhfc2l6ZSA9IFhTS19SSU5H
-X1BST0RfX0RFRkFVTFRfTlVNX0RFU0NTOwoJY2ZnLmxpYmJwZl9mbGFncyA9IDA7CgljZmcueGRw
-X2ZsYWdzID0gb3B0X3hkcF9mbGFnczsKCWNmZy5iaW5kX2ZsYWdzID0gb3B0X3hkcF9iaW5kX2Zs
-YWdzOwoJcmV0ID0geHNrX3NvY2tldF9fY3JlYXRlKCZ4c2stPnhzaywgb3B0X2lmLCBvcHRfcXVl
-dWUsIHVtZW0tPnVtZW0sCgkJCQkgJnhzay0+cngsICZ4c2stPnR4LCAmY2ZnKTsKCWlmIChyZXQp
-CgkJZXhpdF93aXRoX2Vycm9yKC1yZXQpOwoKCXJldCA9IGJwZl9nZXRfbGlua194ZHBfaWQob3B0
-X2lmaW5kZXgsICZwcm9nX2lkLCBvcHRfeGRwX2ZsYWdzKTsKCWlmIChyZXQpCgkJZXhpdF93aXRo
-X2Vycm9yKC1yZXQpOwoKCXJldCA9IHhza19yaW5nX3Byb2RfX3Jlc2VydmUoJnhzay0+dW1lbS0+
-ZnEsCgkJCQkgICAgIFhTS19SSU5HX1BST0RfX0RFRkFVTFRfTlVNX0RFU0NTLAoJCQkJICAgICAm
-aWR4KTsKCWlmIChyZXQgIT0gWFNLX1JJTkdfUFJPRF9fREVGQVVMVF9OVU1fREVTQ1MpCgkJZXhp
-dF93aXRoX2Vycm9yKC1yZXQpOwoJZm9yIChpID0gMDsgaSA8IFhTS19SSU5HX1BST0RfX0RFRkFV
-TFRfTlVNX0RFU0NTOyBpKyspCgkJKnhza19yaW5nX3Byb2RfX2ZpbGxfYWRkcigmeHNrLT51bWVt
-LT5mcSwgaWR4KyspID0KCQkJaSAqIG9wdF94c2tfZnJhbWVfc2l6ZTsKCXhza19yaW5nX3Byb2Rf
-X3N1Ym1pdCgmeHNrLT51bWVtLT5mcSwKCQkJICAgICAgWFNLX1JJTkdfUFJPRF9fREVGQVVMVF9O
-VU1fREVTQ1MpOwoKCXJldHVybiB4c2s7Cn0KCnN0YXRpYyBzdHJ1Y3Qgb3B0aW9uIGxvbmdfb3B0
-aW9uc1tdID0gewoJeyJpbnRlcmZhY2UiLCByZXF1aXJlZF9hcmd1bWVudCwgMCwgJ2knfSwKCXsw
-LCAwLCAwLCAwfQp9OwoKc3RhdGljIHZvaWQgdXNhZ2UoY29uc3QgY2hhciAqcHJvZykKewoJY29u
-c3QgY2hhciAqc3RyID0KCQkiICBVc2FnZTogJXMgW09QVElPTlNdXG4iCgkJIiAgT3B0aW9uczpc
-biIKCQkiICAtaSwgLS1pbnRlcmZhY2U9bglSdW4gb24gaW50ZXJmYWNlIG5cbiIKCQkiXG4iOwoJ
-ZnByaW50ZihzdGRlcnIsIHN0ciwgcHJvZywgWFNLX1VNRU1fX0RFRkFVTFRfRlJBTUVfU0laRSk7
-CglleGl0KEVYSVRfRkFJTFVSRSk7Cn0KCnN0YXRpYyB2b2lkIHBhcnNlX2NvbW1hbmRfbGluZShp
-bnQgYXJnYywgY2hhciAqKmFyZ3YpCnsKCWludCBvcHRpb25faW5kZXgsIGM7CgoJb3B0ZXJyID0g
-MDsKCglmb3IgKDs7KSB7CgkJYyA9IGdldG9wdF9sb25nKGFyZ2MsIGFyZ3YsICJpOiIsIGxvbmdf
-b3B0aW9ucywKCQkJCSZvcHRpb25faW5kZXgpOwoJCWlmIChjID09IC0xKQoJCQlicmVhazsKCgkJ
-c3dpdGNoIChjKSB7CgkJY2FzZSAnaSc6CgkJCW9wdF9pZiA9IG9wdGFyZzsKCQkJYnJlYWs7CgkJ
-ZGVmYXVsdDoKCQkJdXNhZ2UoYmFzZW5hbWUoYXJndlswXSkpOwoJCX0KCX0KCglvcHRfaWZpbmRl
-eCA9IGlmX25hbWV0b2luZGV4KG9wdF9pZik7CglpZiAoIW9wdF9pZmluZGV4KSB7CgkJZnByaW50
-ZihzdGRlcnIsICJFUlJPUjogaW50ZXJmYWNlIFwiJXNcIiBkb2VzIG5vdCBleGlzdFxuIiwKCQkJ
-b3B0X2lmKTsKCQl1c2FnZShiYXNlbmFtZShhcmd2WzBdKSk7Cgl9Cn0KCmludCBtYWluKGludCBh
-cmdjLCBjaGFyICoqYXJndikKewoJc3RydWN0IHJsaW1pdCByID0ge1JMSU1fSU5GSU5JVFksIFJM
-SU1fSU5GSU5JVFl9OwoJc3RydWN0IHhza191bWVtX2luZm8gKnVtZW07Cgl2b2lkICpidWZzOwoJ
-aW50IHJldDsKCglwYXJzZV9jb21tYW5kX2xpbmUoYXJnYywgYXJndik7CgoJaWYgKHNldHJsaW1p
-dChSTElNSVRfTUVNTE9DSywgJnIpKSB7CgkJZnByaW50ZihzdGRlcnIsICJFUlJPUjogc2V0cmxp
-bWl0KFJMSU1JVF9NRU1MT0NLKSBcIiVzXCJcbiIsCgkJCXN0cmVycm9yKGVycm5vKSk7CgkJZXhp
-dChFWElUX0ZBSUxVUkUpOwoJfQoKCXJldCA9IHBvc2l4X21lbWFsaWduKCZidWZzLCBnZXRwYWdl
-c2l6ZSgpLCAvKiBQQUdFX1NJWkUgYWxpZ25lZCAqLwoJCQkgICAgIE5VTV9GUkFNRVMgKiBvcHRf
-eHNrX2ZyYW1lX3NpemUpOwoJaWYgKHJldCkKCQlleGl0X3dpdGhfZXJyb3IocmV0KTsKCiAgICAg
-ICAvKiBDcmVhdGUgc29ja2V0cy4uLiAqLwoJdW1lbSA9IHhza19jb25maWd1cmVfdW1lbShidWZz
-LCBOVU1fRlJBTUVTICogb3B0X3hza19mcmFtZV9zaXplKTsKCXhza3NbMF0gPSB4c2tfY29uZmln
-dXJlX3NvY2tldCh1bWVtKTsKCgkvKiBDbGVhbnVwICovICAvLy8gbWlzc2luZyBzb21ldGhpbmcg
-PwoJc3RydWN0IHhza191bWVtICp1dW1lbSA9IHhza3NbMF0tPnVtZW0tPnVtZW07CgoJeHNrX3Nv
-Y2tldF9fZGVsZXRlKHhza3NbMF0tPnhzayk7Cgkodm9pZCl4c2tfdW1lbV9fZGVsZXRlKHV1bWVt
-KTsKCXJlbW92ZV94ZHBfcHJvZ3JhbSgpOwoJZnJlZShidWZzKTsKCiAgICAgICAvKiBDcmVhdGUg
-c29ja2V0cyAybmQgdGltZSAuLi4gKi8KCXVtZW0gPSBOVUxMOwoJYnVmcyA9IE5VTEw7CgoJcmV0
-ID0gcG9zaXhfbWVtYWxpZ24oJmJ1ZnMsIGdldHBhZ2VzaXplKCksIC8qIFBBR0VfU0laRSBhbGln
-bmVkICovCgkJCSAgICAgTlVNX0ZSQU1FUyAqIG9wdF94c2tfZnJhbWVfc2l6ZSk7CglpZiAocmV0
-KQoJCWV4aXRfd2l0aF9lcnJvcihyZXQpOwoKCXVtZW0gPSB4c2tfY29uZmlndXJlX3VtZW0oYnVm
-cywgTlVNX0ZSQU1FUyAqIG9wdF94c2tfZnJhbWVfc2l6ZSk7Cgl4c2tzWzBdID0geHNrX2NvbmZp
-Z3VyZV9zb2NrZXQodW1lbSk7IC8vLyBmYWlscwoKCglwcmludGYoIlZpY3RvcnksIHNvY2tldCBj
-cmVhdGVkIDJuZCB0aW1lXG4iKTsKCglyZXR1cm4gMDsKfQo=
-
---_002_8292781f95b84d97a5e40684a4202175pantheontech_--
+What's the error message when you are trying to load your program with sudo=
+?
