@@ -2,56 +2,56 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49B6EBF32D
-	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Sep 2019 14:41:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D0FBF6E2
+	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Sep 2019 18:43:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfIZMla (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 26 Sep 2019 08:41:30 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44981 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfIZMla (ORCPT
+        id S1727447AbfIZQnv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 26 Sep 2019 12:43:51 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44950 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfIZQnv (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:41:30 -0400
-Received: by mail-ua1-f65.google.com with SMTP id n2so699943ual.11
-        for <xdp-newbies@vger.kernel.org>; Thu, 26 Sep 2019 05:41:29 -0700 (PDT)
+        Thu, 26 Sep 2019 12:43:51 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u22so2321785qkk.11
+        for <xdp-newbies@vger.kernel.org>; Thu, 26 Sep 2019 09:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=4vYg3oEy3YGzXWMMf790TAzad+VbyNg5+Vfne4AN5d0=;
-        b=fmjFLrX58pmHUduApcBclkavUERwx/IZlmflZvESOseEYoxSKUxLIYuVSeoMyXzS9r
-         QlzwVR5oKlA9HFBkYp8NzvEEZp4Y2dXYyBl764tPvOKakDXJyH8TnisFNjH5vomW60gT
-         VaFlyaO16+FdMfvhA9hR9v3XGzVaSs3c8H+66dv8gyvtdS6W1mPtDqQ61Jvh2pJ4flA2
-         uB1Mc/HGA6HnJJVu1JO7PcDvmhAOiJzI9yYW/7ubq778GVFW26P11+oL+ijgOTDmkx5N
-         TO8BCZDDxagXgxv+q/Jm+WYVH5k4TbuEa5FNgUPa5d2aMCPZFQwlUfOHFEKhTWEXSrwo
-         6ZuQ==
+        bh=1DdLaCr0/x/iFrsdna8+zS0pN3MhDcv2xJWkeDl5jUc=;
+        b=L8h6zSVlMBXWlXwl254KqaiCpMQC7GqwkCkBBzUVwKN48sL2Y+bGQKfFYcL2qMEycp
+         1ka8yjg3Y0EJkrpSRDLGGDW5njmNcp3fa4VcSZUTwTPFNN8gI8rIpVLIMTy9Rrw1wt4N
+         pRA4XA6FFytv2c80RQrJQ2y877ADv9InIUS8T/k62eKbR4wemGIYsPhJ9ChmvQFIwW1C
+         QbPewY1FO0H543w+6XgMPE323pod62ALDcVdwdWGpIsbM3EeYAFwPbs8BatZxidcrts/
+         Z+oEfB4qHbeaQ90zSW2OjcN2HJZhuLZmmlVHej/Ta4kl6zchC/dXJJqtrihy3QvgHMvP
+         Ia1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4vYg3oEy3YGzXWMMf790TAzad+VbyNg5+Vfne4AN5d0=;
-        b=OLupiAKucHb61JdROHpLf6HyOcN1DgBJaSdWur8s4kf7sd+Ot1BxH8+bUbRoKf6Yzl
-         FhoR0VmXu51dGuB1O1nyENJgxj+PBTJ8A/ZRjwgO43eX0eZgQN4qlbPqkQMlpX8zLLpd
-         I6ejpS5wCHl+0vUe9grTY8uDo8AMHShuLrBR62NSDo/xocDIsN2iOF1T3iKbnAW80gF9
-         DKohw6wztIBkQUkhz32D2d0JXOMuisGHpFGWT13FNs2xWcOKXAVFSToUAMBg4jzaR5nf
-         jPgUkEYH6ipzI808b4ORzrJvV1WjV7XyoESbXBWlzssYg1Gci+WTBXw/eKhWm7Qkd3Dv
-         lHVg==
-X-Gm-Message-State: APjAAAXmShw9fO/H881n4obAgwUH7hTBCHrCTJ2FfT3eIO1QQRa5dXAr
-        SgWfjSUmwp23x+Zbo3Nc4SDasgd3H2x+inEOFrA=
-X-Google-Smtp-Source: APXvYqxJx1XelRphsKiHS1SChq5a8+WIi15sL7H1G8yY7S0bXvRLqXm2Lak1du0XSqVXns8jiyEbIUKxEanxnXh4dJ0=
-X-Received: by 2002:ab0:4ea4:: with SMTP id l36mr1570216uah.37.1569501689246;
- Thu, 26 Sep 2019 05:41:29 -0700 (PDT)
+        bh=1DdLaCr0/x/iFrsdna8+zS0pN3MhDcv2xJWkeDl5jUc=;
+        b=CmPXc3EN+DJkNQOLYxqI+HERF2+iB8g1bCvv1S5IDz56pn6OPR43VwWtnF+lSNdNNd
+         NH53bAN63f0cSqGXwDdaa9qsyjb3+HV1G1TcbyUl98CMvEUgoStEGYpdOpSsS+4BM33n
+         +0Uw8pqBfJL4YPcpcaZJSrCPZN5sG/LkNvsN04nbFxar7iB1MSbF+zq0/vnPWXmNvuwS
+         V6zdnTUaXSse/+wjGAmrRuBzvt0v5/iO29ISzqjdxuwSOYgQAr/sVoDiy0eh1Elt6h4i
+         BHi64/aozVIoRc2JY+b0VcMTKKqxKBpPfCHxu6Xs0UZBLTQNogdyhT95k0b+SqpVj7ty
+         gp5Q==
+X-Gm-Message-State: APjAAAXrws65FeOeNXgF1qzbjtlpxqlL/gTQAWOR3a79HOgeKlw1+qT4
+        3DDAMZHUyEFaw7cVSrE4+gyvCe//YKyE+ieXuyE=
+X-Google-Smtp-Source: APXvYqwwrgkwGjNGuD1d6rdRTmHxFPhDueDEYgr9QVs+WxcfePrICGFEtcEVEmqU+Yy4xqEg7EJNwJ2G5HvLwpgthIc=
+X-Received: by 2002:a37:c14:: with SMTP id 20mr4188577qkm.291.1569516229912;
+ Thu, 26 Sep 2019 09:43:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <0cbbc2e2-9eba-ad40-d819-d092b2015707@univ-lille.fr>
- <CAGn_ityTBjJ+erYRrvoFCCVYM9qwztg3tkmRuShs60xACQhvbQ@mail.gmail.com> <20190926123450.GA39817@C02YVCJELVCG>
-In-Reply-To: <20190926123450.GA39817@C02YVCJELVCG>
-From:   Anton Protopopov <aspsk2@gmail.com>
-Date:   Thu, 26 Sep 2019 08:41:18 -0400
-Message-ID: <CAGn_ityL9anR3BHKr_fZhV=Z-9KDtkrbH+TDAHKEtsM9w7Q48Q@mail.gmail.com>
-Subject: Re: [xdp-tutorial] : permission denied when I try to execute a program
-To:     Andy Gospodarek <andy@greyhouse.net>
-Cc:     =?UTF-8?Q?Th=C3=A9o_Mainguet?= <theo.mainguet.etu@univ-lille.fr>,
-        xdp-newbies@vger.kernel.org
+References: <7de437b13561433fa766aca690995c45@pantheon.tech>
+In-Reply-To: <7de437b13561433fa766aca690995c45@pantheon.tech>
+From:   William Tu <u9012063@gmail.com>
+Date:   Thu, 26 Sep 2019 09:43:12 -0700
+Message-ID: <CALDO+SZWdVNCBimVdBivJMYDw+9jCycU3jcVBL+zBJwpMvb8=Q@mail.gmail.com>
+Subject: Re: bug in AF_XDP socket cleanup?
+To:     =?UTF-8?Q?J=C3=BAlius_Milan?= <Julius.Milan@pantheon.tech>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Magnus Karlsson <magnus.karlsson@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
@@ -59,51 +59,61 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-=D1=87=D1=82, 26 =D1=81=D0=B5=D0=BD=D1=82. 2019 =D0=B3. =D0=B2 08:34, Andy =
-Gospodarek <andy@greyhouse.net>:
+On Wed, Sep 25, 2019 at 8:47 AM J=C3=BAlius Milan <Julius.Milan@pantheon.te=
+ch> wrote:
 >
-> On Thu, Sep 26, 2019 at 08:17:48AM -0400, Anton Protopopov wrote:
-> > =D1=87=D1=82, 26 =D1=81=D0=B5=D0=BD=D1=82. 2019 =D0=B3. =D0=B2 05:22, T=
-h=C3=A9o Mainguet <theo.mainguet.etu@univ-lille.fr>:
-> > >
-> > > Hi,
-> > >
-> > >
-> > > Thank you very much for your xdp tutorial. Currently, I try to write =
-a
-> > > simple xdp program to count the number of TCP and UDP packets I recei=
-ve.
-> > > For that, I created a BPF_MAP_TYPE_ARRAY map in my kern.c file. I can
-> > > read into this map with the bpf_map_lookup_elem function but when I t=
-ry
-> > > to update a value, I have an error message "libbpf: load bpf program
-> > > failed: Permission denied". To solve this issue, I've try to run it i=
-n
-> > > sudo, I've verify my kernel configuration (everything needed seems
-> > > enable) ....
-> >
-> > What's the error message when you are trying to load your program with =
-sudo?
+> Hi folks
 >
-> That information would be helpful as some distros will not run some of
-> the sample BPF programs without some ulimit changes.  For example the
-> command:
 >
-> # ulimit -l 1024
 >
-> or even
+> I am stuck with proper cleanup of AF_XDP socket. Not sure if I am doing s=
+omething wrong or is it a bug.
 >
-> # ulimit -l $VERY_LARGE_VALUE
+> I create xdp socket, then I remove it and then I am trying to create it a=
+gain and got EBUSY from bind syscall
 >
-> may be needed on Fedora or Ubuntu, but not on other distros.
+> of xsk_socket__create.
 >
+>
+>
+> My cleanup looks like this:
+>
+> xsk_socket__delete();
+>
+> xsk_umem__delete();
+>
+> bpf_set_link_xdp_fd(ifindex, -1, opt_xdp_flags);
+>
+>
+>
+> Attaching simple test case. It=E2=80=99s just reduced and modified xdpsoc=
+k_user.c form kernel samples.
+>
+> Tested on kernel v5.3 4d856f72c10ecb060868ed10ff1b1453943fc6c8 and relate=
+d libbpf.
 
-Or even
+There are a couple of fixes related to cleanup.
+Can you make sure your kernel has these patches
 
-# ulimit -l unlimited
+commit 0402acd683c678874df6bdbc23530ca07ea19353
+Author: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+Date:   Thu Aug 15 11:30:13 2019 +0200
 
-:-)
+    xsk: remove AF_XDP socket from map when the socket is released
 
-Also this can be done from the loader itself, as, e.g., here:
-https://github.com/xdp-project/xdp-tutorial/blob/master/advanced03-AF_XDP/a=
-f_xdp_user.c#L557
+And libbpf has
+commit 5750902a6e9bc6adb77da8257c0e34db2bfdebb2
+Author: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+Date:   Tue Apr 30 14:45:36 2019 +0200
+
+    libbpf: proper XSKMAP cleanup
+
+commit 0e6741f092979535d159d5a851f12c88bfb7cb9a
+Author: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
+Date:   Tue Apr 30 14:45:35 2019 +0200
+
+    libbpf: fix invalid munmap call
+
+
+Thanks
+William
