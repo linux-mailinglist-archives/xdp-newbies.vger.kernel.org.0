@@ -2,50 +2,50 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D117C885C
-	for <lists+xdp-newbies@lfdr.de>; Wed,  2 Oct 2019 14:25:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BC10C8A3C
+	for <lists+xdp-newbies@lfdr.de>; Wed,  2 Oct 2019 15:52:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfJBMZx (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 2 Oct 2019 08:25:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39817 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJBMZx (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 2 Oct 2019 08:25:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so56412963ioc.6
-        for <xdp-newbies@vger.kernel.org>; Wed, 02 Oct 2019 05:25:51 -0700 (PDT)
+        id S1726754AbfJBNwQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 2 Oct 2019 09:52:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33008 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbfJBNwQ (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 2 Oct 2019 09:52:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id r5so26454690qtd.0
+        for <xdp-newbies@vger.kernel.org>; Wed, 02 Oct 2019 06:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=R4r50NfgqdiTHltRmKljJWOjYztqV7sUGzNbN8Vfh0k=;
-        b=aYbE4nTtoSnPHLnpj4oMdRtzo6TxZCQ90XybVAV13qtmxQKVyWTOTNQtwQFreOHqy4
-         VS33U2G/kh1sQHrVfR+uRW6XrnEqIj+GvUD2UgWwPKOiE4RY+Z8HVxcHWpa/QamF6ihG
-         QdOIiD25u1McWHgCXZ02NbbObKqsRzS7zqtvw2KDzcx8nE07EoCONH1QdExZDREOIaZr
-         1Ic0urFougZ9qaq9BlyG9dW5AoclruOhq3GJJlXK1/9o94JwWx6Ptw50K2QXErd1u5Sx
-         U+29mzLPcDw+zbwogNCS/Dl91NK/L5LerV7mIiy9F9ze0Q4fM4tiGTmZ8nhWV++N7yFd
-         ZDBA==
+        bh=nnNCq14fiGZ0pkGkd/eQNi3uBUVVcjjuEO+Qig1bNyo=;
+        b=E5IUzLwHbnviLKvefltLxchpYrPZb9GBjKVd8EQIzrCxR1FPyaZXsdTOnl9v+GN6CB
+         1VniYtJetzO1Gtws4V5QiO7sVf/Q+uRUz/cRWr/BLIVMJm7DBM1LX6GfStpLmgLvXa9U
+         nx6wm0pBWlRAyL7Phfj+LCKSE2aaiqOwYbBdHsXBqiP9sDmFTD9RqcuIp2M2VZEdG2SQ
+         R0Hnp6W+XpLbG94WF1/Nh6qqf0FpGzuM/k1Zh1rg/K6FOeI59zq7yxaxLFvinmVU7y0j
+         p6I+PczsmS/Ms9fmFTXN3nJ2aFOnvLDy7arT25OGjYPfOdqjoacVVF4yP/wwLRUAFSto
+         f/Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R4r50NfgqdiTHltRmKljJWOjYztqV7sUGzNbN8Vfh0k=;
-        b=s9ZGzKII7F6y7PcBUEURnTu4/jMlP9S97erOUyV1ceKpczmXvgwh3Uq+NsxbyVwQ12
-         HWYSYe4zQ2zdUajoo9wPLYWhPpjI4VDAl1eRDl+2Qs6WCPJ5RgODKSGhOEvk2p5Jur3A
-         Qt98Et95K6o6vL4g7JNnVIjdkE3v3wn1M9jXjvCjPE9O988olNkB7IwPFePl9atSxtYB
-         XYz/FyE/muRvjvg/N9IT9GRVo++2DQkuFj4NA1Sv3BWWuo1AFr7lr/gSf8qBfPBuEhFf
-         bqtZnWXg0+gi2koVLwEyN/j3ESEI5TEGEGjg2d1XMkQO6SQ0ZcTQC8CMhgDKhN1PFylo
-         IM6A==
-X-Gm-Message-State: APjAAAVq0d43sKUNKekXGrAzRzM8YY7tTDgF5cdU9HxI/Em8YVRiaIyL
-        vnXiAZ45dJgZXIWaYbpnU+uWgxGOgn5NeJoheFc=
-X-Google-Smtp-Source: APXvYqx8Ok98HBYZgkKh1cAhQhzxWxtN7e/cIlTLr24yF8/kXHyvF8cjefmh3UtvycYFHZrO2i2oskWPG0bymVtcbE0=
-X-Received: by 2002:a6b:6514:: with SMTP id z20mr3027385iob.50.1570019151103;
- Wed, 02 Oct 2019 05:25:51 -0700 (PDT)
+        bh=nnNCq14fiGZ0pkGkd/eQNi3uBUVVcjjuEO+Qig1bNyo=;
+        b=O1+eszSPDqAiNKgwDU/HU2E7OO9wHE2rsnX6dOzSfl/jxTl2TiJjB9RzpwEEel6e89
+         tQbY+r2kJEG7GwN8p5zkgHKbsKJU1LgGjQUPIwfaUTGVTgoCztMLmv6ooPDVFWR2oa9U
+         ChK+2DYQSiDXFOm2PPf2Lwz10eBJq037ChUEOsGSQS/J8RXQdJ2kF5sQfTKBuSoFNi88
+         L1tnzMQ5p8yHUd2V5hRf1j/Lzw45zDFjwm33BRwJAuJSX/VQlN+t8XNTrfhbX0Br0r1d
+         YfUvvr24Q39NAEivyZVVn17FCw2z9KcbbNUvF1rSc14BBXUAzDL47W90PfEgRjUaId5e
+         ux+A==
+X-Gm-Message-State: APjAAAVV6FbCmDudjW4lu0fqT1YBgnNAZrB5r56YRGYCWV4j58o1en7m
+        giS7/3LH41L9Zy3EQLREitvtJE+/Gg/pOHqadfg=
+X-Google-Smtp-Source: APXvYqw1RMxX/+LtPDZ/kocG2sTq5X5Tn8y6TwuZlOJGTlUGEA0cNkaSiJ8z5UIB+UeqOc2HF4h9nvEqaCUamla9NnU=
+X-Received: by 2002:ac8:3f96:: with SMTP id d22mr4190353qtk.36.1570024335535;
+ Wed, 02 Oct 2019 06:52:15 -0700 (PDT)
 MIME-Version: 1.0
 References: <ccfd36d0372547099b96ea494e2c6369@pantheon.tech>
 In-Reply-To: <ccfd36d0372547099b96ea494e2c6369@pantheon.tech>
-From:   Pavel Popa <pashinho1990@gmail.com>
-Date:   Wed, 2 Oct 2019 14:25:39 +0200
-Message-ID: <CAHOxX0ykVVTPopnSwnzL75RLj4-dnFWttdw0zS7jYe6Z4HcF2g@mail.gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Wed, 2 Oct 2019 15:52:04 +0200
+Message-ID: <CAJ+HfNh58fN=BU5ADzTs=vbCD1j5fs0i1EKhAQQdByjiVHz4BQ@mail.gmail.com>
 Subject: Re: xdpsock problem testing multiple queues
 To:     =?UTF-8?Q?J=C3=BAlius_Milan?= <Julius.Milan@pantheon.tech>
 Cc:     Xdp <xdp-newbies@vger.kernel.org>,
@@ -61,12 +61,8 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-I don't think vmxnet3 has XDP driver support atm, thus just generic
-(i.e. skb) mode. Anyone confirming?
-
-
-Il giorno mer 2 ott 2019 alle ore 14:11 J=C3=BAlius Milan
-<Julius.Milan@pantheon.tech> ha scritto:
+On Wed, 2 Oct 2019 at 14:11, J=C3=BAlius Milan <Julius.Milan@pantheon.tech>=
+ wrote:
 >
 > Hi all
 >
@@ -87,5 +83,15 @@ ket:315: errno: 1/"Operation not permitted"
 > Any ideas what the problem could be? Maybe vmxnet3 driver does not suppor=
 t some necessary operations related to queues?
 >
+
+XDP support is missing for that driver, but the XDP_SKB/generic mode
+is available, and should work.
+
+Can you run the xdp1 application in the samples directory, to rule out
+that you can run XDP.
+
+
+Bj=C3=B6rn
+
 > Best Regards
 > J=C3=BAlius
