@@ -2,147 +2,101 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B19ECBBDE
-	for <lists+xdp-newbies@lfdr.de>; Fri,  4 Oct 2019 15:35:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8959ECC5C0
+	for <lists+xdp-newbies@lfdr.de>; Sat,  5 Oct 2019 00:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388289AbfJDNfy (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 4 Oct 2019 09:35:54 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43108 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388244AbfJDNfy (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 4 Oct 2019 09:35:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a2so3908960pfo.10
-        for <xdp-newbies@vger.kernel.org>; Fri, 04 Oct 2019 06:35:52 -0700 (PDT)
+        id S1731525AbfJDWWI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 4 Oct 2019 18:22:08 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40733 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfJDWWI (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 4 Oct 2019 18:22:08 -0400
+Received: by mail-yw1-f66.google.com with SMTP id e205so2882501ywc.7;
+        Fri, 04 Oct 2019 15:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lc4Ccpqjq3ib+KCgQ53oVFyWP5ZFj0RIqWUTgzgiGFI=;
-        b=QsM3+KdPMWKY45CbSBdkba3XYYOuL3Lw1axG3/RgzuAJL4QAJ0WupbyLEsp0gwm5Zk
-         Bm8ZDODoW5dV9SiPqyYz9n06S7A4AW7Y90hOsPAckU7ZiJI936LIleBGLUCdHVyjvVdh
-         5AG5HfJ9T3Q/pYM1W5ww629v77czK2z8OmpyeDARNT+DaDWi2bDQE8bkG0cpHAocoxDZ
-         UVkilblB9+UgpU7g4T/hXa1/fQ3nlMP6oDD80kRySx8JEAl/fluSwsTUGP4F1BMpehyJ
-         iWDA8rbuQWMzm1IYp+wtEj9cYqvN9pDcBIWFneGcBPkQx3Fut3Gw44YX0ikiv1pKd92y
-         shdg==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=vCjiv3b4WL7zIlrmlGB9UhEaVrhlbG+64GDaYrMOVro=;
+        b=HNMAp31otHBjxfHeHbaPTpWF4ejiVdNal6lUt8SzHYlY1SevbgTJpcC8PjG9mQq+p7
+         UJoy/c7YFOnms3zbm+KIK2fXrJcFdsDVVZ5fYgc6CoL3cmykI7NqghK8gaNp4qZTaXHn
+         TadRgCpkyK3Ki395aZsh2EcUIWXgTShDMzOvOWkNNHMkJvr5iBbbG08V1SGkSViosMwu
+         oOmqoojc30gDcOuJK67/ENW1OlYSMaF9X5sPglE7iYTGNd7BrIRuWYXFywBycwoUqV4T
+         /WReR9dGEy11lVak5xQp66z1fLmljmQfUSjOm1cs3nuFMIZTe+9wR5ljrR4qUodLBh5z
+         sfvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lc4Ccpqjq3ib+KCgQ53oVFyWP5ZFj0RIqWUTgzgiGFI=;
-        b=m3sMX3cEnlQsXUIkF0yl+jQUNXC9JEYWXloubSRQZ9i2stH7XSxBFu2zHhFI3+Oawz
-         XOkwDLAq22gE4nE8uds2LsOV5tuAHRbmaGeRj6GDdAt/T9VRNL2TPF+55PSOWCl1QlAW
-         xy7Oe8Oaa8EexKRJ6vSlK1pijMknMs8jh9Xvbh+U/uIEq6AED7K6n2uw7C8LGihbqZH5
-         uVBaJO8i+nPF3FsZnFdSnnImyUmYdFLkIFDhlqBuL32LjqFOBLojMIJVVDaBa4afaOlZ
-         5J0fvojiGbfUgAuQq6b0oIgqoV0tgXb+3fBJfEwCCG73mUTdfskwJNSvamtM9o3RcETO
-         txvg==
-X-Gm-Message-State: APjAAAXc0xxxYssSl595zku4R+tdf6O5w4gl/pYobVmrKj0TjCZ0uoRo
-        1BH+yKzSlrk35jpdrepzA24=
-X-Google-Smtp-Source: APXvYqyur1NR+XXv7jS7BOgdf9x8x5VZWjwCHbgkDC16P8JSFgt48N5oFiI4qfc3FYOz55v+9mG6pQ==
-X-Received: by 2002:a63:2447:: with SMTP id k68mr1841642pgk.214.1570196152406;
-        Fri, 04 Oct 2019 06:35:52 -0700 (PDT)
-Received: from localhost ([192.55.55.45])
-        by smtp.gmail.com with ESMTPSA id v19sm7144552pff.46.2019.10.04.06.35.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Oct 2019 06:35:52 -0700 (PDT)
-Date:   Fri, 4 Oct 2019 15:35:35 +0200
-From:   Maciej Fijalkowski <maciejromanfijalkowski@gmail.com>
-To:     =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@gmail.com>
-Cc:     =?ISO-8859-1?Q?J=FAlius?= Milan <Julius.Milan@pantheon.tech>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        Magnus Karlsson <magnus.karlsson@gmail.com>,
-        Marek =?ISO-8859-1?Q?Z=E1vodsk=FD?= 
-        <marek.zavodsky@pantheon.tech>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        William Tu <u9012063@gmail.com>,
-        Eelco Chaudron <echaudro@redhat.com>
-Subject: Re: xdpsock problem testing multiple queues
-Message-ID: <20191004153535.00002fe7@gmail.com>
-In-Reply-To: <20191002182755.00000657@gmail.com>
-References: <ccfd36d0372547099b96ea494e2c6369@pantheon.tech>
-        <CAJ+HfNh58fN=BU5ADzTs=vbCD1j5fs0i1EKhAQQdByjiVHz4BQ@mail.gmail.com>
-        <20191002182755.00000657@gmail.com>
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-w64-mingw32)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=vCjiv3b4WL7zIlrmlGB9UhEaVrhlbG+64GDaYrMOVro=;
+        b=eeGTz9D32Y/cySUkdWpl5pxygk19t7Wk9rKdKRT6RKUx3y6tR3urUPrSU25+SNkHZZ
+         x1n3iVwSmbljns9JFOd9g+oA5bhovlzZ31ztouvi93Yj6UoBREH3NliGvNEC8NzJ507p
+         mzf1ylqWqEfmk5zgFjcE94o4w1uTydS0VLG2u2giNZdtUTc6Aaw/TShdlj96VQFzEeHD
+         8JRIGFUx7EaBZxGV2KfcO4V9S7nWeM7gpDypSbOyzxEmOiyUS1AzUoRicNGzxi7n2Pv0
+         WWmMFgC3Y0MDkJnx/iUcGu7Rm/QVFkluh5uPvMPZ6A9Zh4kz2sA6TZZB3yYbLTQT1vLq
+         UZvA==
+X-Gm-Message-State: APjAAAVlmLl0Sk26Ofbbrfmt2d15RwIgS+gPwi977DkIeBs5CTFsYkX7
+        S1KFGkU0s/UDcLu/gtTBKgIrArm4IZyceGtpjw6untwMYQ==
+X-Google-Smtp-Source: APXvYqwtga/T/oGm9UJUdesbIR/QWn/MDQohW7YBAVtzDdLFEvIOh+lWlaIn4vnZFe83XXxoxdJJBgCeOTe2fqZz/mA=
+X-Received: by 2002:a81:8981:: with SMTP id z123mr13185901ywf.56.1570227726901;
+ Fri, 04 Oct 2019 15:22:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+From:   "Daniel T. Lee" <danieltimlee@gmail.com>
+Date:   Sat, 5 Oct 2019 07:21:50 +0900
+Message-ID: <CAEKGpzhoYHrE4NTvaWSpy-R6CiLYehGHzLM6v+-9j8iemNyK0g@mail.gmail.com>
+Subject: samples/bpf not working?
+To:     bpf <bpf@vger.kernel.org>, xdp-newbies@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 2 Oct 2019 18:28:57 +0200
-Maciej Fijalkowski <maciejromanfijalkowski@gmail.com> wrote:
+Currently, building the bpf samples isn't working.
+Running make from the directory 'samples/bpf' will just shows following
+result without compiling any samples.
 
-> On Wed, 2 Oct 2019 15:52:04 +0200
-> Bj=F6rn T=F6pel <bjorn.topel@gmail.com> wrote:
->=20
-> > On Wed, 2 Oct 2019 at 14:11, J=FAlius Milan <Julius.Milan@pantheon.tech=
-> wrote:
-> > >
-> > > Hi all
-> > >
-> > > We are trying to test multiple RX queues with sample program xdpsock =
-from kernel on vmware virtual machine with 2 queues.
-> > > The driver on the NIC is:
-> > > # ethtool -i ens192
-> > > driver: vmxnet3
-> > > version: 1.4.16.0-k-NAPI
-> > >
-> > > NIC has 2 queues, I can check it by ethtool -S.
-> > >
-> > > But when I try to use queue 1, I am getting following:
-> > > # ./xdpsock -i ens192 -q 1
-> > > /home/jmilan/ws/pt-xdp/linux/samples/bpf/xdpsock_user.c:xsk_configure=
-_socket:315: errno: 1/"Operation not permitted"
-> > >
-> > > Any ideas what the problem could be? Maybe vmxnet3 driver does not su=
-pport some necessary operations related to queues?
-> > > =20
-> >=20
-> > XDP support is missing for that driver, but the XDP_SKB/generic mode
-> > is available, and should work.
-> >=20
-> > Can you run the xdp1 application in the samples directory, to rule out
-> > that you can run XDP.
->=20
-> xdp1 should work fine but I think the reason for a reported failure is be=
-cause
-> vmxnet3 driver doesn't expose the {set,get}_channels ethtool API (at leas=
-t I
-> don't see it?) which is used by libbpf's xsk part for querying the underl=
-ying
-> driver how many queues does it has and use that info for creating that ma=
-ny
-> entries in XSKMAP.
->=20
-> So in that case you're limited to use queue 0 because the XSKMAP map has
-> only single entry.
+$ make
+make -C ../../ /git/linux/samples/bpf/ BPF_SAMPLES_PATH=/git/linux/samples/bpf
+make[1]: Entering directory '/git/linux'
+  CALL    scripts/checksyscalls.sh
+  CALL    scripts/atomic/check-atomics.sh
+  DESCEND  objtool
+make[1]: Leaving directory '/git/linux'
+$ ls *kern.o
+ls: cannot access '*kern.o': No such file or directory
 
-After putting some thoughts into it, I am wondering whether we really need =
-to
-query the driver for its max queue count via ethtool during the XSKMAP crea=
-tion.
+By using 'git bisect', found the problem is derived from below commit.
+commit 394053f4a4b3 ("kbuild: make single targets work more correctly")
 
-eBPF resources are being created *after* the bind() syscall, so at that tim=
-e if
-it succeeded we are sure that the queue id provided by user is valid, no?
-Network drivers are usually allocating queues per each CPU on the system, so
-IMO using the libbpf_num_possible_cpus() for XSKMAP entries would be just f=
-ine.
-Obviously, mlx5 is a special case here, but we can double the value we got =
-in
-case the xsk->queue_id is higher than the cpu count.
+> Currently, the single target build directly descends into the directory
+> of the target. For example,
+>
+>     $ make foo/bar/baz.o
+>
+> ... directly descends into foo/bar/.
+>
+> On the other hand, the normal build usually descends one directory at
+> a time, i.e. descends into foo/, and then foo/bar/.
+>
+> This difference causes some problems.
+>
+> [...]
+>
+> This commit fixes those problems by making the single target build
+> descend in the same way as the normal build does.
 
-Thoughts?
+Not familiar with kbuild, so I'm not sure why this led to build failure.
+My humble guess is, samples/bpf/Makefile tries to run make from current
+directory, 'sample/bpf', but somehow upper commit changed the way it works.
 
->=20
-> Maciej
->=20
-> >=20
-> >=20
-> > Bj=F6rn
-> >=20
-> > > Best Regards
-> > > J=FAlius =20
->=20
+samples/bpf/Makefile:232
+# Trick to allow make to be run from this directory
+all:
+        $(MAKE) -C ../../ $(CURDIR)/ BPF_SAMPLES_PATH=$(CURDIR)
 
+I've tried to figure out the problem with 'make --trace', but not sure why
+it's not working. Just a hunch with build directory.
+
+Any ideas to fix this problem?
