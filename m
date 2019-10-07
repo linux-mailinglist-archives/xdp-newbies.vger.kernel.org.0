@@ -2,125 +2,225 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B4DCCF0F
-	for <lists+xdp-newbies@lfdr.de>; Sun,  6 Oct 2019 08:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 210F8CDB2F
+	for <lists+xdp-newbies@lfdr.de>; Mon,  7 Oct 2019 06:58:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfJFGtu (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 6 Oct 2019 02:49:50 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33362 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbfJFGtu (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Sun, 6 Oct 2019 02:49:50 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r5so14815691qtd.0;
-        Sat, 05 Oct 2019 23:49:48 -0700 (PDT)
+        id S1727107AbfJGE6F (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 7 Oct 2019 00:58:05 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43909 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfJGE6F (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 7 Oct 2019 00:58:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i32so129884pgl.10
+        for <xdp-newbies@vger.kernel.org>; Sun, 06 Oct 2019 21:58:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ndSiowtmaYsMdyW5qrWKh8qoq7dXM+au1DUpgPxwWLw=;
-        b=e4jTyWj0q/1ZQVBgW/uEPJ/Z7vgIDOTbELiiA3rgQZk7PX0++2+hawsS9ujMHNAujg
-         mxHz5Tu0L53NfZFn8Zg9Q03T1fqHg1nyBq7WyORVMPrIdKTbIS/2IjtCx7Xs3ZjX4xLE
-         gWV8H4YALE3dKDlfCJBV9f0FuL+kkboqMNrJDCBrcdBK/6QghHc3mYTM2WPZAGOeB9KE
-         Zq1NIxALudM+GZNcLM3QWs90pMEk8O97MGv9xFEjNsz0CYPtPUGvR4CtWvgTpEAzNakm
-         WR2VdtYFjIqu6Hs7WJTsE1H4jsXM/sO9JcaYAW4JnSZ9Wj0/pnt7qBb89475tx/f+JNG
-         QrcQ==
+        d=sage.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8EdYmdtbrf6+F/MAWhTLypXhwqGJzWhD4XIFByfyPhE=;
+        b=GhJd0tc8YUTvVBQVfmwWKCxH8iiV75+AGU7hgrahFxssWhtLOtL/ndnUZxhrRa7+DI
+         ENwKGEZpw05lNfcmJxU1pGU8wpY+4YLDjrsVX4GkHZZAFTDGximUvN3iiNjJspnu6UtA
+         2q6LA42psEPxudGHskC07h2RHb1QrmZJhh/gjUSaPzmjEoRIu6e58PORwtCtXNhxK04F
+         eHh6LrzFEE5xNg5u6/+ohIZSXcATmNKetumDy5a9jmAaAQsu4ogHFhHCd42u8G35SEg0
+         K1U8fLjWBvM8toXvNLc9KBhKAsf3qhxC3ZsyY0GDSOwbSwim4lkZyQe+1OJOOYPD/kge
+         pHUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ndSiowtmaYsMdyW5qrWKh8qoq7dXM+au1DUpgPxwWLw=;
-        b=XkN5iBBdBFOShpoLWuPWtJRB70bFdkbQjggQr5CXfF+ca1PBx8SVcKMbQ5VkUAHGYa
-         JbEKYj91889bxQtyXD0JGT9BM1GYsY1fwT8KSBRV163kyGnRj4TaEbucaYrcZ7zwjI/r
-         +XfEa3PWH/mVi1++IgF9qJoPZ+evorDreveykpXH8SxWQmDXDdhTcjVfADEfe86R59Fz
-         XH4EWZ/+bAt/AzSB8ummnnZvRS8FAsjhIOwqlrnr6Xan2U6Oeuz/TVTm4umNegyCl+1U
-         wXBU0V1b4aO4zgwPXAIhnLdjXYyJJBvUrK2i8Cr+qwIj1ZmCyi3Tr/PP3KcyWp9+1Uc1
-         MLeA==
-X-Gm-Message-State: APjAAAXvU7gWOKeIUIjsn5iS5gIuGVVyq3UM2S+xRjq1LRYpHResj8TP
-        3/po/zv8B4Bm151td0P+Px/RBdRQVNLLYTbinJ4=
-X-Google-Smtp-Source: APXvYqzxj6Nc1nD60pTa8QGuDknaSt0P3FweVjbCyYwQi/6RWqR3QcxkmFm6T9eoEMlpTEfwNBAhaHMB5Oify4uMgQE=
-X-Received: by 2002:ac8:5147:: with SMTP id h7mr24338099qtn.117.1570344587576;
- Sat, 05 Oct 2019 23:49:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAEKGpzhoYHrE4NTvaWSpy-R6CiLYehGHzLM6v+-9j8iemNyK0g@mail.gmail.com>
- <20191005192040.20308-1-eric@sage.org>
-In-Reply-To: <20191005192040.20308-1-eric@sage.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sat, 5 Oct 2019 23:49:36 -0700
-Message-ID: <CAEf4BzYER-Fzu3=RZFfWJqq83Jx-HYg6nuGYUiszfROLKuje7A@mail.gmail.com>
-Subject: Re: samples/bpf not working?
-To:     Eric Sage <eric@sage.org>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8EdYmdtbrf6+F/MAWhTLypXhwqGJzWhD4XIFByfyPhE=;
+        b=uUo1v/wxBodk6AuJk+MT7pJOWqxw0PbCcph0JFDlzwWf0HFd3Qj6UY34kwdd2jUgRl
+         dJqH6lKjCHs28RveT+21WyNilYlmZoAA/PFm/rwAnpo8E8fQnZ2Dd5h91fzd2QOgfDMu
+         XmdD9vDCdOiSIwot1+WxHTZgqaqHaaidkIlXLQXQBIC+yEe400MG9fIJc48wshfb/mvG
+         aHx85ZhYhhe7SPm3MDA8xuhCJiawwOk8QnTeuxMuLSbZW7MoHulZwMt8dFXRm5cjdXWL
+         6H6lhZLQDDGPXOAlr3OC5c3bx/b31DkWEJKjOyVH/1wzL1uRGxNe0c20OmD0VSk2myOF
+         Z96A==
+X-Gm-Message-State: APjAAAUyyKp23Yn0nUnug3ZbLPMG9HeRgxRAdnB5e0updypQbloiqb84
+        t2p8dBXTxb3IHRtpf/NYxa/PJ9xesBi3XA==
+X-Google-Smtp-Source: APXvYqwEW7sGlxlLCNdwYrt2isMJ2qxl5mQ1no94mpHb3sJhlDVb4U6beFGgbvpOkwBL726Z2h6Knw==
+X-Received: by 2002:a65:6681:: with SMTP id b1mr1090952pgw.393.1570424284665;
+        Sun, 06 Oct 2019 21:58:04 -0700 (PDT)
+Received: from dev-instance.c.sage-org.internal (143.139.82.34.bc.googleusercontent.com. [34.82.139.143])
+        by smtp.googlemail.com with ESMTPSA id x11sm21565092pja.3.2019.10.06.21.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2019 21:58:04 -0700 (PDT)
+From:   Eric Sage <eric@sage.org>
+To:     netdev@vger.kernel.org
+Cc:     bpf@vger.kernel.org, daniel@iogearbox.net,
+        xdp-newbies@vger.kernel.org, brouer@redhat.org, ast@kernel.org,
+        Eric Sage <eric@sage.org>
+Subject: [PATCH] samples/bpf: make xdp_monitor use raw_tracepoints
+Date:   Mon,  7 Oct 2019 04:57:26 +0000
+Message-Id: <20191007045726.21467-1-eric@sage.org>
+X-Mailer: git-send-email 2.18.1
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sat, Oct 5, 2019 at 12:24 PM Eric Sage <eric@sage.org> wrote:
->
-> 394053f4a4b3 ("kbuild: make single targets work more correctly")
-> changed the way single target builds work. For example,
-> 'make samples/bpf/' in the previous commit matched:
->
-> Makefile:1787
-> %/: prepare FORCE
->   $(Q)$(MAKE) KBUILD_MODULES=3D1 $(build)=3D$(build-dir) need-modorder=3D=
-1
->
-> So that 'samples/bpf/Makefile' was processed directly.
-> Commit 394053f4a4b3 removed this rule and now requires that
-> 'CONFIG_SAMPLES=3Dy' and that 'bpf/' be added to 'samples/Makefile'
-> so it is added to the list of targets processed by the new
-> 'ifdef single-build' section of 'scripts/Makefile.build'.
->
-> This commit adds a new 'CONFIG_SAMPLE_BPF' under 'CONFIG_SAMPLES' to
-> match what the other sample subdirs have done.
->
-> Signed-off-by: Eric Sage <eric@sage.org>
-> ---
+raw_tracepoints are an eBPF alternative to standard tracepoints which
+attach to a tracepoint without the perf layer being executed, making
+them faster.
 
-See [0], Bj=C3=B6rn already attempted this.
+Since xdp_monitor is supposed to have as little impact on the system as
+possible it is switched to using them by append raw_ to the SEC names.
 
-  [0] https://lore.kernel.org/bpf/20191001101429.24965-1-bjorn.topel@gmail.=
-com/
+There was also a small issues with 'samples/bpf/bpf_load' - it was
+loading the raw_tracepoints with the tracing subsystem name still
+attached, which the bpf syscall rejects with a No such file or directory
+error. This is now fixed.
 
->  samples/Kconfig  | 6 ++++++
->  samples/Makefile | 1 +
->  2 files changed, 7 insertions(+)
->
-> diff --git a/samples/Kconfig b/samples/Kconfig
-> index c8dacb4dda80..396e87ba97e0 100644
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@ -6,6 +6,12 @@ menuconfig SAMPLES
->
->  if SAMPLES
->
-> +config SAMPLE_BPF
-> +       tristate "Build bpf examples"
-> +       depends on EVENT_TRACING && m
-> +       help
-> +         This builds the bpf example modules.
-> +
->  config SAMPLE_TRACE_EVENTS
->         tristate "Build trace_events examples -- loadable modules only"
->         depends on EVENT_TRACING && m
-> diff --git a/samples/Makefile b/samples/Makefile
-> index 7d6e4ca28d69..e133a78f3fb8 100644
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@ -2,6 +2,7 @@
->  # Makefile for Linux samples code
->
->  obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)  +=3D binderfs/
-> +obj-$(CONFIG_SAMPLE_BPF) +=3D bpf/
->  obj-$(CONFIG_SAMPLE_CONFIGFS)          +=3D configfs/
->  obj-$(CONFIG_SAMPLE_CONNECTOR)         +=3D connector/
->  subdir-$(CONFIG_SAMPLE_HIDRAW)         +=3D hidraw
-> --
-> 2.18.1
->
+Signed-off-by: Eric Sage <eric@sage.org>
+---
+ samples/bpf/bpf_load.c         |  5 +++--
+ samples/bpf/xdp_monitor_kern.c | 26 +++++++++++++-------------
+ 2 files changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
+index 4574b1939e49..6f57eee8e913 100644
+--- a/samples/bpf/bpf_load.c
++++ b/samples/bpf/bpf_load.c
+@@ -156,9 +156,10 @@ static int load_and_attach(const char *event, struct bpf_insn *prog, int size)
+ 	}
+ 
+ 	if (is_raw_tracepoint) {
+-		efd = bpf_raw_tracepoint_open(event + 15, fd);
++		efd = bpf_raw_tracepoint_open(event + 19, fd);
+ 		if (efd < 0) {
+-			printf("tracepoint %s %s\n", event + 15, strerror(errno));
++			printf("tracepoint %s %s\n", event + 19,
++						strerror(errno));
+ 			return -1;
+ 		}
+ 		event_fd[prog_cnt - 1] = efd;
+diff --git a/samples/bpf/xdp_monitor_kern.c b/samples/bpf/xdp_monitor_kern.c
+index ad10fe700d7d..6f67c38468b9 100644
+--- a/samples/bpf/xdp_monitor_kern.c
++++ b/samples/bpf/xdp_monitor_kern.c
+@@ -23,10 +23,10 @@ struct bpf_map_def SEC("maps") exception_cnt = {
+ };
+ 
+ /* Tracepoint format: /sys/kernel/debug/tracing/events/xdp/xdp_redirect/format
++ * Notice: For raw_tracepoints first 8 bytes are not part of 'format' struct
+  * Code in:                kernel/include/trace/events/xdp.h
+  */
+ struct xdp_redirect_ctx {
+-	u64 __pad;		// First 8 bytes are not accessible by bpf code
+ 	int prog_id;		//	offset:8;  size:4; signed:1;
+ 	u32 act;		//	offset:12  size:4; signed:0;
+ 	int ifindex;		//	offset:16  size:4; signed:1;
+@@ -65,44 +65,44 @@ int xdp_redirect_collect_stat(struct xdp_redirect_ctx *ctx)
+ 	 */
+ }
+ 
+-SEC("tracepoint/xdp/xdp_redirect_err")
++SEC("raw_tracepoint/xdp/xdp_redirect_err")
+ int trace_xdp_redirect_err(struct xdp_redirect_ctx *ctx)
+ {
+ 	return xdp_redirect_collect_stat(ctx);
+ }
+ 
+ 
+-SEC("tracepoint/xdp/xdp_redirect_map_err")
++SEC("raw_tracepoint/xdp/xdp_redirect_map_err")
+ int trace_xdp_redirect_map_err(struct xdp_redirect_ctx *ctx)
+ {
+ 	return xdp_redirect_collect_stat(ctx);
+ }
+ 
+ /* Likely unloaded when prog starts */
+-SEC("tracepoint/xdp/xdp_redirect")
++SEC("raw_tracepoint/xdp/xdp_redirect")
+ int trace_xdp_redirect(struct xdp_redirect_ctx *ctx)
+ {
+ 	return xdp_redirect_collect_stat(ctx);
+ }
+ 
+ /* Likely unloaded when prog starts */
+-SEC("tracepoint/xdp/xdp_redirect_map")
++SEC("raw_tracepoint/xdp/xdp_redirect_map")
+ int trace_xdp_redirect_map(struct xdp_redirect_ctx *ctx)
+ {
+ 	return xdp_redirect_collect_stat(ctx);
+ }
+ 
+ /* Tracepoint format: /sys/kernel/debug/tracing/events/xdp/xdp_exception/format
++ * Notice: For raw_tracepoints first 8 bytes are not part of 'format' struct
+  * Code in:                kernel/include/trace/events/xdp.h
+  */
+ struct xdp_exception_ctx {
+-	u64 __pad;	// First 8 bytes are not accessible by bpf code
+ 	int prog_id;	//	offset:8;  size:4; signed:1;
+ 	u32 act;	//	offset:12; size:4; signed:0;
+ 	int ifindex;	//	offset:16; size:4; signed:1;
+ };
+ 
+-SEC("tracepoint/xdp/xdp_exception")
++SEC("raw_tracepoint/xdp/xdp_exception")
+ int trace_xdp_exception(struct xdp_exception_ctx *ctx)
+ {
+ 	u64 *cnt;
+@@ -144,10 +144,10 @@ struct bpf_map_def SEC("maps") cpumap_kthread_cnt = {
+ };
+ 
+ /* Tracepoint: /sys/kernel/debug/tracing/events/xdp/xdp_cpumap_enqueue/format
++ * Notice: For raw_tracepoints first 8 bytes are not part of 'format' struct
+  * Code in:         kernel/include/trace/events/xdp.h
+  */
+ struct cpumap_enqueue_ctx {
+-	u64 __pad;		// First 8 bytes are not accessible by bpf code
+ 	int map_id;		//	offset:8;  size:4; signed:1;
+ 	u32 act;		//	offset:12; size:4; signed:0;
+ 	int cpu;		//	offset:16; size:4; signed:1;
+@@ -156,7 +156,7 @@ struct cpumap_enqueue_ctx {
+ 	int to_cpu;		//	offset:28; size:4; signed:1;
+ };
+ 
+-SEC("tracepoint/xdp/xdp_cpumap_enqueue")
++SEC("raw_tracepoint/xdp/xdp_cpumap_enqueue")
+ int trace_xdp_cpumap_enqueue(struct cpumap_enqueue_ctx *ctx)
+ {
+ 	u32 to_cpu = ctx->to_cpu;
+@@ -179,10 +179,10 @@ int trace_xdp_cpumap_enqueue(struct cpumap_enqueue_ctx *ctx)
+ }
+ 
+ /* Tracepoint: /sys/kernel/debug/tracing/events/xdp/xdp_cpumap_kthread/format
++ * Notice: For raw_tracepoints first 8 bytes are not part of 'format' struct
+  * Code in:         kernel/include/trace/events/xdp.h
+  */
+ struct cpumap_kthread_ctx {
+-	u64 __pad;		// First 8 bytes are not accessible by bpf code
+ 	int map_id;		//	offset:8;  size:4; signed:1;
+ 	u32 act;		//	offset:12; size:4; signed:0;
+ 	int cpu;		//	offset:16; size:4; signed:1;
+@@ -191,7 +191,7 @@ struct cpumap_kthread_ctx {
+ 	int sched;		//	offset:28; size:4; signed:1;
+ };
+ 
+-SEC("tracepoint/xdp/xdp_cpumap_kthread")
++SEC("raw_tracepoint/xdp/xdp_cpumap_kthread")
+ int trace_xdp_cpumap_kthread(struct cpumap_kthread_ctx *ctx)
+ {
+ 	struct datarec *rec;
+@@ -218,10 +218,10 @@ struct bpf_map_def SEC("maps") devmap_xmit_cnt = {
+ };
+ 
+ /* Tracepoint: /sys/kernel/debug/tracing/events/xdp/xdp_devmap_xmit/format
++ * Notice: For raw_tracepoints first 8 bytes are not part of 'format' struct
+  * Code in:         kernel/include/trace/events/xdp.h
+  */
+ struct devmap_xmit_ctx {
+-	u64 __pad;		// First 8 bytes are not accessible by bpf code
+ 	int map_id;		//	offset:8;  size:4; signed:1;
+ 	u32 act;		//	offset:12; size:4; signed:0;
+ 	u32 map_index;		//	offset:16; size:4; signed:0;
+@@ -232,7 +232,7 @@ struct devmap_xmit_ctx {
+ 	int err;		//	offset:36; size:4; signed:1;
+ };
+ 
+-SEC("tracepoint/xdp/xdp_devmap_xmit")
++SEC("raw_tracepoint/xdp/xdp_devmap_xmit")
+ int trace_xdp_devmap_xmit(struct devmap_xmit_ctx *ctx)
+ {
+ 	struct datarec *rec;
+-- 
+2.18.1
+
