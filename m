@@ -2,69 +2,107 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 566B4D929B
-	for <lists+xdp-newbies@lfdr.de>; Wed, 16 Oct 2019 15:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10882D9613
+	for <lists+xdp-newbies@lfdr.de>; Wed, 16 Oct 2019 17:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405411AbfJPNee convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Wed, 16 Oct 2019 09:34:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55244 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729612AbfJPNee (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 16 Oct 2019 09:34:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 385DAA3CD90;
-        Wed, 16 Oct 2019 13:34:34 +0000 (UTC)
-Received: from carbon (ovpn-200-46.brq.redhat.com [10.40.200.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1D145D6B2;
-        Wed, 16 Oct 2019 13:34:27 +0000 (UTC)
-Date:   Wed, 16 Oct 2019 15:34:26 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Eric Sage <eric@sage.org>
+        id S2390973AbfJPP5I (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 16 Oct 2019 11:57:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39053 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388005AbfJPP5H (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 16 Oct 2019 11:57:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w144so20476821oia.6
+        for <xdp-newbies@vger.kernel.org>; Wed, 16 Oct 2019 08:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sage.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=9sEGwNR+vs1wvXocKihgDcCfWg7F97MWXpiCKTda+Uo=;
+        b=bhBw5IpPG3f7MC1dp/X9TYLBmZE/AL8nW+PBx/BxtAPR6xKfsP2aEKY9GK8XZhV/dc
+         cH2ruNlDTzUUq/xMGzZDnu1Edx5oYu0sQXWhPeWYA37KQgj6fhMXdSuLPtT7VejbYfFI
+         oxM3bLUnOhIuyFfM5w3akIli/6MA4AedIENPOWe6KZGse1wtkaVWwTaAbypE/nqVEwbt
+         Ehsf6JIQXNqo1tqq31Mco6Aqw1gaoxIn4WEbq7ddktKN+vEPMqOAozB+AiKQKVGqPhL3
+         66dBefHjoowPqoufa8yUAbONsjWCbFQvjFGaBFvJyOysOd16Jo+w7lNxW+qwjmCEffkz
+         KZRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=9sEGwNR+vs1wvXocKihgDcCfWg7F97MWXpiCKTda+Uo=;
+        b=BmA78cY5xGb1CnJVfGryqlsg6iPpP8bundEPDcUVCchjUHpLr9KkGajgy+5/SoFYO+
+         TXcaEQYYUueoS5VgQl6GpurNRcBYRm0Ld3+ilFZLKXJEX2/dqD1gEkdYMuBowHhzPEHn
+         KYmBgQBtSXVbEwqz5nDl7IZRad5q76whheLvLGJOCC2PvAM5USCCI/Q0X/6IR7DnYo7F
+         5DXaXy47s3oDpC26DRwXPr4rAVizx9quSt1katj1s0w4tjk9tfLX5ucJPGnLRW/a4Ozl
+         Lp7gN5uV7Vg2f5Uq65duUND8+/DOS9g+0n/xu9Nqy4tPXjPe4xadPracN3OxERGD/2Pf
+         zXyg==
+X-Gm-Message-State: APjAAAUHuG27o31Bc1vBscbbhexDVFafp3YTgdrjKrYmu/Ba2u+kyKSi
+        8Sor7ez/qHOkkHdmYX54M7jC0w==
+X-Google-Smtp-Source: APXvYqyF9/9fNqu2WQyi04V/AS2P19dOaZraXWn+HvL6HDyHYW+8OHCldpiO9zJQlqVQFJQTnly56A==
+X-Received: by 2002:a05:6808:355:: with SMTP id j21mr3938368oie.160.1571241427024;
+        Wed, 16 Oct 2019 08:57:07 -0700 (PDT)
+Received: from wizard.attlocal.net ([2600:1700:4a30:fd70::13])
+        by smtp.gmail.com with ESMTPSA id n65sm7540433oib.35.2019.10.16.08.57.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Oct 2019 08:57:06 -0700 (PDT)
+Date:   Wed, 16 Oct 2019 08:57:01 -0700
+From:   Eric Sage <eric@sage.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
 Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, brouer@redhat.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, brouer@redhat.com
+        xdp-newbies@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH] samples/bpf: make xdp_monitor use raw_tracepoints
-Message-ID: <20191016153426.1d976f17@carbon>
-In-Reply-To: <20191016042104.GA27738@wizard.attlocal.net>
+Message-ID: <20191016155701.GA18708@wizard.attlocal.net>
 References: <20191007045726.21467-1-eric@sage.org>
-        <20191007110020.6bf8dbc2@carbon>
-        <CAEf4BzacEF0Ga921DCuYCVTxR4rFdOzmRt5o0T7HH-H38gEccg@mail.gmail.com>
-        <20191016042104.GA27738@wizard.attlocal.net>
+ <20191007110020.6bf8dbc2@carbon>
+ <CAEf4BzacEF0Ga921DCuYCVTxR4rFdOzmRt5o0T7HH-H38gEccg@mail.gmail.com>
+ <20191016042104.GA27738@wizard.attlocal.net>
+ <20191016153426.1d976f17@carbon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 16 Oct 2019 13:34:34 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016153426.1d976f17@carbon>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, 15 Oct 2019 21:21:04 -0700
-Eric Sage <eric@sage.org> wrote:
-
-> I'm no longer able to build the samples with 'make M=samples/bpf'.
+On Wed, Oct 16, 2019 at 03:34:26PM +0200, Jesper Dangaard Brouer wrote:
+> On Tue, 15 Oct 2019 21:21:04 -0700
+> Eric Sage <eric@sage.org> wrote:
 > 
-> I get errors in task_fd_query_user.c like:
+> > I'm no longer able to build the samples with 'make M=samples/bpf'.
+> > 
+> > I get errors in task_fd_query_user.c like:
+> > 
+> > samples/bpf/task_fd_query_user.c:153:29: error: ‘PERF_EVENT_IOC_ENABLE’
+> > undeclared.
+> > 
+> > Am I missing a dependancy?
 > 
-> samples/bpf/task_fd_query_user.c:153:29: error: ‘PERF_EVENT_IOC_ENABLE’
-> undeclared.
+> Have you remembered to run:
 > 
-> Am I missing a dependancy?
+>  make headers_install
+> 
+> (As described in samples/bpf/README)
 
-Have you remembered to run:
+Yes, I've done that. I've tried:
 
- make headers_install
+  make mrproper
+  cp /boot/config-5.2.18-200.fc30.x86_64 .config
+  make olddefconfig
+  make headers_install
+  make M=samples/bpf
 
-(As described in samples/bpf/README)
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+which ends with the errors I described.
+> -- 
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
