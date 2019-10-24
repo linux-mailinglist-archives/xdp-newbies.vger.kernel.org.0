@@ -2,89 +2,74 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 519FADF841
-	for <lists+xdp-newbies@lfdr.de>; Tue, 22 Oct 2019 00:51:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F47CE3D65
+	for <lists+xdp-newbies@lfdr.de>; Thu, 24 Oct 2019 22:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfJUWvB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 21 Oct 2019 18:51:01 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34220 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730410AbfJUWvA (ORCPT
+        id S1728268AbfJXUgE (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 24 Oct 2019 16:36:04 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:39253 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727677AbfJXUgD (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 21 Oct 2019 18:51:00 -0400
-Received: by mail-io1-f65.google.com with SMTP id q1so18060649ion.1
-        for <xdp-newbies@vger.kernel.org>; Mon, 21 Oct 2019 15:51:00 -0700 (PDT)
+        Thu, 24 Oct 2019 16:36:03 -0400
+Received: by mail-pf1-f173.google.com with SMTP id v4so14117pff.6
+        for <xdp-newbies@vger.kernel.org>; Thu, 24 Oct 2019 13:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qWF4BCLAtFRvp9lQ1n7cnwHUoykBZaUPua7UseKGDZY=;
-        b=c4I9NgjdDuSlQFYqlPIb9C9+IdflV+YHND/5jW3if1MefPYBk1wr9/O9ArJqQMMWO9
-         czMpnQpLfik5dHKPBg5ET4HICqKI2LWX29DQXeqIZ5rYp/lM7Q7O7o2am5aVCb2SiavW
-         +Wa9m9mIRDXpt2JOcJWCKOMEuoTI11A0PPoXwZSp2JgXMy3sUsDzfoPCjou42ws8U76K
-         0fg53XQp3XFG/be9JSJ95NFpxc9WeFZIOnIG4H3NCkSFuRdsHVcOlJVUUNB5hP3CzoDD
-         DKTyBFJ5pOa1wTaYJ3Egcry3zHUjuVW3f5D6Qp1i1HZCUSC69GxFAJ74JBweD8ylj8dq
-         r9FA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Ej4xVLPfY3O2YMMKTBv0N93ee8XCBBmfcP5yXosNVyA=;
+        b=ksCq9q0nZcN3VMqqrho1u+XWdAR4Eg73QRi9jQxA9dEFsfpaxNpJ4U892/Z/fYm+1V
+         gfyFeQn70QKjAK/3j3IjB/Ej095KXrT2g8xsWQgQXnmcY+Wksog6SMZAEU67aSLzkjHD
+         OGn9NTLCRgRAyK9LqG0SRxTRDbm5v39zfntSc9zOFeByDxZXgVy0vW7YbUx66h9jgQFE
+         UDz0WT+SkWyd2Y4scw3nHDpPKgGCWfEQDk/nywc/Xk6arJqWpmABqMPSLXgEup/OoVDJ
+         zHP5bufzlcwo7rso7X/RicD3X7Ok8WgZEz06SzFQcIuxmYYQJPBrbwuCGuQgEdm7EkxY
+         6SbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qWF4BCLAtFRvp9lQ1n7cnwHUoykBZaUPua7UseKGDZY=;
-        b=QToV4dy8E+189VTU9IwvuXnHMEqQ3AyP7Ra+ZDlnhMzD3eyysdS+RtOqx0u8Mrf/Iz
-         0OPM7u0F6xQehcXcUlmr8glvMxkiR6zRGwbL4meJ5iiktAJDqADOi1drYouRHZtZud4m
-         tyTheFC6ERXxKJNgrDYKiSrc1TEWqAHpwCH68mI81o2N7LA3h1NasI8wK9sx+0BBeBNV
-         sWOXbPHJFO7iZagbqvGYeU5kKmNqZn+qm0jS3CqoICV5flITFxuALWwlkwRDUsyRbVE9
-         eSE/ptwrD8lO5ImnB1XdhMxbMe+rH6Mh75GWtShYgwaAjTdFg4S8Hsi9dOz7Am1UwzLD
-         uB3g==
-X-Gm-Message-State: APjAAAV5mHn7DL1YsyUrtJg5cMyvYTTCbQ6JmiNUZ4xX+WV2+34ot4mU
-        UK1BMYoxvHPQVAXIaGtouYHnfDADqnut3u+NSvo=
-X-Google-Smtp-Source: APXvYqz7Ppti44WrDrnAz2oYYz+/niYl2d7QeC5xCzG007Vfel4Yj2CKhORfwnEeY/DujGo50HwblmUiZhMgqSSmAms=
-X-Received: by 2002:a5e:8b03:: with SMTP id g3mr684156iok.116.1571698259553;
- Mon, 21 Oct 2019 15:50:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Ej4xVLPfY3O2YMMKTBv0N93ee8XCBBmfcP5yXosNVyA=;
+        b=MhxWlWWHI2WMLXYOAx2ROM/0184Z5gXbunfFUAMdOt9VSybOSAEvl6+Im/2GiUWlh5
+         1iGR/XPAmLmtoDz9rLoVs+P7m6C8tUeAytUZgIisBOMz5As6VDAstQUzkKNE0FFDF28b
+         V5Bu1GmN4ra0LgnvPOpapImQXLbOfdCfQxHJZdUL5y3AXeNaGvcgpAJa8f5zRBTsh0Y3
+         oz9vpBnfZtF1hlFAmZFoBdjaqs2MhJdm0Piu/aVxriZt/KexVN9g+oDEggRhYznsgReC
+         Isi+7uJWMAppOt3I0pChCyziSo7xgPKI3UcFQE1B3DCfEbQ7gixg1VpHRRLSKoOfLxew
+         Fv5A==
+X-Gm-Message-State: APjAAAXAhvrl79mmIf+aTfuYFILWl6iiAJ/wOHnspXVvhAFX8WzlZe8g
+        OokE2rxgejJtxONegMLTqPFrMq5KFlZjaK48R4czUgh/
+X-Google-Smtp-Source: APXvYqzJNjwdf9dfPMHBhdSIu8jahPQQSqat6kMALzNzkBlNUByVlPP663yP1RZzmj3noOg9EsbXKzTXWjTFyhu7Cd0=
+X-Received: by 2002:a63:fe55:: with SMTP id x21mr18454051pgj.124.1571949361510;
+ Thu, 24 Oct 2019 13:36:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACCo2jk9rx3sf78RPFr39-JVZgaymsJVd6vg=WMKLmWfYZrNaA@mail.gmail.com>
- <CAADnVQ+X-Fz68XkLPDVBntkcboMoXGg_ArCKMzeeEqfQmvRx-g@mail.gmail.com> <CACCo2j=fFm+FRix4CW+wubZ8h+iLW6s4fNnjjpDK4hXRy2nK1w@mail.gmail.com>
-In-Reply-To: <CACCo2j=fFm+FRix4CW+wubZ8h+iLW6s4fNnjjpDK4hXRy2nK1w@mail.gmail.com>
-From:   Y Song <ys114321@gmail.com>
-Date:   Mon, 21 Oct 2019 15:50:23 -0700
-Message-ID: <CAH3MdRWkepOc+k8+a0iA3CXD1up+sbbH84LmXJQ7XKDq6xB7kg@mail.gmail.com>
-Subject: Re: sharing a simple ebpf code sample
-To:     Farid Zakaria <farid.m.zakaria@gmail.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        Mark Williams <mrw@enotuniq.org>
+From:   Farid Zakaria <farid.m.zakaria@gmail.com>
+Date:   Thu, 24 Oct 2019 13:35:50 -0700
+Message-ID: <CACCo2jmAx7SGU_TNU8EhVCKumcb7gSiwF0wGYvbJ8Ld3Yqfdug@mail.gmail.com>
+Subject: Useful request_id concept for bpf_debug_printk
+To:     Xdp <xdp-newbies@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Mon, Oct 21, 2019 at 12:02 PM Farid Zakaria
-<farid.m.zakaria@gmail.com> wrote:
->
-> On Sat, Oct 19, 2019 at 9:12 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > snip.
-> >
-> > Thanks for sharing.
-> > I think we can create new bpf_examples_and_links.rst file in Documentation/bpf/
-> > with links for various repos, samples, examples, etc
-> > Like yours, cilium, cloudflare, Jesper's docs, etc.
-> > At least from kernel tree all the places will be reachable.
->
-> That's a great idea. I know there is
-> https://github.com/zoidbergwill/awesome-ebpf however having something
-> maintained in the kernel would preferable I think.
-> eBPF is interesting because it empowers some user-space developers to
-> work on code that "looks" kernel like, so I think there is opportunity
-> to expand on the documentation for that segment.
->
-> I will also be attending the LLVM developer conference this week in
-> San Jose -- if anyone from this mailing list is there I hope to meet
-> you.
+I wanted to share an idiom we've used when first developing our ebpf filter:
 
-Farid,
+When having first developed our ebpf filter we heavily leaned on
+`bpf_trace_printk` and `/sys/kernel/debug/tracing/trace_pipe` for
+debugging.
 
-I will attend the conference as well. You can catch me there.
+With any load on the filter however the messages become difficult to
+parse as they are interleaved with other executions & the pid in the
+message may be not enough to discern a single run of the filter.
 
-Yonghong
+I found the following macros useful:
+
+#define REQUEST_ID() bpf_get_prandom_u32()
+#define DEBUG(id, x, ...) bpf_debug_printk("[%u]" x, id, ##__VA_ARGS__)
+
+unsigned long long request_id = REQUEST_ID();
+DEBUG(request_id, "starting filter.\n");
+
+After that you can easily pipe the output of trace_pipe through grep.
+
+Cheers,
+Farid Zakaria
