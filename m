@@ -2,112 +2,74 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8737EF9D3B
-	for <lists+xdp-newbies@lfdr.de>; Tue, 12 Nov 2019 23:43:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1E0104292
+	for <lists+xdp-newbies@lfdr.de>; Wed, 20 Nov 2019 18:52:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfKLWm5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 12 Nov 2019 17:42:57 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:44166 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfKLWm4 (ORCPT
+        id S1727777AbfKTRw5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 20 Nov 2019 12:52:57 -0500
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:37579 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfKTRw5 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 12 Nov 2019 17:42:56 -0500
-Received: by mail-lf1-f54.google.com with SMTP id z188so192940lfa.11;
-        Tue, 12 Nov 2019 14:42:54 -0800 (PST)
+        Wed, 20 Nov 2019 12:52:57 -0500
+Received: by mail-pl1-f175.google.com with SMTP id bb5so116842plb.4
+        for <xdp-newbies@vger.kernel.org>; Wed, 20 Nov 2019 09:52:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=6rfwUBIlHszDeeP+FOVqAKDe8gfyDPoAQ0ZCP7b8JzU=;
-        b=UAX4FVzh0ZrZ0Ahqrn7zURBp/B3kYzEK2di+1KEcgosF71dpMMXb7O1iNxJK13TI06
-         qemGPrXL5Bk5wxCJcE30T0v3gxEi84EF/ofDincC/apyj/7WuT4TSGG0xS5THjFSejCW
-         l1Xm2v71KqCksi6P4G7vHs8sy0+90m9/QI0ARpMhtud/NWYR5OapLkrXF+8Tlnbt6Jd6
-         NlqJXZOXRo24HTTimxhTPRZeaCsg32PAFOPCQjyJtX6GLm+WjRUBhJVT7v9yWFtuoGnH
-         5yEbAcxF950YczVvuICv7C7Vk/QPH8Dj2+juuGAGIb6BoIZYJVKaf+IsSre//1TmSiHh
-         JsZA==
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=BOpkgZQqN7dZalgEBIofLQCrd7m4iHrAeD9MSag4+sk=;
+        b=J+pL/7kRMTC3CAx4zxGRR51BGDidl2DTNDQDfrSJH/wPRq4M6hOdxYfW95rJSpqh0u
+         vWAaiJSx/2Pv5Ien3J6jiqdZviheQOIjMFixj4kScOByaPdTbbLbJbBWm84xKqGeQb2h
+         gZyTBWjLyE1rbk6+OV7cJv/ZZ9Kq7SWzd0y8MBsWW+9fvSy5fTnXCgIAYYG+j4GQQ/IS
+         PCtMytdTeJ3svkmGh+eHITCUoAf/STrqPPwX00e5+R+ArG2g61lEuVjkZEabdzf55ZsO
+         oAdSLBlxWV5nem8/dZijPevtwSIK8z0Yrc0HG8Zu9QjJoKBvYHssW7ubOMshLULG1YWE
+         7moA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=6rfwUBIlHszDeeP+FOVqAKDe8gfyDPoAQ0ZCP7b8JzU=;
-        b=n17xX2jS5aE0JmYBdIOojz3SQ903nPARnXZT3oF/KMkR1PkvmH2E5EszyzNgE2TT+2
-         8IaKyTj48ulNaIP5j3i2JoaT8yqvxg0aWsT5prJnCjaKFT0bI8rR7Jg8C3koJzDyp+zi
-         rgC0b13FhwsBTFXMJAtuyR9gxCOXY41j/dNCETpjGDHEEj4fMM4xUVMN1vukpUeSCeYL
-         J8VoaOXhYdifM0mKDgX3nevrwlKitQMZjrNd3cCo6oN75CZmmj6MN3jssxiyqFKMN0Uh
-         /im0T4tdW+gQXSK13MrTpPrjnNzQi+ipv37KWuRiNOe8QlXAPPhhnQFn26VF2byEWIhd
-         LBIA==
-X-Gm-Message-State: APjAAAVmUECLS21Fuo+boMmKPlXUxgePm0pekX9NI9Tg/tOP+oX6y1sL
-        GhcyiSsiaQq19muWNgUc9WibxIV071kbKgwR1mU=
-X-Google-Smtp-Source: APXvYqzOvuG/QGq8EED+9U1Hh5IV7qzHK2CHNNAM6wpVOVyj/EPbKTR5v+ClNd9MtV0LHetMwnxeh2Lc5FbOWIVIS0I=
-X-Received: by 2002:ac2:5a11:: with SMTP id q17mr183667lfn.41.1573598573829;
- Tue, 12 Nov 2019 14:42:53 -0800 (PST)
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BOpkgZQqN7dZalgEBIofLQCrd7m4iHrAeD9MSag4+sk=;
+        b=oNKNq5et7Z840WBYSPrm3qTvmdqDzRAKpUcGBOvB3u5X3OAKaW3xXg+xmAl96hoZbf
+         XVv2tJX5l7OlHCjUtoktRTr20k+vo1JbNdYBqRUOgPnQtZfiEv5DNl9aHOwWvvms943J
+         Ney/U2t3dYGIAY+d7F8UqFeTpyOpsLD1SHAx5joekciyutz5QpkrfPmLMago4OCeF+SO
+         9AcMAjK4c+MYSDvvLDk3XOOi6izel474yJl3LOOTVs0wp1geTMXhAbogudWWC+th7sXk
+         KzMo6bs0EYa0PTwPGSSZgRhj2WxXWoLBzHeyd+HMePTfe/n2bXXMTvDq+dRtJsdtAqI8
+         +h4Q==
+X-Gm-Message-State: APjAAAUat7G7D7Pmy80DozPRww/1Tk5DwIHrp5N9xikh4ptfCh6ToYLI
+        cYAoFdRD77mABkrX/oZRAuY=
+X-Google-Smtp-Source: APXvYqwQ/zsG9CUAYgKIoOcahyf4IfrcLsEy9jzFYToxVKYi65+t96NcRz+gwgAO90t5uxxzd6NN/g==
+X-Received: by 2002:a17:90a:c789:: with SMTP id gn9mr5499181pjb.99.1574272375645;
+        Wed, 20 Nov 2019 09:52:55 -0800 (PST)
+Received: from dahern-DO-MB.local ([2601:282:800:fd80:d52e:b788:c6dc:7675])
+        by smtp.googlemail.com with ESMTPSA id r15sm31053031pfh.81.2019.11.20.09.52.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 09:52:54 -0800 (PST)
+To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>
+From:   David Ahern <dsahern@gmail.com>
+Subject: error loading xdp program on virtio nic
+Message-ID: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com>
+Date:   Wed, 20 Nov 2019 10:52:53 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Tue, 12 Nov 2019 17:42:42 -0500
-Message-ID: <CAD56B7dwKDKnrCjpGmrnxz2P0QpNWU3CGBvOtqg3RBx3ejPh9g@mail.gmail.com>
-Subject: xdpsock poll with 5.2.21rt kernel
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello,
+Hi:
 
-I'm doing some testing with AF_XDP, and I'm seeing some behavior I
-don't quite understand. It seems I can get into a situation where
-xdpsock (from samples/bpf/scpsocke_user.c) is using most of the cpu
-even though I'm trying to use poll().
+Trying to load an XDP program on a virtio based nic is failing with:
 
-To start with I run xdpsock with --rxdrop and --poll. At first this
-behaves nicely, the cpu usage is very low:
-# ps -AL -o pid,lwp,cmd,comm,rtprio,cpuid,pcpu | grep [x]dpsock
- 1932  1932 ./xdpsock -r -p -i eth1     xdpsock              -     3  0.0
- 1932  1933 ./xdpsock -r -p -i eth1     xdpsock              -     2  0.0
+virtio_net: XDP expects header/data in single page, any_header_sg required
 
-And strace shows nice orderly ppoll timeouts every second.
-# strace -p 1932
-strace: Process 1932 attached
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=0, tv_nsec=510616211}, NULL,
-0) = 0 (Timeout)
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=1, tv_nsec=0}, NULL, 0) = 0 (Timeout)
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=1, tv_nsec=0}, NULL, 0) = 0 (Timeout)
-...
+I have not encountered this error before and not able to find what is
+missing. Any tips?
 
-Then I generate some traffic and ppoll() is not timing out anymore:
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=1, tv_nsec=0}, NULL, 0) = 1
-([{fd=3, revents=POLLIN}], left {tv_sec=0, tv_nsec=999996790})
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=1, tv_nsec=0}, NULL, 0) = 1
-([{fd=3, revents=POLLIN}], left {tv_sec=0, tv_nsec=999997260})
-ppoll([{fd=3, events=POLLIN}], 1, {tv_sec=1, tv_nsec=0}, NULL, 0) = 1
-([{fd=3, revents=POLLIN}], left {tv_sec=0, tv_nsec=999997100})
-
-This is where it get's strange, if I stop the traffic, then strace no
-longer generates any activity but the xdpsock cpu usage is way up:
-# ps -AL -o pid,lwp,cmd,comm,rtprio,cpuid,pcpu | grep [x]dpsock
- 1932  1932 ./xdpsock -r -p -i eth1     xdpsock              -     3 61.0
- 1932  1933 ./xdpsock -r -p -i eth1     xdpsock              -     2  0.0
-
-So is it getting stuck at while (ret != rcvd) in rx_drop()?
-
-Is it a normal case to get past the poll() and then have
-xsk_ring_cons__peek() not equal xsk_ring_prod__reserve()?
-
-I see the added xsk_ring_prod__needs_wakeup() with the extra poll() in
-the latest 5.4 kernels, but I don't think any of the needs_wakeup
-stuff is in the 5.2 kernel. Is that needed for this case?
-
-This is with a 5.2.21 preempt-rt kernel on arm64 using the macb driver
-(so XDP_SKB and not XDP_DRV).
-
-Any thoughts would be appreciated.
-
-thanks,
-Paul
+Thanks,
+David
