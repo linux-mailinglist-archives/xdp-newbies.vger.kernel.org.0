@@ -2,74 +2,86 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1E0104292
-	for <lists+xdp-newbies@lfdr.de>; Wed, 20 Nov 2019 18:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D595104959
+	for <lists+xdp-newbies@lfdr.de>; Thu, 21 Nov 2019 04:26:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfKTRw5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 20 Nov 2019 12:52:57 -0500
-Received: from mail-pl1-f175.google.com ([209.85.214.175]:37579 "EHLO
-        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727619AbfKTRw5 (ORCPT
+        id S1725904AbfKUD0T (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 20 Nov 2019 22:26:19 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33032 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725819AbfKUD0T (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:52:57 -0500
-Received: by mail-pl1-f175.google.com with SMTP id bb5so116842plb.4
-        for <xdp-newbies@vger.kernel.org>; Wed, 20 Nov 2019 09:52:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=BOpkgZQqN7dZalgEBIofLQCrd7m4iHrAeD9MSag4+sk=;
-        b=J+pL/7kRMTC3CAx4zxGRR51BGDidl2DTNDQDfrSJH/wPRq4M6hOdxYfW95rJSpqh0u
-         vWAaiJSx/2Pv5Ien3J6jiqdZviheQOIjMFixj4kScOByaPdTbbLbJbBWm84xKqGeQb2h
-         gZyTBWjLyE1rbk6+OV7cJv/ZZ9Kq7SWzd0y8MBsWW+9fvSy5fTnXCgIAYYG+j4GQQ/IS
-         PCtMytdTeJ3svkmGh+eHITCUoAf/STrqPPwX00e5+R+ArG2g61lEuVjkZEabdzf55ZsO
-         oAdSLBlxWV5nem8/dZijPevtwSIK8z0Yrc0HG8Zu9QjJoKBvYHssW7ubOMshLULG1YWE
-         7moA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=BOpkgZQqN7dZalgEBIofLQCrd7m4iHrAeD9MSag4+sk=;
-        b=oNKNq5et7Z840WBYSPrm3qTvmdqDzRAKpUcGBOvB3u5X3OAKaW3xXg+xmAl96hoZbf
-         XVv2tJX5l7OlHCjUtoktRTr20k+vo1JbNdYBqRUOgPnQtZfiEv5DNl9aHOwWvvms943J
-         Ney/U2t3dYGIAY+d7F8UqFeTpyOpsLD1SHAx5joekciyutz5QpkrfPmLMago4OCeF+SO
-         9AcMAjK4c+MYSDvvLDk3XOOi6izel474yJl3LOOTVs0wp1geTMXhAbogudWWC+th7sXk
-         KzMo6bs0EYa0PTwPGSSZgRhj2WxXWoLBzHeyd+HMePTfe/n2bXXMTvDq+dRtJsdtAqI8
-         +h4Q==
-X-Gm-Message-State: APjAAAUat7G7D7Pmy80DozPRww/1Tk5DwIHrp5N9xikh4ptfCh6ToYLI
-        cYAoFdRD77mABkrX/oZRAuY=
-X-Google-Smtp-Source: APXvYqwQ/zsG9CUAYgKIoOcahyf4IfrcLsEy9jzFYToxVKYi65+t96NcRz+gwgAO90t5uxxzd6NN/g==
-X-Received: by 2002:a17:90a:c789:: with SMTP id gn9mr5499181pjb.99.1574272375645;
-        Wed, 20 Nov 2019 09:52:55 -0800 (PST)
-Received: from dahern-DO-MB.local ([2601:282:800:fd80:d52e:b788:c6dc:7675])
-        by smtp.googlemail.com with ESMTPSA id r15sm31053031pfh.81.2019.11.20.09.52.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2019 09:52:54 -0800 (PST)
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>
-From:   David Ahern <dsahern@gmail.com>
-Subject: error loading xdp program on virtio nic
-Message-ID: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com>
-Date:   Wed, 20 Nov 2019 10:52:53 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.2.2
+        Wed, 20 Nov 2019 22:26:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574306778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uHdg9IjgM0zgcQ2SiWr77IgbI4yBbrKbRu7tyDSC0gs=;
+        b=MSrin5TmVhX2EIuPLC0V40EH0JayGcBerIySXxAr83wQSkljOV12t8XJ8+GgJKADknxusk
+        fgSOVMjhd9P7+zRyw4Y1MdQYku54RJkskpcLJy7nqBVQsUQYTkDu4MTBPplZ7b2i2BCr1Q
+        PUcclNXPpPLP5s/KOTkObHq+MS5PTZA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-2ohaIzD7MtiGhEclmkyuLA-1; Wed, 20 Nov 2019 22:26:16 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F6311005502;
+        Thu, 21 Nov 2019 03:26:15 +0000 (UTC)
+Received: from [10.72.12.204] (ovpn-12-204.pek2.redhat.com [10.72.12.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D8D434D2D;
+        Thu, 21 Nov 2019 03:26:14 +0000 (UTC)
+Subject: Re: error loading xdp program on virtio nic
+To:     David Ahern <dsahern@gmail.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+References: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <89f56317-5955-e692-fcf0-ee876aae068b@redhat.com>
+Date:   Thu, 21 Nov 2019 11:26:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 2ohaIzD7MtiGhEclmkyuLA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi:
 
-Trying to load an XDP program on a virtio based nic is failing with:
+On 2019/11/21 =E4=B8=8A=E5=8D=881:52, David Ahern wrote:
+> Hi:
+>
+> Trying to load an XDP program on a virtio based nic is failing with:
+>
+> virtio_net: XDP expects header/data in single page, any_header_sg require=
+d
+>
+> I have not encountered this error before and not able to find what is
+> missing. Any tips?
 
-virtio_net: XDP expects header/data in single page, any_header_sg required
 
-I have not encountered this error before and not able to find what is
-missing. Any tips?
+Hi David:
 
-Thanks,
-David
+What qemu + guest kernel version did you use? And could you share you=20
+qemu cli?
+
+Old qemu requires vnet header to be placed into a separate sg which=20
+breaks the assumption of XDP. Recent qemu doesn't have such limitation=20
+(any_header_sg feature).
+
+Thanks
+
+
+>
+> Thanks,
+> David
+>
+
