@@ -2,108 +2,99 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11EC41077FD
-	for <lists+xdp-newbies@lfdr.de>; Fri, 22 Nov 2019 20:26:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 643B0107E80
+	for <lists+xdp-newbies@lfdr.de>; Sat, 23 Nov 2019 14:27:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfKVT0d (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 22 Nov 2019 14:26:33 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44888 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbfKVT0c (ORCPT
+        id S1726463AbfKWN1z (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 23 Nov 2019 08:27:55 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38050 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726451AbfKWN1z (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 22 Nov 2019 14:26:32 -0500
-Received: by mail-oi1-f195.google.com with SMTP id s71so7459384oih.11
-        for <xdp-newbies@vger.kernel.org>; Fri, 22 Nov 2019 11:26:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=berger-family.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=iW1T2fCG741Kxt0Lj2gRp1UqSLfn0iXVuTVn+/Ud+cw=;
-        b=ZFCQnfvA90QuUGCpjDkFLb/D1Phv9x5TtzLvPNfRQ+E12veQmRNs7PBWGaMGsNHzwF
-         Ti4iHHNsDRHkBsZBjl56QmQscsU4mF/YNptAkwJ51CVvkL16CpSZ69mM6uzZ29m1QUgc
-         We1gmjsJ4z2AXHE/NISkqdrmNe2bYpQ8NHuaw=
+        Sat, 23 Nov 2019 08:27:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574515673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1MhDMEUxEmLEu7SdbOLTeWFaemHMbwohR9S2GAxlfJc=;
+        b=TbVG8GTcqu6IYx4+1uX7uJLyGr/D/i4hy4U8ovRikyOs9ZE/kFPThjytN4baXwfFesk0/W
+        WA3COcSWGjnGZTC1Hs7cnWUK+Kz1wLTX/n08Qc1JNOnhM31Gyxb3/hzWne7l5KQjMWwQPa
+        XTI9mzUYnM1kBKh1eO9ak6CTf1Z3tHo=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-133-PrwTlV9cPeuk_f6rc19yxQ-1; Sat, 23 Nov 2019 08:27:52 -0500
+Received: by mail-lf1-f72.google.com with SMTP id t28so2385711lfq.6
+        for <xdp-newbies@vger.kernel.org>; Sat, 23 Nov 2019 05:27:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=iW1T2fCG741Kxt0Lj2gRp1UqSLfn0iXVuTVn+/Ud+cw=;
-        b=Jhe7LQ2MBUZtLfuDih4EsU+csrARr33dYNYdvOiWG+7BZjd/XFDsHPtDLE6gyaq4Iz
-         8cD2rlY6QjYx0XiVBO6H+8Fhp4Yml4P6XeDhbOFjs+3ILUujiBJnAGBpvXwX8GZhyllB
-         gY7cwAw58btnIIkurmja+rb1zDVVSIPQMXHCG8ijExWv61RCZsHBCtWkmBHL+/ye8lIp
-         1JO844Hp5twZg7eBYqu9ojzt1KJcay/pPfhJgH/uhOWptBugeqFhCD/7f8HT761Eac2E
-         fp5QBWTs7+ja8DGqd4OgWZyZm5C8K5GPUgHduPZ/we10X7e/RaU1GzaAwIWhi5pwAQ5i
-         yF/Q==
-X-Gm-Message-State: APjAAAWkviTqvjbtx5ocjHN8Amt+3WrktxMU9TmtfCV/HKg5m8f7tCIU
-        bl2zso9XAd9ymU+PAOhla3PBaLoN3+JgkHkxxC2WvK13zU5Ahg==
-X-Google-Smtp-Source: APXvYqx+cOulvSDniNGTyDGCTgd8AaYNW7KIuZnhWFCAcRFtrim2SSOIBnnqx4imEhui8l8EloGLgr7D+iNYN8YruB4=
-X-Received: by 2002:a05:6808:495:: with SMTP id z21mr13685029oid.18.1574450791091;
- Fri, 22 Nov 2019 11:26:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=1MhDMEUxEmLEu7SdbOLTeWFaemHMbwohR9S2GAxlfJc=;
+        b=SUc5C94iP0ezGv1wJ4SodWMwEbfPKnsfOAPkFZ5OdbJxAZIg1RgcSvodTWSLzwJwUm
+         ni3O4s4itaJTNX18OX906e3VN+u4sGOC5L1wW+2MSrH9ClbXBrIk4ss72QewJf6Hp/jL
+         OJ4mA0BScvLJnCmhr3lRK9P7IsBvdiVul0uM7jMmoJEudfLRI7h6dL8aeR9JwEeI8DsZ
+         pM/Rpf8Qwm+nTayOI5TQ9qBpuxJDkjlHVmujHxPH2c+RKwlKn87UXIKPDxFUFLP1BukD
+         +DXEX30BlvQu4Pthct4uWq7GdY0RQ15QewYCgObG8D6XRAENhZASovVmObAlzTK6eS91
+         6oHQ==
+X-Gm-Message-State: APjAAAXtnEm/KpmBk7dRB6PZnN5uAPvmgGXizrtJ/i1f0F26A/9xLeFS
+        eG3ZBxuHYZcXbt7hO24xhyHStzEhzpiH+Wex0v4nXID1HpmhbJ5h9sMkYeHVm+xaVsTb92PQTYj
+        t5BxV2LDTYFlJbvnRRlXO69s=
+X-Received: by 2002:a2e:81c1:: with SMTP id s1mr15526281ljg.83.1574515670873;
+        Sat, 23 Nov 2019 05:27:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx5nzlKINiVfwlKaf0OgiL3Qij3eb+qHaBBD3Fs37/vwKXs2FUrPuQjM1M+jsA+0DEZCDxxHg==
+X-Received: by 2002:a2e:81c1:: with SMTP id s1mr15526258ljg.83.1574515670608;
+        Sat, 23 Nov 2019 05:27:50 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id a8sm705792lfi.50.2019.11.23.05.27.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Nov 2019 05:27:49 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 047371818BF; Sat, 23 Nov 2019 14:27:48 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     David Ahern <dsahern@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "xdp-newbies\@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: error loading xdp program on virtio nic
+In-Reply-To: <1fc9364a-ab96-e085-1fc5-9ed29f43f815@gmail.com>
+References: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com> <89f56317-5955-e692-fcf0-ee876aae068b@redhat.com> <3dc7b9d8-bcb2-1a90-630e-681cbf0f1ace@gmail.com> <18659bd0-432e-f317-fa8a-b5670a91c5b9@redhat.com> <f7b8df14-ef7f-be76-a990-b9d71139bcaa@gmail.com> <20191121072625.3573368f@carbon> <4686849f-f3b8-dd1d-0fe4-3c176a37b67a@redhat.com> <df4ae5e7-3f79-fd28-ea2e-43612ff61e6f@gmail.com> <f7b19bae-a9cf-d4bf-7eee-bfe644d87946@redhat.com> <8324a37e-5507-2ae6-53f6-949c842537e0@gmail.com> <20191122175749.47728e42@carbon> <1fc9364a-ab96-e085-1fc5-9ed29f43f815@gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Sat, 23 Nov 2019 14:27:48 +0100
+Message-ID: <87k17q3ep7.fsf@toke.dk>
 MIME-Version: 1.0
-References: <CA+ZpPeySfq2H8RsPuJj0Y8dVkT5h09OHN=udtcxsvF_5_Tj+Lw@mail.gmail.com>
-In-Reply-To: <CA+ZpPeySfq2H8RsPuJj0Y8dVkT5h09OHN=udtcxsvF_5_Tj+Lw@mail.gmail.com>
-From:   Joubert Berger <joubert@berger-family.org>
-Date:   Fri, 22 Nov 2019 14:26:21 -0500
-Message-ID: <CA+ZpPeziZpoJuCcRUX6s0nAiB-UoWBfVfAVKc1LYgB7QcvDSbg@mail.gmail.com>
-Subject: Re: XDP - Bridge - not redirecting all UDP
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: PrwTlV9cPeuk_f6rc19yxQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-I did some more investigation.
+David Ahern <dsahern@gmail.com> writes:
 
-First, my setup:  Raspberry Pi (ARM7) running 64-bit SuSE
-(4.12.14-lp151.28.25-default)
-As mentioned before I have it setup as a bridge.  eth0 is using the
-lan78xx driver and eth1 is using ax88179_178a driver.
-
-I tried to simplify things, so use xdp-tutorial/basic01-xdp-pass and
-changed xdp_prog_simple() to print the destination IP address:
-int  xdp_prog_simple(struct xdp_md *ctx)
-{
-    void *data_end = (void*)(long) ctx->data_end;
-    void *data = (void*)(long) ctx->data;
-    struct ethhdr *eth = (struct ethhdr*) data;
-
-    if (eth + 1 > data_end) {
-        return XDP_PASS;
-    }
-
-    if (eth->h_proto != bpf_htons(ETH_P_IP))
-        return XDP_PASS;
-
-    struct iphdr *iph = data + sizeof(struct ethhdr);
-    if (iph + 1 > data_end)
-        return XDP_PASS;
-
-    if (iph->protocol != IPPROTO_UDP)
-        return XDP_PASS;
-
-    bpf_printk("udp: dst port: %x proto=%d\n", bpf_ntohl(iph->daddr),
-iph->protocol);
-
-    return XDP_PASS;
-}
-
-Then wrote a small test tool to be able to send udp packets.  I have
-it set to send 20 udp packets.
-When I look at trace_pipe for the above print statement, I will see
-less than 20 lines.
-
-So, for some reason, I am not getting all the packets.  Any thoughts?
-I am not sure where to go from here.
-
-On Thu, Nov 21, 2019 at 3:42 PM Joubert Berger
-<joubert@berger-family.org> wrote:
+> On 11/22/19 9:57 AM, Jesper Dangaard Brouer wrote:
+>> Implementation wise, I would not add flags to xdp_buff / xdp_md.
+>> Instead I propose in[1] slide 46, that the verifier should detect the
+>> XDP features used by a BPF-prog.  If you XDP prog doesn't use e.g.
+>> XDP_TX, then you should be allowed to run it on a virtio_net device
+>> with less queue configured, right?
 >
-> I have been playing around with Ilya's xdpbridge sample.  In my case, what I am interested in is pushing all UDP traffic to userspace.  All other traffic can flow through my box.  So, I setup something like this:
+> Thanks for the reference and yes, that is the goal: allow XDP in the
+> most use cases possible. e.g., Why limit XDP_DROP which requires no
+> resources because XDP_TX does not work?
 >
-> eth0 --> br0 --> eth1
->
-> I then capture all packets on eth0/eth1 and return XDP_PASS for all but  UDP packets.  These I redirect it to the user space application. There I set the UDP checksum to zero, that way I know it hit my code and then send it to "other" interface.
->
-> The problem is that not *all* my UDP traffic has the checksum set to zero.  Anyone have any ideas why that might be the case?  Why is only some of the UDP traffic being pushed to user space?
->
-> --joubert
->
+> I agree a flag in the api is an ugly way to allow it. For the verifier
+> approach, you mean add an internal flag (e.g., bitmask of return codes)
+> that the program uses and the NIC driver can check at attach time?
+
+Yes, that's more or less what we've discussed. With the actual set of
+flags, and the API for the driver (new ndo?) TBD. Suggestions welcome; I
+anticipate this is something Jesper and I need to circle back to soonish
+in any case (unless someone beats us to it!).
+
+-Toke
+
