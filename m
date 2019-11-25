@@ -2,99 +2,119 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 643B0107E80
-	for <lists+xdp-newbies@lfdr.de>; Sat, 23 Nov 2019 14:27:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F01108689
+	for <lists+xdp-newbies@lfdr.de>; Mon, 25 Nov 2019 03:42:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfKWN1z (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 23 Nov 2019 08:27:55 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38050 "EHLO
+        id S1727007AbfKYCmN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 24 Nov 2019 21:42:13 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45504 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbfKWN1z (ORCPT
+        by vger.kernel.org with ESMTP id S1726921AbfKYCmN (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 23 Nov 2019 08:27:55 -0500
+        Sun, 24 Nov 2019 21:42:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574515673;
+        s=mimecast20190719; t=1574649730;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1MhDMEUxEmLEu7SdbOLTeWFaemHMbwohR9S2GAxlfJc=;
-        b=TbVG8GTcqu6IYx4+1uX7uJLyGr/D/i4hy4U8ovRikyOs9ZE/kFPThjytN4baXwfFesk0/W
-        WA3COcSWGjnGZTC1Hs7cnWUK+Kz1wLTX/n08Qc1JNOnhM31Gyxb3/hzWne7l5KQjMWwQPa
-        XTI9mzUYnM1kBKh1eO9ak6CTf1Z3tHo=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-PrwTlV9cPeuk_f6rc19yxQ-1; Sat, 23 Nov 2019 08:27:52 -0500
-Received: by mail-lf1-f72.google.com with SMTP id t28so2385711lfq.6
-        for <xdp-newbies@vger.kernel.org>; Sat, 23 Nov 2019 05:27:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=1MhDMEUxEmLEu7SdbOLTeWFaemHMbwohR9S2GAxlfJc=;
-        b=SUc5C94iP0ezGv1wJ4SodWMwEbfPKnsfOAPkFZ5OdbJxAZIg1RgcSvodTWSLzwJwUm
-         ni3O4s4itaJTNX18OX906e3VN+u4sGOC5L1wW+2MSrH9ClbXBrIk4ss72QewJf6Hp/jL
-         OJ4mA0BScvLJnCmhr3lRK9P7IsBvdiVul0uM7jMmoJEudfLRI7h6dL8aeR9JwEeI8DsZ
-         pM/Rpf8Qwm+nTayOI5TQ9qBpuxJDkjlHVmujHxPH2c+RKwlKn87UXIKPDxFUFLP1BukD
-         +DXEX30BlvQu4Pthct4uWq7GdY0RQ15QewYCgObG8D6XRAENhZASovVmObAlzTK6eS91
-         6oHQ==
-X-Gm-Message-State: APjAAAXtnEm/KpmBk7dRB6PZnN5uAPvmgGXizrtJ/i1f0F26A/9xLeFS
-        eG3ZBxuHYZcXbt7hO24xhyHStzEhzpiH+Wex0v4nXID1HpmhbJ5h9sMkYeHVm+xaVsTb92PQTYj
-        t5BxV2LDTYFlJbvnRRlXO69s=
-X-Received: by 2002:a2e:81c1:: with SMTP id s1mr15526281ljg.83.1574515670873;
-        Sat, 23 Nov 2019 05:27:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx5nzlKINiVfwlKaf0OgiL3Qij3eb+qHaBBD3Fs37/vwKXs2FUrPuQjM1M+jsA+0DEZCDxxHg==
-X-Received: by 2002:a2e:81c1:: with SMTP id s1mr15526258ljg.83.1574515670608;
-        Sat, 23 Nov 2019 05:27:50 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
-        by smtp.gmail.com with ESMTPSA id a8sm705792lfi.50.2019.11.23.05.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 05:27:49 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 047371818BF; Sat, 23 Nov 2019 14:27:48 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     David Ahern <dsahern@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "xdp-newbies\@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+        bh=3o2zb24kIRBTzY7PPr7Q4XXAwQkEmzRh8aDu2/bWy0w=;
+        b=OG/BtNBqQewZI0RRapKpEgS56m4GnO/5wMAQd0nBf0X56KDhvFr7HMmeoFZKDEgEgjcA3B
+        28afyfdELfwKzbUpkKl5huS54A7hlhtUucm8gYeqglE5OFgTmFDIHgWyDBC9kNb7YhzD0F
+        +tIwfcWS/AhzfXoofQS3RMFYZ1Jxnys=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-90-ef78lVTuMW-QOXqb2wgwmg-1; Sun, 24 Nov 2019 21:42:08 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE680800580;
+        Mon, 25 Nov 2019 02:42:07 +0000 (UTC)
+Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 53744600C1;
+        Mon, 25 Nov 2019 02:42:02 +0000 (UTC)
 Subject: Re: error loading xdp program on virtio nic
-In-Reply-To: <1fc9364a-ab96-e085-1fc5-9ed29f43f815@gmail.com>
-References: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com> <89f56317-5955-e692-fcf0-ee876aae068b@redhat.com> <3dc7b9d8-bcb2-1a90-630e-681cbf0f1ace@gmail.com> <18659bd0-432e-f317-fa8a-b5670a91c5b9@redhat.com> <f7b8df14-ef7f-be76-a990-b9d71139bcaa@gmail.com> <20191121072625.3573368f@carbon> <4686849f-f3b8-dd1d-0fe4-3c176a37b67a@redhat.com> <df4ae5e7-3f79-fd28-ea2e-43612ff61e6f@gmail.com> <f7b19bae-a9cf-d4bf-7eee-bfe644d87946@redhat.com> <8324a37e-5507-2ae6-53f6-949c842537e0@gmail.com> <20191122175749.47728e42@carbon> <1fc9364a-ab96-e085-1fc5-9ed29f43f815@gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Sat, 23 Nov 2019 14:27:48 +0100
-Message-ID: <87k17q3ep7.fsf@toke.dk>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        David Ahern <dsahern@gmail.com>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <c484126f-c156-2a17-b47d-06d08121c38b@gmail.com>
+ <89f56317-5955-e692-fcf0-ee876aae068b@redhat.com>
+ <3dc7b9d8-bcb2-1a90-630e-681cbf0f1ace@gmail.com>
+ <18659bd0-432e-f317-fa8a-b5670a91c5b9@redhat.com>
+ <f7b8df14-ef7f-be76-a990-b9d71139bcaa@gmail.com>
+ <20191121072625.3573368f@carbon>
+ <4686849f-f3b8-dd1d-0fe4-3c176a37b67a@redhat.com>
+ <df4ae5e7-3f79-fd28-ea2e-43612ff61e6f@gmail.com>
+ <f7b19bae-a9cf-d4bf-7eee-bfe644d87946@redhat.com>
+ <8324a37e-5507-2ae6-53f6-949c842537e0@gmail.com>
+ <20191122175749.47728e42@carbon>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6c55b35f-9ffe-c192-651c-f5ca3d02de52@redhat.com>
+Date:   Mon, 25 Nov 2019 10:42:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: PrwTlV9cPeuk_f6rc19yxQ-1
+In-Reply-To: <20191122175749.47728e42@carbon>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: ef78lVTuMW-QOXqb2wgwmg-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-David Ahern <dsahern@gmail.com> writes:
 
-> On 11/22/19 9:57 AM, Jesper Dangaard Brouer wrote:
->> Implementation wise, I would not add flags to xdp_buff / xdp_md.
->> Instead I propose in[1] slide 46, that the verifier should detect the
->> XDP features used by a BPF-prog.  If you XDP prog doesn't use e.g.
->> XDP_TX, then you should be allowed to run it on a virtio_net device
->> with less queue configured, right?
+On 2019/11/23 =E4=B8=8A=E5=8D=8812:57, Jesper Dangaard Brouer wrote:
+> On Fri, 22 Nov 2019 08:43:50 -0700
+> David Ahern <dsahern@gmail.com> wrote:
 >
-> Thanks for the reference and yes, that is the goal: allow XDP in the
-> most use cases possible. e.g., Why limit XDP_DROP which requires no
-> resources because XDP_TX does not work?
+>> On 11/21/19 11:09 PM, Jason Wang wrote:
+>>>> Doubling the number of queues for each tap device adds overhead to the
+>>>> hypervisor if you only want to allow XDP_DROP or XDP_DIRECT. Am I
+>>>> understanding that correctly?
+>>>
+>>> Yes, but there's almost impossible to know whether or not XDP_TX will b=
+e
+>>> used by the program. If we don't use per CPU TX queue, it must be
+>>> serialized through locks, not sure it's worth try that (not by default,
+>>> of course).
+>>>   =20
+>> This restriction is going to prevent use of XDP in VMs in general cloud
+>> hosting environments. 2x vhost threads for vcpus is a non-starter.
+>>
+>> If one XDP feature has high resource needs, then we need to subdivide
+>> the capabilities to let some work and others fail. For example, a flag
+>> can be added to xdp_buff / xdp_md that indicates supported XDP features.
+>> If there are insufficient resources for XDP_TX, do not show support for
+>> it. If a program returns XDP_TX anyways, packets will be dropped.
+>>
+> This sounds like concrete use-case and solid argument why we need XDP
+> feature detection and checks. (Last part of LPC talk[1] were about
+> XDP features).
 >
-> I agree a flag in the api is an ugly way to allow it. For the verifier
-> approach, you mean add an internal flag (e.g., bitmask of return codes)
-> that the program uses and the NIC driver can check at attach time?
+> An interesting perspective you bring up, is that XDP features are not
+> static per device driver.  It actually needs to be dynamic, as your
+> XDP_TX feature request depend on the queue resources available.
+>
+> Implementation wise, I would not add flags to xdp_buff / xdp_md.
+> Instead I propose in[1] slide 46, that the verifier should detect the
+> XDP features used by a BPF-prog.  If you XDP prog doesn't use e.g.
+> XDP_TX, then you should be allowed to run it on a virtio_net device
+> with less queue configured, right?
 
-Yes, that's more or less what we've discussed. With the actual set of
-flags, and the API for the driver (new ndo?) TBD. Suggestions welcome; I
-anticipate this is something Jesper and I need to circle back to soonish
-in any case (unless someone beats us to it!).
 
--Toke
+Yes, I think so. But I remember we used to have something like=20
+header_adjust in the past but finally removed ...
+
+Thanks
+
+
+>
+>
+> [1] http://people.netfilter.org/hawk/presentations/LinuxPlumbers2019/xdp-=
+distro-view.pdf
 
