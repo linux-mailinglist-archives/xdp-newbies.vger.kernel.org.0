@@ -2,107 +2,229 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A986010EDF1
-	for <lists+xdp-newbies@lfdr.de>; Mon,  2 Dec 2019 18:11:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEA80112C74
+	for <lists+xdp-newbies@lfdr.de>; Wed,  4 Dec 2019 14:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfLBRLY (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 2 Dec 2019 12:11:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45876 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbfLBRLX (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 2 Dec 2019 12:11:23 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d20so254717ljc.12;
-        Mon, 02 Dec 2019 09:11:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lpXTTJYa93HPPwo+Z8D2FxtkYP9FJXZjmmqaDUf8VaQ=;
-        b=E9g04maQVIBCqRxru4XzIIVPCWLg64d60N7C1BB9CogSSuFO2kAfZikv7f7ZZhlreD
-         flUIUUTBprsfqCUdRLaFKdMmE7ZEEg/I49MNQznUnzw6qyyERDXxuq5IsuwzybPZIYy6
-         B80djTP13Csl7cYKezxlFGhIsF28UabrGMMoHpliQB+A++RDycsneZO9RGH2k5Ofc1w9
-         kT6uSocZK+b7eez1M7j2QeVVvC/EcnbKL3nLhpTAvDv3+ptL9MDm1lZNcYigsDnelktU
-         4k4F6N6VvOyb+rn/iqhjfOXG88RRLUjMP8eoT+69G7eL/tMCFTPr4Nj/h6YXSOGJGBgW
-         SP1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lpXTTJYa93HPPwo+Z8D2FxtkYP9FJXZjmmqaDUf8VaQ=;
-        b=EFGVdVMuYBAqDoh3SO12TxANHnVxu4caPRtMMgLNm+a0akmA3kKCkmgncKkvErrXxl
-         rK6kjsX25gvIPJKlsQA2/6Y59SJpNNSrWahzpncy7G3+bUbA119A1/3be0B/sPzTtDzS
-         RGoNNYUA4iZXVRvfo8UbBqLRgh8SU/ZVG2/UXf7GYlNWkRvYEKEGJ+qLlBKg4SLlfmUp
-         1OTippBabvkFIzi81+zQJZUhUOGRG9IZxqV1H8s8X/jG2Y3uYush/VrRBNHcwbwBELZB
-         FeRy12HXpgXOGzNFyaMRzrE7lciLNcEu510qKM0VrvcAO91lD92HWMRT4juojlov5dhr
-         lcwA==
-X-Gm-Message-State: APjAAAV0d4Z2RAEYkeOzhYrYL06IfHHFcN4Xp9EhLG7z5cpwD51gjgnA
-        0RUhfCu1YTuoEr8o81yooFie+/qo+hfNNLhtphs=
-X-Google-Smtp-Source: APXvYqwvX2YSTp98I8S0ycyL/X5UhxVECvuh6tjh70qyuJdgly0QGQA05gHw6kuFWXvF6MbhiYfWSc86DjT78sEyW9E=
-X-Received: by 2002:a2e:58c:: with SMTP id 134mr34674239ljf.12.1575306680817;
- Mon, 02 Dec 2019 09:11:20 -0800 (PST)
+        id S1727752AbfLDNUG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 4 Dec 2019 08:20:06 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36628 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727445AbfLDNUG (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 4 Dec 2019 08:20:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575465604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SbdpxXWhTQCNP2+MkeZ0xHiQ8dpggKqakmvl3gLRDHc=;
+        b=YN/EIfPXiZoa4RtamAL8ndkedwbiN2hZYuQEo1JBb24NZ0iqeg5qw3dDZ1ySeZmkvF5EtY
+        nRv3mq4D2rN01A03x35PEq4nDAomaimOGulRpKKiehoJZrfcvmvMNyD7iYW8Kg16f6y5da
+        o1ukaTRHDwXUfieBllSdznRdlLJ6NdE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-297X3sNVNpuRMe0MXdoIoQ-1; Wed, 04 Dec 2019 08:20:02 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 738E81083E87;
+        Wed,  4 Dec 2019 13:20:01 +0000 (UTC)
+Received: from [10.36.118.152] (unknown [10.36.118.152])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 79FEC5C28F;
+        Wed,  4 Dec 2019 13:20:00 +0000 (UTC)
+From:   "Eelco Chaudron" <echaudro@redhat.com>
+To:     "Yonghong Song" <yhs@fb.com>,
+        "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+Cc:     Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: Trying the bpf trace a bpf xdp program
+Date:   Wed, 04 Dec 2019 14:19:58 +0100
+Message-ID: <B7E0062E-37ED-46E6-AE64-EE3E2A0294EA@redhat.com>
+In-Reply-To: <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
+References: <E53E0693-1C3A-4B47-B205-DC8E5DAF3619@redhat.com>
+ <CAADnVQKkLtG-QCZwxx-Bpz8-goh-_mSTtUSzpb_oTv9a-qLizg@mail.gmail.com>
+ <3AC9D2B7-9D2F-4286-80A2-1721B51B62CF@redhat.com>
+ <CAADnVQJKSnoMVpQ3F86zBhFyo8WQ0vi65Z4QDtopLRrpK4yB8Q@mail.gmail.com>
+ <4BBF99E4-9554-44F7-8505-D4B8416554C4@redhat.com>
+ <d588c894-a4e0-8b99-72a9-4429b27091df@fb.com>
+ <056E9F5E-4FDD-4636-A43A-EC98A06E84D3@redhat.com>
+ <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
 MIME-Version: 1.0
-References: <CAD56B7dwKDKnrCjpGmrnxz2P0QpNWU3CGBvOtqg3RBx3ejPh9g@mail.gmail.com>
- <20191129164842.qimcmjlz5xq7uupw@linutronix.de> <CAD56B7dtR4GtPUUmmPVcuc0L+7BixW9+S=CR1g4ub3_6ZgRobg@mail.gmail.com>
- <20191202162651.7jkyj52sny3yownr@linutronix.de>
-In-Reply-To: <20191202162651.7jkyj52sny3yownr@linutronix.de>
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Mon, 2 Dec 2019 12:11:08 -0500
-Message-ID: <CAD56B7d3tyWfweZYogywebTcTvZQqK433e5w0GeahHJRzS2cDg@mail.gmail.com>
-Subject: Re: xdpsock poll with 5.2.21rt kernel
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        bpf@vger.kernel.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 297X3sNVNpuRMe0MXdoIoQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-> >
-> > Well, it does complain (report below), but I'm not sure it's related.
-> > The other thing I tried was the AF_XDP example here:
-> > https://github.com/xdp-project/xdp-tutorial/tree/master/advanced03-AF_XDP
-> >
-> > With this example poll() always seems to block correctly, so I think
-> > maybe there is something wrong with the xdpsock_user.c example or how
-> > I'm using it.
-> >
-> > [  259.591480] BUG: assuming atomic context at net/core/ptp_classifier.c:106
-> > [  259.591488] in_atomic(): 0, irqs_disabled(): 0, pid: 953, name: irq/22-eth%d
-> > [  259.591494] CPU: 0 PID: 953 Comm: irq/22-eth%d Tainted: G        WC
-> >        5.
-> >
-> >                         2.21-rt13-00016-g93898e751d0e #90
-> > [  259.591499] Hardware name: Enclustra XU5 SOM (DT)
-> > [  259.591501] Call trace:
-> > [  259.591503] dump_backtrace (/arch/arm64/kernel/traps.c:94)
-> > [  259.591514] show_stack (/arch/arm64/kernel/traps.c:151)
-> > [  259.591520] dump_stack (/lib/dump_stack.c:115)
-> > [  259.591526] __cant_sleep (/kernel/sched/core.c:6386)
-> > [  259.591531] ptp_classify_raw (/./include/linux/compiler.h:194
+
+
+On 2 Dec 2019, at 17:48, Yonghong Song wrote:
+
+> On 12/2/19 8:34 AM, Eelco Chaudron wrote:
+>> On 29 Nov 2019, at 17:52, Yonghong Song wrote:
+
+<SNIP>
 >
-> Is this the only splat? Nothing more? I would expect something at boot
-> time, too.
-I should have expanded more. This seems to happen every second
-starting at boot in ptp_classifier.c regardless of if I'm doing
-anything with BPF.
+> You need to build the kernel with
+>    CONFIG_DEBUG_INFO_BTF=3Dy
+> Make sure on the build machine you have recent pahole version >=3D 1.13.
 
->
-> So this part expects disabled preemption. Other invocations disable
-> preemption. The whole BPF part is currently not working on -RT.
-OK, so I should expect more issues as we play with AF_XDP? An
-application based on the other example [1] is at least running.
-Preempt-rt + AF_XDP seems like an awesome combination, so I hopefully
-any BPF issues can be resolved.
+With the latest LLVM and CONFIG_DEBUG_INFO_BTF=3Dy the self-test for=20
+bpf2bpf is passing!
 
-thanks,
-Paul
 
-[1] https://github.com/xdp-project/xdp-tutorial/tree/master/advanced03-AF_XDP
+However I still have problems with my code, which is getting to the next=20
+step, but no my program is killed when trying to load the eBPG fexit=20
+code. If I replace my generated eBPF programs for the once generated by=20
+the self-test (test_pkt_access.o/fexit_bpf2bpf.o) it works fine.
+
+
+I decided to build my objects just like the example programs (so have a=20
+hacked build.sh file) but I get the same results. I.e. being killed by=20
+the kernel:
+
+bpf(BPF_BTF_LOAD,=20
+{btf=3D"\237\353\1\0\30\0\0\0\0\0\0\0\330\0\0\0\330\0\0\0\244\0\0\0\0\0\0\0=
+\0\0\0\2"...,=20
+btf_log_buf=3DNULL, btf_size=3D404, btf_log_size=3D0, btf_log_level=3D0}, 1=
+20) =3D=20
+6
+bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D3, info_len=3D208,=20
+info=3D0x7ffdfbdac3b0}}, 120) =3D 0
+bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D3, info_len=3D208,=20
+info=3D0xafb600}}, 120) =3D 0
+bpf(BPF_BTF_GET_FD_BY_ID, {btf_id=3D90}, 120) =3D 5
+bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D5, info_len=3D16,=20
+info=3D0x7ffdfbdac4b0}}, 120) =3D 0
+- Opened object file: 0xafb440
+bpf(BPF_PROG_LOAD, {prog_type=3D0x1a /* BPF_PROG_TYPE_??? */, insn_cnt=3D2,=
+=20
+insns=3D0xafbaa0, license=3D"GPL", log_level=3D7, log_size=3D16777215,=20
+log_buf=3D"\237\353\1", kern_version=3DKERNEL_VERSION(0, 0, 0),=20
+prog_flags=3D0, prog_name=3D"test_main", prog_ifindex=3D0,=20
+expected_attach_type=3D0x19 /* BPF_??? */, prog_btf_fd=3D6,=20
+func_info_rec_size=3D8, func_info=3D0xafb9f0, func_info_cnt=3D1,=20
+line_info_rec_size=3D16, line_info=3D0xafba10, line_info_cnt=3D1, ...}, 120
+) =3D ?
++++ killed by SIGKILL +++
+Killed
+
+
+[79162.619208] BUG: kernel NULL pointer dereference, address:=20
+0000000000000000
+[79162.619906] #PF: supervisor read access in kernel mode
+[79162.620582] #PF: error_code(0x0000) - not-present page
+[79162.621255] PGD 80000001e2409067 P4D 80000001e2409067 PUD 22eba9067=20
+PMD 0
+[79162.621933] Oops: 0000 [#12] SMP PTI
+[79162.622599] CPU: 5 PID: 3191 Comm: xdp_sample_fent Tainted: G      D =20
+          5.4.0+ #3
+[79162.623274] Hardware name: Red Hat KVM, BIOS=20
+1.11.1-3.module+el8+2529+a9686a4d 04/01/2014
+[79162.623962] RIP: 0010:bpf_check+0x1648/0x250b
+[79162.624650] Code: 41 89 c5 0f 88 d1 0a 00 00 41 f6 47 02 01 0f 84 17=20
+0b 00 00 41 83 7f 04 1a 0f 84 0c 0c 00 00 49 8b 47 20 48 63 db 48 8b 40=20
+68 <48> 8b 04 d8 48 8b 40 30 49 89 42 50 49 8b 46 20 4c 89 cf 4c 89 95
+[79162.626088] RSP: 0018:ffffb5f6c07c3c88 EFLAGS: 00010293
+[79162.626822] RAX: 0000000000000000 RBX: 0000000000000000 RCX:=20
+ffffb5f6c07c3c40
+[79162.627560] RDX: ffffa0a1e6e01818 RSI: 00000000fffffffa RDI:=20
+0000000000000000
+[79162.628304] RBP: ffffb5f6c07c3d70 R08: 000000000000000e R09:=20
+ffffa0a1f5c9dc90
+[79162.629053] R10: ffffa0a1f5c9dc80 R11: ffffa0a1e6e0199a R12:=20
+ffffa0a1eac48000
+[79162.629806] R13: 0000000000000000 R14: ffffb5f6c043e000 R15:=20
+ffffb5f6c033f000
+[79162.630562] FS:  00007f560c2e3740(0000) GS:ffffa0a1f7940000(0000)=20
+knlGS:0000000000000000
+[79162.631324] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[79162.632072] CR2: 0000000000000000 CR3: 00000001e242a005 CR4:=20
+0000000000360ee0
+[79162.632813] DR0: 0000000000000000 DR1: 0000000000000000 DR2:=20
+0000000000000000
+[79162.633539] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:=20
+0000000000000400
+[79162.634255] Call Trace:
+[79162.634974]  ? _cond_resched+0x15/0x30
+[79162.635686]  ? kmem_cache_alloc_trace+0x162/0x220
+[79162.636398]  ? selinux_bpf_prog_alloc+0x1f/0x60
+[79162.637111]  bpf_prog_load+0x3de/0x690
+[79162.637809]  __do_sys_bpf+0x105/0x1740
+[79162.638488]  do_syscall_64+0x5b/0x180
+[79162.639147]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[79162.639792] RIP: 0033:0x7f560c3fe1ad
+[79162.640415] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa=20
+48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f=20
+05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ab 5c 0c 00 f7 d8 64 89 01 48
+[79162.641703] RSP: 002b:00007ffdfbdac318 EFLAGS: 00000202 ORIG_RAX:=20
+0000000000000141
+[79162.642363] RAX: ffffffffffffffda RBX: 0000000000afb440 RCX:=20
+00007f560c3fe1ad
+[79162.643026] RDX: 0000000000000078 RSI: 00007ffdfbdac390 RDI:=20
+0000000000000005
+[79162.643676] RBP: 00007ffdfbdac330 R08: 0000000000afba70 R09:=20
+00007ffdfbdac390
+[79162.644310] R10: 0000000000afcf10 R11: 0000000000000202 R12:=20
+0000000000402690
+[79162.644935] R13: 00007ffdfbdac790 R14: 0000000000000000 R15:=20
+0000000000000000
+[79162.645559] Modules linked in: ip6t_REJECT nf_reject_ipv6=20
+ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat=20
+ebtable_broute ip6table_nat ip6table_mangle ip6table_raw=20
+ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw=20
+iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set=20
+nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables=20
+iptable_filter intel_rapl_msr intel_rapl_common kvm_intel kvm irqbypass=20
+crct10dif_pclmul crc32_pclmul ghash_clmulni_intel cirrus drm_kms_helper=20
+virtio_net net_failover joydev drm failover i2c_piix4 virtio_balloon=20
+pcspkr ip_tables xfs libcrc32c crc32c_intel ata_generic floppy=20
+virtio_scsi serio_raw pata_acpi qemu_fw_cfg
+[79162.649591] CR2: 0000000000000000
+[79162.650272] ---[ end trace 5119c5364c1e9c83 ]---
+[79162.650957] RIP: 0010:bpf_check+0x1648/0x250b
+[79162.651646] Code: 41 89 c5 0f 88 d1 0a 00 00 41 f6 47 02 01 0f 84 17=20
+0b 00 00 41 83 7f 04 1a 0f 84 0c 0c 00 00 49 8b 47 20 48 63 db 48 8b 40=20
+68 <48> 8b 04 d8 48 8b 40 30 49 89 42 50 49 8b 46 20 4c 89 cf 4c 89 95
+[79162.653081] RSP: 0018:ffffb5f6c072bc88 EFLAGS: 00010293
+[79162.653807] RAX: 0000000000000000 RBX: 0000000000000000 RCX:=20
+ffffb5f6c072bc40
+[79162.654536] RDX: ffffa0a1e76b1418 RSI: 00000000fffffffa RDI:=20
+0000000000000000
+[79162.655270] RBP: ffffb5f6c072bd70 R08: 000000000000000e R09:=20
+ffffa0a1e4d3fa90
+[79162.655996] R10: ffffa0a1e4d3fa80 R11: ffffa0a1e76b159a R12:=20
+ffffa0a1eac7c000
+[79162.656715] R13: 0000000000000000 R14: ffffb5f6c01e3000 R15:=20
+ffffb5f6c015f000
+[79162.657429] FS:  00007f560c2e3740(0000) GS:ffffa0a1f7940000(0000)=20
+knlGS:0000000000000000
+[79162.658137] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[79162.658826] CR2: 0000000000000000 CR3: 00000001e242a005 CR4:=20
+0000000000360ee0
+[79162.659515] DR0: 0000000000000000 DR1: 0000000000000000 DR2:=20
+0000000000000000
+[79162.660196] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:=20
+0000000000000400
+
+
+I=E2=80=99ve put my code on GitHub, maybe it=E2=80=99s just something stupi=
+d=E2=80=A6
+
+https://github.com/chaudron/bpf2bpf-tracing
+
+
+Cheers,
+
+Eelco
+
+
+PS: If I run the latest pahole (v1.15) on the .o files, I get the=20
+following libbpf error: =E2=80=9Clibbpf: Cannot find bpf_func_info for main=
+=20
+program sec fexit/xdp_prog_simple. Ignore all bpf_func_info.=E2=80=9D
+
