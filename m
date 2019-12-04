@@ -2,241 +2,286 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1D89113012
-	for <lists+xdp-newbies@lfdr.de>; Wed,  4 Dec 2019 17:32:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0756113485
+	for <lists+xdp-newbies@lfdr.de>; Wed,  4 Dec 2019 19:25:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfLDQcL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 4 Dec 2019 11:32:11 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35822 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbfLDQcJ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 4 Dec 2019 11:32:09 -0500
-Received: by mail-qt1-f194.google.com with SMTP id s8so370595qte.2;
-        Wed, 04 Dec 2019 08:32:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=l8o+dR1NNNvQI7cQHuCUyPp6laQfu3VVpJsss/qycYY=;
-        b=esBcd9QJecmPovlmuAGOyd7mmwBwsTzTmdns3G96sNyglvm+RWS1vkptFy3cJT+e6v
-         wr6i6CNY6ZfqOoGhNXxBzC4ScBlNg5pW+dAmX7mcgG/zA0YXWHT08MRqPGGJvDu9BLHB
-         z9VG8xT/pK6xNcN3zrRlHKqIqDXOChiKvA+IU8LBMf4MVAF/B+6KufnVBYW9JjN4BM8k
-         cNA9MIhL12khkkK1v9NceTz8EeFo0RkWtIEiJ8nq1hmLUklkNfezmV0ZC/J2NiS84gy4
-         q8mLJe7Gr27p6ocmXK/ks0uymMjk0YSzRs8TQGhN8MH5JVSGciVK0fTw+qtsXN7S/zZ9
-         2PzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=l8o+dR1NNNvQI7cQHuCUyPp6laQfu3VVpJsss/qycYY=;
-        b=tn0lolEHji8uMoh2K4PWHesS7DN2RbIjgIfG9mfCcgAy/+gvfZ3XCnKKXHohh1bX+b
-         ekD+95upHkMTo8tEBvNmhg0UwFGbyhlxuyOEhdbGWHA1KxjJhl2JK5aPVPFy4O6sokYv
-         T4dbqMGPTgX871d5aJHtZiT//iPMlDIjeND+rimZo5NMfCjus0r7I2txSUE8wN/rfJ5/
-         z6+APkEMN9I7QvNgvCnHo3EivM+n+BG2cz0s0IwiKh0RtxUTZHhxy7uLalXJXEDbvINF
-         K9ot4CBlsX7kVZDIJh54qCLxfzlYK49/u6s0yDJpG+yX+iqxKDrNsVQiAd9oiwEhbpjq
-         wFQw==
-X-Gm-Message-State: APjAAAVH+8XPxbH1dP6yRt6e2ylmDAapVTSvFwldq5r/8cABuI0zjkD1
-        GefhbBKQ3wkkD8rTdVDRJ3i1iWCcrrm4dEmyGOQ=
-X-Google-Smtp-Source: APXvYqwL5gPRzCIDlnXSnGX7CXxoNbxdrDaV8qlux0uLe2Uv/X3vRE4S4nsUciWtlmD8uM3nN0oPE4xcPLeyrALa1/c=
-X-Received: by 2002:ac8:5457:: with SMTP id d23mr3343421qtq.93.1575477128359;
- Wed, 04 Dec 2019 08:32:08 -0800 (PST)
-MIME-Version: 1.0
+        id S1729045AbfLDSB6 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 4 Dec 2019 13:01:58 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:8120 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729709AbfLDSB5 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Wed, 4 Dec 2019 13:01:57 -0500
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4Hxdd9023040;
+        Wed, 4 Dec 2019 10:01:52 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=BQt1gnDYDail7ZkhV1wPLeOpj3HtbuvzpLhdq2JdpP4=;
+ b=F2i0Nqpfc5/uFrdCU0t3dgEYMLOFnQ8c19f9SjqIeoUgMAkOlLA1LkMYHGLN0J9qgUID
+ I9y6FRF/WImBzT8ednpqxnctvfEpa05OoDVizFMaQlygXphJ89o2jw//jZK1hplr0w29
+ 5O7Qi+z4lA9kzXaYOKteWDv3oojkb2j9SlE= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2wp7kau1m7-13
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 04 Dec 2019 10:01:52 -0800
+Received: from prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 4 Dec 2019 10:01:43 -0800
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx01.TheFacebook.com (2620:10d:c081:6::15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 4 Dec 2019 10:01:43 -0800
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 4 Dec 2019 10:01:43 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OllXw+PZBTT6y7VyKC3O67t2FSbrXSM+EzAAyibId+j6e/GvH8HQU1fktiU1mcMLaN34RXOxo+A8b7LlsdbZCZICVC6j6ij95sJ2UfINGsjjicIc+gDNheFIY+WRu6uv4CogQmMJ41hlk+AzDza+D2K2Yu1se0R8yj2kpsQP9Go1U9sRNO5wV8PZFYE5nrMZ8RZnioDppXh8LHAW31vUzkE9E31fKQYqrBJucvHKv1zs0po/guAJtpvoj2CJT6VHTDQ61AkM1S5rQBAfUrhIgd4naYX7g7/SvcKEQ/hHw8/8gIAI+b1NFPAqExHXG+fozVAgxJKMuQWuZHdqFyffrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BQt1gnDYDail7ZkhV1wPLeOpj3HtbuvzpLhdq2JdpP4=;
+ b=O8W12jrjYJBMbGngbnnlntY4K4flMkSDIkpQ9OywCqYO9uNEc1KI1D+cYVRe4OLDDRtvtTLZ7nGI6LOTBaT7wSnOLrM4QaF5QDc8Xebfu1MGMP2vA53jtcm28x4HSRzg13t0JBtJNdmO6GF+QlLK5uPBRwXMBZVa8VepkVtqFwT04L6+P1VcpbWsHB8FHrQGkcsmjyG3u5QVBi3xuXfZRKpV+O8jewHWzgE0np1Cfvqyb2HpF44XmhqHIrPP+ljC4OoEjdOeg74OEBDi1VQfLHzjghpEf6X003GMedpfqafqgz+Fg91EFkQEAjIIqQVxXM3w4FzxSPyiJFwp6h3swg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BQt1gnDYDail7ZkhV1wPLeOpj3HtbuvzpLhdq2JdpP4=;
+ b=F337nE80EdczIoFFX6mmfOhbDrVppIQUDRsF7aMYZGcs+EAmxeTgT8LH7dThuQPunwgkYeSicDOGjNwJMQaiyt/zMVdZxT/dVz06TXsbqcdBOWl3J1hHSDVXEFj2RshZi775sSb7AxI/S3SU5Dk7IgVl4JPSXT76KX8U0QFWIuc=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.60.27) by
+ BYAPR15MB3288.namprd15.prod.outlook.com (20.179.57.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Wed, 4 Dec 2019 18:01:41 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::a9f8:a9c0:854c:d680]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::a9f8:a9c0:854c:d680%4]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
+ 18:01:41 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Eelco Chaudron <echaudro@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: Trying the bpf trace a bpf xdp program
+Thread-Topic: Trying the bpf trace a bpf xdp program
+Thread-Index: AQHVphhIOGWFhEFrqUeNGhj+MAAdz6eg9HoAgAAIl4CAAVtbgIAABgYAgASyCgCAAAPtgIAC6nMA//+VWwCAALlXAA==
+Date:   Wed, 4 Dec 2019 18:01:41 +0000
+Message-ID: <b8d80047-3bc1-5393-76a1-7517cb2b7280@fb.com>
 References: <E53E0693-1C3A-4B47-B205-DC8E5DAF3619@redhat.com>
  <CAADnVQKkLtG-QCZwxx-Bpz8-goh-_mSTtUSzpb_oTv9a-qLizg@mail.gmail.com>
- <3AC9D2B7-9D2F-4286-80A2-1721B51B62CF@redhat.com> <CAADnVQJKSnoMVpQ3F86zBhFyo8WQ0vi65Z4QDtopLRrpK4yB8Q@mail.gmail.com>
- <4BBF99E4-9554-44F7-8505-D4B8416554C4@redhat.com> <d588c894-a4e0-8b99-72a9-4429b27091df@fb.com>
- <056E9F5E-4FDD-4636-A43A-EC98A06E84D3@redhat.com> <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
+ <3AC9D2B7-9D2F-4286-80A2-1721B51B62CF@redhat.com>
+ <CAADnVQJKSnoMVpQ3F86zBhFyo8WQ0vi65Z4QDtopLRrpK4yB8Q@mail.gmail.com>
+ <4BBF99E4-9554-44F7-8505-D4B8416554C4@redhat.com>
+ <d588c894-a4e0-8b99-72a9-4429b27091df@fb.com>
+ <056E9F5E-4FDD-4636-A43A-EC98A06E84D3@redhat.com>
+ <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
  <B7E0062E-37ED-46E6-AE64-EE3E2A0294EA@redhat.com>
-In-Reply-To: <B7E0062E-37ED-46E6-AE64-EE3E2A0294EA@redhat.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 4 Dec 2019 08:31:54 -0800
-Message-ID: <CAEf4BzaTRc8dPxZnWhVZe7xpyMwpL1NEgGQyBjeXnsaN_D5CWA@mail.gmail.com>
-Subject: Re: Trying the bpf trace a bpf xdp program
-To:     Eelco Chaudron <echaudro@redhat.com>
-Cc:     Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <7062345a-1060-89f6-0c02-eef2fe0d835a@fb.com>
+In-Reply-To: <7062345a-1060-89f6-0c02-eef2fe0d835a@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0087.namprd19.prod.outlook.com
+ (2603:10b6:320:1f::25) To BYAPR15MB3384.namprd15.prod.outlook.com
+ (2603:10b6:a03:112::27)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:4734]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0911cf1-2922-48d2-cb31-08d778e4042b
+x-ms-traffictypediagnostic: BYAPR15MB3288:
+x-microsoft-antispam-prvs: <BYAPR15MB32888FA98532298B7D00FD18D35D0@BYAPR15MB3288.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0241D5F98C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(199004)(189003)(51914003)(305945005)(36756003)(6486002)(8676002)(8936002)(81156014)(81166006)(4326008)(31686004)(6306002)(6246003)(7736002)(229853002)(6512007)(6436002)(45080400002)(498600001)(14444005)(76176011)(66556008)(66446008)(66476007)(66946007)(64756008)(52116002)(53546011)(102836004)(54906003)(5660300002)(31696002)(99286004)(186003)(86362001)(6506007)(14454004)(25786009)(966005)(71200400001)(2616005)(71190400001)(11346002)(6116002)(5024004)(2906002)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3288;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lM1fE+/dpAsyLCHt3a6T380DT3dHOA2jV65sLsjlqC/J2PucqvMHWN4RjjstSonxZvZhKE22ftWF2h85KOwHjngn+vmiZ+6NjHLtsaRv/yfxj00/CaXxSMYLR1h1cj2C7Z4+N9Gomet86ayJ7on90q3DWI0mBcXqBE9CDwIgOu0WfhVN/nIgnvpEHZ1U3BC/7aGfCgMIJj/duz4RkANpFjIm8bz3O7PBajdWptyEUOXVyPUrsE2OqMQcTdcAkzrNXokoap52rH312WtsKNHdkFyD13cSLzR7+3ZxVbTiBqjLHQqMFaSZ/mLz+xuGWt/V5r+DqP31RBBhH9xs8+wnfG9yIYw6iC5W7OI1uBNjjd9QJWpx/07dn7BTRyc9IuHCSwtWFj2LfcsLUxSH7cIE2myZC3lQrASGyURY73qmnfjK06gO7BhCeOyIBvR5RHZQzdE0P2pI5Vg/BWvmQoR8pv74RNx+OVqTHClbWrgnb8DwRvDSNEvOa9lXLOemDS3Zfy//tQ0wyRyPQQ6o1As44tZRYC7ZptY4IDzKaN/UaWo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <59D212FBACBA9E43823ED9EA333BCB27@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0911cf1-2922-48d2-cb31-08d778e4042b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 18:01:41.5759
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: flruVWsNoQUnmvpPtDVFGeekQ21RnEThxrByZqxIOvfBncW3smxkqlN8TyMLP4GR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3288
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ impostorscore=0 mlxlogscore=719 malwarescore=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 phishscore=0
+ bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912040144
+X-FB-Internal: deliver
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 5:20 AM Eelco Chaudron <echaudro@redhat.com> wrote:
->
->
->
-> On 2 Dec 2019, at 17:48, Yonghong Song wrote:
->
-> > On 12/2/19 8:34 AM, Eelco Chaudron wrote:
-> >> On 29 Nov 2019, at 17:52, Yonghong Song wrote:
->
-> <SNIP>
-> >
-> > You need to build the kernel with
-> >    CONFIG_DEBUG_INFO_BTF=3Dy
-> > Make sure on the build machine you have recent pahole version >=3D 1.13=
-.
->
-> With the latest LLVM and CONFIG_DEBUG_INFO_BTF=3Dy the self-test for
-> bpf2bpf is passing!
->
->
-> However I still have problems with my code, which is getting to the next
-> step, but no my program is killed when trying to load the eBPG fexit
-> code. If I replace my generated eBPF programs for the once generated by
-> the self-test (test_pkt_access.o/fexit_bpf2bpf.o) it works fine.
->
->
-> I decided to build my objects just like the example programs (so have a
-> hacked build.sh file) but I get the same results. I.e. being killed by
-> the kernel:
->
-> bpf(BPF_BTF_LOAD,
-> {btf=3D"\237\353\1\0\30\0\0\0\0\0\0\0\330\0\0\0\330\0\0\0\244\0\0\0\0\0\0=
-\0\0\0\0\2"...,
-> btf_log_buf=3DNULL, btf_size=3D404, btf_log_size=3D0, btf_log_level=3D0},=
- 120) =3D
-> 6
-> bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D3, info_len=3D208,
-> info=3D0x7ffdfbdac3b0}}, 120) =3D 0
-> bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D3, info_len=3D208,
-> info=3D0xafb600}}, 120) =3D 0
-> bpf(BPF_BTF_GET_FD_BY_ID, {btf_id=3D90}, 120) =3D 5
-> bpf(BPF_OBJ_GET_INFO_BY_FD, {info=3D{bpf_fd=3D5, info_len=3D16,
-> info=3D0x7ffdfbdac4b0}}, 120) =3D 0
-> - Opened object file: 0xafb440
-> bpf(BPF_PROG_LOAD, {prog_type=3D0x1a /* BPF_PROG_TYPE_??? */, insn_cnt=3D=
-2,
-> insns=3D0xafbaa0, license=3D"GPL", log_level=3D7, log_size=3D16777215,
-> log_buf=3D"\237\353\1", kern_version=3DKERNEL_VERSION(0, 0, 0),
-> prog_flags=3D0, prog_name=3D"test_main", prog_ifindex=3D0,
-> expected_attach_type=3D0x19 /* BPF_??? */, prog_btf_fd=3D6,
-> func_info_rec_size=3D8, func_info=3D0xafb9f0, func_info_cnt=3D1,
-> line_info_rec_size=3D16, line_info=3D0xafba10, line_info_cnt=3D1, ...}, 1=
-20
-> ) =3D ?
-> +++ killed by SIGKILL +++
-> Killed
->
->
-> [79162.619208] BUG: kernel NULL pointer dereference, address:
-> 0000000000000000
-> [79162.619906] #PF: supervisor read access in kernel mode
-> [79162.620582] #PF: error_code(0x0000) - not-present page
-> [79162.621255] PGD 80000001e2409067 P4D 80000001e2409067 PUD 22eba9067
-> PMD 0
-> [79162.621933] Oops: 0000 [#12] SMP PTI
-> [79162.622599] CPU: 5 PID: 3191 Comm: xdp_sample_fent Tainted: G      D
->           5.4.0+ #3
-> [79162.623274] Hardware name: Red Hat KVM, BIOS
-> 1.11.1-3.module+el8+2529+a9686a4d 04/01/2014
-> [79162.623962] RIP: 0010:bpf_check+0x1648/0x250b
-> [79162.624650] Code: 41 89 c5 0f 88 d1 0a 00 00 41 f6 47 02 01 0f 84 17
-> 0b 00 00 41 83 7f 04 1a 0f 84 0c 0c 00 00 49 8b 47 20 48 63 db 48 8b 40
-> 68 <48> 8b 04 d8 48 8b 40 30 49 89 42 50 49 8b 46 20 4c 89 cf 4c 89 95
-> [79162.626088] RSP: 0018:ffffb5f6c07c3c88 EFLAGS: 00010293
-> [79162.626822] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> ffffb5f6c07c3c40
-> [79162.627560] RDX: ffffa0a1e6e01818 RSI: 00000000fffffffa RDI:
-> 0000000000000000
-> [79162.628304] RBP: ffffb5f6c07c3d70 R08: 000000000000000e R09:
-> ffffa0a1f5c9dc90
-> [79162.629053] R10: ffffa0a1f5c9dc80 R11: ffffa0a1e6e0199a R12:
-> ffffa0a1eac48000
-> [79162.629806] R13: 0000000000000000 R14: ffffb5f6c043e000 R15:
-> ffffb5f6c033f000
-> [79162.630562] FS:  00007f560c2e3740(0000) GS:ffffa0a1f7940000(0000)
-> knlGS:0000000000000000
-> [79162.631324] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [79162.632072] CR2: 0000000000000000 CR3: 00000001e242a005 CR4:
-> 0000000000360ee0
-> [79162.632813] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [79162.633539] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [79162.634255] Call Trace:
-> [79162.634974]  ? _cond_resched+0x15/0x30
-> [79162.635686]  ? kmem_cache_alloc_trace+0x162/0x220
-> [79162.636398]  ? selinux_bpf_prog_alloc+0x1f/0x60
-> [79162.637111]  bpf_prog_load+0x3de/0x690
-> [79162.637809]  __do_sys_bpf+0x105/0x1740
-> [79162.638488]  do_syscall_64+0x5b/0x180
-> [79162.639147]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [79162.639792] RIP: 0033:0x7f560c3fe1ad
-> [79162.640415] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa
-> 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f
-> 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ab 5c 0c 00 f7 d8 64 89 01 48
-> [79162.641703] RSP: 002b:00007ffdfbdac318 EFLAGS: 00000202 ORIG_RAX:
-> 0000000000000141
-> [79162.642363] RAX: ffffffffffffffda RBX: 0000000000afb440 RCX:
-> 00007f560c3fe1ad
-> [79162.643026] RDX: 0000000000000078 RSI: 00007ffdfbdac390 RDI:
-> 0000000000000005
-> [79162.643676] RBP: 00007ffdfbdac330 R08: 0000000000afba70 R09:
-> 00007ffdfbdac390
-> [79162.644310] R10: 0000000000afcf10 R11: 0000000000000202 R12:
-> 0000000000402690
-> [79162.644935] R13: 00007ffdfbdac790 R14: 0000000000000000 R15:
-> 0000000000000000
-> [79162.645559] Modules linked in: ip6t_REJECT nf_reject_ipv6
-> ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ebtable_nat
-> ebtable_broute ip6table_nat ip6table_mangle ip6table_raw
-> ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw
-> iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set
-> nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables
-> iptable_filter intel_rapl_msr intel_rapl_common kvm_intel kvm irqbypass
-> crct10dif_pclmul crc32_pclmul ghash_clmulni_intel cirrus drm_kms_helper
-> virtio_net net_failover joydev drm failover i2c_piix4 virtio_balloon
-> pcspkr ip_tables xfs libcrc32c crc32c_intel ata_generic floppy
-> virtio_scsi serio_raw pata_acpi qemu_fw_cfg
-> [79162.649591] CR2: 0000000000000000
-> [79162.650272] ---[ end trace 5119c5364c1e9c83 ]---
-> [79162.650957] RIP: 0010:bpf_check+0x1648/0x250b
-> [79162.651646] Code: 41 89 c5 0f 88 d1 0a 00 00 41 f6 47 02 01 0f 84 17
-> 0b 00 00 41 83 7f 04 1a 0f 84 0c 0c 00 00 49 8b 47 20 48 63 db 48 8b 40
-> 68 <48> 8b 04 d8 48 8b 40 30 49 89 42 50 49 8b 46 20 4c 89 cf 4c 89 95
-> [79162.653081] RSP: 0018:ffffb5f6c072bc88 EFLAGS: 00010293
-> [79162.653807] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> ffffb5f6c072bc40
-> [79162.654536] RDX: ffffa0a1e76b1418 RSI: 00000000fffffffa RDI:
-> 0000000000000000
-> [79162.655270] RBP: ffffb5f6c072bd70 R08: 000000000000000e R09:
-> ffffa0a1e4d3fa90
-> [79162.655996] R10: ffffa0a1e4d3fa80 R11: ffffa0a1e76b159a R12:
-> ffffa0a1eac7c000
-> [79162.656715] R13: 0000000000000000 R14: ffffb5f6c01e3000 R15:
-> ffffb5f6c015f000
-> [79162.657429] FS:  00007f560c2e3740(0000) GS:ffffa0a1f7940000(0000)
-> knlGS:0000000000000000
-> [79162.658137] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [79162.658826] CR2: 0000000000000000 CR3: 00000001e242a005 CR4:
-> 0000000000360ee0
-> [79162.659515] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [79162.660196] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
->
->
-> I=E2=80=99ve put my code on GitHub, maybe it=E2=80=99s just something stu=
-pid=E2=80=A6
->
-> https://github.com/chaudron/bpf2bpf-tracing
->
->
-> Cheers,
->
-> Eelco
->
->
-> PS: If I run the latest pahole (v1.15) on the .o files, I get the
-> following libbpf error: =E2=80=9Clibbpf: Cannot find bpf_func_info for ma=
-in
-> program sec fexit/xdp_prog_simple. Ignore all bpf_func_info.=E2=80=9D
->
-
-pahole is not supposed to be run on BPF object file. It's needed only
-to do DWARF to BTF conversion for kernel itself. So never mind this
-one. The NULL dereference, though, seems like a bug, I agree with
-Yonghong.
+DQoNCk9uIDEyLzQvMTkgNjo1OCBBTSwgWW9uZ2hvbmcgU29uZyB3cm90ZToNCj4gDQo+IA0KPiBP
+biAxMi80LzE5IDU6MTkgQU0sIEVlbGNvIENoYXVkcm9uIHdyb3RlOg0KPj4NCj4+DQo+PiBPbiAy
+IERlYyAyMDE5LCBhdCAxNzo0OCwgWW9uZ2hvbmcgU29uZyB3cm90ZToNCj4+DQo+Pj4gT24gMTIv
+Mi8xOSA4OjM0IEFNLCBFZWxjbyBDaGF1ZHJvbiB3cm90ZToNCj4+Pj4gT24gMjkgTm92IDIwMTks
+IGF0IDE3OjUyLCBZb25naG9uZyBTb25nIHdyb3RlOg0KPj4NCj4+IDxTTklQPg0KPj4+DQo+Pj4g
+WW91IG5lZWQgdG8gYnVpbGQgdGhlIGtlcm5lbCB3aXRoDQo+Pj4gIMKgwqAgQ09ORklHX0RFQlVH
+X0lORk9fQlRGPXkNCj4+PiBNYWtlIHN1cmUgb24gdGhlIGJ1aWxkIG1hY2hpbmUgeW91IGhhdmUg
+cmVjZW50IHBhaG9sZSB2ZXJzaW9uID49IDEuMTMuDQo+Pg0KPj4gV2l0aCB0aGUgbGF0ZXN0IExM
+Vk0gYW5kIENPTkZJR19ERUJVR19JTkZPX0JURj15IHRoZSBzZWxmLXRlc3QgZm9yDQo+PiBicGYy
+YnBmIGlzIHBhc3NpbmchDQo+IA0KPiBHcmVhdCENCj4gDQo+Pg0KPj4gSG93ZXZlciBJIHN0aWxs
+IGhhdmUgcHJvYmxlbXMgd2l0aCBteSBjb2RlLCB3aGljaCBpcyBnZXR0aW5nIHRvIHRoZSBuZXh0
+DQo+PiBzdGVwLCBidXQgbm8gbXkgcHJvZ3JhbSBpcyBraWxsZWQgd2hlbiB0cnlpbmcgdG8gbG9h
+ZCB0aGUgZUJQRyBmZXhpdA0KPj4gY29kZS4gSWYgSSByZXBsYWNlIG15IGdlbmVyYXRlZCBlQlBG
+IHByb2dyYW1zIGZvciB0aGUgb25jZSBnZW5lcmF0ZWQgYnkNCj4+IHRoZSBzZWxmLXRlc3QgKHRl
+c3RfcGt0X2FjY2Vzcy5vL2ZleGl0X2JwZjJicGYubykgaXQgd29ya3MgZmluZS4NCj4+DQo+Pg0K
+Pj4gSSBkZWNpZGVkIHRvIGJ1aWxkIG15IG9iamVjdHMganVzdCBsaWtlIHRoZSBleGFtcGxlIHBy
+b2dyYW1zIChzbyBoYXZlIGENCj4+IGhhY2tlZCBidWlsZC5zaCBmaWxlKSBidXQgSSBnZXQgdGhl
+IHNhbWUgcmVzdWx0cy4gSS5lLiBiZWluZyBraWxsZWQgYnkNCj4+IHRoZSBrZXJuZWw6DQo+Pg0K
+Pj4gYnBmKEJQRl9CVEZfTE9BRCwNCj4+IHtidGY9IlwyMzdcMzUzXDFcMFwzMFwwXDBcMFwwXDBc
+MFwwXDMzMFwwXDBcMFwzMzBcMFwwXDBcMjQ0XDBcMFwwXDBcMFwwXDBcMFwwXDBcMiIuLi4sDQo+
+PiBidGZfbG9nX2J1Zj1OVUxMLCBidGZfc2l6ZT00MDQsIGJ0Zl9sb2dfc2l6ZT0wLCBidGZfbG9n
+X2xldmVsPTB9LCAxMjApID0gNg0KPj4gYnBmKEJQRl9PQkpfR0VUX0lORk9fQllfRkQsIHtpbmZv
+PXticGZfZmQ9MywgaW5mb19sZW49MjA4LA0KPj4gaW5mbz0weDdmZmRmYmRhYzNiMH19LCAxMjAp
+ID0gMA0KPj4gYnBmKEJQRl9PQkpfR0VUX0lORk9fQllfRkQsIHtpbmZvPXticGZfZmQ9MywgaW5m
+b19sZW49MjA4LA0KPj4gaW5mbz0weGFmYjYwMH19LCAxMjApID0gMA0KPj4gYnBmKEJQRl9CVEZf
+R0VUX0ZEX0JZX0lELCB7YnRmX2lkPTkwfSwgMTIwKSA9IDUNCj4+IGJwZihCUEZfT0JKX0dFVF9J
+TkZPX0JZX0ZELCB7aW5mbz17YnBmX2ZkPTUsIGluZm9fbGVuPTE2LA0KPj4gaW5mbz0weDdmZmRm
+YmRhYzRiMH19LCAxMjApID0gMA0KPj4gLSBPcGVuZWQgb2JqZWN0IGZpbGU6IDB4YWZiNDQwDQo+
+PiBicGYoQlBGX1BST0dfTE9BRCwge3Byb2dfdHlwZT0weDFhIC8qIEJQRl9QUk9HX1RZUEVfPz8/
+ICovLCBpbnNuX2NudD0yLA0KPj4gaW5zbnM9MHhhZmJhYTAsIGxpY2Vuc2U9IkdQTCIsIGxvZ19s
+ZXZlbD03LCBsb2dfc2l6ZT0xNjc3NzIxNSwNCj4+IGxvZ19idWY9IlwyMzdcMzUzXDEiLCBrZXJu
+X3ZlcnNpb249S0VSTkVMX1ZFUlNJT04oMCwgMCwgMCksDQo+PiBwcm9nX2ZsYWdzPTAsIHByb2df
+bmFtZT0idGVzdF9tYWluIiwgcHJvZ19pZmluZGV4PTAsDQo+PiBleHBlY3RlZF9hdHRhY2hfdHlw
+ZT0weDE5IC8qIEJQRl8/Pz8gKi8sIHByb2dfYnRmX2ZkPTYsDQo+PiBmdW5jX2luZm9fcmVjX3Np
+emU9OCwgZnVuY19pbmZvPTB4YWZiOWYwLCBmdW5jX2luZm9fY250PTEsDQo+PiBsaW5lX2luZm9f
+cmVjX3NpemU9MTYsIGxpbmVfaW5mbz0weGFmYmExMCwgbGluZV9pbmZvX2NudD0xLCAuLi59LCAx
+MjANCj4+ICkgPSA/DQo+PiArKysga2lsbGVkIGJ5IFNJR0tJTEwgKysrDQo+PiBLaWxsZWQNCj4+
+DQo+Pg0KPj4gWzc5MTYyLjYxOTIwOF0gQlVHOiBrZXJuZWwgTlVMTCBwb2ludGVyIGRlcmVmZXJl
+bmNlLCBhZGRyZXNzOg0KPiANCj4gVGhpcyBzaG91bGQgYmUgYSBrZXJuZWwgYnVnLiBJIHdpbGwg
+dGFrZSBhIGxvb2sgYXQgaXQgdG9kYXkuDQo+IA0KPj4gMDAwMDAwMDAwMDAwMDAwMA0KPj4gWzc5
+MTYyLjYxOTkwNl0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNzIGluIGtlcm5lbCBtb2RlDQo+
+PiBbNzkxNjIuNjIwNTgyXSAjUEY6IGVycm9yX2NvZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBh
+Z2UNCj4+IFs3OTE2Mi42MjEyNTVdIFBHRCA4MDAwMDAwMWUyNDA5MDY3IFA0RCA4MDAwMDAwMWUy
+NDA5MDY3IFBVRCAyMmViYTkwNjcNCj4+IFBNRCAwDQo+PiBbNzkxNjIuNjIxOTMzXSBPb3BzOiAw
+MDAwIFsjMTJdIFNNUCBQVEkNCj4+IFs3OTE2Mi42MjI1OTldIENQVTogNSBQSUQ6IDMxOTEgQ29t
+bTogeGRwX3NhbXBsZV9mZW50IFRhaW50ZWQ6IEfCoMKgwqDCoMKgIEQNCj4+ICAgwqDCoMKgwqDC
+oMKgwqDCoCA1LjQuMCsgIzMNCj4+IFs3OTE2Mi42MjMyNzRdIEhhcmR3YXJlIG5hbWU6IFJlZCBI
+YXQgS1ZNLCBCSU9TDQo+PiAxLjExLjEtMy5tb2R1bGUrZWw4KzI1MjkrYTk2ODZhNGQgMDQvMDEv
+MjAxNA0KPj4gWzc5MTYyLjYyMzk2Ml0gUklQOiAwMDEwOmJwZl9jaGVjaysweDE2NDgvMHgyNTBi
+DQo+PiBbNzkxNjIuNjI0NjUwXSBDb2RlOiA0MSA4OSBjNSAwZiA4OCBkMSAwYSAwMCAwMCA0MSBm
+NiA0NyAwMiAwMSAwZiA4NCAxNw0KPj4gMGIgMDAgMDAgNDEgODMgN2YgMDQgMWEgMGYgODQgMGMg
+MGMgMDAgMDAgNDkgOGIgNDcgMjAgNDggNjMgZGIgNDggOGIgNDANCj4+IDY4IDw0OD4gOGIgMDQg
+ZDggNDggOGIgNDAgMzAgNDkgODkgNDIgNTAgNDkgOGIgNDYgMjAgNGMgODkgY2YgNGMgODkgOTUN
+Cj4+IFs3OTE2Mi42MjYwODhdIFJTUDogMDAxODpmZmZmYjVmNmMwN2MzYzg4IEVGTEFHUzogMDAw
+MTAyOTMNCj4+IFs3OTE2Mi42MjY4MjJdIFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAw
+MDAwMDAwMDAwMDAgUkNYOg0KPj4gZmZmZmI1ZjZjMDdjM2M0MA0KPj4gWzc5MTYyLjYyNzU2MF0g
+UkRYOiBmZmZmYTBhMWU2ZTAxODE4IFJTSTogMDAwMDAwMDBmZmZmZmZmYSBSREk6DQo+PiAwMDAw
+MDAwMDAwMDAwMDAwDQo+PiBbNzkxNjIuNjI4MzA0XSBSQlA6IGZmZmZiNWY2YzA3YzNkNzAgUjA4
+OiAwMDAwMDAwMDAwMDAwMDBlIFIwOToNCj4+IGZmZmZhMGExZjVjOWRjOTANCj4+IFs3OTE2Mi42
+MjkwNTNdIFIxMDogZmZmZmEwYTFmNWM5ZGM4MCBSMTE6IGZmZmZhMGExZTZlMDE5OWEgUjEyOg0K
+Pj4gZmZmZmEwYTFlYWM0ODAwMA0KPj4gWzc5MTYyLjYyOTgwNl0gUjEzOiAwMDAwMDAwMDAwMDAw
+MDAwIFIxNDogZmZmZmI1ZjZjMDQzZTAwMCBSMTU6DQo+PiBmZmZmYjVmNmMwMzNmMDAwDQo+PiBb
+NzkxNjIuNjMwNTYyXSBGUzrCoCAwMDAwN2Y1NjBjMmUzNzQwKDAwMDApIEdTOmZmZmZhMGExZjc5
+NDAwMDAoMDAwMCkNCj4+IGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4+IFs3OTE2Mi42MzEzMjRd
+IENTOsKgIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQo+PiBb
+NzkxNjIuNjMyMDcyXSBDUjI6IDAwMDAwMDAwMDAwMDAwMDAgQ1IzOiAwMDAwMDAwMWUyNDJhMDA1
+IENSNDoNCj4+IDAwMDAwMDAwMDAzNjBlZTANCj4+IFs3OTE2Mi42MzI4MTNdIERSMDogMDAwMDAw
+MDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOg0KPj4gMDAwMDAwMDAwMDAwMDAw
+MA0KPj4gWzc5MTYyLjYzMzUzOV0gRFIzOiAwMDAwMDAwMDAwMDAwMDAwIERSNjogMDAwMDAwMDBm
+ZmZlMGZmMCBEUjc6DQo+PiAwMDAwMDAwMDAwMDAwNDAwDQo+PiBbNzkxNjIuNjM0MjU1XSBDYWxs
+IFRyYWNlOg0KPj4gWzc5MTYyLjYzNDk3NF3CoCA/IF9jb25kX3Jlc2NoZWQrMHgxNS8weDMwDQo+
+PiBbNzkxNjIuNjM1Njg2XcKgID8ga21lbV9jYWNoZV9hbGxvY190cmFjZSsweDE2Mi8weDIyMA0K
+Pj4gWzc5MTYyLjYzNjM5OF3CoCA/IHNlbGludXhfYnBmX3Byb2dfYWxsb2MrMHgxZi8weDYwDQo+
+PiBbNzkxNjIuNjM3MTExXcKgIGJwZl9wcm9nX2xvYWQrMHgzZGUvMHg2OTANCj4+IFs3OTE2Mi42
+Mzc4MDldwqAgX19kb19zeXNfYnBmKzB4MTA1LzB4MTc0MA0KPj4gWzc5MTYyLjYzODQ4OF3CoCBk
+b19zeXNjYWxsXzY0KzB4NWIvMHgxODANCj4+IFs3OTE2Mi42MzkxNDddwqAgZW50cnlfU1lTQ0FM
+TF82NF9hZnRlcl9od2ZyYW1lKzB4NDQvMHhhOQ0KPj4gWzc5MTYyLjYzOTc5Ml0gUklQOiAwMDMz
+OjB4N2Y1NjBjM2ZlMWFkDQo+PiBbNzkxNjIuNjQwNDE1XSBDb2RlOiAwMCBjMyA2NiAyZSAwZiAx
+ZiA4NCAwMCAwMCAwMCAwMCAwMCA5MCBmMyAwZiAxZSBmYQ0KPj4gNDggODkgZjggNDggODkgZjcg
+NDggODkgZDYgNDggODkgY2EgNGQgODkgYzIgNGQgODkgYzggNGMgOGIgNGMgMjQgMDggMGYNCj4+
+IDA1IDw0OD4gM2QgMDEgZjAgZmYgZmYgNzMgMDEgYzMgNDggOGIgMGQgYWIgNWMgMGMgMDAgZjcg
+ZDggNjQgODkgMDEgNDgNCj4+IFs3OTE2Mi42NDE3MDNdIFJTUDogMDAyYjowMDAwN2ZmZGZiZGFj
+MzE4IEVGTEFHUzogMDAwMDAyMDIgT1JJR19SQVg6DQo+PiAwMDAwMDAwMDAwMDAwMTQxDQo+PiBb
+NzkxNjIuNjQyMzYzXSBSQVg6IGZmZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwYWZiNDQw
+IFJDWDoNCj4+IDAwMDA3ZjU2MGMzZmUxYWQNCj4+IFs3OTE2Mi42NDMwMjZdIFJEWDogMDAwMDAw
+MDAwMDAwMDA3OCBSU0k6IDAwMDA3ZmZkZmJkYWMzOTAgUkRJOg0KPj4gMDAwMDAwMDAwMDAwMDAw
+NQ0KPj4gWzc5MTYyLjY0MzY3Nl0gUkJQOiAwMDAwN2ZmZGZiZGFjMzMwIFIwODogMDAwMDAwMDAw
+MGFmYmE3MCBSMDk6DQo+PiAwMDAwN2ZmZGZiZGFjMzkwDQo+PiBbNzkxNjIuNjQ0MzEwXSBSMTA6
+IDAwMDAwMDAwMDBhZmNmMTAgUjExOiAwMDAwMDAwMDAwMDAwMjAyIFIxMjoNCj4+IDAwMDAwMDAw
+MDA0MDI2OTANCj4+IFs3OTE2Mi42NDQ5MzVdIFIxMzogMDAwMDdmZmRmYmRhYzc5MCBSMTQ6IDAw
+MDAwMDAwMDAwMDAwMDAgUjE1Og0KPj4gMDAwMDAwMDAwMDAwMDAwMA0KPj4gWzc5MTYyLjY0NTU1
+OV0gTW9kdWxlcyBsaW5rZWQgaW46IGlwNnRfUkVKRUNUIG5mX3JlamVjdF9pcHY2DQo+PiBpcDZ0
+X3JwZmlsdGVyIGlwdF9SRUpFQ1QgbmZfcmVqZWN0X2lwdjQgeHRfY29ubnRyYWNrIGVidGFibGVf
+bmF0DQo+PiBlYnRhYmxlX2Jyb3V0ZSBpcDZ0YWJsZV9uYXQgaXA2dGFibGVfbWFuZ2xlIGlwNnRh
+YmxlX3Jhdw0KPj4gaXA2dGFibGVfc2VjdXJpdHkgaXB0YWJsZV9uYXQgbmZfbmF0IGlwdGFibGVf
+bWFuZ2xlIGlwdGFibGVfcmF3DQo+PiBpcHRhYmxlX3NlY3VyaXR5IG5mX2Nvbm50cmFjayBuZl9k
+ZWZyYWdfaXB2NiBuZl9kZWZyYWdfaXB2NCBpcF9zZXQNCj4+IG5mbmV0bGluayBlYnRhYmxlX2Zp
+bHRlciBlYnRhYmxlcyBpcDZ0YWJsZV9maWx0ZXIgaXA2X3RhYmxlcw0KPj4gaXB0YWJsZV9maWx0
+ZXIgaW50ZWxfcmFwbF9tc3IgaW50ZWxfcmFwbF9jb21tb24ga3ZtX2ludGVsIGt2bSBpcnFieXBh
+c3MNCj4+IGNyY3QxMGRpZl9wY2xtdWwgY3JjMzJfcGNsbXVsIGdoYXNoX2NsbXVsbmlfaW50ZWwg
+Y2lycnVzIGRybV9rbXNfaGVscGVyDQo+PiB2aXJ0aW9fbmV0IG5ldF9mYWlsb3ZlciBqb3lkZXYg
+ZHJtIGZhaWxvdmVyIGkyY19waWl4NCB2aXJ0aW9fYmFsbG9vbg0KPj4gcGNzcGtyIGlwX3RhYmxl
+cyB4ZnMgbGliY3JjMzJjIGNyYzMyY19pbnRlbCBhdGFfZ2VuZXJpYyBmbG9wcHkNCj4+IHZpcnRp
+b19zY3NpIHNlcmlvX3JhdyBwYXRhX2FjcGkgcWVtdV9md19jZmcNCj4+IFs3OTE2Mi42NDk1OTFd
+IENSMjogMDAwMDAwMDAwMDAwMDAwMA0KPj4gWzc5MTYyLjY1MDI3Ml0gLS0tWyBlbmQgdHJhY2Ug
+NTExOWM1MzY0YzFlOWM4MyBdLS0tDQo+PiBbNzkxNjIuNjUwOTU3XSBSSVA6IDAwMTA6YnBmX2No
+ZWNrKzB4MTY0OC8weDI1MGINCj4+IFs3OTE2Mi42NTE2NDZdIENvZGU6IDQxIDg5IGM1IDBmIDg4
+IGQxIDBhIDAwIDAwIDQxIGY2IDQ3IDAyIDAxIDBmIDg0IDE3DQo+PiAwYiAwMCAwMCA0MSA4MyA3
+ZiAwNCAxYSAwZiA4NCAwYyAwYyAwMCAwMCA0OSA4YiA0NyAyMCA0OCA2MyBkYiA0OCA4YiA0MA0K
+Pj4gNjggPDQ4PiA4YiAwNCBkOCA0OCA4YiA0MCAzMCA0OSA4OSA0MiA1MCA0OSA4YiA0NiAyMCA0
+YyA4OSBjZiA0YyA4OSA5NQ0KPj4gWzc5MTYyLjY1MzA4MV0gUlNQOiAwMDE4OmZmZmZiNWY2YzA3
+MmJjODggRUZMQUdTOiAwMDAxMDI5Mw0KPj4gWzc5MTYyLjY1MzgwN10gUkFYOiAwMDAwMDAwMDAw
+MDAwMDAwIFJCWDogMDAwMDAwMDAwMDAwMDAwMCBSQ1g6DQo+PiBmZmZmYjVmNmMwNzJiYzQwDQo+
+PiBbNzkxNjIuNjU0NTM2XSBSRFg6IGZmZmZhMGExZTc2YjE0MTggUlNJOiAwMDAwMDAwMGZmZmZm
+ZmZhIFJESToNCj4+IDAwMDAwMDAwMDAwMDAwMDANCj4+IFs3OTE2Mi42NTUyNzBdIFJCUDogZmZm
+ZmI1ZjZjMDcyYmQ3MCBSMDg6IDAwMDAwMDAwMDAwMDAwMGUgUjA5Og0KPj4gZmZmZmEwYTFlNGQz
+ZmE5MA0KPj4gWzc5MTYyLjY1NTk5Nl0gUjEwOiBmZmZmYTBhMWU0ZDNmYTgwIFIxMTogZmZmZmEw
+YTFlNzZiMTU5YSBSMTI6DQo+PiBmZmZmYTBhMWVhYzdjMDAwDQo+PiBbNzkxNjIuNjU2NzE1XSBS
+MTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiBmZmZmYjVmNmMwMWUzMDAwIFIxNToNCj4+IGZmZmZi
+NWY2YzAxNWYwMDANCj4+IFs3OTE2Mi42NTc0MjldIEZTOsKgIDAwMDA3ZjU2MGMyZTM3NDAoMDAw
+MCkgR1M6ZmZmZmEwYTFmNzk0MDAwMCgwMDAwKQ0KPj4ga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0K
+Pj4gWzc5MTYyLjY1ODEzN10gQ1M6wqAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAw
+MDAwODAwNTAwMzMNCj4+IFs3OTE2Mi42NTg4MjZdIENSMjogMDAwMDAwMDAwMDAwMDAwMCBDUjM6
+IDAwMDAwMDAxZTI0MmEwMDUgQ1I0Og0KPj4gMDAwMDAwMDAwMDM2MGVlMA0KPj4gWzc5MTYyLjY1
+OTUxNV0gRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6DQo+
+PiAwMDAwMDAwMDAwMDAwMDAwDQo+PiBbNzkxNjIuNjYwMTk2XSBEUjM6IDAwMDAwMDAwMDAwMDAw
+MDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzoNCj4+IDAwMDAwMDAwMDAwMDA0MDANCj4+DQo+
+Pg0KPj4gSeKAmXZlIHB1dCBteSBjb2RlIG9uIEdpdEh1YiwgbWF5YmUgaXTigJlzIGp1c3Qgc29t
+ZXRoaW5nIHN0dXBpZOKApg0KDQpUaGFua3MgZm9yIHRoZSB0ZXN0IGNhc2UuIFRoaXMgaW5kZWVk
+IGEga2VybmVsIGJ1Zy4NClRoZSBmb2xsb3dpbmcgY2hhbmdlIGZpeGVkIHRoZSBpc3N1ZToNCg0K
+DQotYmFzaC00LjQkIGdpdCBkaWZmDQpkaWZmIC0tZ2l0IGEva2VybmVsL2JwZi92ZXJpZmllci5j
+IGIva2VybmVsL2JwZi92ZXJpZmllci5jDQppbmRleCBhMDQ4MmUxYzRhNzcuLjAzNGVmODFmOTM1
+YiAxMDA2NDQNCi0tLSBhL2tlcm5lbC9icGYvdmVyaWZpZXIuYw0KKysrIGIva2VybmVsL2JwZi92
+ZXJpZmllci5jDQpAQCAtOTYzNiw3ICs5NjM2LDEwIEBAIHN0YXRpYyBpbnQgY2hlY2tfYXR0YWNo
+X2J0Zl9pZChzdHJ1Y3QgDQpicGZfdmVyaWZpZXJfZW52ICplbnYpDQogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICByZXQgPSAtRUlOVkFMOw0KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgZ290byBvdXQ7DQogICAgICAgICAgICAgICAgICAgICAgICAgfQ0KLSAgICAgICAg
+ICAgICAgICAgICAgICAgYWRkciA9IChsb25nKSANCnRndF9wcm9nLT5hdXgtPmZ1bmNbc3VicHJv
+Z10tPmJwZl9mdW5jOw0KKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKHN1YnByb2cgPT0gMCkN
+CisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWRkciA9IChsb25nKSB0Z3RfcHJvZy0+
+YnBmX2Z1bmM7DQorICAgICAgICAgICAgICAgICAgICAgICBlbHNlDQorICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGFkZHIgPSAobG9uZykgDQp0Z3RfcHJvZy0+YXV4LT5mdW5jW3N1YnBy
+b2ddLT5icGZfZnVuYzsNCiAgICAgICAgICAgICAgICAgfSBlbHNlIHsNCiAgICAgICAgICAgICAg
+ICAgICAgICAgICBhZGRyID0ga2FsbHN5bXNfbG9va3VwX25hbWUodG5hbWUpOw0KICAgICAgICAg
+ICAgICAgICAgICAgICAgIGlmICghYWRkcikgew0KLWJhc2gtNC40JA0KDQpUaGUgcmVhc29uIGlz
+IGZvciBhIGJwZiBwcm9ncmFtIHdpdGhvdXQgYW55IGFkZGl0aW9uYWwgc3VicHJvZ3JhbSANCihj
+YWxsZWVzKSwgdGd0X3Byb2ctPmF1eC0+ZnVuYyBpcyBub3QgcG9wdWxhdGVkIGFuZCBpcyBhIE5V
+TEwgcG9pbnRlciwNCnNvIHRoZSBhY2Nlc3MgdGd0X3Byb2ctPmF1eC0+ZnVuY1swXS0+YnBmX2Z1
+bmMgd2lsbCBzZWdmYXVsdC4NCg0KV2l0aCB0aGUgYWJvdmUgY2hhbmdlLCB5b3VyIHRlc3Qgd29y
+a3MgcHJvcGVybHkuDQoNCldpbGwgc2VuZCBhIHBhdGNoIHRvIHVwc3RyZWFtIHNvb24uDQoNCj4+
+DQo+PiBodHRwczovL2dpdGh1Yi5jb20vY2hhdWRyb24vYnBmMmJwZi10cmFjaW5nDQo+Pg0KPj4N
+Cj4+IENoZWVycywNCj4+DQo+PiBFZWxjbw0KPj4NCj4+DQo+PiBQUzogSWYgSSBydW4gdGhlIGxh
+dGVzdCBwYWhvbGUgKHYxLjE1KSBvbiB0aGUgLm8gZmlsZXMsIEkgZ2V0IHRoZQ0KPj4gZm9sbG93
+aW5nIGxpYmJwZiBlcnJvcjog4oCcbGliYnBmOiBDYW5ub3QgZmluZCBicGZfZnVuY19pbmZvIGZv
+ciBtYWluDQo+PiBwcm9ncmFtIHNlYyBmZXhpdC94ZHBfcHJvZ19zaW1wbGUuIElnbm9yZSBhbGwg
+YnBmX2Z1bmNfaW5mby7igJ0NCj4+DQo=
