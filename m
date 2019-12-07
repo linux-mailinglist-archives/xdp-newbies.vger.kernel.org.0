@@ -2,54 +2,62 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9073115C53
-	for <lists+xdp-newbies@lfdr.de>; Sat,  7 Dec 2019 14:16:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E09C3115D97
+	for <lists+xdp-newbies@lfdr.de>; Sat,  7 Dec 2019 17:51:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfLGNQJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 7 Dec 2019 08:16:09 -0500
-Received: from mail-vk1-f175.google.com ([209.85.221.175]:41999 "EHLO
-        mail-vk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfLGNQJ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Sat, 7 Dec 2019 08:16:09 -0500
-Received: by mail-vk1-f175.google.com with SMTP id u123so3116246vkb.9
-        for <xdp-newbies@vger.kernel.org>; Sat, 07 Dec 2019 05:16:08 -0800 (PST)
+        id S1726420AbfLGQvd (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 7 Dec 2019 11:51:33 -0500
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:45119 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfLGQvd (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Sat, 7 Dec 2019 11:51:33 -0500
+Received: by mail-lf1-f48.google.com with SMTP id 203so7549459lfa.12;
+        Sat, 07 Dec 2019 08:51:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=4rul3mnEYFONvKiP6XZdA6eBPjClCRkhlAE44xm7h5c=;
-        b=OrTwZtI0Jki1fk1tt2/6jE3s6zdXxoY0yjBLrBh4mUparreEayN+vZFi2Bjuv9lg9H
-         B/Ixi4kyayJ1E4FbZfddrOFjYflvuV1B/z/EJU012uF2AJI3rhu41dxhJYK72nd4n7NQ
-         My87alxPS/7fRM9AGbJByeKU1Nnh3F1cfAYvfu7P+YRysipJTF0A4nMz1ywmiloJ65R9
-         +1V6t0/X16IPA7b7CZcvJ34U3/GkgX+bDi6WICctgSQnHFf54GfZAS2+RP/NW7BxECE1
-         oqT71rDaHkIuJcOw5Knq9BYpc8lz8HdDcUEgQXX+ZwHnJIQD5oyvUvtEFtxNkr6/kf6k
-         sh/g==
+        bh=H1vWx0dAQL31p+IIogmLYF5ORkKGGbq821m3i9i/pV0=;
+        b=l69R3OsNyR8t6H+eyEVkm6Pd4gkWR//KmWOg0QJeklF4KOCui+kJR2cs5C1bxGbe6S
+         n8UrkgdMKNjN45eQG7BulPvf+iRK6RisLBZogM6CmZ0hS6wvDo9vfY+lUZ/FUDsL5Okg
+         BDffHDt/U+FLVT7IGYydylgTl+gsRcxpGv4ZLLYlOC/JRsvSes89W7lCOPMPplEqXskv
+         q9QKwfW9C9y4Q494hHR20oylhShzQyOqNmraRZMZT5KCAS8ZV1x107lnaJBUeLu2i9pn
+         b9IB0j2WETSn9zLnc5JEDYhACJ1dSeM38+it6R0C6iW8jjoMjqQfsVG+KUqAr/ExFkx7
+         SBOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4rul3mnEYFONvKiP6XZdA6eBPjClCRkhlAE44xm7h5c=;
-        b=f6V1GR4p17P+t+O+eCebzTCDu1304Kf7nOldOHW+oLTNMf6wYqPAUldPmQwKEXsOjt
-         FOVg4z72RqimgBu2/dwbqDVvPk4MjuuUI56vqa8YvYd7nRFFe3IKw5cTW23dMAsKiGJj
-         qq9xEMPuGfLHnXDhXGj0ni2xu/u3jeXljk9eRUIBtFDky8iPB2WvChM78Dmrg+suENrX
-         wrfA7wybQQtHwne2AfVhYk2WRdgpmFCZI8cIXP+DwbL7LXh6OAc5Vopn22qOq+mcmWWa
-         dY5C7CnS/qPK9CfRN6vr1RFFX1s51Ef3vi5Emhy6lI28CuiD/vPV8JfV/QqTwJ9IzFpY
-         7XRQ==
-X-Gm-Message-State: APjAAAWuMG1jAmsGSM64WsPCym2zvTkrv0oi/PkXXM2NU2VpWdlWTLnr
-        9IklHcGDp7+uvB/8i/wc8kQFGdEk/ZWnIy4iu2w=
-X-Google-Smtp-Source: APXvYqzU5Dy3oYYOfYAJpMsULNDY5gGzrTLC8qd00dbltrugn/nEpfDNqxwbX0KrBchjVzVS1UzVgQ5TeVkvMf4krRY=
-X-Received: by 2002:a1f:9941:: with SMTP id b62mr16267884vke.48.1575724568129;
- Sat, 07 Dec 2019 05:16:08 -0800 (PST)
+        bh=H1vWx0dAQL31p+IIogmLYF5ORkKGGbq821m3i9i/pV0=;
+        b=BSrDoLVCFYV7mt6fAeCs+vaSrIryNv17hWcIJZAwqOowpk7Rjid0XaddhlMOettKHV
+         REbShcKO6DCkbp5bgX57EtkM7WBOSSgNv08eqpfKdpka0un0OxwsSd6FAZ7lsaSXf75o
+         DszqXy+YnfnYHP569zrntyji2AOYbWhJ7dLDD3RWZIxX8x6USPNMAE1JzhJk4mdlQQF/
+         mARR6n5OhYIUBtCErCWW+8VL9tHHHeAMC+L8nmGX5eWdBfUpPMYK1tI/bBxNs5zK9KYu
+         BAYAh7F02H2G+h+uku1mJqRf77cMRoPtQt7rb2UoSlAj4yf3TBMFD/FWrd7ZF4n9cn2e
+         xteQ==
+X-Gm-Message-State: APjAAAWf5pwqEHTV2m0aIlFViiHFPTDdCn9k//dNQy60plz5AyNwIBC/
+        QOIeeP3o8/X2akz+hr1oR89b1zy4C9wMV+wQayU=
+X-Google-Smtp-Source: APXvYqybCyX9ONFN4SLNqXZu87KejRjU7J3OJArhn08ViTPNaLrkojkayz+3V1WmDeheyZ8DNsWnXbpS8vxZvIKIc0k=
+X-Received: by 2002:ac2:52a5:: with SMTP id r5mr11120850lfm.19.1575737491115;
+ Sat, 07 Dec 2019 08:51:31 -0800 (PST)
 MIME-Version: 1.0
-References: <BYAPR11MB26157ACA256993F0F15D65E7B45F0@BYAPR11MB2615.namprd11.prod.outlook.com>
- <BYAPR11MB261504C332D91F584F054345B45E0@BYAPR11MB2615.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB261504C332D91F584F054345B45E0@BYAPR11MB2615.namprd11.prod.outlook.com>
-From:   Anton Protopopov <aspsk2@gmail.com>
-Date:   Sat, 7 Dec 2019 08:15:57 -0500
-Message-ID: <CAGn_itw1=3+dH85NL-4NtdKgLnXPgCZe4xrjQRx_Tu3iwySaiQ@mail.gmail.com>
-Subject: Re: bpf_csum_diff - R3 offset is outside of the packet
-To:     "Francesco Ruta (fruta)" <fruta@cisco.com>
-Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+References: <E53E0693-1C3A-4B47-B205-DC8E5DAF3619@redhat.com>
+ <CAADnVQKkLtG-QCZwxx-Bpz8-goh-_mSTtUSzpb_oTv9a-qLizg@mail.gmail.com>
+ <3AC9D2B7-9D2F-4286-80A2-1721B51B62CF@redhat.com> <CAADnVQJKSnoMVpQ3F86zBhFyo8WQ0vi65Z4QDtopLRrpK4yB8Q@mail.gmail.com>
+ <4BBF99E4-9554-44F7-8505-D4B8416554C4@redhat.com> <d588c894-a4e0-8b99-72a9-4429b27091df@fb.com>
+ <056E9F5E-4FDD-4636-A43A-EC98A06E84D3@redhat.com> <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
+ <B7E0062E-37ED-46E6-AE64-EE3E2A0294EA@redhat.com> <7062345a-1060-89f6-0c02-eef2fe0d835a@fb.com>
+ <b8d80047-3bc1-5393-76a1-7517cb2b7280@fb.com> <E08A0006-E254-492C-92AB-408B58E456C0@redhat.com>
+ <F8CFD537-7907-4259-9C91-4649F799216B@redhat.com> <CAH3MdRXr+3mUfrd8MPH-mDdNwD1szXRhz07s2C4dVQ0EkzDaAg@mail.gmail.com>
+ <78D7857B-82E4-42BC-85E1-E3D7C97BF840@redhat.com>
+In-Reply-To: <78D7857B-82E4-42BC-85E1-E3D7C97BF840@redhat.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 7 Dec 2019 08:51:19 -0800
+Message-ID: <CAADnVQ+DHuDS2xZbjsEfBYX5t761dbCih6p-=NaCNU9OJEMk8A@mail.gmail.com>
+Subject: Re: Trying the bpf trace a bpf xdp program
+To:     Eelco Chaudron <echaudro@redhat.com>
+Cc:     Y Song <ys114321@gmail.com>, Yonghong Song <yhs@fb.com>,
+        Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
@@ -57,87 +65,67 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Francesco,
-
-=D0=BF=D1=82, 6 =D0=B4=D0=B5=D0=BA. 2019 =D0=B3. =D0=B2 19:12, Francesco Ru=
-ta (fruta) <fruta@cisco.com>:
+On Fri, Dec 6, 2019 at 5:05 AM Eelco Chaudron <echaudro@redhat.com> wrote:
 >
-> Hello,
+> Thanks the hint that it should be the jitted arguments solved it=E2=80=A6=
+ And
+> you quick example worked, just in case some one else is playing with it,
+> here is my working example:
 >
-> I am trying to use bpf_csum_diff() to recompute a corrupted checksum in X=
-DP; unfortunately, in this specific case, I am unable to just perform an in=
-cremental update.
-> I understand that the verifier will reject code that uses dynamic length,=
- but even the stripped-down test shown below is rejected.
-> I tried directly in assembly adding extra range checks for the r3 registe=
-r to placate the most phobic verifier to no avail.
-> Is there any workaround -or any alternative?
-> BR
-> F.
+> // SPDX-License-Identifier: GPL-2.0
+> #include <linux/bpf.h>
+> #include "bpf_helpers.h"
+> #include "bpf_trace_helpers.h"
 >
-> SEC("test")
-> int intercept(struct xdp_md *ctx) {
->     void * data =3D (void*)(long)ctx->data;
->     void * dataEnd =3D (void*)(long)ctx->data_end;
->     void * dataPnt =3D data;
->     if (dataPnt >=3D dataEnd) {
->         return XDP_ABORTED;
->     }
->     __u32 dataLen =3D (__be32 *)dataEnd - (__be32 *)dataPnt;
->     if (dataLen > sizeof(__be32)){
->         (void)bpf_csum_diff(0, 0, (__be32 *)dataPnt, sizeof(__be32), 0);
->    }
->     return XDP_PASS;
+> #define bpf_debug(fmt, ...)                \
+> {                                          \
+>      char __fmt[] =3D fmt;                    \
+>      bpf_trace_printk(__fmt, sizeof(__fmt), \
+>                       ##__VA_ARGS__);       \
 > }
-> char _license[] SEC("license") =3D "GPL";
 >
-> Prog section 'test' rejected: Permission denied (13)!
-> - Type:         6
-> - Instructions: 18 (0 over limit)
-> - License:      GPL
+> struct net_device {
+>      /* Structure does not need to contain all entries,
+>       * as "preserve_access_index" will use BTF to fix this... */
+>      int                    ifindex;
+> } __attribute__((preserve_access_index));
 >
-> Verifier analysis:
+> struct xdp_rxq_info {
+>      /* Structure does not need to contain all entries,
+>       * as "preserve_access_index" will use BTF to fix this... */
+>      struct net_device *dev;
+>      __u32 queue_index;
+> } __attribute__((preserve_access_index));
 >
-> 0: (b7) r6 =3D 1
-> 1: (61) r2 =3D *(u32 *)(r1 +4)
-> 2: (61) r3 =3D *(u32 *)(r1 +0)
-> 3: (3d) if r3 >=3D r2 goto pc+12
-> R1=3Dctx(id=3D0,off=3D0,imm=3D0) R2=3Dpkt_end(id=3D0,off=3D0,imm=3D0) R3=
-=3Dpkt(id=3D0,off=3D0,r=3D0,imm=3D0) R6=3Dinv1 R10=3Dfp0,call_-1
-> 4: (1f) r2 -=3D r3
-> 5: (18) r1 =3D 0x3fffffffc
-> 7: (5f) r2 &=3D r1
-> 8: (b7) r6 =3D 2
-> 9: (b7) r1 =3D 17
-> 10: (2d) if r1 > r2 goto pc+5
-> R1=3Dinv17 R2=3Dinv(id=3D0,umin_value=3D17,umax_value=3D17179869180,var_o=
-ff=3D(0x0; 0x3fffffffc)) R3=3Dpkt(id=3D0,off=3D0,r=3D0,imm=3D0) R6=3Dinv2 R=
-10=3Dfp0,call_-1
-> 11: (b7) r1 =3D 0
-> 12: (b7) r2 =3D 0
-> 13: (b7) r4 =3D 4
-> 14: (b7) r5 =3D 0
-> 15: (85) call bpf_csum_diff#28
-> invalid access to packet, off=3D0 size=3D4, R3(id=3D0,off=3D0,r=3D0)
-> R3 offset is outside of the packet
+> struct xdp_buff {
+>      void *data;
+>      void *data_end;
+>      void *data_meta;
+>      void *data_hard_start;
+>      unsigned long handle;
+>      struct xdp_rxq_info *rxq;
+> } __attribute__((preserve_access_index));
 >
-> uname -sr
-> Linux 5.0.0-1022-gke
+>
+> BPF_TRACE_1("fentry/xdp_prog_simple", trace_on_entry,
+>              struct xdp_buff *, xdp)
+> {
+>      bpf_debug("fentry: [ifindex =3D %u, queue =3D  %u]\n",
+>                xdp->rxq->dev->ifindex, xdp->rxq->queue_index);
+>      return 0;
+> }
+>
+>
+> BPF_TRACE_2("fexit/xdp_prog_simple", trace_on_exit,
+>              struct xdp_buff*, xdp, int, ret)
+> {
+>      bpf_debug("fexit: [ifindex =3D %u, queue =3D  %u, ret =3D %d]\n",
+>                xdp->rxq->dev->ifindex, xdp->rxq->queue_index, ret);
 
-You need to check pointer boundaries, try something like this:
+This is great. Could you submit it as selftests/bpf ?
+It will help others trying to do the same.
+May be instead of bpf_debug() use global variables so the test will be
+self checking ?
 
-SEC("test")
-int intercept(struct xdp_md *ctx) {
-    void * data =3D (void*)(long)ctx->data;
-    void * data_end =3D (void*)(long)ctx->data_end;
-    const int N =3D sizeof(__be32);
-
-    if (data >=3D data_end)
-        return XDP_ABORTED;
-
-    if (data + N <=3D data_end) /* lets verifier to know that
-data[0,...,N-1] is valid */
-        bpf_csum_diff(0, 0, data, N, 0);
-
-    return XDP_PASS;
-}
+Long term we should teach verifier to understand 'struct xdp_md*'
+in addition to 'struct xdp_buff *'. That will help ease of use.
