@@ -2,93 +2,94 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92F3D123A54
-	for <lists+xdp-newbies@lfdr.de>; Tue, 17 Dec 2019 23:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85AF4126076
+	for <lists+xdp-newbies@lfdr.de>; Thu, 19 Dec 2019 12:07:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725870AbfLQWz7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 17 Dec 2019 17:55:59 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36920 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfLQWz7 (ORCPT
+        id S1726694AbfLSLHD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 19 Dec 2019 06:07:03 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44879 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726701AbfLSLHD (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 17 Dec 2019 17:55:59 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 21so7052771qky.4
-        for <xdp-newbies@vger.kernel.org>; Tue, 17 Dec 2019 14:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bjN4whhbp6nTQ6P5lPNpFXr1gERtyMPTC9LPUU3jZ1Y=;
-        b=gw5O4u4xOVFB55z7hcXlfmobl0/QalY5AD8BCjt1lFSuOg/9plcj+sEJzX/EEvRw4X
-         1KkywbOYXPyb9Rp3oUXi4IPFgjst8wK1bugFKzslMKRUS1pxtLN18jbJeOkqF7fmjHOO
-         /OU1x8EepF0hbn8BxJ/pm29ILIxcvOKZOAl5D4ndfzk38MogXEpl7H8J7Dh61m8cMgAz
-         if5N8lRfpm+DRB/XpqpECmLiDUZ5rfXb4W8JMFFeD9XRxGfdGsvJnVCBAjJh3raMucOm
-         92j8hGIOuUsvqmVJfFQZhZ3LAoN9J5aam/sCcfSiUL7cJhfQnZJO/pwLZrVzjsr6ovcK
-         rIAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bjN4whhbp6nTQ6P5lPNpFXr1gERtyMPTC9LPUU3jZ1Y=;
-        b=gcAid6r0pBwZckOibRR9KU19ecyvsRdm/wAPTKbeqrs/0DSnQWU4SSXoKzmwQOB7X+
-         9h3M3fpJ+qJhRGFbc39QwqlM5lHmlJ9GZ1d0eS0yOaCJHbN93GuDcGsIbeNRkzutNb0z
-         i4/+trjGpLaBXmlNRV5qWQZ4ycwoLszMjEIrG98IsyGCHfocyS6+fIJpVDYlOs/sdFQw
-         Debg7M8/P8nzvb1o2U5kS6fWMY/5u45i0Y5f+deFjsb4vk3Y091vJy5g1OQIVM4LasYf
-         Q7k44AIFUQJckmrDfmJXHf09eibrskfuYzWJqFwp//UYkaFZpu4J1WN84SKw+AnyaPCi
-         Y62A==
-X-Gm-Message-State: APjAAAXivWw0PIV5XRLzRF4Z4uzrAn2FV1PW2TxUB7MbPCTny1hE6++g
-        UEoTyI2bG+qvsenQG0jCi1y1UZ1uFy9JbQW893mJHQ==
-X-Google-Smtp-Source: APXvYqwplksrCxTqVX6QQE6JVJICpHpM2rpQ0aa7D4JJL/fSekhTGPRsyaPW6H5ljIddasDRMVPPAserX46jQ/Ip3PQ=
-X-Received: by 2002:a37:b602:: with SMTP id g2mr492555qkf.174.1576623358526;
- Tue, 17 Dec 2019 14:55:58 -0800 (PST)
+        Thu, 19 Dec 2019 06:07:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576753621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HMAsAMp0jRLhLgJ/PuI/xVdZndqWzzNp5YhE5mTtj84=;
+        b=cdpQkoIIboekwvE96Ao+2cHs1yS1N3OR+EjNBxyCXPzfsYqYHBh1T3owFMQmtQquBCYo3h
+        JbRPLlo/q/DtSKCURG+qErYIdsRA/Uo8gNLClf2c7JPGjRt51NEU9umSJZK+Ffv8t52fY/
+        8yXafBK2T782rghoD96xKadwqOAjXfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-332-uFuyKEurPwiQAi9DCsczvw-1; Thu, 19 Dec 2019 06:06:54 -0500
+X-MC-Unique: uFuyKEurPwiQAi9DCsczvw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94BA91883521;
+        Thu, 19 Dec 2019 11:06:53 +0000 (UTC)
+Received: from [10.36.116.227] (ovpn-116-227.ams2.redhat.com [10.36.116.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E4321A7E3;
+        Thu, 19 Dec 2019 11:06:52 +0000 (UTC)
+From:   "Eelco Chaudron" <echaudro@redhat.com>
+To:     "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+Cc:     "Y Song" <ys114321@gmail.com>, "Yonghong Song" <yhs@fb.com>,
+        Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Subject: Re: Trying the bpf trace a bpf xdp program
+Date:   Thu, 19 Dec 2019 12:06:50 +0100
+Message-ID: <B2161C36-B1A9-41B8-9D93-A18869649E25@redhat.com>
+In-Reply-To: <CAADnVQ+DHuDS2xZbjsEfBYX5t761dbCih6p-=NaCNU9OJEMk8A@mail.gmail.com>
+References: <E53E0693-1C3A-4B47-B205-DC8E5DAF3619@redhat.com>
+ <CAADnVQKkLtG-QCZwxx-Bpz8-goh-_mSTtUSzpb_oTv9a-qLizg@mail.gmail.com>
+ <3AC9D2B7-9D2F-4286-80A2-1721B51B62CF@redhat.com>
+ <CAADnVQJKSnoMVpQ3F86zBhFyo8WQ0vi65Z4QDtopLRrpK4yB8Q@mail.gmail.com>
+ <4BBF99E4-9554-44F7-8505-D4B8416554C4@redhat.com>
+ <d588c894-a4e0-8b99-72a9-4429b27091df@fb.com>
+ <056E9F5E-4FDD-4636-A43A-EC98A06E84D3@redhat.com>
+ <aa59532b-34a9-7887-f550-ef2859f0c9f1@fb.com>
+ <B7E0062E-37ED-46E6-AE64-EE3E2A0294EA@redhat.com>
+ <7062345a-1060-89f6-0c02-eef2fe0d835a@fb.com>
+ <b8d80047-3bc1-5393-76a1-7517cb2b7280@fb.com>
+ <E08A0006-E254-492C-92AB-408B58E456C0@redhat.com>
+ <F8CFD537-7907-4259-9C91-4649F799216B@redhat.com>
+ <CAH3MdRXr+3mUfrd8MPH-mDdNwD1szXRhz07s2C4dVQ0EkzDaAg@mail.gmail.com>
+ <78D7857B-82E4-42BC-85E1-E3D7C97BF840@redhat.com>
+ <CAADnVQ+DHuDS2xZbjsEfBYX5t761dbCih6p-=NaCNU9OJEMk8A@mail.gmail.com>
 MIME-Version: 1.0
-References: <b36728e9-4cb8-4127-2127-2cbdcd9a0068@nic.cz>
-In-Reply-To: <b36728e9-4cb8-4127-2127-2cbdcd9a0068@nic.cz>
-From:   William Tu <u9012063@gmail.com>
-Date:   Tue, 17 Dec 2019 14:55:22 -0800
-Message-ID: <CALDO+Sb00zQKuGKP43q-WEVXntMhmL+y8RN-_NTB879HxYbfTA@mail.gmail.com>
-Subject: Re: AF_XDP headroom
-To:     =?UTF-8?B?VmxhZGltw61yIMSMdW7DoXQ=?= <vladimir.cunat@nic.cz>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 7:05 AM Vladim=C3=ADr =C4=8Cun=C3=A1t <vladimir.cun=
-at@nic.cz> wrote:
->
-> Hello.
->
-> I configured .frame_headroom =3D 0 (default) but I receive packets with
-> larger one (256).  Am I doing something wrong?  Kernel [docs] says:
->
-This is correct.
-The 256 headroom is for XDP frame's headroom, reserved in driver.
-So you shouldn't use it.
-if you configure .frame_headroom =3D 256, then your frame will start
-with 256 + 256.
 
-> > There is also an option to set the headroom of each single buffer in
-> the UMEM. If you set this to N bytes, it means that the packet will
-> start N bytes into the buffer leaving the first N bytes for the
-> application to use.
 
-Yes
-William
+On 7 Dec 2019, at 17:51, Alexei Starovoitov wrote:
 
+> On Fri, Dec 6, 2019 at 5:05 AM Eelco Chaudron <echaudro@redhat.com> wro=
+te:
+>>
+>> Thanks the hint that it should be the jitted arguments solved it=E2=80=
+=A6 And
+>> you quick example worked, just in case some one else is playing with i=
+t,
+>> here is my working example:
+>>
+<SNIP>
+
+> This is great. Could you submit it as selftests/bpf ?
+
+Good idea, sent a patch out...
+
+> It will help others trying to do the same.
+> May be instead of bpf_debug() use global variables so the test will be
+> self checking ?
 >
-> which doesn't sound to leave an option for kernel-space to
-> change/increase it, but apparently it does so for me.  In my case it
-> wouldn't really be an issue, except it makes me unsure e.g. whether 2k
-> frames are guaranteed to handle standard 1.5k payloads.
->
-> [docs]
-> https://www.kernel.org/doc/html/latest/networking/af_xdp.html?highlight=
-=3Dheadroom
->
-> Thanks
-> --Vladimir
->
+> Long term we should teach verifier to understand 'struct xdp_md*'
+> in addition to 'struct xdp_buff *'. That will help ease of use.
+
