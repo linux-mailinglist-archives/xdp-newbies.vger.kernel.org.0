@@ -2,101 +2,72 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A1CD13B3D1
-	for <lists+xdp-newbies@lfdr.de>; Tue, 14 Jan 2020 21:52:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62F3713B3D2
+	for <lists+xdp-newbies@lfdr.de>; Tue, 14 Jan 2020 21:52:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgANUwj (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 14 Jan 2020 15:52:39 -0500
-Received: from mail-qk1-f176.google.com ([209.85.222.176]:42813 "EHLO
-        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANUwj (ORCPT
+        id S1728656AbgANUwx (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 14 Jan 2020 15:52:53 -0500
+Received: from mail-d.ads.isi.edu ([128.9.180.199]:16441 "EHLO
+        mail-d.ads.isi.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbgANUwx (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:52:39 -0500
-Received: by mail-qk1-f176.google.com with SMTP id z14so13536142qkg.9
-        for <xdp-newbies@vger.kernel.org>; Tue, 14 Jan 2020 12:52:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=coverfire.com; s=google;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=OwwPbCeUfisztwKtkp1kwqjVh4Rn2TrKdhKRunw4qTg=;
-        b=owA9TXev0ynoPY5/fs5P2NeieqwaxTBzdcCO0d0aOPkS/MsOmms4EnFHjGpdVtSd0c
-         YdnZgi4gc2YCjdl+v/+nLVonhT7Uw6cLKYiiajFgViUpz0bEU0ypuI5bf1hhFgeEZxyc
-         wqD3vzWESnhslO7fcNcakhhebFOCCMXiFNGZ4VFDvKAYgk4JYv2lH7xJkW06jyCh2f1O
-         9KwDSwSmHEPgs5WWyRKWQvHeI3ccDLAJREJdjAza6gFfC/J4XdBqjIgtnivnv+7SR5lg
-         sax3YYjzxQZM6fTTk6c+a0O2/O13SJ0E9uqN9E5lzZtN58oSJPnCgxdyrPI4D7Xg8XpL
-         3xcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=OwwPbCeUfisztwKtkp1kwqjVh4Rn2TrKdhKRunw4qTg=;
-        b=JN+ZJ1127GR9mmt3LCV43OUJBJmWgrjZa/0VkEfL81uvQcUerRwnN8OHaWafwYQIpl
-         eQBUQMZcfc47Fin+pTCt75n7Fd/iuVqrOVgW3gnnTo8Tq5ylBO8YzAReRZ6SveNvOPd1
-         epyAk8jvwsZbiUvq0zv7uVXC2TXZ47d6l1BqEjxDEk3q3fwXo/2MWzBTrGjyaJ+4It1y
-         4Vq8JNg3bj/6snmYZt5G8Ogwhvcri+gFA5F2yev5OERyP9JVdRNz3XtZz2ZbQjqjJ9f2
-         WPT26pSD1ultaop0jdqdT88bg+b7IKs7psJEa+bQXg7x3un2Z28dZmmkblMV4TVGOZat
-         i1kg==
-X-Gm-Message-State: APjAAAXwNAUYW27BfATS5SH6sDJZEqHpRc7XzQes2Afx4KETavN4dz3i
-        ixwRamJC5nxkspSb5uoAwsOm+N+mQYg=
-X-Google-Smtp-Source: APXvYqynutnA+sbdE2SVyv8nrRu813yrJXVm7ZOhrpBcHreIYlVkEG1CmlHHbpZjYRl1IoG8YgSbfw==
-X-Received: by 2002:a37:6451:: with SMTP id y78mr18838088qkb.499.1579035157171;
-        Tue, 14 Jan 2020 12:52:37 -0800 (PST)
-Received: from neptune.home ([206.174.180.53])
-        by smtp.gmail.com with ESMTPSA id t38sm8314020qta.78.2020.01.14.12.52.36
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 12:52:36 -0800 (PST)
-Message-ID: <242dfd7986c0d382f80462f5ce0cbe8a69fac2cd.camel@coverfire.com>
-Subject: AF_XDP with Rust
-From:   dan@coverfire.com
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Date:   Tue, 14 Jan 2020 15:52:35 -0500
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Tue, 14 Jan 2020 15:52:53 -0500
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="20795771"
+Received: from pool-108-14-86-129.nycmny.ftas.verizon.net (HELO smtp.ads.isi.edu) ([108.14.86.129])
+  by mail-d.ads.isi.edu with ESMTP/TLS/AES256-GCM-SHA384; 14 Jan 2020 12:52:53 -0800
+Date:   Tue, 14 Jan 2020 15:52:50 -0500
+From:   Ryan Goodfellow <rgoodfel@isi.edu>
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: Re: zero-copy between interfaces
+Message-ID: <20200114205250.GA85903@smtp.ads.isi.edu>
+References: <14f9e1bf5c3a41dbaec53f83cb5f0564@isi.edu>
+ <CAJ8uoz1FcfDYa1PaQuY-Yk+keEX5FT6+q2H2eLTce6DxcQjuiA@mail.gmail.com>
+ <20200113151159.GB68570@smtp.ads.isi.edu>
+ <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-https://github.com/aterlo/afxdp-rs
+On Tue, Jan 14, 2020 at 10:59:19AM +0100, Magnus Karlsson wrote:
+> 
+> Just sent out a patch on the mailing list. Would be great if you could
+> try it out.
 
-afxdp-rs provides a Rust interface to AF_XDP. The docs.rs build is
-broken right now but at high level this provides:
-- Mem mapped area
-- Umem (completion queue and fill queue)
-- AF_XDP sockets (Tx/Rx, Tx-only, Rx-only)
-- Buf (to represent a packet). Templated to allow user customization.
-- BufPool to manage Bufs (this doesn't do much in the sample programs
-but is useful in more complicated scenarios)
-- 1 link and 2 link forwarding examples
+Thanks for the quick turnaround. I gave this patch a go, both in the bpf-next
+tree and manually applied to the 5.5.0-rc3 branch I've been working with up to 
+this point. It does allow for allocating more memory, however packet 
+forwarding no longer works. I did not see any complaints from dmesg, but here 
+is an example iperf3 session from a client that worked before.
 
-Performance
+ry@xd2:~$ iperf3 -c 10.1.0.2
+Connecting to host 10.1.0.2, port 5201
+[  5] local 10.1.0.1 port 53304 connected to 10.1.0.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  5.91 MBytes  49.5 Mbits/sec    2   1.41 KBytes
+[  5]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+[  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+[  5]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+[  5]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+[  5]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+[  5]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+[  5]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+[  5]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+^C[  5]  10.00-139.77 sec  0.00 Bytes  0.00 bits/sec    4   1.41 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-139.77 sec  5.91 MBytes   355 Kbits/sec    9             sender
+[  5]   0.00-139.77 sec  0.00 Bytes  0.00 bits/sec                  receiver
+iperf3: interrupt - the client has terminated
 
-Test System:
+I'll continue to investigate and report back with anything that I find.
 
-* Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz
-* Single X710 (4 physical 10G ports) (i40e)
-* Kernel: 5.4.2-300.fc31.x86_64
-* Kernel boot args: skew_tick=1 mitigations=off selinux=0 isolcpus=4-27 
-nohz_full=4-27 rcu_nobcs=4-27 default_hugepagesz=1G hugepagesz=1G
-hugepages=4
-
-Traffic Generator:
-
-* Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz
-* Single X710 (4 physical 10G ports) (i40e)
-* Traffic goes from one port, through test system and to second port on
-the same X710
-* T-Rex traffic generator (https://trex-tgn.cisco.com/) (DPDK)
-* 64-byte UDP packets
-
-Scenario 1: l2fwd-2link on a single core running userspace and NAPI
-
-Small amounts of packet loss start at about 6.5M packets-per-second
-(PPS) unidirectional and 6.0M PPS bi-directional (3M each direction).
-
-Little effort has been put into optimizing this so I expect there are
-some easy performance wins still.
-
+-- 
+~ ry
