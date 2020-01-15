@@ -2,92 +2,347 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 318C013CE94
-	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2020 22:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 642A613CFDE
+	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2020 23:11:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgAOVDl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 15 Jan 2020 16:03:41 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:42423 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729134AbgAOVDk (ORCPT
+        id S1729251AbgAOWLR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 15 Jan 2020 17:11:17 -0500
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:46738 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgAOWLR (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:03:40 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id F3B4721EAE
-        for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2020 16:03:39 -0500 (EST)
-Received: from imap38 ([10.202.2.88])
-  by compute5.internal (MEProxy); Wed, 15 Jan 2020 16:03:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jibi.io; h=
-        mime-version:message-id:date:from:to:subject:content-type; s=
-        mesmtp; bh=hBME1k8CVmyzvO6sToIWP3/JfgAKFAvFljUXIDsNAnQ=; b=qNVcZ
-        b5xRRyjUGV5+9vNPuajWR3YARFV+A6tQdxQ0hK5lpFUxPAbXZ+Z0kNO+CScm06+V
-        onup1stvZxma8HZr1P8I9EeIFq3O8Sn8O4vplgr6G9tyrH6YCaghVg75ppkFq3KT
-        gwj01K9tREJRvR6YhrkTvBooLxZ+POd0Z4bmuE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm1; bh=hBME1k8CVmyzvO6sToIWP3/JfgAKF
-        AvFljUXIDsNAnQ=; b=kVVuhLxTCwAnmTYFvVoiBkn1QB5Erz9EUPfenEmlSfsrs
-        +XvMsz0FYx5xnJYj9Gnk7GpXiYhzymfP/M9vm6+Iy5vdDrVxMHgHMUxeGvXUtxDU
-        VOGpkeRxKwvNEFiodJbuVnCO8DirKSbyxq9QM7CH7vyVWCF08N8h7d4dU0j1nuHe
-        YqxABTyIQrrPrVaavGf5j51gvBFig2zgsRvCuLpg+jANg31z6YlVvjPDq8kpjRiC
-        dLEOBYqM4CisnJTqm0Y5NDDZHp/dTkH6CnuQVhIGBg/7p4Ta2kS0vbdeLYaTV/PS
-        fWqqkjF1W1/R0/zN9K7bDD1rMhWp3e0BO1tIGgQzw==
-X-ME-Sender: <xms:K34fXgAtyCihGJQpOLGPqiR_-EsNhgN8ArkZSt5L_DOT8FMuqpVYcw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdefgddugeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfffhffvufgtsehttdertd
-    erredtnecuhfhrohhmpedfifhilhgsvghrthhouceuvghrthhinhdfuceomhgvsehjihgs
-    ihdrihhoqeenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehjihgsihdrihhonecuve
-    hluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:K34fXjxFAy0tRm5fhtRHz5G91pHoxQEXd0NW8eiP3S96AG6J_0t8xw>
-    <xmx:K34fXsBmsHiYjGUCK4jKthQ5Gtq21t628ata6DsuA2sh3JKjIKtN7Q>
-    <xmx:K34fXs9Q3Wr1TosMJFyiwULj9whmikhQqcCcaf5kKM0lJSH3nCxcBA>
-    <xmx:K34fXq7SPa8d4xw8HaYZCJo0StkOrBuVuuAAsXqziU5DNG6ZIS7gvQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id A79F44C000A4; Wed, 15 Jan 2020 16:03:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
-Mime-Version: 1.0
-Message-Id: <ee5e4155-f060-4836-bc00-58979c004421@www.fastmail.com>
-Date:   Wed, 15 Jan 2020 22:03:19 +0100
-From:   "Gilberto Bertin" <me@jibi.io>
+        Wed, 15 Jan 2020 17:11:17 -0500
+Received: by mail-ed1-f49.google.com with SMTP id m8so17016523edi.13
+        for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2020 14:11:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=XqPlpfjz1/stWxqKoHvD7BEH0eUwl9TUryFGwlp7UkA=;
+        b=GUpXLP9+saR99PMYwzs2ZTC2WqKhtgecP3ZkID3I4+eaayvx/3xEmGfFDg3ss8g3zc
+         D+6OC7rPo1tyx5ip8lmdbZPfztKRSXSKRpCZ+Dsao2IeFwDq4DHvph6GNUd5CHdTt0ow
+         xCiWncFclWmSwxuHsqQbAULzwgWIiTeFMwAz7+BYgc3viymRqy1JGenA96NEiwrkvIh6
+         +ykPph/A0ey8zHafN/y38G9e6n+IxrUZf89uye6+MfzS8yINaebSO+bHXgOH7+wxbf5z
+         dhsokRb9XqTTJKm/MaGif8dfUFhrBweeQJCELT7l+1QivXxhcBlrzwW7e1CJI8ZLGbfC
+         b2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=XqPlpfjz1/stWxqKoHvD7BEH0eUwl9TUryFGwlp7UkA=;
+        b=BCgMSQh5yur10wackyufsNy9oHAxxvAOghT5BiMTGKHQaqQqkGOaYzQ7VhV+kkeOMT
+         jO5UfNHv7amgf5S4SmhdeXtK3p5/DBrfHpCcnCumdCtF6xgyMfSL8UJ8E5BqO+0rwW49
+         9Hn4nyTJVzprZJoTpY/c8wZarwgkVZF1pY25qzadKn52zeq7tX21EbXmP98TJzDujWT5
+         H3zzwC21+18DUoqilvFMVid/c2vsBoLnTKXVlzmlcJ4gjWCX8hoTM4t70+aklCV8DyPf
+         /mGbfcUZMeeVR/hyL3ICtEhrJ+NOssE0nksKFrx31EaphDahS6ZgMjEwp4UZNBL+eH7R
+         aoSg==
+X-Gm-Message-State: APjAAAXUZDJ7OqcmEQU/CYYyS66g9HQWGWSoBTZtOrbNAXvy7JdouW0b
+        WK3R77aj+vY7AuKUBA61OQ38klsUcf3BbBgtQFY+SkHV
+X-Google-Smtp-Source: APXvYqwj/qpt6hRIOwZyscXV7YiOjwe2lVtiX5fCTLcWaol6AAd1uVapAreA9yjoRvSS5KAkBkShMWk+o5q8Hr/yKO4=
+X-Received: by 2002:a05:6402:1742:: with SMTP id v2mr33354433edx.171.1579126274808;
+ Wed, 15 Jan 2020 14:11:14 -0800 (PST)
+MIME-Version: 1.0
+From:   Vincent Li <mchun.li@gmail.com>
+Date:   Wed, 15 Jan 2020 14:11:04 -0800
+Message-ID: <CAK86TEf+GY3F8resRW11DNvate5uqSsh=JAQuJHhBuL0sQpvjg@mail.gmail.com>
+Subject: XDP invalid memory access
 To:     xdp-newbies@vger.kernel.org
-Subject: Transmitting packets with AF_XDP on lo iface
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi all,
+Hi,
 
-I'm playing with AF_XDP with a program based on the sample one in the
-xdp-tutorial repo.
+I am writing a sample XDP program to parse tcp packet options, code
+below, compiled ok, when I attach it to a network interface
 
-The program is a simple UDP echo server, and works fine on any interface
-_but_ the loopback one!
+#clang -O2 -emit-llvm -c tcp_option.c -o - |llc -march=bpf
+-filetype=obj -o tcp_option.o
 
-When I run it on lo, I can:
 
-* receive packets
-* send the responses
-* see the UDP packets I'm sending from AF_xDP in tcpdump
+# ip link set dev enp3s0 xdpgeneric object tcp_option.o verbose
 
-but the actual application does not receive any traffic.
 
-I also tried the original example in xdp-tutorial (which replies to ICMP
-echo requests rather than UDP packets) and I can observe the same
-behaviour.
+Prog section 'prog' rejected: Permission denied (13)!
 
-I'm using:
+ - Type:         6
 
-* xdp-tutorial from master
-* Ubuntu 19.10
-* kernel 5.3.0
+ - Instructions: 42 (0 over limit)
 
-Is this a known issue? Does lo require any special configuration to work
-with AF_XDP?
+ - License:      GPL
 
-Cheers,
-Gilberto
+
+Verifier analysis:
+
+
+0: (61) r2 = *(u32 *)(r1 +4)
+
+1: (61) r1 = *(u32 *)(r1 +0)
+
+2: (bf) r3 = r1
+
+3: (07) r3 += 54
+
+4: (b7) r0 = 2
+
+5: (2d) if r3 > r2 goto pc+35
+
+ R0_w=inv2 R1_w=pkt(id=0,off=0,r=54,imm=0)
+R2_w=pkt_end(id=0,off=0,imm=0) R3_w=pkt(id=0,off=54,r=54,imm=0)
+R10=fp0
+
+6: (71) r2 = *(u8 *)(r1 +12)
+
+7: (71) r3 = *(u8 *)(r1 +13)
+
+8: (67) r3 <<= 8
+
+9: (4f) r3 |= r2
+
+10: (b7) r0 = 2
+
+11: (55) if r3 != 0x8 goto pc+29
+
+ R0_w=inv2 R1_w=pkt(id=0,off=0,r=54,imm=0)
+R2_w=inv(id=0,umax_value=255,var_off=(0x0; 0xff)) R3_w=inv8 R10=fp0
+
+12: (71) r2 = *(u8 *)(r1 +23)
+
+13: (b7) r0 = 2
+
+14: (55) if r2 != 0x6 goto pc+26
+
+ R0=inv2 R1=pkt(id=0,off=0,r=54,imm=0) R2=inv6 R3=inv8 R10=fp0
+
+15: (69) r1 = *(u16 *)(r1 +46)
+
+16: (bf) r2 = r1
+
+17: (57) r2 &= 7936
+
+18: (b7) r0 = 2
+
+19: (55) if r2 != 0x200 goto pc+21
+
+ R0_w=inv2 R1_w=inv(id=0,umax_value=65535,var_off=(0x0; 0xffff))
+R2_w=inv512 R3=inv8 R10=fp0
+
+20: (77) r1 >>= 2
+
+21: (57) r1 &= 60
+
+22: (07) r1 += -20
+
+23: (18) r2 = 0x0
+
+25: (63) *(u32 *)(r2 +0) = r1
+
+R2 invalid mem access 'inv' <----------------
+
+processed 25 insns (limit 1000000) max_states_per_insn 0 total_states
+1 peak_states 1 mark_read 1
+
+
+it appears optlen = tcphdr->doff*4 - sizeof(*tcphdr); is invalid ? if
+I comment out lines between 60 and 73, no problem with invalid mem
+access
+
+
+
+
+
+     1 #include <stdint.h>
+
+     2 #include <arpa/inet.h>
+
+     3 #include <asm/byteorder.h>
+
+     4 #include <linux/bpf.h>
+
+     5 #include <linux/if_ether.h>
+
+     6 #include <linux/ip.h>
+
+     7 #include <linux/tcp.h>
+
+     8 #include <linux/pkt_cls.h>
+
+     9
+
+    10 /*
+
+    11 * Sample XDP to parse tcp option.
+
+    12 * compile it with:
+
+    13 *      clang -O2 -emit-llvm -c tcp_option.c -o - |llc
+-march=bpf -filetype=obj -o tcp_option.o
+
+    14  * attach it to a device with XDP as:
+
+    15  *  ip link set dev lo xdp object tcp_option.o verbose
+
+    16 */
+
+    17
+
+    18 #define SEC(NAME) __attribute__((section(NAME), used))
+
+    19
+
+    20 #define TCPOPT_EOL        0       /* End of options (1)              */
+
+    21 #define TCPOPT_NOP        1       /* No-op (1)                       */
+
+    22 #define TCPOPT_MAXSEG     2       /* Maximum segment size (4)        */
+
+    23 #define TCPOPT_WSCALE     3       /* Window scaling (3)              */
+
+    24 #define TCPOPT_SACKOK     4       /* Selective ACK permitted (2)     */
+
+    25 #define TCPOPT_SACK       5       /* Actual selective ACK (10-34)    */
+
+    26 #define TCPOPT_TSTAMP     8       /* Timestamp (10)                  */
+
+    27
+
+    28
+
+    29 /* from bpf_helpers.h */
+
+    30
+
+    31 static int (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
+
+    32         (void *) BPF_FUNC_trace_printk;
+
+    33
+
+    34 static unsigned long long (*bpf_get_prandom_u32)(void) =
+
+    35 (void *) BPF_FUNC_get_prandom_u32;
+
+    36
+
+    37 const __u8 *op;
+
+    38 int i, optlen;
+
+    39
+
+    40 static int tcp_option(void *data, void *data_end)
+
+    41 {
+
+    42 struct ethhdr *eth = (struct ethhdr *)data;
+
+    43 struct iphdr *iph = (struct iphdr *)(eth + 1);
+
+    44 struct tcphdr *tcphdr = (struct tcphdr *)(iph + 1);
+
+    45 int tcplen;
+
+    46
+
+    47 /* sanity check needed by the eBPF verifier */
+
+    48 if ((void *)(tcphdr + 1) > data_end)
+
+    49 return 0;
+
+    50
+
+    51 /* skip non TCP packets */
+
+    52 if (eth->h_proto != __constant_htons(ETH_P_IP) || iph->protocol
+!= IPPROTO_TCP)
+
+    53 return 0;
+
+    54
+
+    55 /* incompatible flags, or PSH already set */
+
+    56 if (tcphdr->ack || tcphdr->fin || tcphdr->rst || tcphdr->psh)
+
+    57 return 0;
+
+    58
+
+    59 if (tcphdr->syn) {
+
+    60 optlen = tcphdr->doff*4 - sizeof(*tcphdr);
+
+    61                 if (!optlen)
+
+    62                       return -1;
+
+    63 /*
+
+    64                 for (i = 0; i < optlen; ) {
+
+    65                         if (op[i] == TCPOPT_EOL) {
+
+    66                  char fmt[] = "XDP: tcp opt eol kind seen %d \n";
+
+    67                  bpf_trace_printk(fmt, sizeof(fmt), op[i]);
+
+    68 }
+
+    69                         if (op[i] < 2)
+
+    70                                 i++;
+
+    71                         else
+
+    72                                 i += op[i+1] ? : 1;
+
+    73                 }
+
+    74 */
+
+    75
+
+    76                char fmt[] = "XDP: tcp syn seen \n";
+
+    77                bpf_trace_printk(fmt, sizeof(fmt));
+
+    78
+
+    79 }
+
+    80
+
+    81 return 0;
+
+    82 }
+
+    83
+
+    84 SEC("prog")
+
+    85 int xdp_main(struct xdp_md *ctx)
+
+    86 {
+
+    87 void *data_end = (void *)(uintptr_t)ctx->data_end;
+
+    88 void *data = (void *)(uintptr_t)ctx->data;
+
+    89
+
+    90 if (tcp_option(data, data_end))
+
+    91 return XDP_DROP;
+
+    92
+
+    93 return XDP_PASS;
+
+    94 }
+
+    95
+
+    96
+
+    97 char _license[] SEC("license") = "GPL";
