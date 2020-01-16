@@ -2,87 +2,356 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D482513D31C
-	for <lists+xdp-newbies@lfdr.de>; Thu, 16 Jan 2020 05:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94BA913D6E6
+	for <lists+xdp-newbies@lfdr.de>; Thu, 16 Jan 2020 10:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgAPEWr (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 15 Jan 2020 23:22:47 -0500
-Received: from mail-io1-f54.google.com ([209.85.166.54]:45966 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729661AbgAPEWq (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 15 Jan 2020 23:22:46 -0500
-Received: by mail-io1-f54.google.com with SMTP id i11so20270414ioi.12
-        for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2020 20:22:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZJF/EJbQuPmPT7BLrY9aCp3mjf8rPeGARaX/PdhkDfg=;
-        b=UQIGIG+xn7p/KQi1/JTDmOYMstPiulHVk+0ek9qtJxmR2L/boxeBYP1DbxK4pa6iGk
-         eftaTuBlF+JjLLo3F9N7ldgQIuIrJP8MYIZf5p4tRaNiuQ835NVF9FVwjvIN7CdZEWEC
-         3zmuJhg0z0wSQTi8T5iA+hRyB8NPsCPEVBHATSQqI2lmEMh7x56jTfqw8ch0TZpQH6bs
-         7shTSZmk0Cx2DlDCYqmg75ydcRen7JMNfijRzUBB0wRRWRQ1rcOpxr+QY464fjmB9lnH
-         m6jFNbQPNz2B4E7DK47gLk8gGlFtCB94X/KXbCsX7/aiVZButcxVilvMzDnbbnnfpuzk
-         0OjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZJF/EJbQuPmPT7BLrY9aCp3mjf8rPeGARaX/PdhkDfg=;
-        b=uWyDJ8NBIM/oDaY02dyMzhjFGIvOv6hJ+Etajzhx3bohsK4sz2hiYCtS2Yq1waLRg8
-         DSpEW3Lk5j7ZMJ5ohUbnY7cq0H8s3GYFW6fVuTQkbaZtn2ShOBzVMkJpRO+Pyf5kHE/T
-         +IJ0NM+wHgTEDPwCVp1KoW9mtKeELP2qkLMX+slPzmnlnM/6X3znBwLOBkWleTOfOkJL
-         ziPbQJnOhWfOtL2xI3EpYI/DABBviXVnuYFKLd5FoJ5nzZpZ3UBbcW/wdvu3ToBR98Mg
-         zuVaAIAVzXCA6Iei5mnY780Mt1TaKONQJ3gMriih46QacteV/Mfe4q1oSBcxufqCqJhV
-         aUhA==
-X-Gm-Message-State: APjAAAW6Kh5oZn/2AaBAZEiL2faobKukVhk/+ygsE6m8crUvouGJibvS
-        1NgdXl3/au8fUI8PishtVAk61kjY
-X-Google-Smtp-Source: APXvYqyOZXSujUZHGO9iRL7MhL/ii5YDQbjP790SQyGV6ghT3ypyvLf8oZWPKcGcrfftov5CCFBF3g==
-X-Received: by 2002:a02:7f54:: with SMTP id r81mr27495166jac.121.1579148565751;
-        Wed, 15 Jan 2020 20:22:45 -0800 (PST)
-Received: from ?IPv6:2601:282:803:7700:5c84:fd9a:6187:58f5? ([2601:282:803:7700:5c84:fd9a:6187:58f5])
-        by smtp.googlemail.com with ESMTPSA id i11sm4727564ion.1.2020.01.15.20.22.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 20:22:45 -0800 (PST)
-Subject: Re: XDP invalid memory access
+        id S1730486AbgAPJcM (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 16 Jan 2020 04:32:12 -0500
+Received: from mga04.intel.com ([192.55.52.120]:63734 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgAPJcL (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:32:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 01:32:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="220312478"
+Received: from ranger.igk.intel.com ([10.102.21.164])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jan 2020 01:32:09 -0800
+Date:   Thu, 16 Jan 2020 03:24:59 +0100
+From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
 To:     Vincent Li <mchun.li@gmail.com>
-Cc:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        xdp-newbies@vger.kernel.org
+Cc:     xdp-newbies@vger.kernel.org, daniel@iogearbox.net, andriin@fb.com,
+        dsahern@gmail.com
+Subject: Re: XDP invalid memory access
+Message-ID: <20200116022459.GA2853@ranger.igk.intel.com>
 References: <CAK86TEf+GY3F8resRW11DNvate5uqSsh=JAQuJHhBuL0sQpvjg@mail.gmail.com>
- <87ftggtl7t.fsf@toke.dk>
- <CAK86TEcyRqVrB-OOiCxtM6WLMp-Sr_+eO9G70+T=OMpF2KBrgQ@mail.gmail.com>
- <99fe90fe-cbb4-1ff1-156b-bd8053293aca@gmail.com>
- <CAK86TEcGAkmPLeYACWGtLT0CJPZqGYCqZDpZSO=0x4_ph0qcUA@mail.gmail.com>
- <CAK86TEe8Je6NjLWzRHoMhDgqKyhqYd7pX2awmAUTQ7V3GCcKAA@mail.gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <ae0f349a-67a7-9c52-e48c-9c713e484af9@gmail.com>
-Date:   Wed, 15 Jan 2020 21:22:44 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAK86TEe8Je6NjLWzRHoMhDgqKyhqYd7pX2awmAUTQ7V3GCcKAA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK86TEf+GY3F8resRW11DNvate5uqSsh=JAQuJHhBuL0sQpvjg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 1/15/20 8:19 PM, Vincent Li wrote:
+On Wed, Jan 15, 2020 at 02:11:04PM -0800, Vincent Li wrote:
+> Hi,
 > 
->  59         if (tcphdr->syn) {
+> I am writing a sample XDP program to parse tcp packet options, code
+> below, compiled ok, when I attach it to a network interface
 > 
->  60                 if (((void *)(tcphdr + 1) + tcphdr->doff*4) > data_end)
+> #clang -O2 -emit-llvm -c tcp_option.c -o - |llc -march=bpf
+> -filetype=obj -o tcp_option.o
 > 
->  61                         return 0;
 > 
->  62                 optlen = tcphdr->doff*4 - sizeof(*tcphdr);
+> # ip link set dev enp3s0 xdpgeneric object tcp_option.o verbose
 > 
->  63                 for (i = 0; i < optlen; ) {
+> 
+> Prog section 'prog' rejected: Permission denied (13)!
+> 
+>  - Type:         6
+> 
+>  - Instructions: 42 (0 over limit)
+> 
+>  - License:      GPL
+> 
+> 
+> Verifier analysis:
+> 
+> 
+> 0: (61) r2 = *(u32 *)(r1 +4)
+> 
+> 1: (61) r1 = *(u32 *)(r1 +0)
+> 
+> 2: (bf) r3 = r1
+> 
+> 3: (07) r3 += 54
+> 
+> 4: (b7) r0 = 2
+> 
+> 5: (2d) if r3 > r2 goto pc+35
+> 
+>  R0_w=inv2 R1_w=pkt(id=0,off=0,r=54,imm=0)
+> R2_w=pkt_end(id=0,off=0,imm=0) R3_w=pkt(id=0,off=54,r=54,imm=0)
+> R10=fp0
+> 
+> 6: (71) r2 = *(u8 *)(r1 +12)
+> 
+> 7: (71) r3 = *(u8 *)(r1 +13)
+> 
+> 8: (67) r3 <<= 8
+> 
+> 9: (4f) r3 |= r2
+> 
+> 10: (b7) r0 = 2
+> 
+> 11: (55) if r3 != 0x8 goto pc+29
+> 
+>  R0_w=inv2 R1_w=pkt(id=0,off=0,r=54,imm=0)
+> R2_w=inv(id=0,umax_value=255,var_off=(0x0; 0xff)) R3_w=inv8 R10=fp0
+> 
+> 12: (71) r2 = *(u8 *)(r1 +23)
+> 
+> 13: (b7) r0 = 2
+> 
+> 14: (55) if r2 != 0x6 goto pc+26
+> 
+>  R0=inv2 R1=pkt(id=0,off=0,r=54,imm=0) R2=inv6 R3=inv8 R10=fp0
+> 
+> 15: (69) r1 = *(u16 *)(r1 +46)
+> 
+> 16: (bf) r2 = r1
+> 
+> 17: (57) r2 &= 7936
+> 
+> 18: (b7) r0 = 2
+> 
+> 19: (55) if r2 != 0x200 goto pc+21
+> 
+>  R0_w=inv2 R1_w=inv(id=0,umax_value=65535,var_off=(0x0; 0xffff))
+> R2_w=inv512 R3=inv8 R10=fp0
+> 
+> 20: (77) r1 >>= 2
+> 
+> 21: (57) r1 &= 60
+> 
+> 22: (07) r1 += -20
+> 
+> 23: (18) r2 = 0x0
+> 
+> 25: (63) *(u32 *)(r2 +0) = r1
+> 
+> R2 invalid mem access 'inv' <----------------
 
-A variable length loop counter. Change this to just look at i = 0 (no
-loop) and see if it loads.
+So it's not out of the bounds access but rather null dereference since r2
+has been loaded with 0 on previous insn.
 
+> 
+> processed 25 insns (limit 1000000) max_states_per_insn 0 total_states
+> 1 peak_states 1 mark_read 1
+> 
+> 
+> it appears optlen = tcphdr->doff*4 - sizeof(*tcphdr); is invalid ? if
+> I comment out lines between 60 and 73, no problem with invalid mem
+> access
+
+I see that optlen is a global variable. This line might be valid but
+you're using iproute2's loader for your XDP program, right? AFAIK it
+doesn't have support for BPF global variables, only libbpf does (Daniel,
+Andrii? is that true?).
+
+So you have to either make the optlen a local variable or go with writing
+the loader part that is based on libbpf usage (see samples/bpf directory
+in kernel tree, for example xdp1_user.c).
+
+Could you next time try a little better with the format of data you're
+providing? I'm pretty sure other folks would have spotted earlier that
+optlen is global if the code was properly formatted :)
+
+To wrap this rant up, making optlen a local var does the job for me.
+
+> 
+> 
+> 
+> 
+> 
+>      1 #include <stdint.h>
+> 
+>      2 #include <arpa/inet.h>
+> 
+>      3 #include <asm/byteorder.h>
+> 
+>      4 #include <linux/bpf.h>
+> 
+>      5 #include <linux/if_ether.h>
+> 
+>      6 #include <linux/ip.h>
+> 
+>      7 #include <linux/tcp.h>
+> 
+>      8 #include <linux/pkt_cls.h>
+> 
+>      9
+> 
+>     10 /*
+> 
+>     11 * Sample XDP to parse tcp option.
+> 
+>     12 * compile it with:
+> 
+>     13 *      clang -O2 -emit-llvm -c tcp_option.c -o - |llc
+> -march=bpf -filetype=obj -o tcp_option.o
+> 
+>     14  * attach it to a device with XDP as:
+> 
+>     15  *  ip link set dev lo xdp object tcp_option.o verbose
+> 
+>     16 */
+> 
+>     17
+> 
+>     18 #define SEC(NAME) __attribute__((section(NAME), used))
+> 
+>     19
+> 
+>     20 #define TCPOPT_EOL        0       /* End of options (1)              */
+> 
+>     21 #define TCPOPT_NOP        1       /* No-op (1)                       */
+> 
+>     22 #define TCPOPT_MAXSEG     2       /* Maximum segment size (4)        */
+> 
+>     23 #define TCPOPT_WSCALE     3       /* Window scaling (3)              */
+> 
+>     24 #define TCPOPT_SACKOK     4       /* Selective ACK permitted (2)     */
+> 
+>     25 #define TCPOPT_SACK       5       /* Actual selective ACK (10-34)    */
+> 
+>     26 #define TCPOPT_TSTAMP     8       /* Timestamp (10)                  */
+> 
+>     27
+> 
+>     28
+> 
+>     29 /* from bpf_helpers.h */
+> 
+>     30
+> 
+>     31 static int (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
+> 
+>     32         (void *) BPF_FUNC_trace_printk;
+> 
+>     33
+> 
+>     34 static unsigned long long (*bpf_get_prandom_u32)(void) =
+> 
+>     35 (void *) BPF_FUNC_get_prandom_u32;
+> 
+>     36
+> 
+>     37 const __u8 *op;
+> 
+>     38 int i, optlen;
+> 
+>     39
+> 
+>     40 static int tcp_option(void *data, void *data_end)
+> 
+>     41 {
+> 
+>     42 struct ethhdr *eth = (struct ethhdr *)data;
+> 
+>     43 struct iphdr *iph = (struct iphdr *)(eth + 1);
+> 
+>     44 struct tcphdr *tcphdr = (struct tcphdr *)(iph + 1);
+> 
+>     45 int tcplen;
+> 
+>     46
+> 
+>     47 /* sanity check needed by the eBPF verifier */
+> 
+>     48 if ((void *)(tcphdr + 1) > data_end)
+> 
+>     49 return 0;
+> 
+>     50
+> 
+>     51 /* skip non TCP packets */
+> 
+>     52 if (eth->h_proto != __constant_htons(ETH_P_IP) || iph->protocol
+> != IPPROTO_TCP)
+> 
+>     53 return 0;
+> 
+>     54
+> 
+>     55 /* incompatible flags, or PSH already set */
+> 
+>     56 if (tcphdr->ack || tcphdr->fin || tcphdr->rst || tcphdr->psh)
+> 
+>     57 return 0;
+> 
+>     58
+> 
+>     59 if (tcphdr->syn) {
+> 
+>     60 optlen = tcphdr->doff*4 - sizeof(*tcphdr);
+> 
+>     61                 if (!optlen)
+> 
+>     62                       return -1;
+> 
+>     63 /*
+> 
+>     64                 for (i = 0; i < optlen; ) {
+> 
+>     65                         if (op[i] == TCPOPT_EOL) {
+> 
+>     66                  char fmt[] = "XDP: tcp opt eol kind seen %d \n";
+> 
+>     67                  bpf_trace_printk(fmt, sizeof(fmt), op[i]);
+> 
+>     68 }
+> 
+>     69                         if (op[i] < 2)
+> 
+>     70                                 i++;
+> 
+>     71                         else
+> 
+>     72                                 i += op[i+1] ? : 1;
+> 
+>     73                 }
+> 
+>     74 */
+> 
+>     75
+> 
+>     76                char fmt[] = "XDP: tcp syn seen \n";
+> 
+>     77                bpf_trace_printk(fmt, sizeof(fmt));
+> 
+>     78
+> 
+>     79 }
+> 
+>     80
+> 
+>     81 return 0;
+> 
+>     82 }
+> 
+>     83
+> 
+>     84 SEC("prog")
+> 
+>     85 int xdp_main(struct xdp_md *ctx)
+> 
+>     86 {
+> 
+>     87 void *data_end = (void *)(uintptr_t)ctx->data_end;
+> 
+>     88 void *data = (void *)(uintptr_t)ctx->data;
+> 
+>     89
+> 
+>     90 if (tcp_option(data, data_end))
+> 
+>     91 return XDP_DROP;
+> 
+>     92
+> 
+>     93 return XDP_PASS;
+> 
+>     94 }
+> 
+>     95
+> 
+>     96
+> 
+>     97 char _license[] SEC("license") = "GPL";
