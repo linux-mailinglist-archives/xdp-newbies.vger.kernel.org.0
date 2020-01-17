@@ -2,157 +2,91 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7975B1408A1
-	for <lists+xdp-newbies@lfdr.de>; Fri, 17 Jan 2020 12:07:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B97BD1409C5
+	for <lists+xdp-newbies@lfdr.de>; Fri, 17 Jan 2020 13:32:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgAQLHJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 17 Jan 2020 06:07:09 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39975 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726343AbgAQLHI (ORCPT
+        id S1728640AbgAQMcU (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 17 Jan 2020 07:32:20 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:46969 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgAQMcT (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:07:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579259227;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FD/DgNcM1GLD79brHZ4ucrevIm2zv6khR/Sdh/iU+qM=;
-        b=Ln42xij2j492CRS8wAVHKLxJWXaQe6n8uvUwNwAc5hONuJqu0GjuHhsh7gEyKk6PvEnaWF
-        hbvSScDIrEQ8WpE/Ns8gdhSWd0WfCGQK9zMvpYgYKXRXdLdKZXbZtabySpz350uaJuJSor
-        7lMTeCrI++XV9QcsjyW4x6OFHeY4CXo=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-A5i5R8jXMmClccD1cjksUQ-1; Fri, 17 Jan 2020 06:07:06 -0500
-X-MC-Unique: A5i5R8jXMmClccD1cjksUQ-1
-Received: by mail-lj1-f200.google.com with SMTP id k21so6130141ljg.3
-        for <xdp-newbies@vger.kernel.org>; Fri, 17 Jan 2020 03:07:05 -0800 (PST)
+        Fri, 17 Jan 2020 07:32:19 -0500
+Received: by mail-qk1-f171.google.com with SMTP id r14so22436636qke.13
+        for <xdp-newbies@vger.kernel.org>; Fri, 17 Jan 2020 04:32:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bDo76dKOnuzMEZoozXWQMHwLc/1xlavJZ+W7DLl98cA=;
+        b=Zuu0U+4k8U3TD77N2gxENMofYswGIX7cAUtVza5colFEksaX5SB4mO8RaFQiZ0sz6I
+         f/QfQjY00+2cPnqGozgWSiBjafKbOzsDuH+OEtrfBZBYGWEYKPhW/klR4C4LvXCSAz5r
+         xnDht5j6I8hjqzR8NUNkUkzeecoKkD6XTJJt9AiRk33yuyQNdHfBMDydVVLE48k4r3cD
+         8Bi78ttsu2qI5QpkioiQ7M0kuPUOXz4GT73zqyXUmXMAqDvQD2KSoj7mfDU8CRHHWHNk
+         GjeBExZ2Qp8OTx/xVe+ZqTqJBUVhgFTO+T2xckmvSAPOdALBSJTIbDkrymed+Uy4ndF1
+         0iRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=FD/DgNcM1GLD79brHZ4ucrevIm2zv6khR/Sdh/iU+qM=;
-        b=GEawped0FiN936BB+BtHEXnjkki9FF9zDZqok18u+Z3np35lK4EdH4KBENe1S4ekmP
-         7FhON9NJWyBhHDxZajhylr4IFiJ/aWx1nlaT4OhYM2B1XJ4qcI6qLQ1NvUQFhkxghcMB
-         7uoTOoSlkzIiP1VdSwmU66GKlXQOUw1ifLIeGJ9XTQhW5B7EXWE0Wc5o1o5DoMRrWyzy
-         aKT7G25U7fMoeWDxdyb0QiIufmud/biHLafdzT8ee+6beRH2gPb86aXuNQMO5uML/0gW
-         Cn1x/PUG8XeRe9PNAIkFWG7hF4Ee8Keavp9KTJesaDRUf0mGEVQcEdlBtvAO3rmmvWFL
-         tGag==
-X-Gm-Message-State: APjAAAUG+ykV4D8G9KhNY6y11HfwbRIB0QRVDPwtpVP9lON97UQvnDdV
-        s3VhfKc4EOKq3h8/xlqr8MO6uf/fe28ruUaPDZ1Nia7g1LvFrEXcJ7lll0Ad2jf3GhiLOHcL2Pi
-        Q+JLX0YgwndE5K/EnlsvKuq0=
-X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr5147559lfq.176.1579259224473;
-        Fri, 17 Jan 2020 03:07:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwLtSDX6E2Zxd2jCBD9EgPbkh8WsMi984qwk3z5d11iErVkCJcVP/GlCslSEB+QKmVt/T8SLg==
-X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr5147546lfq.176.1579259224267;
-        Fri, 17 Jan 2020 03:07:04 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id d24sm12131827lja.82.2020.01.17.03.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 03:07:02 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 1AA911804D6; Fri, 17 Jan 2020 12:07:02 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Vincent Li <mchun.li@gmail.com>
-Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Vincent Li <mchun.li@gmail.com>, xdp-newbies@vger.kernel.org,
-        daniel@iogearbox.net, andriin@fb.com, dsahern@gmail.com
-Subject: Re: XDP invalid memory access
-In-Reply-To: <alpine.OSX.2.21.2001161059220.5400@jiadeimac.local>
-References: <CAK86TEf+GY3F8resRW11DNvate5uqSsh=JAQuJHhBuL0sQpvjg@mail.gmail.com> <20200116022459.GA2853@ranger.igk.intel.com> <87y2u7spj3.fsf@toke.dk> <alpine.OSX.2.21.2001161059220.5400@jiadeimac.local>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 17 Jan 2020 12:07:02 +0100
-Message-ID: <87blr2qr3d.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bDo76dKOnuzMEZoozXWQMHwLc/1xlavJZ+W7DLl98cA=;
+        b=lSN7m5zvesO7CvpdcBJsxAlMFPjz/Eg0GIZMzp7x7IVP19+z5USz6Qg1x1fkfVW2TL
+         MVpdfKEnfhNpJ8gEZ3qNr5GXZsPsdBJEyyoaopJpCAcv76SiHpZTb6HhD05Qi/9w5v6j
+         GbFK/vw3OkQMpf0AiwsNw0qa455U8+oaHHr/ltvcmjW7iKYwJRs7mtSCJoIPFA4F/HE3
+         JVFhVum8SXuX8N6NgnKWO9F892EUhtz1r15zBx1H9AmdOQzYXOWeCGOFSo4PCFB0YyJ3
+         18/j7T6nrnY3Kh59qUcnnVcnhNDkwEfZRRJW6W8/XKOD83JOaTnxbhguo5G4NdE+GJu2
+         yFsw==
+X-Gm-Message-State: APjAAAWTKhXXHduflthbb4XQwNj0xr/IGhfAjbIoXPqEb7PVVJjqq1OR
+        iN+DWi5rpojNALErb1JebfZMcVqKgmcWCbVPWEawsHEUX7U=
+X-Google-Smtp-Source: APXvYqxTXWA54rmWZpLP6uGDCWOlZc+r+yABTf9LKI9AozCp3AplLW8CMhCxgL+4K2WT73qjLAzt1DUkxLTE72V/ueE=
+X-Received: by 2002:ae9:ee11:: with SMTP id i17mr38169903qkg.333.1579264338781;
+ Fri, 17 Jan 2020 04:32:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <14f9e1bf5c3a41dbaec53f83cb5f0564@isi.edu>
+In-Reply-To: <14f9e1bf5c3a41dbaec53f83cb5f0564@isi.edu>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Fri, 17 Jan 2020 13:32:07 +0100
+Message-ID: <CAJ+HfNhdPEe34DVUAj4eHxLkBUSTo2CXbLHoWu+dwFCp753oMg@mail.gmail.com>
+Subject: Re: zero-copy between interfaces
+To:     Ryan Goodfellow <rgoodfel@isi.edu>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Magnus Karlsson <magnus.karlsson@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Vincent Li <mchun.li@gmail.com> writes:
-
-> On Thu, 16 Jan 2020, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+On Mon, 13 Jan 2020 at 01:28, Ryan Goodfellow <rgoodfel@isi.edu> wrote:
 >
-> Hi Toke,
+[...]
 >
->>=20
->> You could also try the xdp-loader in xdp-tools:
->> https://github.com/xdp-project/xdp-tools
->>=20
->> It's somewhat basic still, but should be able to at least load a basic
->> program - please file a bug report if it fails.
->
-> I tried the xdp-tools xdp-loader, when the optlen is global variable, I=20
-> got:
-> # xdp-loader load enp3s0 tcp_option.o
-> Couldn't load BPF program: Relocation failed
->
-> if I move the optlen, i variable to local variable, I got:
->
-> # xdp-loader load enp3s0 tcp_option.o
-> Couldn't load eBPF object: Invalid argument(-22)
+> I could not get zero-copy to work with the i40e driver as it would crash.=
+ I've
+> attached the corresponding traces from dmesg.
 
-OK, I tried this, and there were a couple of issues:
+Thanks Ryan! I had a look at the crash, and it's in the XDP setup:
 
-- The xdp-loader didn't set the BPF program type to XDP, and since your
-  section name doesn't have an xdp_ prefix libbpf couldn't auto-detect
-  it. I've pushed a fix for this to the xdp-tools repo so the loader
-  will always set the program type to XDP now.
+i40e_xdp_setup:
+...
+ for (i =3D 0; i < vsi->num_queue_pairs; i++)
+     WRITE_ONCE(vsi->rx_rings[i]->xdp_prog, vsi->xdp_prog);
 
-- There are a couple of bugs in your program:
+and the vsi->rx_ring[0] is NULL. This is clearly broken.
 
-First, when compiling with warnings turned on, I get this:
+It would help with more lines from your dmesg: the cut i40e log hints
+that something is really broken:
 
-tcp_options.c:64:29: error: variable 'op' is uninitialized when used here [=
--Werror,-Wuninitialized]
-                        if (op[i] =3D=3D TCPOPT_EOL ) {
-                            ^~
-tcp_options.c:43:23: note: initialize the variable 'op' to silence this war=
-ning
-        const __u8 *op;
-                      ^
-                       =3D 0
+[  328.579154] i40e 0000:b7:00.2: failed to get tracking for 256
+queues for VSI 0 err -12
+[  328.579280] i40e 0000:b7:00.2: setup of MAIN VSI failed
+[  328.579367] i40e 0000:b7:00.2: can't remove VEB 162 with 0 VSIs left
 
-after fixing that (adding this line after the optlen =3D assignment):
+Is it possible to dig out the complete log?
 
-                op =3D (const __u8 *)(tcphdr + 1);
-
-the verifier then complains about out-of-bounds reading of the packet
-data (pass -vv to xdp-loader to get the full debug output from libbpf).
-You are not checking that the op pointer doesn't read out-of-bounds.
-
-I fixed that by adding a couple of bounds checks inside the for loop.
-The whole thing now looks like this:
-
-                optlen =3D tcphdr->doff*4 - sizeof(*tcphdr);
-                op =3D (const __u8 *)(tcphdr + 1);
-                for (i =3D 0; i < optlen; ) {
-                        if ((void *)op + i + 1 > data_end)
-                                return 0;
-                        if (op[i] =3D=3D TCPOPT_EOL ) {
-                                char fmt[] =3D "XDP: tcp source : %d tcp op=
-tion eol\n";
-                                bpf_trace_printk(fmt, sizeof(fmt), (int)tcp=
-hdr->source);
-                                return 1;
-                        }
-                        if (op[i] < 2)
-                                i++;
-                        else
-                                i +=3D ((void *)op + 2 < data_end && op[i+1=
-]) ? : 1;
-                }
-
-
-With this, I can successfully load the program using xdp-loader. Turning
-the variables back into globals still doesn't work, but I think that
-error message should be fairly obvious:
-
-libbpf: invalid relo for 'op' in special section 0xfff2; forgot to initiali=
-ze global var?..
-
--Toke
-
+Thanks!
+Bj=C3=B6rn
