@@ -2,225 +2,157 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5AE81406C3
-	for <lists+xdp-newbies@lfdr.de>; Fri, 17 Jan 2020 10:47:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7975B1408A1
+	for <lists+xdp-newbies@lfdr.de>; Fri, 17 Jan 2020 12:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgAQJpq (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 17 Jan 2020 04:45:46 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33381 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgAQJpq (ORCPT
+        id S1726362AbgAQLHJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 17 Jan 2020 06:07:09 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39975 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726343AbgAQLHI (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:45:46 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so22079490otp.0
-        for <xdp-newbies@vger.kernel.org>; Fri, 17 Jan 2020 01:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OEw7SPhhkhmExEzrF8vhmwik2mIU4uMBdZl4k+GfGoM=;
-        b=TJ7fyGfKekqEzTVw15hzhdIszENiUw/BJro8H0iJI49I0J/cOFA1cEOdV40eudDSAA
-         rSI2ELmNpsqcT8qCw3x57HfGKbL80EPo5cOJvlxlrdpM0cW8QddaGW850XWc8A35ccij
-         /4mlPGSSNhJs62JbldJ7N87C2rl3CvIiWZOYNw3IiwaDPIbLOhsoU7EDQjUQSIqph3zC
-         fJex8dR0EAibqao+IMjqBi9FpMwkw3rvi10TB3ZRy004SP0wYyB1wx3AD9136wMGpFtB
-         dv5WbTSDETffcRxundL5LGOJrRNU6pB+aXdyirfYyNBAcqOEjseiIue+yAG6omw7mwnK
-         Ml5g==
+        Fri, 17 Jan 2020 06:07:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579259227;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FD/DgNcM1GLD79brHZ4ucrevIm2zv6khR/Sdh/iU+qM=;
+        b=Ln42xij2j492CRS8wAVHKLxJWXaQe6n8uvUwNwAc5hONuJqu0GjuHhsh7gEyKk6PvEnaWF
+        hbvSScDIrEQ8WpE/Ns8gdhSWd0WfCGQK9zMvpYgYKXRXdLdKZXbZtabySpz350uaJuJSor
+        7lMTeCrI++XV9QcsjyW4x6OFHeY4CXo=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-A5i5R8jXMmClccD1cjksUQ-1; Fri, 17 Jan 2020 06:07:06 -0500
+X-MC-Unique: A5i5R8jXMmClccD1cjksUQ-1
+Received: by mail-lj1-f200.google.com with SMTP id k21so6130141ljg.3
+        for <xdp-newbies@vger.kernel.org>; Fri, 17 Jan 2020 03:07:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEw7SPhhkhmExEzrF8vhmwik2mIU4uMBdZl4k+GfGoM=;
-        b=H5hu9vZCyn1biZ3SBO24dzC8B351/4Fb9Hs1mjlvJAk+PNJ4+q4pcZLoRh0YPLe9Sg
-         VZSD9KEAvUY1s7gb+6r/kyT46YFizCO5sAz3DTZ6wo4WULB2uAyPK/jL9rVgVZ4figXr
-         uX8Tdw/bIjHWzuwzBmXdxEXQNfuUjfNFYq0JY3PxlBOA9r3dPuVk+iPbImWCYDcPpqgb
-         7WdbNApNUlscu06/Qp3hPIhfBBlXjAdXBfEvmCaMyON0YWqK74fjmsOyywUrm27WkP+j
-         1IloF8ReYOI6cA+OVcW0dxoZBc6FzhBwT+xZ1KLzEGrrszvxxoEckBIO71ATXRMw6tvq
-         Do/w==
-X-Gm-Message-State: APjAAAUAbmGBjTpzNprJL+lYefYTDOf4r9+9V2Y6jjcIO+5V+CIRZXlz
-        lee9HZi+7QA/TQdwl5gMa5C1gk6JYVT5pIeox3PZ5orMsu8=
-X-Google-Smtp-Source: APXvYqxiErz1lcuT8j3A0vD/Pp2tgRU51xniP6xFOwup1CdcGLaaOz0VBvW28bRSxx3xooto3CYA61I9YahuNyagCD0=
-X-Received: by 2002:a9d:7501:: with SMTP id r1mr5603186otk.196.1579254344894;
- Fri, 17 Jan 2020 01:45:44 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=FD/DgNcM1GLD79brHZ4ucrevIm2zv6khR/Sdh/iU+qM=;
+        b=GEawped0FiN936BB+BtHEXnjkki9FF9zDZqok18u+Z3np35lK4EdH4KBENe1S4ekmP
+         7FhON9NJWyBhHDxZajhylr4IFiJ/aWx1nlaT4OhYM2B1XJ4qcI6qLQ1NvUQFhkxghcMB
+         7uoTOoSlkzIiP1VdSwmU66GKlXQOUw1ifLIeGJ9XTQhW5B7EXWE0Wc5o1o5DoMRrWyzy
+         aKT7G25U7fMoeWDxdyb0QiIufmud/biHLafdzT8ee+6beRH2gPb86aXuNQMO5uML/0gW
+         Cn1x/PUG8XeRe9PNAIkFWG7hF4Ee8Keavp9KTJesaDRUf0mGEVQcEdlBtvAO3rmmvWFL
+         tGag==
+X-Gm-Message-State: APjAAAUG+ykV4D8G9KhNY6y11HfwbRIB0QRVDPwtpVP9lON97UQvnDdV
+        s3VhfKc4EOKq3h8/xlqr8MO6uf/fe28ruUaPDZ1Nia7g1LvFrEXcJ7lll0Ad2jf3GhiLOHcL2Pi
+        Q+JLX0YgwndE5K/EnlsvKuq0=
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr5147559lfq.176.1579259224473;
+        Fri, 17 Jan 2020 03:07:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwLtSDX6E2Zxd2jCBD9EgPbkh8WsMi984qwk3z5d11iErVkCJcVP/GlCslSEB+QKmVt/T8SLg==
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr5147546lfq.176.1579259224267;
+        Fri, 17 Jan 2020 03:07:04 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id d24sm12131827lja.82.2020.01.17.03.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 03:07:02 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 1AA911804D6; Fri, 17 Jan 2020 12:07:02 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Vincent Li <mchun.li@gmail.com>
+Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Vincent Li <mchun.li@gmail.com>, xdp-newbies@vger.kernel.org,
+        daniel@iogearbox.net, andriin@fb.com, dsahern@gmail.com
+Subject: Re: XDP invalid memory access
+In-Reply-To: <alpine.OSX.2.21.2001161059220.5400@jiadeimac.local>
+References: <CAK86TEf+GY3F8resRW11DNvate5uqSsh=JAQuJHhBuL0sQpvjg@mail.gmail.com> <20200116022459.GA2853@ranger.igk.intel.com> <87y2u7spj3.fsf@toke.dk> <alpine.OSX.2.21.2001161059220.5400@jiadeimac.local>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 17 Jan 2020 12:07:02 +0100
+Message-ID: <87blr2qr3d.fsf@toke.dk>
 MIME-Version: 1.0
-References: <14f9e1bf5c3a41dbaec53f83cb5f0564@isi.edu> <CAJ8uoz1FcfDYa1PaQuY-Yk+keEX5FT6+q2H2eLTce6DxcQjuiA@mail.gmail.com>
- <20200113151159.GB68570@smtp.ads.isi.edu> <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
- <20200114205250.GA85903@smtp.ads.isi.edu> <20200115014137.GA105434@smtp.ads.isi.edu>
- <CAJ8uoz2VTXAT9ryF9Ls2JjacEw0Bc23t9w2jDEoMdA0dRc6Aaw@mail.gmail.com>
- <CAJ8uoz1Nf+Fsg40tfdnMenFiCjRBJN9maY9rVo--trt+Uwkqwg@mail.gmail.com>
- <20200116020414.GA46831@smtp.ads.isi.edu> <CAJ8uoz2WqQMVVu8F9JPBc2-Z=yvkg_9LH6cycxtYvJhJ4ytWJQ@mail.gmail.com>
-In-Reply-To: <CAJ8uoz2WqQMVVu8F9JPBc2-Z=yvkg_9LH6cycxtYvJhJ4ytWJQ@mail.gmail.com>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Fri, 17 Jan 2020 10:45:33 +0100
-Message-ID: <CAJ8uoz3k1y9DeqQPf16BYL2HrrOUkpjEMmgUuVZX4nxAspJ4AA@mail.gmail.com>
-Subject: Re: zero-copy between interfaces
-To:     Ryan Goodfellow <rgoodfel@isi.edu>
-Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 3:32 PM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
+Vincent Li <mchun.li@gmail.com> writes:
+
+> On Thu, 16 Jan 2020, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
 >
-> On Thu, Jan 16, 2020 at 3:04 AM Ryan Goodfellow <rgoodfel@isi.edu> wrote:
-> >
-> > On Wed, Jan 15, 2020 at 09:20:30AM +0100, Magnus Karlsson wrote:
-> > > On Wed, Jan 15, 2020 at 8:40 AM Magnus Karlsson
-> > > <magnus.karlsson@gmail.com> wrote:
-> > > >
-> > > > On Wed, Jan 15, 2020 at 2:41 AM Ryan Goodfellow <rgoodfel@isi.edu> wrote:
-> > > > >
-> > > > > On Tue, Jan 14, 2020 at 03:52:50PM -0500, Ryan Goodfellow wrote:
-> > > > > > On Tue, Jan 14, 2020 at 10:59:19AM +0100, Magnus Karlsson wrote:
-> > > > > > >
-> > > > > > > Just sent out a patch on the mailing list. Would be great if you could
-> > > > > > > try it out.
-> > > > > >
-> > > > > > Thanks for the quick turnaround. I gave this patch a go, both in the bpf-next
-> > > > > > tree and manually applied to the 5.5.0-rc3 branch I've been working with up to
-> > > > > > this point. It does allow for allocating more memory, however packet
-> > > > > > forwarding no longer works. I did not see any complaints from dmesg, but here
-> > > > > > is an example iperf3 session from a client that worked before.
-> > > > > >
-> > > > > > ry@xd2:~$ iperf3 -c 10.1.0.2
-> > > > > > Connecting to host 10.1.0.2, port 5201
-> > > > > > [  5] local 10.1.0.1 port 53304 connected to 10.1.0.2 port 5201
-> > > > > > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> > > > > > [  5]   0.00-1.00   sec  5.91 MBytes  49.5 Mbits/sec    2   1.41 KBytes
-> > > > > > [  5]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > > > > > [  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > > > > > [  5]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > > > > > [  5]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > > > > > [  5]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > > > > > [  5]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > > > > > [  5]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > > > > > [  5]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > > > > > ^C[  5]  10.00-139.77 sec  0.00 Bytes  0.00 bits/sec    4   1.41 KBytes
-> > > > > > - - - - - - - - - - - - - - - - - - - - - - - - -
-> > > > > > [ ID] Interval           Transfer     Bitrate         Retr
-> > > > > > [  5]   0.00-139.77 sec  5.91 MBytes   355 Kbits/sec    9             sender
-> > > > > > [  5]   0.00-139.77 sec  0.00 Bytes  0.00 bits/sec                  receiver
-> > > > > > iperf3: interrupt - the client has terminated
-> > > > > >
-> > > > > > I'll continue to investigate and report back with anything that I find.
-> > > > >
-> > > > > Interestingly I found this behavior to exist in the bpf-next tree independent
-> > > > > of the patch being present.
-> > > >
-> > > > Ryan,
-> > > >
-> > > > Could you please do a bisect on it? In the 12 commits after the merge
-> > > > commit below there are number of sensitive rewrites of the ring access
-> > > > functions. Maybe one of them breaks your code. When you say "packet
-> > > > forwarding no longer works", do you mean it works for a second or so,
-> > > > then no packets come through? What HW are you using?
-> > > >
-> > > > commit ce3cec27933c069d2015a81e59b93eb656fe7ee4
-> > > > Merge: 99cacdc 1d9cb1f
-> > > > Author: Alexei Starovoitov <ast@kernel.org>
-> > > > Date:   Fri Dec 20 16:00:10 2019 -0800
-> > > >
-> > > >     Merge branch 'xsk-cleanup'
-> > > >
-> > > >     Magnus Karlsson says:
-> > > >
-> > > >     ====================
-> > > >     This patch set cleans up the ring access functions of AF_XDP in hope
-> > > >     that it will now be easier to understand and maintain. I used to get a
-> > > >     headache every time I looked at this code in order to really understand it,
-> > > >     but now I do think it is a lot less painful.
-> > > >     <snip>
-> > > >
-> > > > /Magnus
-> > >
-> > > I see that you have debug messages in your application. Could you
-> > > please run with those on and send me the output so I can see where it
-> > > stops. A bisect that pin-points what commit that breaks your program
-> > > plus the debug output should hopefully send us on the right path for a
-> > > fix.
-> > >
-> > > Thanks: Magnus
-> > >
-> >
-> > Hi Magnus,
-> >
-> > I did a bisect starting from the head of the bpf-next tree (990bca1) down to
-> > the first commit before the patch series you identified (df034c9). The result
-> > was identifying df0ae6f as the commit that causes the issue I am seeing.
-> >
-> > I've posted output from the program in debugging mode here
-> >
-> > - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930375
+> Hi Toke,
 >
-> Perfect. Thanks.
+>>=20
+>> You could also try the xdp-loader in xdp-tools:
+>> https://github.com/xdp-project/xdp-tools
+>>=20
+>> It's somewhat basic still, but should be able to at least load a basic
+>> program - please file a bug report if it fails.
 >
-> > Yes, you are correct in that forwarding works for a brief period and then stops.
-> > I've noticed that the number of packets that are forwarded is equal to the size
-> > of the producer/consumer descriptor rings. I've posted two ping traces from a
-> > client ping that shows this.
-> >
-> > - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930376
-> > - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930377
-> >
-> > I've also noticed that when the forwarding stops, the CPU usage for the proc
-> > running the program is pegged, which is not the norm for this program as it uses
-> > a poll call with a timeout on the xsk fd.
+> I tried the xdp-tools xdp-loader, when the optlen is global variable, I=20
+> got:
+> # xdp-loader load enp3s0 tcp_option.o
+> Couldn't load BPF program: Relocation failed
 >
-> I will replicate your setup and try to reproduce it. Only have one
-> port connected to my load generator now, but when I get into the
-> office, I will connect two ports.
-
-If have now run your application, but unfortunately I cannot recreate
-your problem. It works and runs for several minutes until I get bored
-and terminate it. Note that I use an i40e card that you get a crash
-with. So two problems I cannot reproduce, sigh. Here is my system
-info. Can you please dump yours? Please do the ethtool dump on your
-i40e card.
-
-mkarlsso@kurt:~/src/dna-linux$ sudo ethtool -i ens803f0
-[sudo] password for mkarlsso:
-driver: i40e
-version: 2.8.20-k
-firmware-version: 5.05 0x800028a6 1.1568.0
-expansion-rom-version:
-bus-info: 0000:86:00.0
-supports-statistics: yes
-supports-test: yes
-supports-eeprom-access: yes
-supports-register-dump: yes
-supports-priv-flags: yes
-
-mkarlsso@kurt:~/src/dna-linux$ uname -a
-Linux kurt 5.5.0-rc4+ #72 SMP PREEMPT Thu Jan 16 10:03:20 CET 2020
-x86_64 x86_64 x86_64 GNU/Linux
-
-mkarlsso@kurt:~/src/dna-linux$ git log -1
-commit b65053cd94f46619b4aae746b98f2d8d9274540e (HEAD, bpf-next/master)
-Author: Andrii Nakryiko <andriin@fb.com>
-Date:   Wed Jan 15 16:55:49 2020 -0800
-
-    selftests/bpf: Add whitelist/blacklist of test names to test_progs
-
-gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2)
-
-I also noted that you use MAX_SOCKS in your XDP program. The size of
-the xsks_map is not dependent on the number of sockets in your case.
-It is dependent on the queue id you use. So I would introduce a
-MAX_QUEUE_ID and set it to e.g. 128 and use that instead. MAX_SOCKS is
-4, so quite restrictive.
-
-/Magnus
-
-> In what loop does the execution get stuck when it hangs at 100% load?
+> if I move the optlen, i variable to local variable, I got:
 >
-> /Magnus
->
-> > The hardware I am using is a Mellanox ConnectX4 2x100G card (MCX416A-CCAT)
-> > running the mlx5 driver. The program is running in zero copy mode. I also tested
-> > this code out in a virtual machine with virtio NICs in SKB mode which uses
-> > xdpgeneric - there were no issues in that setting.
-> >
-> > --
-> > ~ ry
+> # xdp-loader load enp3s0 tcp_option.o
+> Couldn't load eBPF object: Invalid argument(-22)
+
+OK, I tried this, and there were a couple of issues:
+
+- The xdp-loader didn't set the BPF program type to XDP, and since your
+  section name doesn't have an xdp_ prefix libbpf couldn't auto-detect
+  it. I've pushed a fix for this to the xdp-tools repo so the loader
+  will always set the program type to XDP now.
+
+- There are a couple of bugs in your program:
+
+First, when compiling with warnings turned on, I get this:
+
+tcp_options.c:64:29: error: variable 'op' is uninitialized when used here [=
+-Werror,-Wuninitialized]
+                        if (op[i] =3D=3D TCPOPT_EOL ) {
+                            ^~
+tcp_options.c:43:23: note: initialize the variable 'op' to silence this war=
+ning
+        const __u8 *op;
+                      ^
+                       =3D 0
+
+after fixing that (adding this line after the optlen =3D assignment):
+
+                op =3D (const __u8 *)(tcphdr + 1);
+
+the verifier then complains about out-of-bounds reading of the packet
+data (pass -vv to xdp-loader to get the full debug output from libbpf).
+You are not checking that the op pointer doesn't read out-of-bounds.
+
+I fixed that by adding a couple of bounds checks inside the for loop.
+The whole thing now looks like this:
+
+                optlen =3D tcphdr->doff*4 - sizeof(*tcphdr);
+                op =3D (const __u8 *)(tcphdr + 1);
+                for (i =3D 0; i < optlen; ) {
+                        if ((void *)op + i + 1 > data_end)
+                                return 0;
+                        if (op[i] =3D=3D TCPOPT_EOL ) {
+                                char fmt[] =3D "XDP: tcp source : %d tcp op=
+tion eol\n";
+                                bpf_trace_printk(fmt, sizeof(fmt), (int)tcp=
+hdr->source);
+                                return 1;
+                        }
+                        if (op[i] < 2)
+                                i++;
+                        else
+                                i +=3D ((void *)op + 2 < data_end && op[i+1=
+]) ? : 1;
+                }
+
+
+With this, I can successfully load the program using xdp-loader. Turning
+the variables back into globals still doesn't work, but I think that
+error message should be fairly obvious:
+
+libbpf: invalid relo for 'op' in special section 0xfff2; forgot to initiali=
+ze global var?..
+
+-Toke
+
