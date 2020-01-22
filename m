@@ -2,106 +2,97 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CDF5145E40
-	for <lists+xdp-newbies@lfdr.de>; Wed, 22 Jan 2020 22:44:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA4FB145E67
+	for <lists+xdp-newbies@lfdr.de>; Wed, 22 Jan 2020 23:11:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgAVVoB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 22 Jan 2020 16:44:01 -0500
-Received: from mail-d.ads.isi.edu ([128.9.180.199]:27013 "EHLO
-        mail-d.ads.isi.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbgAVVoB (ORCPT
+        id S1726083AbgAVWLK (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 22 Jan 2020 17:11:10 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36101 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgAVWLK (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 22 Jan 2020 16:44:01 -0500
-X-IronPort-AV: E=Sophos;i="5.70,351,1574150400"; 
-   d="scan'208";a="20874919"
-Received: from 1-163-46-234.dynamic-ip.hinet.net (HELO smtp.ads.isi.edu) ([1.163.46.234])
-  by mail-d.ads.isi.edu with ESMTP/TLS/AES256-GCM-SHA384; 22 Jan 2020 13:43:59 -0800
-Date:   Thu, 23 Jan 2020 05:43:55 +0800
-From:   Ryan Goodfellow <rgoodfel@isi.edu>
-To:     Maxim Mikityanskiy <maximmi@mellanox.com>
-Cc:     Magnus Karlsson <magnus.karlsson@gmail.com>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>
-Subject: Re: zero-copy between interfaces
-Message-ID: <20200122214352.GA13201@smtp.ads.isi.edu>
-References: <CAJ8uoz1FcfDYa1PaQuY-Yk+keEX5FT6+q2H2eLTce6DxcQjuiA@mail.gmail.com>
- <20200113151159.GB68570@smtp.ads.isi.edu>
- <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
- <20200114205250.GA85903@smtp.ads.isi.edu>
- <20200115014137.GA105434@smtp.ads.isi.edu>
- <CAJ8uoz2VTXAT9ryF9Ls2JjacEw0Bc23t9w2jDEoMdA0dRc6Aaw@mail.gmail.com>
- <CAJ8uoz1Nf+Fsg40tfdnMenFiCjRBJN9maY9rVo--trt+Uwkqwg@mail.gmail.com>
- <20200116020414.GA46831@smtp.ads.isi.edu>
- <CAJ8uoz0yqYTq+OOK8p0XRcWyMkfnJ1ZT7hUew9w3FuHr=4K-QQ@mail.gmail.com>
- <4c03813d-5edf-7e9e-8905-31902b5acb71@mellanox.com>
+        Wed, 22 Jan 2020 17:11:10 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so413257plm.3
+        for <xdp-newbies@vger.kernel.org>; Wed, 22 Jan 2020 14:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rZfDq/DHrDuW8PlSBWxmRGFO6BP8xzqBn2K5wcB3pH8=;
+        b=pWfe/yjshwKFdxHWolX/AVSMBf6pXoephLHT6yeFf9NbNpYdV10UIHrz/UHKZbefP4
+         /a5TMAKiIbX+UqLTURTWt4eMjHOwVLfDfarpG8wM4viObq3jCiTdLtDlqVKylKISvH/4
+         PrcbmzyS8Dkq7QUhpZVPhz6ZoN74hmcnPAbDIeFc26kzYVguYToJDEhXLnZw2QWupQCo
+         FA85d+QJ+dF+b45ODk1uhbNM8c9Aa2/dKEUTKVpI4mV1O6gveihihGc4TCOLdczAgKYy
+         imIoyTl9r6Xi06ewi9pcXZlA/UPEWoNk/HyNvatcTPN6s2685Ob2s0h44LDh8plmsgBp
+         YEwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rZfDq/DHrDuW8PlSBWxmRGFO6BP8xzqBn2K5wcB3pH8=;
+        b=adx29XvBkELM6KQr7VG0M69Wrdst2RJnSS8c4PUBFrLy8bEhMM7X3F5oeywr8MZr89
+         FHUUUe8RMneOc9QRyKliPe8rlWTbI7CYLtA1UWOrsNkj6fhSExWsS5ltmsGkyxkfAlN4
+         madN+zbyAINXDOQRBUn1FSsVDwLJtdAbZtePAWsRB1nSBWoxvqbxACTXEN7Mw5NE25Z1
+         wjDpJS1Jrpo39Yt3PaFFtoe2scYi7V21VsV9FThbBMs2iQtIqLcRtpQFjGHbaGLhBStW
+         v9Xr0PF75BZhxgD1hnWXu4+bhPAH3JTu0klVndQRvNl4A7BcJvyd4xe89TdoA1N1oLFL
+         ePVQ==
+X-Gm-Message-State: APjAAAXer0L3nU0DQRZSzhIBggjM3YFbnsXbp+dAXKrcAKYdDvi+k8RS
+        YwPrZVfkEpVBclKyzpsg0cw=
+X-Google-Smtp-Source: APXvYqzWIOfBtIKsrMGxZ1jE7e+pINNIgsz/2I36/zt9W+yn2R5JO2A2A23b9WgNZIGvUN1fm4RAhQ==
+X-Received: by 2002:a17:90a:d081:: with SMTP id k1mr737368pju.57.1579731069999;
+        Wed, 22 Jan 2020 14:11:09 -0800 (PST)
+Received: from [192.168.1.25] (c-71-231-121-172.hsd1.wa.comcast.net. [71.231.121.172])
+        by smtp.gmail.com with ESMTPSA id n188sm45741pga.84.2020.01.22.14.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jan 2020 14:11:09 -0800 (PST)
+From:   Vincent Li <mchun.li@gmail.com>
+X-Google-Original-From: Vincent Li <guzheng@gmail.com>
+Date:   Wed, 22 Jan 2020 14:11:07 -0800 (PST)
+X-X-Sender: guzheng@jiadeimac.local
+To:     Christian Deacon <gamemann@gflclan.com>
+cc:     xdp-newbies@vger.kernel.org
+Subject: Re: Measuring/Debugging XDP Performance
+In-Reply-To: <6c3dc8ff-e2bd-a06e-d9f0-c5be0103d266@gflclan.com>
+Message-ID: <alpine.OSX.2.21.2001221405250.1261@jiadeimac.local>
+References: <6c3dc8ff-e2bd-a06e-d9f0-c5be0103d266@gflclan.com>
+User-Agent: Alpine 2.21 (OSX 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c03813d-5edf-7e9e-8905-31902b5acb71@mellanox.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 01:40:50PM +0000, Maxim Mikityanskiy wrote:
-> >> I've posted output from the program in debugging mode here
-> >>
-> >> - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930375
-> >>
-> >> Yes, you are correct in that forwarding works for a brief period and then stops.
-> >> I've noticed that the number of packets that are forwarded is equal to the size
-> >> of the producer/consumer descriptor rings. I've posted two ping traces from a
-> >> client ping that shows this.
-> >>
-> >> - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930376
-> >> - https://gitlab.com/mergetb/tech/network-emulation/kernel/snippets/1930377
+
+
+On Wed, 22 Jan 2020, Christian Deacon wrote:
+
+> Hey everyone,
 > 
-> These snippets are not available.
-
-Apologies, I had the wrong permissions set. They should be available now.
-
+> I am new to XDP + AF_XDP (along with C programming in general), but I am very
+> interested in it and I've been learning a lot recently. I own an Anycast
+> network and our POP servers are running custom software our developer created
+> that processes packets using XDP. This software basically forwards specific
+> traffic to another machine via an IPIP tunnel. One issue I've been noticing is
+> the packets our software is processing and forwarding to another machine keep
+> dropping at higher traffic loads. I can't tell if this is dropping at the POP
+> level or if the machine the software is forwarding this specific traffic to
+> is. I've even tried upgrading the POP server from a two-core VPS (2.5 GHz
+> CPUs) to a dedicated server (Intel E3-1230v6 @ 3.5 GHz, 4 cores, and 8
+> threads). If this is being dropped at the POP level, I'm wondering if the
+> software is being limited to one core on this specific POP (other POPs are
+> able to use more than one core specifically). However, I have no way to
+> confirm that. To my understanding XDP programs should be able to use more than
+> one core.
 > 
-> >>
-> >> I've also noticed that when the forwarding stops, the CPU usage for the proc
-> >> running the program is pegged, which is not the norm for this program as it uses
-> >> a poll call with a timeout on the xsk fd.
+> My questions are the following:
 > 
-> This information led me to a guess what may be happening. On the RX 
-> side, mlx5e allocates pages in bulks for performance reasons and to 
-> leverage hardware features targeted to performance. In AF_XDP mode, 
-> bulking of frames is also used (on x86, the bulk size is 64 with 
-> striding RQ enabled, and 8 otherwise, however, it's implementation 
-> details that might change later). If you don't put enough frames to XSK 
-> Fill Ring, the driver will be demanding more frames and return from 
-> poll() immediately. Basically, in the application, you should put as 
-> many frames to the Fill Ring as you can. Please check if that could be 
-> the root cause of your issue.
+> 1. Is there a way to see how much CPU the XDP program is using or the load of
+> the NIC? To my understanding, you cannot tell the XDP program's CPU usage
+> based off of something like `top` or `htop` due to that being in the user
+> space (XDP happens at the NIC driver level in the kernel IIRC).
 
-The code in this application makes an effort to relenish the fill ring as fast
-as possible. The basic loop of the application is to first check if there are
-any descriptors to be consumed from the completion queue or any descriptors that
-can be added to the fill queue, and only then to move on to moving packets
-through the rx and tx rings.
-
-https://gitlab.com/mergetb/tech/network-emulation/kernel/blob/v5.5-moa/samples/bpf/xdpsock_multidev.c#L452-474
-
-> 
-> I tracked this issue in our internal bug tracker in case we need to 
-> perform actual debugging of mlx5e. I'm looking forward to your feedback 
-> on my assumption above.
-> 
-> >> The hardware I am using is a Mellanox ConnectX4 2x100G card (MCX416A-CCAT)
-> >> running the mlx5 driver.
-> 
-> This one should run without striding RQ, please verify it with ethtool 
-> --show-priv-flags (the flag name is rx_striding_rq).
-
-I do not remember changing this option, so whatever the default is, is what it
-was running with. I am traveling this week and do not have access to these
-systems, but will ensure that this flag is set properly when I get back.
-
--- 
-~ ry
+I am newbie in XDP too, maybe Linux 
+Perf http://www.brendangregg.com/perf.html tool could help you figuring 
+out which part of the code in your XDP app consuming CPU cycles (debug 
+symbol needed)
