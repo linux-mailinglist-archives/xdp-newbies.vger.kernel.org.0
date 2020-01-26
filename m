@@ -2,102 +2,121 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C40814734E
-	for <lists+xdp-newbies@lfdr.de>; Thu, 23 Jan 2020 22:43:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4841E1498CA
+	for <lists+xdp-newbies@lfdr.de>; Sun, 26 Jan 2020 05:53:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAWVny (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 23 Jan 2020 16:43:54 -0500
-Received: from q2relay107.mxroute.com ([160.202.107.107]:35955 "EHLO
-        q2relay107.mxroute.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgAWVnx (ORCPT
+        id S1729133AbgAZExG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 25 Jan 2020 23:53:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46204 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgAZExG (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 23 Jan 2020 16:43:53 -0500
-X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Jan 2020 16:43:53 EST
-Received: from filter003.mxroute.com [168.235.111.26] (Authenticated sender: mN4UYu2MZsgR)
- by q2relay107.mxroute.com (ZoneMTA) with ESMTPSA id 16fd457ecec00098e2.001
- for <xdp-newbies@vger.kernel.org>
- (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
- Thu, 23 Jan 2020 21:38:49 +0000
-X-Zone-Loop: a3e50fc8046dfa80b96d9c69473d3946bc8c48e7f782
-X-Originating-IP: [168.235.111.26]
-Received: from ocean.mxroute.com (ocean.mxroute.com [195.201.59.214])
-        by filter003.mxroute.com (Postfix) with ESMTPS id C260A6003E
-        for <xdp-newbies@vger.kernel.org>; Thu, 23 Jan 2020 21:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZpZGl4fvXjp7GVzqvuHO1WTtKuZS2UBTTfYBb6Y3X5g=; b=phVDEoNAy5ukmXE3R/HiOXTMz0
-        /fkavmmA8IqG0vnVCNyuFcvCaK2cZYbYh0tcIoCTKMLCLVET/hZs1DTxFccMqH1WmLvpfocMwrcx6
-        0Eg9imqQ9AB6dZ3gkwXS9OnIaUTX/6xd8CpQ/MI5XGKx3AJcRQY+zp5Rg55KzG9jGErQeoaPH53BR
-        VSmYY7dHLV765/FMvRBrZSpKTJEVfzMkVgwvBu9n417gESPqlmIsJbc1mf2/6H8Q4x3siEIFdx+qj
-        55eQ3YxGbYNqcLjd5HTT+TLn5Pgs8uyrBzIoTQWxR7ITIDakDZs4Af2cvmulhOCDfah/fGCCm5De6
-        b2eH+nHg==;
-Subject: Re: Measuring/Debugging XDP Performance
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     xdp-newbies@vger.kernel.org
-References: <6c3dc8ff-e2bd-a06e-d9f0-c5be0103d266@gflclan.com>
- <20200123141122.3783e298@carbon>
- <23ec64c0-e0d7-a60b-ecc4-6ca401dc4896@gflclan.com>
- <20200123213808.7a1f200b@carbon>
-From:   Christian Deacon <gamemann@gflclan.com>
-Message-ID: <fdd597bf-7da9-f9bd-d97f-f1bd90f14281@gflclan.com>
-Date:   Thu, 23 Jan 2020 15:38:43 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 25 Jan 2020 23:53:06 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so3376456pgb.13
+        for <xdp-newbies@vger.kernel.org>; Sat, 25 Jan 2020 20:53:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=coverfire.com; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=DrDjRKmQTgaDuxM6u3yhfD1/TvcyHpt5emIdpC4AZSM=;
+        b=huZ5hvIH/mv2zmIaVrXuNcMO8B7IDpfzrkldr9qwULm0JyNy6vP4LPvQ98s/Twed7I
+         zzGccnpjyJFMayJXqlgb/0/dZ2jN8Drz986yv915+jYa7g9eyELfPLENpDJgDFyGuGYm
+         QrEq9aJinBLBI1j38wGW0mYnpqNZvE0NV4/iaf+7SgjU9sZTCFg68fFFO2V/ncjdlpg5
+         0MnDvk8vgK5RkNW6V7BJh8OVwDWlLDTOfLeKuj05RZweoyRu/7RgMihAbwYoYUH8CJQH
+         eNhORxUjloLSbBUtlTxJKT0Ktli88MtrvdnfawrlYbsevLUrs+t/79YMEEF3Zm6bO2nm
+         eGRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=DrDjRKmQTgaDuxM6u3yhfD1/TvcyHpt5emIdpC4AZSM=;
+        b=Q+QXehpJT/uUrl8/QrG3irm/bHa6JXoLkABSLlPsPXmZd9RscIYxRFiBfWyaX3q31i
+         7Jku1Zn2jhNv4hD4/arPTmQQULw0FhbG/RSEzoNjsi8rEHmuOQmHhTvPJXG6tOkWG8Sl
+         4MlDEl0PNC8kjz6oFnlMK7gb/0bqhuhsDPX0dbl2CQzclvtUWbs6NbtCKmLGSx6qbCkQ
+         zwqGP4EDNJ8zCUn5Y5yiwu6X2fxj4LgXrxKewXhR+mDz+Bh3CsN3ni78aCGC/uKVwfil
+         HWUURqzRc8fxK3AelYDZPc98ae1+gNq+ddtO6rkOHffRjVdaKIeFgPs3E2HVwkj6a7b+
+         At7g==
+X-Gm-Message-State: APjAAAWh9FQt4VHcgZHW7/8PAsc6t0ohdKon1NXeigQ4z7v5Yxez+8Wr
+        eq2j9wzwAY5586b6sRyZ9EH4rw==
+X-Google-Smtp-Source: APXvYqx+K0atA6KTnWro5nCZvEZ9hLO7XgJUUlr0ysC0o1lAbrDAcjxtRwzpltTY64xfWD86+YTfxg==
+X-Received: by 2002:a65:5bc3:: with SMTP id o3mr12551018pgr.226.1580014385933;
+        Sat, 25 Jan 2020 20:53:05 -0800 (PST)
+Received: from neptune.home ([203.97.87.169])
+        by smtp.gmail.com with ESMTPSA id 72sm7450381pfw.7.2020.01.25.20.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jan 2020 20:53:05 -0800 (PST)
+Message-ID: <03dce571f7c17726938daaf0fa576d75b2a5f90f.camel@coverfire.com>
+Subject: Re: zero-copy between interfaces
+From:   Dan Siemon <dan@coverfire.com>
+To:     Ryan Goodfellow <rgoodfel@isi.edu>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Date:   Sat, 25 Jan 2020 23:53:00 -0500
+In-Reply-To: <20200118140857.GA9363@smtp.ads.isi.edu>
+References: <14f9e1bf5c3a41dbaec53f83cb5f0564@isi.edu>
+         <20200113124134.3974cbed@carbon> <20200113152759.GD68570@smtp.ads.isi.edu>
+         <20200113180411.24d8bd40@carbon> <20200117175409.GC69024@smtp.ads.isi.edu>
+         <20200118111405.28fd1c75@carbon> <20200118140857.GA9363@smtp.ads.isi.edu>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200123213808.7a1f200b@carbon>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-OutGoing-Spam-Status: No, score=-10.0
-X-AuthUser: gamemann@gflclan.com
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hey Jesper,
+On Sat, 2020-01-18 at 09:08 -0500, Ryan Goodfellow wrote:
+> On Sat, Jan 18, 2020 at 11:14:05AM +0100, Jesper Dangaard
+> Brouerwrote:
+> > 
+> > I'm wondering why did you choose/need AF_XDP technology for doing
+> > forwarding?
+> 
+> This is just a sample program used to demonstrate moving packets
+> between
+> different interfaces efficiently using AF_XDP.
+> 
+> Our actual use case is performing network emulation in userspace. For
+> example,
+> representing impaired links or entire networks with link-by-link
+> shaping
+> specifications. We are using AF_XDP to get packets to/from our
+> network emulation
+> software as quickly as possible without having to go through the
+> entire network
+> stack, as the emulation host's network configuration does not
+> influence the
+> networks it's emulating.
+> 
+> Traditionally we've used DPDK for this, but are porting to AF_XDP for
+> the 
+> relative simplicity and flexibility it provides. Some specific
+> benefits for us
+> are:
+> 
+> - Can attach to VTEPs which allows us to hook into some EVPN/VXLAN
+> based
+>   networks we have easily. Alternatively with the BPF program
+> flexibility, we
+>   also have the option to split out BGP control plane traffic from
+> overlay
+>   traffic when attaching to the physical interface and pass it
+> through to the 
+>   kernel. Both of these approaches let the kernel manage the FDB for
+> VTEPs as 
+>   well as taking care of encap/decap (potentially offloaded to the
+> NIC itself) 
+>   and let our software focus on emulation.
+> 
+> - Using XDP in virtual machines in our testing environment is
+> straightforward,
+>   while this is possible with DPDK and virtio, the setup was rather
+> convoluted.
+
+I'm in a very similar situation. The per-packet work we do is
+complicated. Doing it all in BPF would be much more painful if even
+possible. For us, AF_XDP is a nice, simple DPDK. We have no need for
+BPF in the AF_XDP path.
 
 
-Thank you for the information and that makes a lot more sense! I didn't 
-realize we had a NIC that doesn't support XDP-native. I will see if I 
-can get a better NIC card for this dedicated server (I don't believe our 
-current NIC card supports any other drivers besides `igb`).
-
-
-In the meantime, I have stopped announcing my dedicated server to our 
-Anycast network and have started announcing the four-core VPS that had 
-similar issues before ordering the dedicated server (even though I feel 
-this VPS should be able to handle the traffic load). The CPU is 
-virtualized and running at 2.5 GHz per core. The VPS's OS is Ubuntu 
-18.10 and the kernel is '4.18.0-20'. The NIC driver is "virtio-pci", 
-which I believe is supported (please correct me if I'm wrong, I do see 
-'virtio_net' in the list of supported XDP drivers which I'd assume is 
-the same thing).
-
-
-I will execute the 'perf' commands tonight when we have higher traffic 
-load and reply with the output.
-
-
-Thank you for your help!
-
-
-On 1/23/2020 2:38 PM, Jesper Dangaard Brouer wrote:
-> On Thu, 23 Jan 2020 11:22:31 -0600
-> Christian Deacon <gamemann@gflclan.com> wrote:
->
->> Thank you for the information and I will try these commands tonight when
->> there is higher traffic load! The 'perf' command seems interesting.
-> Thanks for the perf output in the private email thread. From the output
-> I can clearly see the problem (some copy pasted below signature).  You
-> are using the driver igb which does not support XDP-native, and is thus
-> using generic-XDP.
->
-> This driver only have 192 bytes headroom, where 256 is needed.  Thus,
-> running XDP-generic will be slower than running the normal network
-> stack, as every packet will get reallocated and copied.
->
