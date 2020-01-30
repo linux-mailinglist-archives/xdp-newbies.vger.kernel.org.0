@@ -2,268 +2,344 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8C7214D84D
-	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Jan 2020 10:37:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B508314D87C
+	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Jan 2020 10:59:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgA3Jh5 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 30 Jan 2020 04:37:57 -0500
-Received: from mail-db8eur05on2054.outbound.protection.outlook.com ([40.107.20.54]:6195
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726882AbgA3Jh4 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 30 Jan 2020 04:37:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ua2TleQOt/FqrQ3LtyvpaD1bgmISzFHV8fONGO1s0ZXLT5OMXSYjyBKAfIIBrlnmlEIK1a7BPe9ysUbGSIti8kJrosNxZs5qZanIkgel72ow2C8jW0dSzvDSRaquST8uPKO/bLWuBv97N+BNfxoEzmqbBuSNkQHnZ+WDi2AxH4KOsG3cQUw4rnTgF58XcEC09Xs099FyW/AtnWnT8PxpnhcgqHAobBi6F/L9k0hK5yWzI1FXPMq1tkeFjMvYMtqG7jNcA/ta/fVEJ9UxX24GxFfN069bxRlUguU54gkADFMcgwYw/6wx8zSM+42TArUvMb+NF2Y5Lhn6/sUKIylaeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B7s56Bmuo8AEq5WopyVcs6jmJ80R226o5J9RGerGhmk=;
- b=a/zLr3ooUJdfFpTGrqw40Wy3OiSau5f8Kp1juVEuag08KLmTDtVoixmptFNPYkq94rOVlk5YcpCcA7HhXzicdr5Dboo87DDT6Su75Zp5JQSrGmVc2HsSaXb8vlXB5ebkQAsUM3UVD0r2PWRoIdI3F1lFPtscr8d01OYi3rmhFqFZEWrfzTxVow8jsHfMMRIf+hTdtk0tKg8xHFoeMHEBFCpMlcnCfFkpEPLveYUIKRTakTC0XvWd8MQ0rYzQRJS7/QTwdKrs19lOLhFU60Vb8QEEOri7PgvFnEUP6KFYQ+8l/V808oBcHika9r/W0aUq6b8a6U/UENV6M5YiA5OpeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B7s56Bmuo8AEq5WopyVcs6jmJ80R226o5J9RGerGhmk=;
- b=mG2hzhcYTw+KE8rNFb2ejn7UIX0MDa4OXbS0jYpCNexX8DRXRgvYmQ54hwwUVhrBDXLgobLkHkDA9IcUZr64UWTW2sp8I7irSGPwQyv6dBITxnjItsEmjnHeYunm09lMV7nd8/H/lMaCaOtw0gftOOKcFGpXW2O3KN+AD4RRv50=
-Received: from HE1PR0501MB2570.eurprd05.prod.outlook.com (10.168.126.17) by
- HE1PR0501MB2297.eurprd05.prod.outlook.com (10.168.34.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.22; Thu, 30 Jan 2020 09:37:51 +0000
-Received: from HE1PR0501MB2570.eurprd05.prod.outlook.com
- ([fe80::6131:363b:61b8:680a]) by HE1PR0501MB2570.eurprd05.prod.outlook.com
- ([fe80::6131:363b:61b8:680a%11]) with mapi id 15.20.2686.025; Thu, 30 Jan
- 2020 09:37:51 +0000
-From:   Maxim Mikityanskiy <maximmi@mellanox.com>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-CC:     Ryan Goodfellow <rgoodfel@isi.edu>,
+        id S1726947AbgA3J7i (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 30 Jan 2020 04:59:38 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45471 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgA3J7i (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Thu, 30 Jan 2020 04:59:38 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so2521926otp.12
+        for <xdp-newbies@vger.kernel.org>; Thu, 30 Jan 2020 01:59:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pMXXcqZGNVXW/z841xgynU1Mq8GmLvrmBFT4fNvm5bY=;
+        b=FeOzm13UlIYK4v9+Dk5yZuYaSe0srnvjlzoI7UxQ8jemisQf1RcFACqSxzMAUqbckA
+         s801bnJyuLcmhMgKgVk1OVQVPDovJfPuIzmN06vUmqzJK3iwx6xkFUQiEqRpSudlj1gH
+         z92oTVdeCuktB2MciC1XeocuTeGJAnlgj0qSVWYNgUAP0R7XCW4p4cSKZnubaHWaEQQ7
+         Ta3t9eiUtzHYCVhho0zKyFvBnME5m8BQpoTbQk0llYo0sOmo8v6z9q2Jw3tTh+Qk7Ike
+         QmdjJA6aUPpye3qecoD02GVFlv1KtA14oQu3TQ6oh/WhSw8XAk7yQi5b1GzyxEseUhY/
+         6tUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pMXXcqZGNVXW/z841xgynU1Mq8GmLvrmBFT4fNvm5bY=;
+        b=W6iQWbsCi5JgfbysoLyApMOvbC8dnY5SylAxzyN+DHUCqB+gGRWe263nGEDLPTebSN
+         esSUHdehTWWspjkjO/SbYhfXhwG5e/W+pTTLm0SeDPo3O+2dfiasanZtSf0w7kHxIMFM
+         gHEWXNuZkFrpJStyGZDkrmbzyRvZVzObFcEognjQfB4VMliM9gJmH8XnFKis0u6VUIMn
+         0brV8lVEigUvzwAy2vMttkhhKm/q8RB3MGFYCEaX7YypKsUEHJy3ohUa2gHthvOhvp/K
+         UJ16v3Z4gq83czacEGlCxhd/u92Q+DQIVykFf2eXTFNqaczX1/kxNSh7S4u5PHe3vEDF
+         iPbQ==
+X-Gm-Message-State: APjAAAXIcjDZ3iSeVZ6F8BgwaaPe/69uhn4FySf08GhbuId6EIkqcksT
+        XudnyJD6Kj3BkMlJ8A0zOHYIYtgZfNubXooWqtVCYbUS
+X-Google-Smtp-Source: APXvYqwTJuBmopszg8Gj+kqzHA9+sGcgrFKrI95jgsb4ppZK6E5NujHKo3b+apmW/Uu1bUf6xTlYEoXlzEcVw9i4NCk=
+X-Received: by 2002:a9d:5c1:: with SMTP id 59mr2918464otd.192.1580378377437;
+ Thu, 30 Jan 2020 01:59:37 -0800 (PST)
+MIME-Version: 1.0
+References: <CAJ8uoz1FcfDYa1PaQuY-Yk+keEX5FT6+q2H2eLTce6DxcQjuiA@mail.gmail.com>
+ <20200113151159.GB68570@smtp.ads.isi.edu> <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
+ <20200114205250.GA85903@smtp.ads.isi.edu> <20200115014137.GA105434@smtp.ads.isi.edu>
+ <CAJ8uoz2VTXAT9ryF9Ls2JjacEw0Bc23t9w2jDEoMdA0dRc6Aaw@mail.gmail.com>
+ <CAJ8uoz1Nf+Fsg40tfdnMenFiCjRBJN9maY9rVo--trt+Uwkqwg@mail.gmail.com>
+ <20200116020414.GA46831@smtp.ads.isi.edu> <CAJ8uoz0yqYTq+OOK8p0XRcWyMkfnJ1ZT7hUew9w3FuHr=4K-QQ@mail.gmail.com>
+ <4c03813d-5edf-7e9e-8905-31902b5acb71@mellanox.com> <20200122214352.GA13201@smtp.ads.isi.edu>
+ <b1b9342b-b9e5-f576-c06c-3a43dcf2b189@mellanox.com> <CAJ8uoz1wuCmPehXNX2_OddF2YC=2mNaFZC4f+6j9VkmSTSPaQQ@mail.gmail.com>
+ <HE1PR0501MB2570108E0E186FEE0A09D668D1040@HE1PR0501MB2570.eurprd05.prod.outlook.com>
+In-Reply-To: <HE1PR0501MB2570108E0E186FEE0A09D668D1040@HE1PR0501MB2570.eurprd05.prod.outlook.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Thu, 30 Jan 2020 10:59:26 +0100
+Message-ID: <CAJ8uoz1kkj8Fb+dg4RFDO+CpXhDs=70fb1DrTubgO+tKg0zTpg@mail.gmail.com>
+Subject: Re: zero-copy between interfaces
+To:     Maxim Mikityanskiy <maximmi@mellanox.com>
+Cc:     Ryan Goodfellow <rgoodfel@isi.edu>,
         "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
         Tariq Toukan <tariqt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: RE: zero-copy between interfaces
-Thread-Topic: zero-copy between interfaces
-Thread-Index: AQHV0C0x4KTPnFOssUSt5vpHUAzNC6f1IGuAgAIZUYCAB3wQAP///ggAgARFw+A=
-Date:   Thu, 30 Jan 2020 09:37:24 +0000
-Deferred-Delivery: Thu, 30 Jan 2020 09:37:18 +0000
-Message-ID: <HE1PR0501MB2570108E0E186FEE0A09D668D1040@HE1PR0501MB2570.eurprd05.prod.outlook.com>
-References: <CAJ8uoz1FcfDYa1PaQuY-Yk+keEX5FT6+q2H2eLTce6DxcQjuiA@mail.gmail.com>
- <20200113151159.GB68570@smtp.ads.isi.edu>
- <CAJ8uoz1Ax5CAfO4wfo0Pj+jieeRN+gj0s2LpeeJ53uTorFP0ng@mail.gmail.com>
- <20200114205250.GA85903@smtp.ads.isi.edu>
- <20200115014137.GA105434@smtp.ads.isi.edu>
- <CAJ8uoz2VTXAT9ryF9Ls2JjacEw0Bc23t9w2jDEoMdA0dRc6Aaw@mail.gmail.com>
- <CAJ8uoz1Nf+Fsg40tfdnMenFiCjRBJN9maY9rVo--trt+Uwkqwg@mail.gmail.com>
- <20200116020414.GA46831@smtp.ads.isi.edu>
- <CAJ8uoz0yqYTq+OOK8p0XRcWyMkfnJ1ZT7hUew9w3FuHr=4K-QQ@mail.gmail.com>
- <4c03813d-5edf-7e9e-8905-31902b5acb71@mellanox.com>
- <20200122214352.GA13201@smtp.ads.isi.edu>
- <b1b9342b-b9e5-f576-c06c-3a43dcf2b189@mellanox.com>
- <CAJ8uoz1wuCmPehXNX2_OddF2YC=2mNaFZC4f+6j9VkmSTSPaQQ@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1wuCmPehXNX2_OddF2YC=2mNaFZC4f+6j9VkmSTSPaQQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=maximmi@mellanox.com; 
-x-originating-ip: [77.75.144.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c95951eb-4c0d-413a-3229-08d7a5681302
-x-ms-traffictypediagnostic: HE1PR0501MB2297:|HE1PR0501MB2297:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0501MB22973D88C32F82A83102A011D1040@HE1PR0501MB2297.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02981BE340
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(396003)(346002)(199004)(189003)(55016002)(2906002)(5660300002)(53546011)(478600001)(7696005)(6666004)(6916009)(6506007)(4326008)(3480700007)(71200400001)(316002)(186003)(26005)(86362001)(966005)(81166006)(81156014)(8936002)(107886003)(52536014)(66946007)(8676002)(66446008)(64756008)(66574012)(66556008)(9686003)(33656002)(76116006)(54906003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0501MB2297;H:HE1PR0501MB2570.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /8IqtOEDKtnw2CME1qUdGPBZ/hDgWGoSlpusgG1Q2u9Z0JbfOucTCsCaCavqHZcJDfWye0yquB8d/z65OGGrsuq5KqLlzzQxb+N6pFy8vIwEbjt8gFrEn4PxqFdAtpDa1eob3fXcWmhndQnliconiGh+i65RBRLx0ziM1Rq8bb5H3atskJ+PR98GM6D09+0VOcxoDgW/ZtwmdiMrYDuXBbZslPznv/QrUTl28KCQbK/KrbI4N5xrQXV4nO1K0zxNnQDrwvEwX9uOalwcMbl3WT3eOH7dGp2vSUpS6y8mNEqntiqc8wFNPaFKAdpmHvtK5FBDWBnq2LPnQFyFxpd+HTqTmJVqzyZ0NHNHpc9m/BFKbUSTHrwOJoi20hnX43BRf74vn4BkKGtdbRgcxyQ4MH5U/3C89QdYGIMHAXq5+/X/IzW7tc327rgAvLnLSyH2vmm8NKjtAwTBx6KhbwgADSSDM5W3Z6ecJd5ogTdNm19WdNCnVjc19K+IQCEtAdW+fUtQLWPsMfPBUxvp/Sm9xw==
-x-ms-exchange-antispam-messagedata: sNUV33GDqQdDRmOROMZnhk8h9ys0o3lolNPuaVNKPbZHDVUr6/iMTPwdWnHti64TpiO+9j43Ik7mhMLT8vxla5xrq4kwt7izfwL8o8G6x19OYgd5fOv38tbGOy1CK3b+U1q2qoHoWj7Lmy0BCZdOqg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c95951eb-4c0d-413a-3229-08d7a5681302
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2020 09:37:50.8298
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GBWDEJrkp/V4EDs2qg/P8+s91sB+jtNqjRuCcPJJTp48Kqe/9x+SAASVr+D3MtmXV9x0NL3PUaxllHt09jsIMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0501MB2297
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYWdudXMgS2FybHNzb24gPG1h
-Z251cy5rYXJsc3NvbkBnbWFpbC5jb20+DQo+IFNlbnQ6IDI3IEphbnVhcnksIDIwMjAgMTc6NTUN
-Cj4gVG86IE1heGltIE1pa2l0eWFuc2tpeSA8bWF4aW1taUBtZWxsYW5veC5jb20+DQo+IENjOiBS
-eWFuIEdvb2RmZWxsb3cgPHJnb29kZmVsQGlzaS5lZHU+OyB4ZHAtbmV3Ymllc0B2Z2VyLmtlcm5l
-bC5vcmc7IFRhcmlxDQo+IFRvdWthbiA8dGFyaXF0QG1lbGxhbm94LmNvbT47IFNhZWVkIE1haGFt
-ZWVkIDxzYWVlZG1AbWVsbGFub3guY29tPjsgTW9zaGUNCj4gU2hlbWVzaCA8bW9zaGVAbWVsbGFu
-b3guY29tPg0KPiBTdWJqZWN0OiBSZTogemVyby1jb3B5IGJldHdlZW4gaW50ZXJmYWNlcw0KPiAN
-Cj4gT24gTW9uLCBKYW4gMjcsIDIwMjAgYXQgMzowMSBQTSBNYXhpbSBNaWtpdHlhbnNraXkgPG1h
-eGltbWlAbWVsbGFub3guY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IE9uIDIwMjAtMDEtMjIgMjM6
-NDMsIFJ5YW4gR29vZGZlbGxvdyB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgSmFuIDIxLCAyMDIwIGF0
-IDAxOjQwOjUwUE0gKzAwMDAsIE1heGltIE1pa2l0eWFuc2tpeSB3cm90ZToNCj4gPiA+Pj4+IEkn
-dmUgcG9zdGVkIG91dHB1dCBmcm9tIHRoZSBwcm9ncmFtIGluIGRlYnVnZ2luZyBtb2RlIGhlcmUN
-Cj4gPiA+Pj4+DQo+ID4gPj4+PiAtIGh0dHBzOi8vZ2l0bGFiLmNvbS9tZXJnZXRiL3RlY2gvbmV0
-d29yay0NCj4gZW11bGF0aW9uL2tlcm5lbC9zbmlwcGV0cy8xOTMwMzc1DQo+ID4gPj4+Pg0KPiA+
-ID4+Pj4gWWVzLCB5b3UgYXJlIGNvcnJlY3QgaW4gdGhhdCBmb3J3YXJkaW5nIHdvcmtzIGZvciBh
-IGJyaWVmIHBlcmlvZCBhbmQNCj4gdGhlbiBzdG9wcy4NCj4gPiA+Pj4+IEkndmUgbm90aWNlZCB0
-aGF0IHRoZSBudW1iZXIgb2YgcGFja2V0cyB0aGF0IGFyZSBmb3J3YXJkZWQgaXMgZXF1YWwNCj4g
-dG8gdGhlIHNpemUNCj4gPiA+Pj4+IG9mIHRoZSBwcm9kdWNlci9jb25zdW1lciBkZXNjcmlwdG9y
-IHJpbmdzLiBJJ3ZlIHBvc3RlZCB0d28gcGluZw0KPiB0cmFjZXMgZnJvbSBhDQo+ID4gPj4+PiBj
-bGllbnQgcGluZyB0aGF0IHNob3dzIHRoaXMuDQo+ID4gPj4+Pg0KPiA+ID4+Pj4gLSBodHRwczov
-L2dpdGxhYi5jb20vbWVyZ2V0Yi90ZWNoL25ldHdvcmstDQo+IGVtdWxhdGlvbi9rZXJuZWwvc25p
-cHBldHMvMTkzMDM3Ng0KPiA+ID4+Pj4gLSBodHRwczovL2dpdGxhYi5jb20vbWVyZ2V0Yi90ZWNo
-L25ldHdvcmstDQo+IGVtdWxhdGlvbi9rZXJuZWwvc25pcHBldHMvMTkzMDM3Nw0KPiA+ID4+DQo+
-ID4gPj4gVGhlc2Ugc25pcHBldHMgYXJlIG5vdCBhdmFpbGFibGUuDQo+ID4gPg0KPiA+ID4gQXBv
-bG9naWVzLCBJIGhhZCB0aGUgd3JvbmcgcGVybWlzc2lvbnMgc2V0LiBUaGV5IHNob3VsZCBiZSBh
-dmFpbGFibGUNCj4gbm93Lg0KPiA+ID4NCj4gPiA+Pg0KPiA+ID4+Pj4NCj4gPiA+Pj4+IEkndmUg
-YWxzbyBub3RpY2VkIHRoYXQgd2hlbiB0aGUgZm9yd2FyZGluZyBzdG9wcywgdGhlIENQVSB1c2Fn
-ZSBmb3INCj4gdGhlIHByb2MNCj4gPiA+Pj4+IHJ1bm5pbmcgdGhlIHByb2dyYW0gaXMgcGVnZ2Vk
-LCB3aGljaCBpcyBub3QgdGhlIG5vcm0gZm9yIHRoaXMgcHJvZ3JhbQ0KPiBhcyBpdCB1c2VzDQo+
-ID4gPj4+PiBhIHBvbGwgY2FsbCB3aXRoIGEgdGltZW91dCBvbiB0aGUgeHNrIGZkLg0KPiA+ID4+
-DQo+ID4gPj4gVGhpcyBpbmZvcm1hdGlvbiBsZWQgbWUgdG8gYSBndWVzcyB3aGF0IG1heSBiZSBo
-YXBwZW5pbmcuIE9uIHRoZSBSWA0KPiA+ID4+IHNpZGUsIG1seDVlIGFsbG9jYXRlcyBwYWdlcyBp
-biBidWxrcyBmb3IgcGVyZm9ybWFuY2UgcmVhc29ucyBhbmQgdG8NCj4gPiA+PiBsZXZlcmFnZSBo
-YXJkd2FyZSBmZWF0dXJlcyB0YXJnZXRlZCB0byBwZXJmb3JtYW5jZS4gSW4gQUZfWERQIG1vZGUs
-DQo+ID4gPj4gYnVsa2luZyBvZiBmcmFtZXMgaXMgYWxzbyB1c2VkIChvbiB4ODYsIHRoZSBidWxr
-IHNpemUgaXMgNjQgd2l0aA0KPiA+ID4+IHN0cmlkaW5nIFJRIGVuYWJsZWQsIGFuZCA4IG90aGVy
-d2lzZSwgaG93ZXZlciwgaXQncyBpbXBsZW1lbnRhdGlvbg0KPiA+ID4+IGRldGFpbHMgdGhhdCBt
-aWdodCBjaGFuZ2UgbGF0ZXIpLiBJZiB5b3UgZG9uJ3QgcHV0IGVub3VnaCBmcmFtZXMgdG8gWFNL
-DQo+ID4gPj4gRmlsbCBSaW5nLCB0aGUgZHJpdmVyIHdpbGwgYmUgZGVtYW5kaW5nIG1vcmUgZnJh
-bWVzIGFuZCByZXR1cm4gZnJvbQ0KPiA+ID4+IHBvbGwoKSBpbW1lZGlhdGVseS4gQmFzaWNhbGx5
-LCBpbiB0aGUgYXBwbGljYXRpb24sIHlvdSBzaG91bGQgcHV0IGFzDQo+ID4gPj4gbWFueSBmcmFt
-ZXMgdG8gdGhlIEZpbGwgUmluZyBhcyB5b3UgY2FuLiBQbGVhc2UgY2hlY2sgaWYgdGhhdCBjb3Vs
-ZCBiZQ0KPiA+ID4+IHRoZSByb290IGNhdXNlIG9mIHlvdXIgaXNzdWUuDQo+ID4gPg0KPiA+ID4g
-VGhlIGNvZGUgaW4gdGhpcyBhcHBsaWNhdGlvbiBtYWtlcyBhbiBlZmZvcnQgdG8gcmVsZW5pc2gg
-dGhlIGZpbGwgcmluZw0KPiBhcyBmYXN0DQo+ID4gPiBhcyBwb3NzaWJsZS4gVGhlIGJhc2ljIGxv
-b3Agb2YgdGhlIGFwcGxpY2F0aW9uIGlzIHRvIGZpcnN0IGNoZWNrIGlmDQo+IHRoZXJlIGFyZQ0K
-PiA+ID4gYW55IGRlc2NyaXB0b3JzIHRvIGJlIGNvbnN1bWVkIGZyb20gdGhlIGNvbXBsZXRpb24g
-cXVldWUgb3IgYW55DQo+IGRlc2NyaXB0b3JzIHRoYXQNCj4gPiA+IGNhbiBiZSBhZGRlZCB0byB0
-aGUgZmlsbCBxdWV1ZSwgYW5kIG9ubHkgdGhlbiB0byBtb3ZlIG9uIHRvIG1vdmluZw0KPiBwYWNr
-ZXRzDQo+ID4gPiB0aHJvdWdoIHRoZSByeCBhbmQgdHggcmluZ3MuDQo+ID4gPg0KPiA+ID4gaHR0
-cHM6Ly9naXRsYWIuY29tL21lcmdldGIvdGVjaC9uZXR3b3JrLWVtdWxhdGlvbi9rZXJuZWwvYmxv
-Yi92NS41LQ0KPiBtb2Evc2FtcGxlcy9icGYveGRwc29ja19tdWx0aWRldi5jI0w0NTItNDc0DQo+
-ID4NCj4gPiBJIHJlcHJvZHVjZWQgeW91ciBpc3N1ZSBhbmQgZGlkIG15IGludmVzdGlnYXRpb24s
-IGFuZCBoZXJlIGlzIHdoYXQgSQ0KPiBmb3VuZDoNCj4gPg0KPiA+IDEuIENvbW1pdCBkZjBhZTZm
-NzhhNDUgKHRoYXQgeW91IGZvdW5kIGR1cmluZyBiaXNlY3QpIGludHJvZHVjZXMgYW4NCj4gPiBp
-bXBvcnRhbnQgYmVoYXZpb3JhbCBjaGFuZ2UgKHdoaWNoIEkgdGhvdWdodCB3YXMgbm90IHRoYXQg
-aW1wb3J0YW50KS4NCj4gPiB4c2txX25iX2F2YWlsIHVzZWQgdG8gcmV0dXJuIG1pbihlbnRyaWVz
-LCBkY250KSwgYnV0IGFmdGVyIHRoZSBjaGFuZ2UgaXQNCj4gPiBqdXN0IHJldHVybnMgZW50cmll
-cywgd2hpY2ggbWF5IGJlIGFzIGJpZyBhcyB0aGUgcmluZyBzaXplLg0KPiA+DQo+ID4gMi4geHNr
-cV9wZWVrX2FkZHIgdXBkYXRlcyBxLT5yaW5nLT5jb25zdW1lciBvbmx5IHdoZW4gcS0+Y29uc190
-YWlsDQo+ID4gY2F0Y2hlcyB1cCB3aXRoIHEtPmNvbnNfaGVhZC4gU28sIGJlZm9yZSB0aGF0IHBh
-dGNoIGFuZCBvbmUgcHJldmlvdXMNCj4gPiBwYXRjaCwgY29uc19oZWFkIC0gY29uc190YWlsIHdh
-cyBub3QgbW9yZSB0aGFuIDE2LCBzbyB0aGUgY29uc3VtZXIgaW5kZXgNCj4gPiB3YXMgdXBkYXRl
-ZCBwZXJpb2RpY2FsbHkuIE5vdyBjb25zdW1lciBpcyB1cGRhdGVkIG9ubHkgd2hlbiB0aGUgd2hv
-bGUNCj4gPiByaW5nIGlzIGV4aGF1c3RlZC4NCj4gPg0KPiA+IDMuIFRoZSBhcHBsaWNhdGlvbiBj
-YW4ndCByZXBsZW5pc2ggdGhlIGZpbGwgcmluZyBpZiB0aGUgY29uc3VtZXIgaW5kZXgNCj4gPiBk
-b2Vzbid0IG1vdmUuIEFzIGEgY29uc2VxdWVuY2UsIHJlZmlsbGluZyB0aGUgZGVzY3JpcHRvcnMg
-YnkgdGhlDQo+ID4gYXBwbGljYXRpb24gY2FuJ3QgaGFwcGVuIGluIHBhcmFsbGVsIHdpdGggdXNp
-bmcgdGhlbSBieSB0aGUgZHJpdmVyLiBJdA0KPiA+IHNob3VsZCBoYXZlIHNvbWUgcGVyZm9ybWFu
-Y2UgcGVuYWx0eSBhbmQgcG9zc2libHkgZXZlbiBsZWFkIHRvIHBhY2tldA0KPiA+IGRyb3BzLCBi
-ZWNhdXNlIHRoZSBkcml2ZXIgdXNlcyBhbGwgdGhlIGRlc2NyaXB0b3JzIGFuZCBvbmx5IHRoZW4N
-Cj4gPiBhZHZhbmNlcyB0aGUgY29uc3VtZXIgaW5kZXgsIGFuZCB0aGVuIGl0IGhhcyB0byB3YWl0
-IHVudGlsIHRoZQ0KPiA+IGFwcGxpY2F0aW9uIHJlZmlsbHMgdGhlIHJpbmcsIGJ1c3ktbG9vcGlu
-ZyBhbmQgbG9zaW5nIHBhY2tldHMuDQo+IA0KPiBUaGlzIHdpbGwgaGFwcGVuIGlmIHVzZXIgc3Bh
-Y2UgYWx3YXlzIGZpbGxzIHVwIHRoZSB3aG9sZSByaW5nLCB3aGljaA0KPiBtaWdodCBvciBtaWdo
-dCBub3QgaGFwcGVuIGFsbCBkZXBlbmRpbmcgb24gdGhlIGFwcC4NCg0KWWVzLCB0aGF0J3Mgcmln
-aHQsIGFuZCBhcyBmYXIgYXMgSSBrbm93LCBpdCdzIGNvbW1vbiB0byBmaWxsIGFzIG1hbnkNCmZy
-YW1lcyBhcyB0aGUgYXBwbGljYXRpb24gY2FuICh0aGVyZSB3YXMgbm8gcmVhc29uIHRvIGRvIGl0
-IG90aGVyIHdheQ0KdGlsbCBub3cpLg0KDQo+IFdpdGggdGhhdCBzYWlkLCBpdA0KPiBtaWdodCBw
-cm92aWRlIGJldHRlciBwZXJmb3JtYW5jZSB0byB1cGRhdGUgaXQgb25jZSBpbiBhIHdoaWxlLiBJ
-dA0KPiBtaWdodCBhbHNvIGJlIHRoZSBjYXNlIHRoYXQgd2Ugd2lsbCBnZXQgYmV0dGVyIHBlcmZv
-cm1hbmNlIHdpdGggdGhlDQo+IG5ldyBzY2hlbWUgaWYgd2Ugb25seSBmaWxsIGhhbGYgdGhlIGZp
-bGwgcmluZy4NCg0KWWVzLCBpdCBtYXkgaW1wcm92ZSBwZXJmb3JtYW5jZS4gSG93ZXZlciwgSSBk
-b24ndCB0aGluayBpdCdzIGNvcnJlY3QgdG8NCnNldCBzdWNoIGEgbGltaXRhdGlvbiBvbiB0aGUg
-YXBwLg0KDQo+IEkgd2lsbCBsb29rIGludG8gdGhpcw0KPiBhbmQgc2VlIHdoYXQgSSBnZXQuDQo+
-IA0KPiA+IDQuIEFzIG1seDVlIGFsbG9jYXRlcyBmcmFtZXMgaW4gYmF0Y2hlcywgdGhlIGNvbnNl
-cXVlbmNlcyBhcmUgZXZlbiBtb3JlDQo+ID4gc2V2ZXJlOiBpdCdzIGEgZGVhZGxvY2sgd2hlcmUg
-dGhlIGRyaXZlciB3YWl0cyBmb3IgdGhlIGFwcGxpY2F0aW9uLCBhbmQNCj4gPiB2aWNlIHZlcnNh
-LiBUaGUgZHJpdmVyIG5ldmVyIHJlYWNoZXMgdGhlIHBvaW50IHdoZXJlIGNvbnNfdGFpbCBnZXRz
-DQo+ID4gZXF1YWwgdG8gY29uc19oZWFkLiBFLmcuLCBpZiBjb25zX3RhaWwgKyAzID09IGNvbnNf
-aGVhZCwgYW5kIHRoZSBiYXRjaA0KPiA+IHNpemUgcmVxdWVzdGVkIGJ5IHRoZSBkcml2ZXIgaXMg
-OCwgdGhlIGRyaXZlciB3b24ndCBwZWVrIGFueXRoaW5nIGZyb20NCj4gPiB0aGUgZmlsbCByaW5n
-IHdhaXRpbmcgZm9yIGRpZmZlcmVuY2UgYmV0d2VlbiBjb25zX3RhaWwgYW5kIGNvbnNfaGVhZCB0
-bw0KPiA+IGluY3JlYXNlIHRvIGJlIGF0IGxlYXN0IDguIE9uIHRoZSBvdGhlciBoYW5kLCB0aGUg
-YXBwbGljYXRpb24gY2FuJ3QgcHV0DQo+ID4gYW55dGhpbmcgdG8gdGhlIHJpbmcsIGJlY2F1c2Ug
-aXQgc3RpbGwgdGhpbmtzIHRoYXQgdGhlIGNvbnN1bWVyIGluZGV4IGlzDQo+ID4gMC4gQXMgY29u
-c190YWlsIG5ldmVyIHJlYWNoZXMgY29uc19oZWFkLCB0aGUgY29uc3VtZXIgaW5kZXggZG9lc24n
-dCBnZXQNCj4gPiB1cGRhdGVkLCBoZW5jZSB0aGUgZGVhZGxvY2suDQo+IA0KPiBHb29kIHRoaW5n
-IHRoYXQgeW91IGRldGVjdGVkIHRoaXMuIE1heWJlIEkgc2hvdWxkIGdldCBhIE1lbGxhbm94IGNh
-cmQNCj4gOi0pLiBUaGlzIGlzIGRpZmZlcmVudCBmcm9tIGhvdyB3ZSBpbXBsZW1lbnRlZCBJbnRl
-bCdzIGRyaXZlcnMgdGhhdA0KPiBqdXN0IHdvcmsgb24gYW55IGJhdGNoIHNpemUuIElmIGl0IGdl
-dHMgMyBwYWNrZXRzIGJhY2ssIGl0IHdpbGwgdXNlDQo+IHRob3NlLiBIb3cgZG8geW91IGRlYWwg
-d2l0aCB0aGUgY2FzZSB3aGVuIHRoZSBhcHBsaWNhdGlvbiBqdXN0IHB1dHMgYQ0KPiBzaW5nbGUg
-YnVmZmVyIGluIHRoZSBmaWxsIHJpbmcgYW5kIHdhbnRzIHRvIHJlY2VpdmUgYSBzaW5nbGUgcGFj
-a2V0Pw0KDQptbHg1ZSB3aWxsIHdhaXQgdW50aWwgdGhlIGZ1bGwgYmF0Y2ggaXMgYXZhaWxhYmxl
-LiBBcyBBRl9YRFAgaXMgaW50ZW5kZWQNCmZvciBoaWdoLXBlcmZvcm1hbmNlIGFwcHMsIHRoaXMg
-c2NlbmFyaW8gaXMgbGVzcyBleHBlY3RlZC4gV2UgcHJlZmVyIHRvDQpsZXZlcmFnZSBvdXIgcGVy
-Zm9ybWFuY2UgZmVhdHVyZXMuDQoNCj4gV2h5IGRvZXMgdGhlIE1lbGxhbm94IGRyaXZlciBuZWVk
-IGEgc3BlY2lmaWMgYmF0Y2ggc2l6ZT8gVGhpcyBpcyBqdXN0DQo+IGZvciBteSB1bmRlcnN0YW5k
-aW5nIHNvIHdlIGNhbiBmaW5kIGEgZ29vZCBzb2x1dGlvbi4NCg0KVGhlIG1haW4gcmVhc29uIGlz
-IG91ciBwZXJmb3JtYW5jZSBmZWF0dXJlIGNhbGxlZCBzdHJpZGluZyBSUS4gU2tpcHBpbmcNCmFs
-bCBpcnJlbGV2YW50IGRldGFpbHMsIGEgYmF0Y2ggb2YgNjQgcGFnZXMgaXMgcG9zdGVkIHRvIHRo
-ZSBOSUMgd2l0aCBhDQpzaW5nbGUgcmVxdWVzdCwgYW5kIHRoZSBOSUMgZmlsbHMgdGhlbSBwcm9n
-cmVzc2l2ZWx5LiBUaGlzIGZlYXR1cmUgaXMNCnR1cm5lZCBvbiBieSBkZWZhdWx0IG9uIG1vZGVy
-biBOSUNzLCBhbmQgaXQncyByZWFsbHkgZ29vZCBmb3INCnBlcmZvcm1hbmNlLg0KDQpJdCBtaWdo
-dCBiZSBwb3NzaWJsZSB0byBwb3N0IGEgc21hbGxlciBiYXRjaCB0aG91Z2gsIEknbSBub3Qgc3Vy
-ZSBhYm91dA0KaXQsIGl0IG5lZWRzIHRvIGJlIGNoZWNrZWQsIGJ1dCBhbnl3YXkgaXQncyBub3Qg
-c29tZXRoaW5nIHRoYXQgd2Ugd2lsbA0KbGlrZWx5IGRvLCBiZWNhdXNlIGl0J3MgYSBjb21wbGlj
-YXRpb24gb2YgdGhlIGRhdGEgcGF0aCwgYW5kIGlmIHdlIGtub3cNCm1vcmUgZnJhbWVzIGFyZSBj
-b21pbmcsIGl0J3MgbXVjaCBiZXR0ZXIgZm9yIHRoZSBwZXJmb3JtYW5jZSB0byB3YWl0IGZvcg0K
-dGhlbSwgcmF0aGVyIHRoYW4gdG8gcG9zdCBzZXZlcmFsIGluY29tcGxldGUgYmF0Y2hlcy4NCg0K
-PiA+IFNvLCBpbiBteSB2aXNpb24sIHRoZSBkZWNpc2lvbiB0byByZW1vdmUgUlhfQkFUQ0hfU0la
-RSBhbmQgcGVyaW9kaWMNCj4gPiB1cGRhdGVzIG9mIHRoZSBjb25zdW1lciBpbmRleCB3YXMgd3Jv
-bmcuIEl0IHRvdGFsbHkgYnJlYWtzIG1seDVlLCB0aGF0DQo+ID4gZG9lcyBiYXRjaGluZywgYW5k
-IGl0IHdpbGwgYWZmZWN0IHRoZSBwZXJmb3JtYW5jZSBvZiBhbnkgZHJpdmVyLCBiZWNhdXNlDQo+
-ID4gdGhlIGFwcGxpY2F0aW9uIGNhbid0IHJlZmlsbCB0aGUgcmluZyB1bnRpbCBpdCBnZXRzIGNv
-bXBsZXRlbHkgZW1wdHkgYW5kDQo+ID4gdGhlIGRyaXZlciBzdGFydHMgd2FpdGluZyBmb3IgZnJh
-bWVzLiBJIHN1Z2dlc3QgdGhhdCBwZXJpb2RpYyB1cGRhdGVzIG9mDQo+ID4gdGhlIGNvbnN1bWVy
-IGluZGV4IHNob3VsZCBiZSByZWFkZGVkIHRvIHhza3FfY29uc19wZWVrX2FkZHIuDQo+IA0KPiBU
-aGUgcmVhc29uIEkgd2FudGVkIHRvIHJlbW92ZSBSWF9CQVRDSF9TSVpFIGlzIHRoYXQgYXBwbGlj
-YXRpb24NCj4gZGV2ZWxvcGVycyBjb21wbGFpbmVkIGFib3V0IGl0IGdpdmluZyByaXNlIHRvIGNv
-dW50ZXIgaW50dWl0aXZlDQo+IGJlaGF2aW9yIGluIHVzZXIgc3BhY2UuIEkgd2lsbCB0cnkgdG8g
-ZGlnIG91dCB0aGUgY29tcGxhaW50cyBhbmQgdGhlDQo+IGV4cGxhbmF0aW9ucyBCasO2cm4gYW5k
-IEkgaGFkIHRvIHNlbmQgd2hpY2ggaXQgc2VlbWVkIHRoYXQgdXNlcnMgcmVhbGx5DQo+IHNob3Vs
-ZCBub3QgaGF2ZSB0byBjYXJlIGFib3V0LiBJdCBzaG91bGQganVzdCB3b3JrLg0KDQpJIHRoaW5r
-IHRoZSBjb3VudGVyIHRoYXQgZG9lc24ndCB1cGRhdGUgdGlsbCB0aGUgdmVyeSBsYXN0IG1vbWVu
-dCBhbmQNCnRoZW4gYWR2YW5jZXMgYnkgdGhlIHJpbmcgc2l6ZSB3aWxsIGFsc28gYmUgc29tZXRo
-aW5nIHRvIGNvbXBsYWluIGFib3V0DQooYW5kIEkgYW0gdGhlIGZpcnN0IG9uZSB0byBjb21wbGFp
-biA6RCkuIFN1Y2ggYnVyc3RzIGFyZSBub3QgZ29vZCBpbiBhbnkNCmNhc2UuDQoNCj4gSSBhbHNv
-IGRvIG5vdCBsaWtlDQo+IHRvIGhhdmUgYXJiaXRyYXJ5IGNvbnN0YW50cyBsaWtlIHRoaXMuIFdo
-eSAxNj8NCg0KSSBiZWxpZXZlIGFueSBiYXRjaGluZyBtZWNoYW5pc20gaGFzIGEgY29uc3RhbnQg
-dGhhdCBsb29rIGFyYml0cmFyeS4NClRoaXMgY29uc3RhbnQgc2hvdWxkIGJlIHRoZSBnb2xkZW4g
-bWVhbjogaWYgaXQncyB0b28gc21hbGwsIHRoZXJlIGlzDQpsaXR0bGUgZWZmZWN0IGZyb20gYmF0
-Y2hpbmc7IGlmIGl0J3MgdG9vIGJpZywgaXQgZ2V0cyB0b28gYnVyc3R5Lg0KDQpCYXNpY2FsbHks
-IGFmdGVyIHlvdXIgcGF0Y2ggaXQganVzdCBjaGFuZ2VkIGZyb20gMTYgdG8gdGhlIHJpbmcgc2l6
-ZS4NCk1heWJlIHdlIGNhbiB0aWUgdGhhdCBjb25zdGFudCB0byByaW5nIHNpemU/IE1ha2UgaXQg
-cmluZ19zaXplIC8NCmFub3RoZXJfYXJiaXRyYXJ5X2NvbnN0YW50PyA6KQ0KDQo+IFdvdWxkIG11
-Y2ggcHJlZmVyIG5vdA0KPiBoYXZpbmcgdG8gZGVhbCB3aXRoIHRoaXMsIHVubGVzcyBvZiBjb3Vy
-c2UgaXQgaG9ycmlibHkgYnJlYWtzDQo+IHNvbWV0aGluZyBvciBnaXZlcyByaXNlIHRvIHdvcnNl
-IHBlcmZvcm1hbmNlLiBNaWdodCBzdGlsbCBiZSB0aGUgY2FzZQ0KPiBoZXJlLCBidXQgaWYgbm90
-LCBJIHdvdWxkIGxpa2UgdG8gcmVtb3ZlIGl0Lg0KPiANCj4gVGhhbmtzOiBNYWdudXMNCj4gDQo+
-ID4gTWFnbnVzLCB3aGF0IGRvIHlvdSB0aGluayBvZiB0aGUgc3VnZ2VzdGlvbiBhYm92ZT8NCj4g
-Pg0KPiA+IFRoYW5rcywNCj4gPiBNYXgNCj4gPg0KPiA+ID4+DQo+ID4gPj4gSSB0cmFja2VkIHRo
-aXMgaXNzdWUgaW4gb3VyIGludGVybmFsIGJ1ZyB0cmFja2VyIGluIGNhc2Ugd2UgbmVlZCB0bw0K
-PiA+ID4+IHBlcmZvcm0gYWN0dWFsIGRlYnVnZ2luZyBvZiBtbHg1ZS4gSSdtIGxvb2tpbmcgZm9y
-d2FyZCB0byB5b3VyIGZlZWRiYWNrDQo+ID4gPj4gb24gbXkgYXNzdW1wdGlvbiBhYm92ZS4NCj4g
-PiA+Pg0KPiA+ID4+Pj4gVGhlIGhhcmR3YXJlIEkgYW0gdXNpbmcgaXMgYSBNZWxsYW5veCBDb25u
-ZWN0WDQgMngxMDBHIGNhcmQgKE1DWDQxNkEtDQo+IENDQVQpDQo+ID4gPj4+PiBydW5uaW5nIHRo
-ZSBtbHg1IGRyaXZlci4NCj4gPiA+Pg0KPiA+ID4+IFRoaXMgb25lIHNob3VsZCBydW4gd2l0aG91
-dCBzdHJpZGluZyBSUSwgcGxlYXNlIHZlcmlmeSBpdCB3aXRoIGV0aHRvb2wNCj4gPiA+PiAtLXNo
-b3ctcHJpdi1mbGFncyAodGhlIGZsYWcgbmFtZSBpcyByeF9zdHJpZGluZ19ycSkuDQo+ID4gPg0K
-PiA+ID4gSSBkbyBub3QgcmVtZW1iZXIgY2hhbmdpbmcgdGhpcyBvcHRpb24sIHNvIHdoYXRldmVy
-IHRoZSBkZWZhdWx0IGlzLCBpcw0KPiB3aGF0IGl0DQo+ID4gPiB3YXMgcnVubmluZyB3aXRoLiBJ
-IGFtIHRyYXZlbGluZyB0aGlzIHdlZWsgYW5kIGRvIG5vdCBoYXZlIGFjY2VzcyB0bw0KPiB0aGVz
-ZQ0KPiA+ID4gc3lzdGVtcywgYnV0IHdpbGwgZW5zdXJlIHRoYXQgdGhpcyBmbGFnIGlzIHNldCBw
-cm9wZXJseSB3aGVuIEkgZ2V0IGJhY2suDQo+ID4gPg0KPiA+DQo=
+On Thu, Jan 30, 2020 at 10:37 AM Maxim Mikityanskiy
+<maximmi@mellanox.com> wrote:
+>
+> > -----Original Message-----
+> > From: Magnus Karlsson <magnus.karlsson@gmail.com>
+> > Sent: 27 January, 2020 17:55
+> > To: Maxim Mikityanskiy <maximmi@mellanox.com>
+> > Cc: Ryan Goodfellow <rgoodfel@isi.edu>; xdp-newbies@vger.kernel.org; Ta=
+riq
+> > Toukan <tariqt@mellanox.com>; Saeed Mahameed <saeedm@mellanox.com>; Mos=
+he
+> > Shemesh <moshe@mellanox.com>
+> > Subject: Re: zero-copy between interfaces
+> >
+> > On Mon, Jan 27, 2020 at 3:01 PM Maxim Mikityanskiy <maximmi@mellanox.co=
+m>
+> > wrote:
+> > >
+> > > On 2020-01-22 23:43, Ryan Goodfellow wrote:
+> > > > On Tue, Jan 21, 2020 at 01:40:50PM +0000, Maxim Mikityanskiy wrote:
+> > > >>>> I've posted output from the program in debugging mode here
+> > > >>>>
+> > > >>>> - https://gitlab.com/mergetb/tech/network-
+> > emulation/kernel/snippets/1930375
+> > > >>>>
+> > > >>>> Yes, you are correct in that forwarding works for a brief period=
+ and
+> > then stops.
+> > > >>>> I've noticed that the number of packets that are forwarded is eq=
+ual
+> > to the size
+> > > >>>> of the producer/consumer descriptor rings. I've posted two ping
+> > traces from a
+> > > >>>> client ping that shows this.
+> > > >>>>
+> > > >>>> - https://gitlab.com/mergetb/tech/network-
+> > emulation/kernel/snippets/1930376
+> > > >>>> - https://gitlab.com/mergetb/tech/network-
+> > emulation/kernel/snippets/1930377
+> > > >>
+> > > >> These snippets are not available.
+> > > >
+> > > > Apologies, I had the wrong permissions set. They should be availabl=
+e
+> > now.
+> > > >
+> > > >>
+> > > >>>>
+> > > >>>> I've also noticed that when the forwarding stops, the CPU usage =
+for
+> > the proc
+> > > >>>> running the program is pegged, which is not the norm for this pr=
+ogram
+> > as it uses
+> > > >>>> a poll call with a timeout on the xsk fd.
+> > > >>
+> > > >> This information led me to a guess what may be happening. On the R=
+X
+> > > >> side, mlx5e allocates pages in bulks for performance reasons and t=
+o
+> > > >> leverage hardware features targeted to performance. In AF_XDP mode=
+,
+> > > >> bulking of frames is also used (on x86, the bulk size is 64 with
+> > > >> striding RQ enabled, and 8 otherwise, however, it's implementation
+> > > >> details that might change later). If you don't put enough frames t=
+o XSK
+> > > >> Fill Ring, the driver will be demanding more frames and return fro=
+m
+> > > >> poll() immediately. Basically, in the application, you should put =
+as
+> > > >> many frames to the Fill Ring as you can. Please check if that coul=
+d be
+> > > >> the root cause of your issue.
+> > > >
+> > > > The code in this application makes an effort to relenish the fill r=
+ing
+> > as fast
+> > > > as possible. The basic loop of the application is to first check if
+> > there are
+> > > > any descriptors to be consumed from the completion queue or any
+> > descriptors that
+> > > > can be added to the fill queue, and only then to move on to moving
+> > packets
+> > > > through the rx and tx rings.
+> > > >
+> > > > https://gitlab.com/mergetb/tech/network-emulation/kernel/blob/v5.5-
+> > moa/samples/bpf/xdpsock_multidev.c#L452-474
+> > >
+> > > I reproduced your issue and did my investigation, and here is what I
+> > found:
+> > >
+> > > 1. Commit df0ae6f78a45 (that you found during bisect) introduces an
+> > > important behavioral change (which I thought was not that important).
+> > > xskq_nb_avail used to return min(entries, dcnt), but after the change=
+ it
+> > > just returns entries, which may be as big as the ring size.
+> > >
+> > > 2. xskq_peek_addr updates q->ring->consumer only when q->cons_tail
+> > > catches up with q->cons_head. So, before that patch and one previous
+> > > patch, cons_head - cons_tail was not more than 16, so the consumer in=
+dex
+> > > was updated periodically. Now consumer is updated only when the whole
+> > > ring is exhausted.
+> > >
+> > > 3. The application can't replenish the fill ring if the consumer inde=
+x
+> > > doesn't move. As a consequence, refilling the descriptors by the
+> > > application can't happen in parallel with using them by the driver. I=
+t
+> > > should have some performance penalty and possibly even lead to packet
+> > > drops, because the driver uses all the descriptors and only then
+> > > advances the consumer index, and then it has to wait until the
+> > > application refills the ring, busy-looping and losing packets.
+> >
+> > This will happen if user space always fills up the whole ring, which
+> > might or might not happen all depending on the app.
+>
+> Yes, that's right, and as far as I know, it's common to fill as many
+> frames as the application can (there was no reason to do it other way
+> till now).
+>
+> > With that said, it
+> > might provide better performance to update it once in a while. It
+> > might also be the case that we will get better performance with the
+> > new scheme if we only fill half the fill ring.
+>
+> Yes, it may improve performance. However, I don't think it's correct to
+> set such a limitation on the app.
+
+I will examine what provides the best performance. On one hand it is
+the number of updates to shared ring state (minimized by current
+scheme) and the ability for the user app to but buffers on the fill
+ring. Stating that putting e.g. half the packets on the fill ring
+provides better performance (for some application) is not a
+limitation. It is performance tuning advise :-).
+
+> > I will look into this
+> > and see what I get.
+> >
+> > > 4. As mlx5e allocates frames in batches, the consequences are even mo=
+re
+> > > severe: it's a deadlock where the driver waits for the application, a=
+nd
+> > > vice versa. The driver never reaches the point where cons_tail gets
+> > > equal to cons_head. E.g., if cons_tail + 3 =3D=3D cons_head, and the =
+batch
+> > > size requested by the driver is 8, the driver won't peek anything fro=
+m
+> > > the fill ring waiting for difference between cons_tail and cons_head =
+to
+> > > increase to be at least 8. On the other hand, the application can't p=
+ut
+> > > anything to the ring, because it still thinks that the consumer index=
+ is
+> > > 0. As cons_tail never reaches cons_head, the consumer index doesn't g=
+et
+> > > updated, hence the deadlock.
+> >
+> > Good thing that you detected this. Maybe I should get a Mellanox card
+> > :-). This is different from how we implemented Intel's drivers that
+> > just work on any batch size. If it gets 3 packets back, it will use
+> > those. How do you deal with the case when the application just puts a
+> > single buffer in the fill ring and wants to receive a single packet?
+>
+> mlx5e will wait until the full batch is available. As AF_XDP is intended
+> for high-performance apps, this scenario is less expected. We prefer to
+> leverage our performance features.
+
+That you cannot support all applications on top of AF_XDP with your
+zero-copy support seems broken to me. But I give you that you might
+support all the ones you care about with your current batching
+support. Like you say, most apps will put plenty of buffers on the
+fill ring, so this should not be a problem. Can you not implement some
+slow path for these cases? You must have one for the skb case.
+
+> > Why does the Mellanox driver need a specific batch size? This is just
+> > for my understanding so we can find a good solution.
+>
+> The main reason is our performance feature called striding RQ. Skipping
+> all irrelevant details, a batch of 64 pages is posted to the NIC with a
+> single request, and the NIC fills them progressively. This feature is
+> turned on by default on modern NICs, and it's really good for
+> performance.
+>
+> It might be possible to post a smaller batch though, I'm not sure about
+> it, it needs to be checked, but anyway it's not something that we will
+> likely do, because it's a complication of the data path, and if we know
+> more frames are coming, it's much better for the performance to wait for
+> them, rather than to post several incomplete batches.
+>
+> > > So, in my vision, the decision to remove RX_BATCH_SIZE and periodic
+> > > updates of the consumer index was wrong. It totally breaks mlx5e, tha=
+t
+> > > does batching, and it will affect the performance of any driver, beca=
+use
+> > > the application can't refill the ring until it gets completely empty =
+and
+> > > the driver starts waiting for frames. I suggest that periodic updates=
+ of
+> > > the consumer index should be readded to xskq_cons_peek_addr.
+> >
+> > The reason I wanted to remove RX_BATCH_SIZE is that application
+> > developers complained about it giving rise to counter intuitive
+> > behavior in user space. I will try to dig out the complaints and the
+> > explanations Bj=C3=B6rn and I had to send which it seemed that users re=
+ally
+> > should not have to care about. It should just work.
+>
+> I think the counter that doesn't update till the very last moment and
+> then advances by the ring size will also be something to complain about
+> (and I am the first one to complain :D). Such bursts are not good in any
+> case.
+
+Do you have any performance data that shows this scheme is bad for
+performance? The good thing about this scheme is that global state is
+updated less frequently. And the bad thing is what you mentioned. But
+which one has the greatest effect, is the question.
+
+> > I also do not like
+> > to have arbitrary constants like this. Why 16?
+>
+> I believe any batching mechanism has a constant that look arbitrary.
+> This constant should be the golden mean: if it's too small, there is
+> little effect from batching; if it's too big, it gets too bursty.
+>
+> Basically, after your patch it just changed from 16 to the ring size.
+> Maybe we can tie that constant to ring size? Make it ring_size /
+> another_arbitrary_constant? :)
+
+Agreed, I thought about this too. Something tied to ring_size might be
+a good compromise. Will examine this. But I want to base this on
+performance data not idle speculation, so need to run some experiments
+first.
+
+/Magnus
+
+> > Would much prefer not
+> > having to deal with this, unless of course it horribly breaks
+> > something or gives rise to worse performance. Might still be the case
+> > here, but if not, I would like to remove it.
+> >
+> > Thanks: Magnus
+> >
+> > > Magnus, what do you think of the suggestion above?
+> > >
+> > > Thanks,
+> > > Max
+> > >
+> > > >>
+> > > >> I tracked this issue in our internal bug tracker in case we need t=
+o
+> > > >> perform actual debugging of mlx5e. I'm looking forward to your fee=
+dback
+> > > >> on my assumption above.
+> > > >>
+> > > >>>> The hardware I am using is a Mellanox ConnectX4 2x100G card (MCX=
+416A-
+> > CCAT)
+> > > >>>> running the mlx5 driver.
+> > > >>
+> > > >> This one should run without striding RQ, please verify it with eth=
+tool
+> > > >> --show-priv-flags (the flag name is rx_striding_rq).
+> > > >
+> > > > I do not remember changing this option, so whatever the default is,=
+ is
+> > what it
+> > > > was running with. I am traveling this week and do not have access t=
+o
+> > these
+> > > > systems, but will ensure that this flag is set properly when I get =
+back.
+> > > >
+> > >
