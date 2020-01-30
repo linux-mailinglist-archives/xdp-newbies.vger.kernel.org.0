@@ -2,81 +2,80 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F8BC14CC63
-	for <lists+xdp-newbies@lfdr.de>; Wed, 29 Jan 2020 15:26:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A53EC14D4EA
+	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Jan 2020 02:03:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgA2O0h (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 29 Jan 2020 09:26:37 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21674 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726261AbgA2O0h (ORCPT
+        id S1726939AbgA3BDL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 29 Jan 2020 20:03:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44706 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgA3BDL (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 29 Jan 2020 09:26:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580307996;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iIeWZ2oxrgmLniVaNVNGaMHEfbuuFfPQRFxgwvAAzlw=;
-        b=CZDBvbWjjjUSNG7m2a70GrGT4PVcwEYUYtyz+MjT/Zhn1FuUN+sgQzfO9golZ2+ECsM5x+
-        ih5jOPDc0vG1rplC+DNRG0mSfinmtDj6HbwYNYNGDKjD+RnbJ1RFA41H0rZwAGdhR7yzZx
-        aUB6+bshU6CvyXW2cDFeus7KGbiVKVE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-jZFXXuugNpOm0dagpbsv-A-1; Wed, 29 Jan 2020 09:26:30 -0500
-X-MC-Unique: jZFXXuugNpOm0dagpbsv-A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 760EF1005510;
-        Wed, 29 Jan 2020 14:26:29 +0000 (UTC)
-Received: from carbon (ovpn-200-56.brq.redhat.com [10.40.200.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C80225DA66;
-        Wed, 29 Jan 2020 14:26:25 +0000 (UTC)
-Date:   Wed, 29 Jan 2020 15:26:24 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Christian Deacon <gamemann@gflclan.com>
-Cc:     xdp-newbies@vger.kernel.org, brouer@redhat.com
-Subject: Re: Measuring/Debugging XDP Performance
-Message-ID: <20200129152624.2d0dde2a@carbon>
-In-Reply-To: <b1d478e6-555c-97da-f967-4f10f879f589@gflclan.com>
-References: <6c3dc8ff-e2bd-a06e-d9f0-c5be0103d266@gflclan.com>
-        <20200123141122.3783e298@carbon>
-        <23ec64c0-e0d7-a60b-ecc4-6ca401dc4896@gflclan.com>
-        <20200123213808.7a1f200b@carbon>
-        <fdd597bf-7da9-f9bd-d97f-f1bd90f14281@gflclan.com>
-        <b1d478e6-555c-97da-f967-4f10f879f589@gflclan.com>
+        Wed, 29 Jan 2020 20:03:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h9so1510381otj.11
+        for <xdp-newbies@vger.kernel.org>; Wed, 29 Jan 2020 17:03:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=xsE8tDi5/zVy549lACc8LV+TVk9O3mq6cDYbNfBtZCM=;
+        b=C2X1g7hf/xUk8hXWCREh8LBUz33z2Bdw31L2w+kaE6dfrHR/FmPuri/mBLRl8LW1Fd
+         rF30+arV8MoRb/kTZp2/5cGN+LZWsgxros1LeHSjtxC8QzWcw+ZCmFo83JVfg3/9Cbg4
+         1mV/SkV56mFeLg8tkyfZO4ZjJSoR29i4GUppPmrgq5x/R4MsmG1XYARfy2SeI7vlgzFE
+         yszOrDK2LcOaY3bhbvXeaTibjuScHI7BUxK9PxQqdN0ZS1fetD36VcVFlnURtst8NJY+
+         u2mZdZ4b2wWbrQgqYQ86kZ+Cqyeex1kjoJHJWYoM67WEiH0xsw87tXdFs5CCWMpOJBEf
+         ARhg==
+X-Gm-Message-State: APjAAAX+XmG4fnX3h+F4m6dCWs/nT2wuwykha1qMqC1atXVDlThI6nmx
+        lVyoe4KsznM3Mjn5X32JVSnRQG9x/LIsX42OSIcXFEb2dUc=
+X-Google-Smtp-Source: APXvYqzJgsuDa/R0xo5bIvAwB/52KxRpdc/IRj5EpQ72Wo+lh+8GqxFO89xLcZUFjRgju5HGQfQcUuksV4TbvH/ISk0=
+X-Received: by 2002:a9d:7b50:: with SMTP id f16mr1664998oto.18.1580346190517;
+ Wed, 29 Jan 2020 17:03:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+From:   Cameron Elliott <cameron@cameronelliott.com>
+Date:   Wed, 29 Jan 2020 17:02:59 -0800
+Message-ID: <CAMyc9bVpR9thvVsa-LWNg6BPwkqNcL-W-FuEXdfXgGxCUUn3jA@mail.gmail.com>
+Subject: xdpsock ... -N -z and AF_XDP XDP_ZEROCOPY not working: RESOLVED!
+To:     Xdp <xdp-newbies@vger.kernel.org>,
+        Magnus Karlsson <magnus.karlsson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, 28 Jan 2020 12:42:21 -0600
-Christian Deacon <gamemann@gflclan.com> wrote:
+My benchmarking with xdpsock was failing whenever I added '-z' to the
+'-N' option.
+Which is basically the XDP_ZEROCOPY flag to the AF_XDP setup call.
 
-> With that said, it appears my other POP servers that are using the 
-> "virtio_net" NIC driver are using XDP generic according to the 'perf' 
-> results as well (they're similar to the above). They're also on
-> kernel 4.18.
 
-First of all 'virtio_net' is tricky to get working with 'native-XDP',
-because you need to disable a number of offloads.  This have gotten a
-bit easier on newer kernels.
+I had the latest x710 firmware, and latest i40e driver on my ubuntu 18.04 box.
+I also had th 5.3.0 kernel as installed by:
+"sudo apt-get install --install-recommends linux-generic-hwe-18.04"
 
-That said, it is important to understand that getting raw "fast" frames
-into your "virtio_net" virtual netcard is a two-stage "rocket".   The
-owner of the hardware box also need a native-XDP netcard that runs XDP
-which XDP-redirect frames into your virtual NIC, else there is not
-performance advantage.
+To my surprise, xdpsock ... -N -z was failing with errno 95
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
 
+Turns out the 5.3.0 kernel was the culprit that prevented '-z' working with '-N'
+(prevented XDP_ZEROCOPY working)
+
+I installed the bpf-next kernel found here:
+
+With this command:
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+More info: https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
+
+I built the kernel using these directions:
+https://wiki.ubuntu.com/KernelTeam/GitKernelBuild
+
+And after rebooting and running on the 5.5 bpf-next kernel, -z and
+XDP_ZEROCOPY were working fine!
+
+
+Many many thanks to Magnus for his help tracking this down.
+
+
+I re-posted this under a better title (IMHO) to help others suffering
+the same fate to find it.
+
+
+
+Cameron Elliott
