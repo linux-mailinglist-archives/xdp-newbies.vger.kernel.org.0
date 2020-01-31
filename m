@@ -2,106 +2,80 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C8714E6FA
-	for <lists+xdp-newbies@lfdr.de>; Fri, 31 Jan 2020 03:16:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71B8614F3D1
+	for <lists+xdp-newbies@lfdr.de>; Fri, 31 Jan 2020 22:33:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgAaCQJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 30 Jan 2020 21:16:09 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:44512 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbgAaCQJ (ORCPT
+        id S1726347AbgAaVdl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 31 Jan 2020 16:33:41 -0500
+Received: from mail-vs1-f41.google.com ([209.85.217.41]:46243 "EHLO
+        mail-vs1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgAaVdk (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 30 Jan 2020 21:16:09 -0500
-Received: by mail-oi1-f181.google.com with SMTP id d62so5751135oia.11
-        for <xdp-newbies@vger.kernel.org>; Thu, 30 Jan 2020 18:16:08 -0800 (PST)
+        Fri, 31 Jan 2020 16:33:40 -0500
+Received: by mail-vs1-f41.google.com with SMTP id t12so5281866vso.13
+        for <xdp-newbies@vger.kernel.org>; Fri, 31 Jan 2020 13:33:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=M/Eo190S9PJ9KkbqJwsmHtw+piNIWXjN0EFnTUhIt74=;
+        b=HKNXkKlDIDVwwvnjFFOsdIyU3KYPkILpZX2IFOucLHKcTIlZeB4dWhWwjF1KFPqAt6
+         PAfWxcoGGw/tMDlG4yKcHyhX+LRii5xCJX44tXHsNIegDjMevZff/ZaN2roSuJfRevOf
+         YI/vyzou15Lyv7TXpLOVpz5wtF2S6hxKOMWMWeywScdVi7nFKTZzvfmvx2VAk/iaWdjD
+         nyzux2oLgKJSHWdIDu9AVho/5tI4RpTHKfXRzetDKH3NND2Ftk2Zh2ag/POT6ztLqyN5
+         A0Wnepz/bSG6SBvhU7AfokPhJkz87tE18Kd3smZB9sdLt5Y3QIYLLilJ+ZRbKWI8tNMe
+         KcgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=I6Aos7IIEtPLI0JN4sWNjhZ+s33J5x0K+zlRm4rQrxk=;
-        b=aUtSW1so1V2X6UN3Cbgwfuj2rMwuf7xjrus6AppeDebEd0eUe0qDMd6sOuZVM9ilVx
-         T93l7H3DZR/GUdfnewU1rdVMMWAPeQqrR7HYUcTjhTu8qZcqCKUYX0Cb4XVr1lZDC9wB
-         9i/tWG43EiABB4zK2Q4fUiIbZ2XHi4NEplNGmSQZ2dWPls7djpX1Ji17/m3DMio/W3E2
-         41q/Ig/58nO82xd1n+OJxK+zbdNakG/jci8wwZqiYMEgp9RpvxJlWzsLrSWTerow6dQM
-         4jEW2joiCzvSTk5GunplppmHEGMmjFZ8Dht5G1SgEQyIaBEX554Qb7ETs8o+DB+2NWCC
-         2xAQ==
-X-Gm-Message-State: APjAAAU7pJnMi99/XsDE0Pg4MF4yumKbiBK+wwYfV40qjFFeRgoJMhJu
-        1+Zud9cYkrSjJHz67EuU7BeNxKJ6T0GOG9+Z1Wdle4g9hK0=
-X-Google-Smtp-Source: APXvYqwyelNqiqcBj8sOymSNQfVScrJzP9XC+BaYyQK6QdhKZuDqK/AqjDRJgu2DC54IwYYVRQBwPxsGE9jWO+xVsd0=
-X-Received: by 2002:aca:5746:: with SMTP id l67mr5099298oib.60.1580436967917;
- Thu, 30 Jan 2020 18:16:07 -0800 (PST)
+        bh=M/Eo190S9PJ9KkbqJwsmHtw+piNIWXjN0EFnTUhIt74=;
+        b=jnGFsVi/HuaRPfU1j+uBbsfundKOYoCtgDdQdXJp4o7D5N5CIC19VWBXT7SVyBCMOk
+         m5xBOOMLNYbnGEFfHBbbY6LdYwBgmnfviefXpTUR53rKW8GMXNiHhbkBczvNpA5APrbj
+         8kUHSKsl4699x+kA6ZgDczSWiY658mrrQYXEcldEIx3L1TI/QoqcQmeg54NzEd+RKf/w
+         sJZv80aw0U7t1v67NGFuHH5sA3itovar3utgcRA4U7JO1IukxmZk0JHkd/o2AGVqEuwQ
+         86GsP96jPNeoATHRtrW9RszKqkdvF8BHtJwIjPcxLVJ8Yzd04L9jF1bUhaSUIxQAI76c
+         JsUQ==
+X-Gm-Message-State: APjAAAUDe0na3MOtZkKAt6yG7s/a97CGzrcqk5G8yPgbyebtL3XlKOue
+        Xij5WEtn1C76NN8tJZ+X1SIUCOTmzFWFImDDyT703pC5Lxs=
+X-Google-Smtp-Source: APXvYqyHjfDcrzHjiXwPyUaqansB082BJjPIroSfBrDzVFDpGImMBJSbNafGvUk76g9PfE31oFhBG267KD+EUrzz2/o=
+X-Received: by 2002:a67:f6c8:: with SMTP id v8mr8165785vso.147.1580506419481;
+ Fri, 31 Jan 2020 13:33:39 -0800 (PST)
 MIME-Version: 1.0
-From:   Cameron Elliott <cameron@cameronelliott.com>
-Date:   Thu, 30 Jan 2020 18:15:55 -0800
-Message-ID: <CAMyc9bXvhK2a-m9KEj34rnc3EBM4mgFicdfvRWay=cwuNVDg8g@mail.gmail.com>
-Subject: Cannot run multiple 'xdpsock' concurrently?
-To:     Xdp <xdp-newbies@vger.kernel.org>
+From:   Elerion <elerion1000@gmail.com>
+Date:   Fri, 31 Jan 2020 13:33:28 -0800
+Message-ID: <CAMDScm=w_B-tqTaoUCQiYiUEye4WO_sVfAA741XRLzAQEdwxKg@mail.gmail.com>
+Subject: Packets randomly dropped with virtio-net with xdp loaded in native mode
+To:     xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello, I am trying to measure the maximum mpps I can push using AF_XDP
-on a 40G X710
+Not sure if this is a known issue or if I'm doing something wrong, but
+when I tried to load an xdp program in native mode, my server starts
+randomly dropping packets while there are no issues with generic mode.
 
-I can do ~22 mpps after resolving a few bumbles I made with drivers,
-etc., (Thanks Magnus!)
-when using a single instance of 'xdpsock'
+bpf_set_link_xdp_fd(ifindex, fd, XDP_FLAGS_DRV_MODE); // drops packets
+bpf_set_link_xdp_fd(ifindex, fd, XDP_FLAGS_SKB_MODE); // doesn't drop packets
 
+Guest
+5.0.0-16-generic #17~18.04.1-Ubuntu SMP Mon May 20 14:00:27 UTC 2019
+x86_64 x86_64 x86_64 GNU/Linux
 
-Apparently the way to upto 50, 60 or 70? mpps is to use multiple cores...
-And apparently the simple way to do that, is multiple instances of
-xdpsock on different queues.
+00:03.0 Ethernet controller: Red Hat, Inc. Virtio network device
+        Subsystem: Red Hat, Inc. Virtio network device
+        Physical Slot: 3
+        Flags: bus master, fast devsel, latency 0, IRQ 10
+        I/O ports at c000 [size=64]
+        Memory at febf1000 (32-bit, non-prefetchable) [size=4K]
+        Memory at fe000000 (64-bit, prefetchable) [size=16K]
+        Capabilities: [98] MSI-X: Enable+ Count=18 Masked-
+        Capabilities: [84] Vendor Specific Information: VirtIO: <unknown>
+        Capabilities: [70] Vendor Specific Information: VirtIO: Notify
+        Capabilities: [60] Vendor Specific Information: VirtIO: DeviceCfg
+        Capabilities: [50] Vendor Specific Information: VirtIO: ISR
+        Capabilities: [40] Vendor Specific Information: VirtIO: CommonCfg
+        Kernel driver in use: virtio-pci
 
-But, my attempts with multiple instances fail. :(
-
-
-
-First, I checked my channel setup:
-
-$ sudo ethtool --set-channels enp1s0f0
-no channel parameters changed.
-current values: rx 0 tx 0 other 1 combined 4
-
-I presume that is okay...
-
-Then I run these two commands in two different windows:
-
-sudo  /home/c/bpf-next/samples/bpf/xdpsock -i enp1s0f0 -t -N -z -q 0
-sudo  /home/c/bpf-next/samples/bpf/xdpsock -i enp1s0f0 -t -N -z -q 1
-
-With the only difference being the queue id.
-
-The first will start and show ~22 mpps tx rate.
-When I start the second, both instances die:
-
-The first instace dies with:
-/home/c/bpf-next/samples/bpf/xdpsock_user.c:kick_tx:794: errno:
-100/"Network is down"
-
-The second instance dies with:
-/home/c/bpf-next/samples/bpf/xdpsock_user.c:kick_tx:794: errno: 6/"No
-such device or address"
-
-
-Do I understand correctly I should be able to run two instances like
-this concurrently?
-
-
-
-Thank you for any ideas, input.
-
-
-
-# ethtool dump / i40e driver from recent bpf-next clone
-c@lumen ~> ethtool -i enp1s0f0
-driver: i40e
-version: 2.8.20-k
-firmware-version: 7.10 0x80006456 1.2527.0
-expansion-rom-version:
-bus-info: 0000:01:00.0
-supports-statistics: yes
-supports-test: yes
-supports-eeprom-access: yes
-supports-register-dump: yes
-supports-priv-flags: yes
+Host
+Unknown. It is a server from vultr.com
