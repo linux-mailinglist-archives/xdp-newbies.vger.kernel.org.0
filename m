@@ -2,115 +2,173 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D9C1518B2
-	for <lists+xdp-newbies@lfdr.de>; Tue,  4 Feb 2020 11:20:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFCA151BB4
+	for <lists+xdp-newbies@lfdr.de>; Tue,  4 Feb 2020 14:57:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgBDKUF (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 4 Feb 2020 05:20:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32291 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726362AbgBDKUF (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 4 Feb 2020 05:20:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580811604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MA37R27p1GI9kDoyzbU77utZOAS0BVN1h6qrJs4GgKs=;
-        b=PCo35W14jsdrGnTVB1TAewiuk8MmfOhmK1e19v5JV1zRLiUYPErCmaJnMB0iZWxRFMadio
-        CPOQ1WMme/eiyEwxeKG3NSwZFx3fv6fdWZ2R2PRL3p+0Jzsr5CHsz1dsSW0ZOX+IS58rVT
-        LztJt4X9LuiYz5nkfctjNHsRuF/Ht0I=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-PDllHhk1NOOFADcACJ3OLQ-1; Tue, 04 Feb 2020 05:19:59 -0500
-X-MC-Unique: PDllHhk1NOOFADcACJ3OLQ-1
-Received: by mail-lj1-f200.google.com with SMTP id l14so5106733ljb.10
-        for <xdp-newbies@vger.kernel.org>; Tue, 04 Feb 2020 02:19:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=MA37R27p1GI9kDoyzbU77utZOAS0BVN1h6qrJs4GgKs=;
-        b=bRV01gtSmDaVV93ZroaLDYG2eEFGzJ9QdH46/9tiVZ24yqvX9QLESY1zHeFaQNOVkH
-         CsmQc6xBnx3og3qU1nTtAlJNP4YRr+93PRNQC/ejA9N7Bt+wFckPrZaARbqU/LoyjDRB
-         d3bbxB91I3QKjOrPUcRRTa88qsBr6KIFBRUoq+Q1Qa1q+hI8xYicdw0NRn6yFyaXBzVU
-         FLQW8vcj0MSNYqtzs8zG5qh/fIDtr6g11MV7he+aA1UGuwOQz298dY4DhggOGXtjyWDf
-         hMqg9yWbtTWS7qCvQLGJcTrm6llyRIQNFDWnERrvoz8R2uQ2d2Ja8I+H59Ngrhu4dNjQ
-         X2/g==
-X-Gm-Message-State: APjAAAWBgHWqkhdYY/E+f9XCC3D9zcaV6uOzQ/wBiWRbhDLaQ1A+LO6E
-        6TxM3oQP6DsZXcnUh/xobhiMpded4rSNdP/HoM/Nflx1hOT1R+K3HELhUNlw7o4+v/NFHC15Qoj
-        Koo9j3OVypK1JSoviS/sgvSI=
-X-Received: by 2002:a19:f80a:: with SMTP id a10mr14498305lff.107.1580811597871;
-        Tue, 04 Feb 2020 02:19:57 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxKJ5E02WVNIKwSSK2btBeMs/J4NB6kvu7SO6qqMHFLtYJDjIx0iiZE7pvg/xkJnP9raWL/aw==
-X-Received: by 2002:a19:f80a:: with SMTP id a10mr14498295lff.107.1580811597657;
-        Tue, 04 Feb 2020 02:19:57 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id e8sm13191461ljb.45.2020.02.04.02.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2020 02:19:56 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 95DFD1802CA; Tue,  4 Feb 2020 11:19:53 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Eelco Chaudron <echaudro@redhat.com>, xdp-newbies@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: Need a way to modify the section name for a read program object
-In-Reply-To: <D0F8E306-ABEE-480E-BDFD-D43E3A98DC5A@redhat.com>
-References: <D0F8E306-ABEE-480E-BDFD-D43E3A98DC5A@redhat.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Tue, 04 Feb 2020 11:19:53 +0100
-Message-ID: <874kw664dy.fsf@toke.dk>
+        id S1727215AbgBDN5p (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 4 Feb 2020 08:57:45 -0500
+Received: from mga11.intel.com ([192.55.52.93]:40921 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727190AbgBDN5p (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 4 Feb 2020 08:57:45 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 05:57:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,402,1574150400"; 
+   d="scan'208";a="263841782"
+Received: from ranger.igk.intel.com ([10.102.21.164])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Feb 2020 05:57:43 -0800
+Date:   Tue, 4 Feb 2020 07:50:00 +0100
+From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+To:     Maxim Mikityanskiy <maximmi@mellanox.com>
+Cc:     Magnus Karlsson <magnus.karlsson@gmail.com>,
+        Cameron Elliott <cameron@cameronelliott.com>,
+        Xdp <xdp-newbies@vger.kernel.org>, bjorn.topel@intel.com
+Subject: Re: Cannot run multiple 'xdpsock' concurrently?
+Message-ID: <20200204065000.GA44903@ranger.igk.intel.com>
+References: <CAMyc9bVixUDEJ-WHLJaCCTF3iV4pFF2j+RPM0hM1XOKh6S2yBw@mail.gmail.com>
+ <CAJ8uoz0btU4L80d2DHv+=ivL3RJmunnAsmetL=2zBo_2xfpgAA@mail.gmail.com>
+ <20200203031104.GA19512@ranger.igk.intel.com>
+ <afcf4030-aee3-7e9c-a57f-c5458c285b74@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afcf4030-aee3-7e9c-a57f-c5458c285b74@mellanox.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-"Eelco Chaudron" <echaudro@redhat.com> writes:
+On Mon, Feb 03, 2020 at 01:49:11PM +0200, Maxim Mikityanskiy wrote:
+> On 2020-02-03 05:11, Maciej Fijalkowski wrote:
+> > On Mon, Feb 03, 2020 at 10:53:40AM +0100, Magnus Karlsson wrote:
+> > > On Fri, Jan 31, 2020 at 3:14 AM Cameron Elliott
+> > > <cameron@cameronelliott.com> wrote:
+> > > > 
+> > > > Hello, I am trying to measure the maximum mpps I can push using AF_XDP on a 40G X710
+> > > > 
+> > > > I can do 22 mpps  after resolving a few bumbles I made with drivers, etc., (Thanks Magnus!)
+> > > > when using a single instance of 'xdpsock'
+> > > > 
+> > > > 
+> > > > Apparently the way to upto 50, 60 or 70? mpps is to use multiple cores...
+> > > > And apparently the simple way to do that, is multiple instances of xdpsock on different queues.
+> > > > 
+> > > > But, my attempts with multiple instances fail. :(
+> > > > 
+> > > > 
+> > > > 
+> > > > First, I checked my channel setup:
+> > > > 
+> > > > $ sudo ethtool --set-channels enp1s0f0
+> > > > no channel parameters changed.
+> > > > current values: rx 0 tx 0 other 1 combined 4
+> > > > 
+> > > > I presume that is okay...
+> > > > 
+> > > > Then I run these two commands in two different windows:
+> > > > 
+> > > > sudo  /home/c/bpf-next/samples/bpf/xdpsock -i enp1s0f0 -t -N -z -q 0
+> > > > sudo  /home/c/bpf-next/samples/bpf/xdpsock -i enp1s0f0 -t -N -z -q 1
+> > > > 
+> > > > With the only difference being the queue id.
+> > > > 
+> > > > The first will start and show ~22 mpps tx rate.
+> > > > When I start the second, both instances die:
+> > > > 
+> > > > The first instace dies with:
+> > > > /home/c/bpf-next/samples/bpf/xdpsock_user.c:kick_tx:794: errno: 100/"Network is down"
+> > > > 
+> > > > The second instance dies with:
+> > > > /home/c/bpf-next/samples/bpf/xdpsock_user.c:kick_tx:794: errno: 6/"No such device or address"
+> > > > 
+> > > > 
+> > > > Do I understand correctly I should be able to run two instances like this concurrently?
+> > > 
+> > > This is probably not supported by the current xdpsock application.
+> > > What is likely happening is that it tries to load the XDP program
+> > > multiple times. As the XDP program is per netdev, not per queue, it
+> > > should only be loaded once. When the second process then fails, it
+> > > probably removes the XDP program (as it think it has loaded it) which
+> > > crashes the first process you started.
+> > 
+> > Of course it *was* supported. Program is loaded only on the first xdpsock
+> > instance since libbpf is checking whether xdp resources are there. On the
+> > removal part you're right, we still haven't figured it out how to properly
+> > exit the xdpsock when there are other xdpsocks running.
+> > 
+> > Actually commit b3873a5be757 ("net/i40e: Fix concurrency issues between
+> > config flow and XSK") (CCing Maxim, Bjorn) broke the xdpsock multiple
+> > instances support.
+> 
+> That was surprising, but now that I took a look at that code in the context
+> of this issue, it got clear to me why it happens.
+> 
+> > If we drop the check against busy bit in PF state in
+> > the i40e_xsk_wakeup, then I can run many xdpsocks on same ifindex.
+> > 
+> > I'm not really sure that is the right approach since we are explicitly
+> > setting the __I40E_CONFIG_BUSY bit in i40e_queue_pair_disable which is
+> > used when ndo_bpf is called with XDP_SETUP_XSK_UMEM command.
+> 
+> Right, we shouldn't drop this check, at least it's needed to sync on
+> xsk_wakeup when closing a socket. I think there are two issues here, and I
+> suggest this way of solving them:
+> 
+> 1. __I40E_CONFIG_BUSY is set while a single QP is being recreated, e.g.,
+> when opening/closing an XSK. I considered it as a flag for global
+> configuration changes, but apparently it's also needed when a single XSK is
+> being configured. Probably xsk_wakeup shouldn't return ENETDOWN when this
+> flag is set, but something lighter like EAGAIN. xdpsock will need to repeat
+> the syscall instead of bailing out.
+> 
+Haven't yet checked the l2fwd case since I broke my hw setup, but do we
+really need the syscall repetition? For tx only scenario skipping the
+syscall would mean that we wouldn't post entries to completion queue and
+in case tx ring gets full we would call complete_tx_only() again. So there
+we have syscall being repeated?
 
-> Hi All,
->
-> I'm trying to write an xdpdump like utility and have some missing part 
-> in libbpf to change the fentry/FUNCTION section name before loading the 
-> trace program.
->
-> In short, I have an eBPF program that has a section name like 
-> "fentry/FUNCTION" where FUNCTION needs to be replaced by the name of the 
-> XDP program loaded in the interfaces its start function.
->
-> The code for loading the ftrace part is something like:
->
-> 	open_opts.attach_prog_fd = bpf_prog_get_fd_by_id(info.id);
-> 	trace_obj = bpf_object__open_file("xdpdump_bpf.o", &open_opts);
->
-> 	trace_prog_fentry = bpf_object__find_program_by_title(trace_obj, 
-> "fentry/FUNCTION");
->
-> 	/* Here I need to replace the trace_prog_fentry->section_name = 
-> "fentry/<INTERFACE PROG NAME> */
->
-> 	bpf_object__load(trace_obj);
-> 	trace_link_fentry = bpf_program__attach_trace(trace_prog_fentry);
->
->
-> See the above, I would like to change the section_name but there is no 
-> API to do this, and of course, the struct bpf_program is 
-> implementation-specific.
->
-> Any idea how I would work around this, or what extension to libbpf can 
-> be suggested to support this?
+> 2. Should xdpsock stop on ENETDOWN? Normal network sockets don't close as
+> soon as the carrier is lost, so why should xdpsock fail on ENETDOWN? IMO,
+> xdpsock should handle it more gracefully (wait with some timeout?).
+> 
+> Does it sound like the right direction?
 
-I think what's missing is a way for the caller to set the attach_btf_id.
-Currently, libbpf always tries to discover this based on the section
-name (see libbpf_find_attach_btf_id()). I think the right way to let the
-caller specify this is not to change the section name, though, but just
-to expose a way to explicitly set the btf_id (which the caller can then
-go find on its own).
+It does! :) But in general I would allow ENETDOWN to the set of errnos
+checked in kick_tx(). Not sure about repeating syscall though.
 
-Not sure if it would be better with a new open_opt (to mirror
-attach_prog_fd), or just a setter (bpf_program__set_attach_btf_id()?).
-Or maybe both? Andrii, WDYT?
-
--Toke
-
+> 
+> > > 
+> > > So, the application needs to get extended to support this. Maybe you
+> > > want to do this :-)? Could be a good exercise. You could add a new
+> > > commend line option that takes the number of instances you would like
+> > > to create. Look at the -M option for some inspiration as it does some
+> > > of the things you need. Maybe you can reuse that code to support your
+> > > use case.
+> > > 
+> > > /Magnus
+> > > 
+> > > > 
+> > > > Thank you for any ideas, input.
+> > > > 
+> > > > 
+> > > > 
+> > > > # ethtool dump / i40e driver from recent bpf-next clone
+> > > > c@lumen ~> ethtool -i enp1s0f0
+> > > > driver: i40e
+> > > > version: 2.8.20-k
+> > > > firmware-version: 7.10 0x80006456 1.2527.0
+> > > > expansion-rom-version:
+> > > > bus-info: 0000:01:00.0
+> > > > supports-statistics: yes
+> > > > supports-test: yes
+> > > > supports-eeprom-access: yes
+> > > > supports-register-dump: yes
+> > > > supports-priv-flags: yes
+> > > > 
+> > > > 
+> 
