@@ -2,100 +2,255 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3062182F27
-	for <lists+xdp-newbies@lfdr.de>; Thu, 12 Mar 2020 12:29:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE73183560
+	for <lists+xdp-newbies@lfdr.de>; Thu, 12 Mar 2020 16:48:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgCLL3Y (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 12 Mar 2020 07:29:24 -0400
-Received: from mail-qt1-f174.google.com ([209.85.160.174]:32812 "EHLO
-        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLL3X (ORCPT
+        id S1727493AbgCLPsi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 12 Mar 2020 11:48:38 -0400
+Received: from postout1.mail.lrz.de ([129.187.255.137]:49365 "EHLO
+        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgCLPsi (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:29:23 -0400
-Received: by mail-qt1-f174.google.com with SMTP id d22so4014687qtn.0
-        for <xdp-newbies@vger.kernel.org>; Thu, 12 Mar 2020 04:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dh8SnP65lNEzCjJUNDQqfm8hPjEIxDZt1bjp69Gk+ps=;
-        b=RzoWeANACJ2+8fwqO9De8RAd+lbAmrHEe60Vhi6+/0+5Fum0D/Im/inKnXTo+7zXUv
-         l8OQwcYNY/pG3xqy57An7ebWA0zL9TKTNROfjZmjLGVAhNquy9SrDp+mKzjawQeuPaBq
-         gp4O+3yxX0ghiy5JfT3AMKo3oVjLtkoKGVsZapO5g6KiJUGpLUtPDzhggOZqcZibtfcb
-         46l6SnFlqzOmDWb4B8Itsv3hdrgC8avMdCIqDZ4hDswpMkdOOqyXClm4n6XpwmAQ0qf8
-         cLREnYKo14GsaLYPorXg+eKxhCtj+JYZuizxXXCkc0JcEoATfE00uYzRGB1cG7g9UjN+
-         zUHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dh8SnP65lNEzCjJUNDQqfm8hPjEIxDZt1bjp69Gk+ps=;
-        b=EXPCY6LTr5uRBsQz5cK74bdxFGMr2YolSSABkAx+XNojInd1ustkUuiZsLXhYtWxZx
-         6GKDm3w/l+L6gT9tlVTtd+p22mK3IO6YDnJm2ZV4s6BZ2KnjPYODhQo6L3/IFr5jLfXr
-         SI+YtLlpHsWm17iYiSv8kpcvereirlmpQT1LF0TU//1SqHKE5Z4V8m0dkPeCQaDajrez
-         g0fCU64fSM99O8zWPPRuSHnGuesURyTxKZiqx2BE8rT7s8qZt/QuAlTJoz9kLyQ6zmxI
-         yvwEBzMSUyjSacA1HQuFov8NIpNklLVetmilkJ1mHUIcreKMwG1HrTjBvmlNXwcHeABJ
-         Kttw==
-X-Gm-Message-State: ANhLgQ2vWYL9gW1c+1H3iOI7THKditLl09Wp+Bw7QafqsAFn1IVB5vb5
-        pJHt5pfsmkQDFCh+wG7E768e+uwnYntW5XHAupk=
-X-Google-Smtp-Source: ADFU+vsJQgajNjGUp1QPjxAC1nRzbJalBidoEm/iqK3KiewJpdrDlJ3KDGA4e4yMF1xPR/RXCHQqdqv+tHx0/U3g5UM=
-X-Received: by 2002:ac8:1762:: with SMTP id u31mr1994387qtk.359.1584012563099;
- Thu, 12 Mar 2020 04:29:23 -0700 (PDT)
+        Thu, 12 Mar 2020 11:48:38 -0400
+Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
+        by postout1.mail.lrz.de (Postfix) with ESMTP id 48dYC56kP7zyb8;
+        Thu, 12 Mar 2020 16:48:33 +0100 (CET)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.584
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.584 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_URL_HTTP=0.001,
+        LRZ_HAS_URL_HTTP_SINGLE=0.001, LRZ_HAS_X_ORIG_IP=0.001,
+        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
+        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
+        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout1.mail.lrz.de ([127.0.0.1])
+        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id qWleEHo6fy5R; Thu, 12 Mar 2020 16:48:33 +0100 (CET)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (BADWLRZ-SWMBX03.ads.mwn.de [IPv6:2001:4ca0:0:108::159])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX03", Issuer "BADWLRZ-SWMBX03" (not verified))
+        by postout1.mail.lrz.de (Postfix) with ESMTPS id 48dYC54VwpzyZ6;
+        Thu, 12 Mar 2020 16:48:33 +0100 (CET)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 12 Mar 2020 16:48:33 +0100
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1913.007; Thu, 12 Mar 2020 16:48:33 +0100
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@gmail.com>,
+        =?iso-8859-1?Q?Toke_H=F8iland-J=F8rgensen?= <toke@redhat.com>
+CC:     Xdp <xdp-newbies@vger.kernel.org>
+Subject: AW: Shared Umem between processes
+Thread-Topic: Shared Umem between processes
+Thread-Index: AQHV973HYXLoSjdqpUaKyJTfUanHqKhEhuoAgAATn7z///hnAIAAEfwr///26oCAABGslv//9tqAAALM5wAAAPy6AAAKRuCE
+Date:   Thu, 12 Mar 2020 15:48:33 +0000
+Message-ID: <1f9eeee0897f4cf9951374ae605b03a4@hm.edu>
+References: <fd5e40efd5c1426cb4a5942682407ea2@hm.edu>
+ <CAJ+HfNghFctg3L=3QdeoWyqDdj4wP4EKWjYyF01=SmCO5+=32g@mail.gmail.com>
+ <a80ec2c07cb9493eafabb9decf479c60@hm.edu>
+ <CAJ+HfNjiDCdaQm_PocHXC+gHABAO67b6H+f2pf+ZdHRu2uhMVA@mail.gmail.com>
+ <69569dcbc4ce450eb5b2c1905bf11208@hm.edu>
+ <CAJ+HfNi5sstcz20EGq2sak0RpYdBwVO5P+NLX8cALBuG_xsnHw@mail.gmail.com>
+ <046ac5d67f6a447f98266eacaa2c25e5@hm.edu>
+ <CAJ+HfNjNMhxzXTrwKjOZALO5=3UTgQz0ytyAMs5zoGB0HX29DA@mail.gmail.com>
+ <87sgidon13.fsf@toke.dk>,<CAJ+HfNgRahagXKiiUCwZMO46cPL--OxXcE3HwpbWAyph9Cjy3Q@mail.gmail.com>
+In-Reply-To: <CAJ+HfNgRahagXKiiUCwZMO46cPL--OxXcE3HwpbWAyph9Cjy3Q@mail.gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [80.246.32.33]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <fd5e40efd5c1426cb4a5942682407ea2@hm.edu> <CAJ+HfNghFctg3L=3QdeoWyqDdj4wP4EKWjYyF01=SmCO5+=32g@mail.gmail.com>
- <a80ec2c07cb9493eafabb9decf479c60@hm.edu> <CAJ+HfNjiDCdaQm_PocHXC+gHABAO67b6H+f2pf+ZdHRu2uhMVA@mail.gmail.com>
- <69569dcbc4ce450eb5b2c1905bf11208@hm.edu> <CAJ+HfNi5sstcz20EGq2sak0RpYdBwVO5P+NLX8cALBuG_xsnHw@mail.gmail.com>
- <046ac5d67f6a447f98266eacaa2c25e5@hm.edu> <CAJ+HfNjNMhxzXTrwKjOZALO5=3UTgQz0ytyAMs5zoGB0HX29DA@mail.gmail.com>
- <87sgidon13.fsf@toke.dk>
-In-Reply-To: <87sgidon13.fsf@toke.dk>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Thu, 12 Mar 2020 12:29:12 +0100
-Message-ID: <CAJ+HfNgRahagXKiiUCwZMO46cPL--OxXcE3HwpbWAyph9Cjy3Q@mail.gmail.com>
-Subject: Re: Shared Umem between processes
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>,
-        Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, 12 Mar 2020 at 12:01, Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat=
-.com> wrote:
->
-> Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com> writes:
->
-> > On Thu, 12 Mar 2020 at 10:17, Gaul, Maximilian <maximilian.gaul@hm.edu>=
- wrote:
-> >>
-> > [...]
-> >>
-> >> Thank you so much Bj=C3=B6rn!
-> >>
-> >> just to wrap things up:
-> >>
-> >> - if I want to distribute packet processing from a single RX-Queue to
-> >> multiple sockets I have to use shared umem because it is not possible
-> >> to bind multiple af-xdp sockets onto the same RX-Queue
-> >
-> > Correct! And you need a tailored XDP program that spreads over the
-> > shared umem sockets!
->
-> Could we lift this restriction? Not with zero-copy, obviously, but if
-> there's a copy involved it seems it should be possible to support
-> several sockets on the same RXQ? That would make it possible to use XDP
-> as a per-CPU load balancer for a single RXQ, like we can do with cpumap
-> for packets hitting the stack today?
->
+I don't know if it is appropriate to ask a new question on the same topic in the same thread? In case it is not I will start a new one but I thought it would fit "my story on how to get shared umem working".
 
-Yes! It's on the (never ending) TODO list. Never heard that before, right? =
-:-(
+I followed https://github.com/xdp-project/bpf-next/blob/master/samples/bpf/xdpsock_user.c on how to implement shared umem and I think I got it working to some extend.
 
+There are some problems though:
 
-Cheers,
-Bj=C3=B6rn
+I am processing two multicast streams arriving on the same RX-Queue on two sockets (using shared umem) - each socket is running in its own thread (same process).
+What I noticed: Everything seems to work fine for about 1min or so (even though I am noticing some packet-loss for 530.000 pps) but after that, datarate drops to only half and after one more minute to a fourth.
 
-> -Toke
->
+My first thought on this was that the reserved umem frames by calling `xsk_ring_prod__reserve` are not freed properly (similiar to a memory leak) because of that I decreased the size of the umem to a tenth hoping to see a decrease in packet rate even sooner - and indeed I did!
+
+Basically what I do is to create a new thread for each socket and pass the `xsk_socket_info`-struct accordingly. I then call `nanosleep` for 2.5ms in a while-loop and process every frame that arrived:
+
+static void* rx_and_process(void *a) {
+
+	struct pthread_arg *arg = (struct pthread_arg*)a;
+	struct config *cfg = arg->cfg;
+	struct pckt_idntfy_stats *pckt = arg->pckt_idntfy;
+	struct xsk_socket_info *xsk_socket = arg->xsk_socket;
+
+	struct timespec spec;
+	spec.tv_sec = 0;
+	spec.tv_nsec = 2500 * 1000;
+
+	struct timespec remaining;
+
+	while(!global_exit) {
+		if(nanosleep(&spec, &remaining) < 0) {
+			nanosleep(&spec, &remaining);
+		}
+		handle_receive_packets(xsk_socket, fds);
+	}
+
+	return NULL;
+}
+
+`pckt_idntfy_stats` contains information about where the statistics about this multicast-stream should be placed in shared memory.
+
+Processing then happens like this:
+
+static void handle_receive_packets(struct xsk_socket_info *xsk_socket, struct pollfd *fds) {
+	unsigned int rcvd, i;
+	uint32_t idx_rx = 0, idx_fq = 0;
+	int ret;
+
+	rcvd = xsk_ring_cons__peek(&xsk_socket->rx, INT32_MAX, &idx_rx);
+	if (!rcvd) {
+        /* no packets received, go to sleep */
+		return;
+	}
+
+	ret = xsk_ring_prod__reserve(&xsk_socket->umem->fq, rcvd, &idx_fq);
+	if (ret < 0) {
+		fprintf(stderr, "Error: %s\n", strerror(-ret));
+		return;
+	} else if(ret == 0) {
+		printf("NO SPACE LEFT!\n");
+		return;
+	} else if(ret != rcvd) {
+		printf("RET != RCVD\n");
+		return;
+	}
+
+	for (i = 0; i < rcvd; i++) {
+		uint64_t addr = xsk_ring_cons__rx_desc(&xsk_socket->rx, idx_rx)->addr;
+		uint32_t len = xsk_ring_cons__rx_desc(&xsk_socket->rx, idx_rx++)->len;
+		uint64_t orig = xsk_umem__extract_addr(addr);
+
+		addr = xsk_umem__add_offset_to_addr(addr);
+
+		process_packet(xsk_socket, addr, len);
+		*xsk_ring_prod__fill_addr(&xsk_socket->umem->fq, idx_fq++) = orig;
+		
+		xsk_socket->stats.rx_bytes += len;
+	}
+
+	xsk_ring_prod__submit(&xsk_socket->umem->fq, rcvd);
+	xsk_ring_cons__release(&xsk_socket->rx, rcvd);
+	xsk_socket->stats.rx_packets += rcvd;
+}
+
+I am sorry to post all this code here but maybe it helps?
+
+This is how I configured the umem (basically a 1:1 copy from `xdpsock_user.c`:
+
+static struct xsk_umem_info *configure_xsk_umem(void *buffer, uint64_t size) {
+
+	struct xsk_umem_info *umem;
+	struct xsk_umem_config cfg = {
+		.fill_size = XSK_RING_PROD__DEFAULT_NUM_DESCS,
+		.comp_size = XSK_RING_CONS__DEFAULT_NUM_DESCS,
+		.frame_size = FRAME_SIZE,
+		.frame_headroom = XSK_UMEM__DEFAULT_FRAME_HEADROOM,
+		.flags = 0
+	};
+	int ret;
+
+	umem = calloc(1, sizeof(*umem));
+	if (!umem) {
+		fprintf(stderr, "Error while allocating umem: %s\n", strerror(errno));
+		exit(1);
+	}
+
+	ret = xsk_umem__create(&umem->umem, buffer, size, &umem->fq, &umem->cq, &cfg);
+	if (ret) {
+		fprintf(stderr, "`xsk_umem__create` returned: %s\n", strerror(-ret));
+		exit(1);
+	}
+
+	umem->buffer = buffer;
+	return umem;
+}
+
+and after that I call:
+
+static void xsk_populate_fill_ring(struct xsk_umem_info *umem) {
+	int ret, i;
+	uint32_t idx;
+
+	ret = xsk_ring_prod__reserve(&umem->fq, XSK_RING_PROD__DEFAULT_NUM_DESCS, &idx);
+	if (ret != XSK_RING_PROD__DEFAULT_NUM_DESCS) {
+		fprintf(stderr, "Failed to reserve prod ring: %s\n", strerror(errno));
+		exit(1);
+	}
+	for (i = 0; i < XSK_RING_PROD__DEFAULT_NUM_DESCS; i++) {
+		*xsk_ring_prod__fill_addr(&umem->fq, idx++) = i * FRAME_SIZE;
+	}
+	xsk_ring_prod__submit(&umem->fq, XSK_RING_PROD__DEFAULT_NUM_DESCS);
+}
+
+And sockets are created this way:
+
+static struct xsk_socket_info *xsk_configure_socket(struct xsk_umem_info *umem, struct config *cfg, bool rx, bool tx) {
+	struct xsk_socket_config xsk_socket_cfg;
+ 	struct xsk_socket_info *xsk;
+	struct xsk_ring_cons *rxr;
+	struct xsk_ring_prod *txr;
+	int ret;
+
+	xsk = calloc(1, sizeof(*xsk));
+	if (!xsk) {
+		fprintf(stderr, "xsk `calloc` failed: %s\n", strerror(errno));
+		exit(1);
+	}
+
+	xsk->umem = umem;
+	xsk_socket_cfg.rx_size = XSK_RING_CONS__DEFAULT_NUM_DESCS;
+	xsk_socket_cfg.tx_size = XSK_RING_PROD__DEFAULT_NUM_DESCS;
+	if (cfg->ip_addrs_len > 1) {
+		xsk_socket_cfg.libbpf_flags = XSK_LIBBPF_FLAGS__INHIBIT_PROG_LOAD;
+	} else {
+		xsk_socket_cfg.libbpf_flags = 0;
+	}
+	xsk_socket_cfg.xdp_flags = cfg->xdp_flags;
+	xsk_socket_cfg.bind_flags = cfg->xsk_bind_flags;
+
+	rxr = rx ? &xsk->rx : NULL;
+	txr = tx ? &xsk->tx : NULL;
+	ret = xsk_socket__create(&xsk->xsk, cfg->ifname_buf, cfg->xsk_if_queue, umem->umem, rxr, txr, &xsk_socket_cfg);
+	if (ret) {
+		fprintf(stderr, "`xsk_socket__create` returned error: %s\n", strerror(errno));
+		exit(-ret);
+	}
+
+	return xsk;
+}
+
+As far as I've seen from `xdpsock_user.c` there is no special handling required by the sockets who are using shared umem? What am I missing?
+
+Best regards
+
+Max
