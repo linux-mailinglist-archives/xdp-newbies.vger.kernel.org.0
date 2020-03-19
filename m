@@ -2,113 +2,127 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 276D91866A1
-	for <lists+xdp-newbies@lfdr.de>; Mon, 16 Mar 2020 09:38:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3870118B923
+	for <lists+xdp-newbies@lfdr.de>; Thu, 19 Mar 2020 15:15:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgCPIid (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 16 Mar 2020 04:38:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49439 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730048AbgCPIid (ORCPT
+        id S1727141AbgCSOPt convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 19 Mar 2020 10:15:49 -0400
+Received: from postout2.mail.lrz.de ([129.187.255.138]:58001 "EHLO
+        postout2.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgCSOPt (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:38:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584347911;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7uu8ZglRcxpl1RvABSTsu6DnS9ic/goMU1QnbnHDbOk=;
-        b=EsDt0Apuk8+gR2F8eKf/vvVl5sJC9b8e64SSbOoU/+vLzBxxD8mcFMgn9Rb0aYfzVEzEox
-        kOtX8SBzM0+AXB9o7pkQGb/FGUxbx8hvr8IcB04CZvAuHdxK5tgiSCXeZlYSqBVFgCWJ8N
-        lkMSHGCJWqrHVY+94eIu8ghcjsRVXEY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-mmsqzYicOQmcU9XlIea8uA-1; Mon, 16 Mar 2020 04:38:27 -0400
-X-MC-Unique: mmsqzYicOQmcU9XlIea8uA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16F8F13F5;
-        Mon, 16 Mar 2020 08:38:26 +0000 (UTC)
-Received: from carbon (ovpn-200-32.brq.redhat.com [10.40.200.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3133610021B2;
-        Mon, 16 Mar 2020 08:38:21 +0000 (UTC)
-Date:   Mon, 16 Mar 2020 09:38:19 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-Cc:     brouer@redhat.com, Xdp <xdp-newbies@vger.kernel.org>,
-        =?UTF-8?B?Qmo=?= =?UTF-8?B?w7ZybiBUw7ZwZWw=?= 
-        <bjorn.topel@intel.com>
-Subject: Re: Why does my AF-XDP Socket lose packets whereas a generic linux
+        Thu, 19 Mar 2020 10:15:49 -0400
+Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
+        by postout2.mail.lrz.de (Postfix) with ESMTP id 48jppn5d8kzynR;
+        Thu, 19 Mar 2020 15:15:45 +0100 (CET)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.585
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.585 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_SPF=0.001, LRZ_HAS_THREAD_INDEX=0.001,
+        LRZ_HAS_X_ORIG_IP=0.001, LRZ_MSGID_HL32=0.001,
+        LRZ_RCVD_BADWLRZ_EXCH=0.001, LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5,
+        RDNS_NONE=0.793, SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout2.mail.lrz.de ([127.0.0.1])
+        by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id LxBZ3XBct5hh; Thu, 19 Mar 2020 15:15:45 +0100 (CET)
+Received: from BADWLRZ-SWMBX05.ads.mwn.de (BADWLRZ-SWMBX05.ads.mwn.de [IPv6:2001:4ca0:0:108::161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX05", Issuer "BADWLRZ-SWMBX05" (not verified))
+        by postout2.mail.lrz.de (Postfix) with ESMTPS id 48jppn0hvzzynF;
+        Thu, 19 Mar 2020 15:15:45 +0100 (CET)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX05.ads.mwn.de (2001:4ca0:0:108::161) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 19 Mar 2020 15:15:44 +0100
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1913.010; Thu, 19 Mar 2020 15:15:44 +0100
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+CC:     Xdp <xdp-newbies@vger.kernel.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>
+Subject: AW: Why does my AF-XDP Socket lose packets whereas a generic linux
  socket doesn't?
-Message-ID: <20200316093819.65c24cdd@carbon>
-In-Reply-To: <27adfa9b069242a3a0d8e9ccd64e308a@hm.edu>
-References: <27adfa9b069242a3a0d8e9ccd64e308a@hm.edu>
+Thread-Topic: Why does my AF-XDP Socket lose packets whereas a generic linux
+ socket doesn't?
+Thread-Index: AQHV+t9JHNkA4/KZDEuYHjwHshnQ1ahK1fqAgAUgAcQ=
+Date:   Thu, 19 Mar 2020 14:15:44 +0000
+Message-ID: <bd692ff951cb41cfbd5397203f3a3ef0@hm.edu>
+References: <27adfa9b069242a3a0d8e9ccd64e308a@hm.edu>,<20200316093819.65c24cdd@carbon>
+In-Reply-To: <20200316093819.65c24cdd@carbon>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2003:c6:4f25:4bf6:801c:6db5:405:327c]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sun, 15 Mar 2020 15:36:13 +0000
-"Gaul, Maximilian" <maximilian.gaul@hm.edu> wrote:
+On Mon, 16 Mar 2020 09:38, <brouer@redhat.com> wrote:
 
-> I am comparing AF-XDP sockets vs Linux Sockets in terms of how many
-> packets they can process without packet-loss (packet-loss is defined
-> as the RTP-sequence number of the current packet is not equal to the
-> RTP-sequence number of the previous packet `+ 1`).
-> 
-> I noticed that my AF-XDP socket program (I can't determine if this
-> problem is related to the kernel program or the user-space program)
-> is losing around `~25` packets per second at around `390.000` packets
-> per second whereas an equivalent program with generic linux sockets
-> doesn't lose any packets.
-> 
-[...]
+>On Sun, 15 Mar 2020 15:36:13 +0000
+>"Gaul, Maximilian" <maximilian.gaul@hm.edu> wrote:
+>
+>
+>You say that you are sleeping for a specified time around 1 - 2ms.
+>
+>Have you considered if in the time your programs sleeps, if the
+>RX-queue can be overflowed?
+>
+>You say at 390,000 pps drops happen.  At this speed a packets arrive
+>every 2.564 usec (1/390000*10^9 = 2564 ns = 2.564 usec).
+>
+>What NIC hardware/driver are you using?
+>And what is the RX-queue size? (ethtool -g)
+>On Intel's XL710 driver i40e, the default RX-ring size is 512.
+>
+>The "good-queue" effect is that a queue functions as a shock absorber,
+>to handle that the OS/CPU is busy doing something else.  If I have 512
+>RX-queue slots, and packets arriving every 2.564 usec, then I must
+>return and empty the queue (and re-fill slots) every 1.3 ms
+>(512 * 2.564 usec = 1312.768 usec = 1.3127 ms).
+>
 
-> Because I figured I don't need maximum latency for this application,
-> I send the process to sleep for a specified time (around `1 - 2ms`)
-> after which it loops through every AF-XDP socket (most of the time it
-> is only one socket) and processes every received packet for that
-> socket, verifying that no packets have been missed:
-> 
-> 	while(!global_exit) {
-> 	    nanosleep(&spec, &remaining);
-> 
-> 		for(int i = 0; i < cfg.ip_addrs_len; i++) {
-> 			struct xsk_socket_info *socket = xsk_sockets[i];
-> 			if(atomic_exchange(&socket->stats_sync.lock, 1) == 0) {
-> 				handle_receive_packets(socket);
-> 				atomic_fetch_xor(&socket->stats_sync.lock, 1); /* release socket-lock */
-> 			}
-> 		}
-> 	}
+Thank you so much for your answer Jesper!
 
-You say that you are sleeping for a specified time around 1 - 2ms.
+regarding the size of the RX-Queue: it is 1024.
+I am able to increase it up to 8192 but my tests are showing that the RX-Queue size doesn't change anything on the lost packet rate unless it is lower than 512 (lost packets increase very minimally if set to 512 from 1024).
+I also decreased the sleeping time of the process from 1ms to 500µs - this also didn't change anything.
+I am using a *Mellanox Technologies MT27800 Family [ConnectX-5]*. I did some further tests with the generic linux socket and it worked fine without any packet loss (but of course I want to use the extended packet processing capability by AF-XDP).
+I am not sure but is it possible that some "side traffic" comes up to userspace (for example some ping-packages or IGMP-queries) thus messing up my RTP-Sequencenumber tracking? Even though I am filtering packets by whether they are all four: IP, UDP, have valid dest-ip and valid dest-port:
 
-Have you considered if in the time your programs sleeps, if the
-RX-queue can be overflowed?
+                            const struct pckt_idntfy_raw raw = {
+                                .src_ip = 0, /*not used at the moment */
+                                .dst_ip = iph->daddr,
+                                .dst_port = udh->dest,
+                                .pad = 0
+                            };
 
-You say at 390,000 pps drops happen.  At this speed a packets arrive
-every 2.564 usec (1/390000*10^9 = 2564 ns = 2.564 usec).
+                            const int *idx = bpf_map_lookup_elem(&xdp_packet_mapping, &raw);
+                            
+                            if(idx != NULL) {
+                                if (bpf_map_lookup_elem(&xsks_map, idx)) {
+                                    return bpf_redirect_map(&xsks_map, *idx, 0);
+                                }
+                            }
 
-What NIC hardware/driver are you using?
-And what is the RX-queue size? (ethtool -g)
-On Intel's XL710 driver i40e, the default RX-ring size is 512.
+Best regards
 
-The "good-queue" effect is that a queue functions as a shock absorber,
-to handle that the OS/CPU is busy doing something else.  If I have 512
-RX-queue slots, and packets arriving every 2.564 usec, then I must
-return and empty the queue (and re-fill slots) every 1.3 ms
-(512 * 2.564 usec = 1312.768 usec = 1.3127 ms).
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Max
