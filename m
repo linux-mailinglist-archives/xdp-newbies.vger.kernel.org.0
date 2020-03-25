@@ -2,85 +2,85 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 221E0192399
-	for <lists+xdp-newbies@lfdr.de>; Wed, 25 Mar 2020 10:04:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E9D19245A
+	for <lists+xdp-newbies@lfdr.de>; Wed, 25 Mar 2020 10:41:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgCYJEI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Wed, 25 Mar 2020 05:04:08 -0400
-Received: from postout1.mail.lrz.de ([129.187.255.137]:42037 "EHLO
-        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgCYJEI (ORCPT
+        id S1726154AbgCYJlW (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 25 Mar 2020 05:41:22 -0400
+Received: from mail-vs1-f53.google.com ([209.85.217.53]:44259 "EHLO
+        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgCYJlW (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:04:08 -0400
-Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
-        by postout1.mail.lrz.de (Postfix) with ESMTP id 48nMcN674qzyZ1
-        for <xdp-newbies@vger.kernel.org>; Wed, 25 Mar 2020 10:04:04 +0100 (CET)
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -0.586
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.586 tagged_above=-999 required=5
-        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
-        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
-        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
-        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
-        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
-        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
-        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
-        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_X_ORIG_IP=0.001,
-        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
-        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
-        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
-Received: from postout1.mail.lrz.de ([127.0.0.1])
-        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-        with LMTP id Ae1yW5wecpgw for <xdp-newbies@vger.kernel.org>;
-        Wed, 25 Mar 2020 10:04:04 +0100 (CET)
-Received: from BADWLRZ-SWMBX03.ads.mwn.de (BADWLRZ-SWMBX03.ads.mwn.de [IPv6:2001:4ca0:0:108::159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client CN "BADWLRZ-SWMBX03", Issuer "BADWLRZ-SWMBX03" (not verified))
-        by postout1.mail.lrz.de (Postfix) with ESMTPS id 48nMcN4mvMzyZ0
-        for <xdp-newbies@vger.kernel.org>; Wed, 25 Mar 2020 10:04:04 +0100 (CET)
-Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
- BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 25 Mar 2020 10:04:04 +0100
-Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
- BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
- 15.01.1913.010; Wed, 25 Mar 2020 10:04:04 +0100
-From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-To:     Xdp <xdp-newbies@vger.kernel.org>
-Subject: Shared Umem and reducing ksoftirqd-Load
-Thread-Topic: Shared Umem and reducing ksoftirqd-Load
-Thread-Index: AQHWAoMHgnpBMyiXt0+Jhmcs5uRxxQ==
-Date:   Wed, 25 Mar 2020 09:04:04 +0000
-Message-ID: <018e8071725b48399141cc46b63641e1@hm.edu>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Exchange-Organization-AuthAs: Internal
-X-MS-Exchange-Organization-AuthMechanism: 04
-X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2003:c6:4f25:4b9d:801c:6db5:405:327c]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Wed, 25 Mar 2020 05:41:22 -0400
+Received: by mail-vs1-f53.google.com with SMTP id e138so1052527vsc.11
+        for <xdp-newbies@vger.kernel.org>; Wed, 25 Mar 2020 02:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zFV51ls/MyXTuoBqrSQ2vu1C9CMIZlIsg8j1BIYYLBI=;
+        b=hVgM9u3+uAjZCZ1C9M0FqzwjOojXG6aPYH1d128NwZgfjq+bwIrgVNf3Uedu3fMmTQ
+         b2N9ut8uW9hIftH1q8bN6w68Kz9AlaznWzSIhMOjqcHekbubDf9QlO+uaXflfwHKICoK
+         n6d3TdXbTkMA1Murfiw6gkfgOZ7GZBmDeFQ2COPK80eQzIPgAJ5TF7Km1Z+lIHnpf0Pq
+         9HbC3gOF3CaaPa9T2ndqiK7w6NryBsPC38CLKJ5Jj958muNSoKqZJnwgLkgxhHs0wwUM
+         6zXHBILmgxsqymXWhXFBhj2k5htBPv1uf0pbhjuAGdI2iTPXkGmptDWmVBMiNYcUuqk1
+         LxLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zFV51ls/MyXTuoBqrSQ2vu1C9CMIZlIsg8j1BIYYLBI=;
+        b=UrE8X/xCVffiTxwuHY/1He2qXP3YqeYEm76ehXkOSjqtBy9APqku8OQNCjAi9ZZn8Q
+         yK5Wac1kQQBQ5/FDiJStO90S51LzxDkhUKeBgOk4JI0LRuyJT9W8BwZ4KO9nkSVdY0OB
+         OHOFrqKGCQcVhvxd04YXiX+OQecVYx95fc/v2gPeEmxFoMPAlmg4EkmHDOpbvSK8xOjx
+         tfScrdZBkGalLPbPteTxLWth6i8PjV2xC1DUSDnuLuIp/FPuWtVoLVHVC4iJXgEUuzv4
+         Px3yBPUSWBM8ZH4hXlG780GV+tZuKJ3Es2uVj+CpWv6U/hbdA7EpE/VTZrn6FTB+9rNG
+         dvmQ==
+X-Gm-Message-State: ANhLgQ3zoIEdrIu/KScOLP5VnyATy5Mwa1X2uKE6eKmKQaQBS9UPlhrW
+        kGntrxP2CVNUZ/iHAejKsme65FII7EVYDtYux+2fMqhK
+X-Google-Smtp-Source: ADFU+vsPzWhH5uEZQnqNfhnDu2RHGKU3zba1DIIyp4SrL4g97XOVDp6S3ptlw8CG9phUmy+/QITfNaUzCw++4ccVFHo=
+X-Received: by 2002:a67:24c1:: with SMTP id k184mr1660121vsk.177.1585129281203;
+ Wed, 25 Mar 2020 02:41:21 -0700 (PDT)
 MIME-Version: 1.0
+References: <018e8071725b48399141cc46b63641e1@hm.edu>
+In-Reply-To: <018e8071725b48399141cc46b63641e1@hm.edu>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Wed, 25 Mar 2020 10:41:10 +0100
+Message-ID: <CAJ8uoz1Vh+zj6msumTNWgtZY6jdOeYgoyDBoizfna1dzhC465A@mail.gmail.com>
+Subject: Re: Shared Umem and reducing ksoftirqd-Load
+To:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+Cc:     Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-I am running a Multi-AF-XDP-Socket approach per RX-Queue (using Shared Umem).
+On Wed, Mar 25, 2020 at 10:04 AM Gaul, Maximilian
+<maximilian.gaul@hm.edu> wrote:
+>
+> I am running a Multi-AF-XDP-Socket approach per RX-Queue (using Shared Umem).
+>
+> Unfortunately I am noticing, that at around 650k pps, the *ksoftirqd*-thread of that RX-Queue ramps up to 100% thus leading to packet loss.
+> I tried setting *XDP_USE_NEED_WAKEUP* on *xsk_socket_cfg.bind_flags* but those bind_flags are only taken into account if *umem->refcount > 1* (libbpf/xsk.c - xsk_socket__create()).
+> As far as I understand this correctly, only the first socket is able to set *XDP_USE_NEED_WAKEUP* because for all sockets after, *umem->refcount* is going to be at least 2.
 
-Unfortunately I am noticing, that at around 650k pps, the *ksoftirqd*-thread of that RX-Queue ramps up to 100% thus leading to packet loss.
-I tried setting *XDP_USE_NEED_WAKEUP* on *xsk_socket_cfg.bind_flags* but those bind_flags are only taken into account if *umem->refcount > 1* (libbpf/xsk.c - xsk_socket__create()).
-As far as I understand this correctly, only the first socket is able to set *XDP_USE_NEED_WAKEUP* because for all sockets after, *umem->refcount* is going to be at least 2.
+Yes, the other sockets just inherit the settings of the first one.
 
-I didn't observe a dramatic change as I've hoped to. Are there some other ways to reduce interrupt load (user-space application and ksoftirq are already running on different CPUs)?
+Are you using the SKB mode? What is your packet size? Sounds like a
+low number unless you have large packets and are using the SKB mode.
 
-NIC: Mellanox Technologies MT27800
+> I didn't observe a dramatic change as I've hoped to. Are there some other ways to reduce interrupt load (user-space application and ksoftirq are already running on different CPUs)?
 
-Best regards
+The need_wakeup flag has a big impact when you run the softirq and the
+application thread on the same core. When using two cores for this, it
+has less of an impact.
 
-Max
+/Magnus
 
+> NIC: Mellanox Technologies MT27800
+>
+> Best regards
+>
+> Max
+>
