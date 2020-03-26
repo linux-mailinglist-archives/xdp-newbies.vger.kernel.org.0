@@ -2,297 +2,155 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72414193F38
-	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Mar 2020 13:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90476193FD6
+	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Mar 2020 14:35:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgCZMsc (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 26 Mar 2020 08:48:32 -0400
-Received: from mail-ua1-f50.google.com ([209.85.222.50]:41793 "EHLO
-        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgCZMsc (ORCPT
+        id S1727456AbgCZNfu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 26 Mar 2020 09:35:50 -0400
+Received: from postout2.mail.lrz.de ([129.187.255.138]:39891 "EHLO
+        postout2.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgCZNfu (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:48:32 -0400
-Received: by mail-ua1-f50.google.com with SMTP id f9so2046622uaq.8
-        for <xdp-newbies@vger.kernel.org>; Thu, 26 Mar 2020 05:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+rT/7r9/tZ4cH4rM4s/uXRaonu1Wc1MLBa3UYc2ULE4=;
-        b=MWdLD+hi73jdaAfdaNzgvxsXXnttAYTuZM4j2NO8afvmvidUwRnqPc6sTcSkDYlxRX
-         CfSa470cjRodz9IOTbzeX60uAom0QQZlbRAqav8Aavqf85X9fl5RffnZ6BXQrJ60Nc9j
-         kN3kHl351gVo4MB0NZ+K4NyRE6rZzYTxLwVIu88VNdr++PP1rs9kjwpzepi91lbaiwBo
-         QzJxcnpmGFuRYy7R5h6J11bXdvvIRUMKH5jBDhxRBQjj3Om52UAMljWb6uFV9zZI02kT
-         pn9JX7zfAiSlwBK1y4UoRCPuigQknw3wJ4s0zBzMzlTWaeKXsnX4WXsamhfaswDp49xs
-         goWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+rT/7r9/tZ4cH4rM4s/uXRaonu1Wc1MLBa3UYc2ULE4=;
-        b=r5+xqp0Cvocs74+8Tzkm7oyX6r1v+e/1mrkkle5UU9s13VBp6uogaYJa+WkdWpyFy7
-         Gesp+Tdv1aNY/A/oHzEslci09DApzxUjBw5pWH8ydTkBMly0NJsk7Rj2Lrpy0OhaqHZe
-         bEED4NpIM9sM2ZncrUY4Dr86/ejtIihMM4HYJo6DzAtcplWO3ygRsaS6o+YfBRDM0tTy
-         2i3OZN5a4d+cUsdSNVk+G5mZL915Bfh9sZ0ZS34ONpdMTDfaTFRcLQ4snsPfw0WOP7I5
-         FnZ4TvjOer14uBuhonxGlc2nUNRTPegTyNn8s+IWObB5BPxWbMTVe0IX+HgZ3O4PaQJh
-         vHZA==
-X-Gm-Message-State: ANhLgQ1FpG2dZbwP3aesfy3Pfeguufx/dUuccLatok4TK10mD7iCdHxA
-        4/3HqbPFzXzjNxXVFLNYhJQ7WWOigd4RDu+f51g=
-X-Google-Smtp-Source: ADFU+vvI6OfPl9uORW/g/VE21VSA8DoAwLNlt5d/oBD04dDGDOGzH7UNArz97U0Tyk5A+m8Jv+xeZfStXH2XVMYrs+A=
-X-Received: by 2002:ab0:e5:: with SMTP id 92mr5949069uaj.83.1585226910704;
- Thu, 26 Mar 2020 05:48:30 -0700 (PDT)
+        Thu, 26 Mar 2020 09:35:50 -0400
+Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
+        by postout2.mail.lrz.de (Postfix) with ESMTP id 48p5bR4BWpzymG
+        for <xdp-newbies@vger.kernel.org>; Thu, 26 Mar 2020 14:35:47 +0100 (CET)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.584
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.584 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_URL_HTTP=0.001,
+        LRZ_HAS_URL_HTTP_SINGLE=0.001, LRZ_HAS_X_ORIG_IP=0.001,
+        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
+        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
+        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout2.mail.lrz.de ([127.0.0.1])
+        by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id 6cCxscgbxzIg for <xdp-newbies@vger.kernel.org>;
+        Thu, 26 Mar 2020 14:35:47 +0100 (CET)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (BADWLRZ-SWMBX03.ads.mwn.de [IPv6:2001:4ca0:0:108::159])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX03", Issuer "BADWLRZ-SWMBX03" (not verified))
+        by postout2.mail.lrz.de (Postfix) with ESMTPS id 48p5bR2V6Vzyft
+        for <xdp-newbies@vger.kernel.org>; Thu, 26 Mar 2020 14:35:47 +0100 (CET)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Thu, 26 Mar 2020 14:35:47 +0100
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1913.010; Thu, 26 Mar 2020 14:35:47 +0100
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     Xdp <xdp-newbies@vger.kernel.org>
+Subject: Is there a way to process multiple shared umem sockets on same
+ RX-queue in parallel?
+Thread-Topic: Is there a way to process multiple shared umem sockets on same
+ RX-queue in parallel?
+Thread-Index: AQHWA3N007xG7v0DXEOrz9V9fCLzpg==
+Date:   Thu, 26 Mar 2020 13:35:47 +0000
+Message-ID: <c442671a3c7145a7b76b1f871e2b01cf@hm.edu>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2003:c6:4f25:4be0:801c:6db5:405:327c]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <018e8071725b48399141cc46b63641e1@hm.edu> <CAJ8uoz1Vh+zj6msumTNWgtZY6jdOeYgoyDBoizfna1dzhC465A@mail.gmail.com>
- <9616cd5986c74058b51ffd1eb3311b85@hm.edu> <CAJ8uoz1-Nub4RKembg5maQ4Cj1J+O90eR_PcP41yNHuq7pShaQ@mail.gmail.com>
- <35eed7a7481a44bc93e8e5f7e59d9e5a@hm.edu> <CAJ8uoz3D=nw_aD0+Kj9Mh_DivRBvse0+G0Mtfw+eR8UJdDT0jw@mail.gmail.com>
- <883111619d9e429fb5f1fb239afdb478@hm.edu> <CAJ8uoz2OZOrERz3D+L9fe-WhYAHOZOd_ZOzYjUTKwyZ1ic7AaA@mail.gmail.com>
- <b4e8bdfd96d8484d904b6b91ece81324@hm.edu>
-In-Reply-To: <b4e8bdfd96d8484d904b6b91ece81324@hm.edu>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Thu, 26 Mar 2020 13:48:19 +0100
-Message-ID: <CAJ8uoz2bPr6=2-amO209kuRU7o=JuzfXspn2WtCQ6NmRUYKh8w@mail.gmail.com>
-Subject: Re: Shared Umem and reducing ksoftirqd-Load
-To:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 1:30 PM Gaul, Maximilian <maximilian.gaul@hm.edu> w=
-rote:
->
-> On Wed, Mar 25, 2020 at 14:36 AM Karlsson, Magnus
-> magnus.karlsson@gmail.com> wrote:
->
-> > On Wed, Mar 25, 2020 at 1:40 PM Gaul, Maximilian <maximilian.gaul@hm.ed=
-u> wrote:
-> > >
-> > > On Wed, Mar 25, 2020 at 12:04 AM Karlsson, Magnus
-> > > magnus.karlsson@gmail.com> wrote:
-> > >
-> > > > On Wed, Mar 25, 2020 at 11:45 AM Gaul, Maximilian
-> > > > <maximilian.gaul@hm.edu> wrote:
-> > > > >
-> > > > > On Wed, Mar 25, 2020 at 11:24 AM Karlsson, Magnus
-> > > > > <magnus.karlsson@gmail.com> wrote:
-> > > > >
-> > > > > > On Wed, Mar 25, 2020 at 11:02 AM Gaul, Maximilian
-> > > > > > <maximilian.gaul@hm.edu> wrote:
-> > > > > > >
-> > > > > > > On Wed, Mar 25, 2020 at 10:41 AM Karlsson, Magnus
-> > > > > > > <magnus.karlsson@gmail.com> wrote:
-> > > > > > >
-> > > > > > > > On Wed, Mar 25, 2020 at 10:04 AM Gaul, Maximilian
-> > > > > > > > <maximilian.gaul@hm.edu> wrote:
-> > > > > > > > >
-> > > > > > > > > I am running a Multi-AF-XDP-Socket approach per RX-Queue =
-(using Shared Umem).
-> > > > > > > > >
-> > > > > > > > > Unfortunately I am noticing, that at around 650k pps, the=
- *ksoftirqd*-thread of that RX-Queue ramps up to 100% thus leading to packe=
-t loss.
-> > > > > > > > > I tried setting *XDP_USE_NEED_WAKEUP* on *xsk_socket_cfg.=
-bind_flags* but those bind_flags are only taken into account if *umem->refc=
-ount > 1* (libbpf/xsk.c - xsk_socket__create()).
-> > > > > > > > > As far as I understand this correctly, only the first soc=
-ket is able to set *XDP_USE_NEED_WAKEUP* because for all sockets after, *um=
-em->refcount* is going to be at least 2.
-> > > > > > > >
-> > > > > > > > Yes, the other sockets just inherit the settings of the fir=
-st one.
-> > > > > > > >
-> > > > > > > > Are you using the SKB mode? What is your packet size? Sound=
-s like a
-> > > > > > > > low number unless you have large packets and are using the =
-SKB mode.
-> > > > > > > >
-> > > > > > >
-> > > > > > > These are the flags I set right before calling `xsk_socket__c=
-reate`:
-> > > > > > >
-> > > > > > >         xsk_socket_cfg.xdp_flags =3D cfg->xdp_flags | XDP_FLA=
-GS_DRV_MODE | XDP_ZEROCOPY;
-> > > > > > >         xsk_socket_cfg.bind_flags =3D cfg->xsk_bind_flags | X=
-DP_USE_NEED_WAKEUP;
-> > > > > >
-> > > > > > XDP_ZEROCOPY is a bind flag not an XDP flag, so please move it =
-there.
-> > > > > > If you get an error when you have it set, it means that your se=
-tup
-> > > > > > does not support zero-copy for some reason. Check what kernel v=
-ersion
-> > > > > > you are using and the the driver you are using supports zero-co=
-py. I
-> > > > > > believe you need to use a queue id>=3D32 in the Mellanox driver=
- for it
-> > > > > > to work in zero-copy mode. Below 32, you will get copy mode.
-> > > > > >
-> > > > > > > Packet size is around 1492 bytes.
-> > > > > >
-> > > > > > Seems that you are using SKB mode then, not zero-copy.
-> > > > > >
-> > > > > > /Magnus
-> > > > > >
-> > > > >
-> > > > > Thank you for the hint. As you correctly said, I get an error if =
-I use *XDP_ZEROCOPY*. But as far as I understand, packet rates should be hi=
-gher in Driver-Mode even without zero-copy?
-> > > >
-> > > > Yes, I would expect that too.
-> > > >
-> > > > > I just updated to the latest driver- and firmware version:
-> > > > >
-> > > > >         $ sudo ethtool -i <if>
-> > > > >         driver: mlx5_core
-> > > > >         version: 5.0-0
-> > > > >         firmware-version: 16.27.1016 (MT_0000000012)
-> > > >
-> > > > What kernel version are you using? And you should use the driver fr=
-om
-> > > > that same kernel.
-> > > >
-> > >
-> > > I am using
-> > >
-> > >         $ uname -a
-> > >         Linux 5.4.0-4-amd64 #1 SMP Debian 5.4.19-1 (2020-02-13) x86_6=
-4 GNU/Linux
-> > >
-> > > At the moment, Mellanox only supports Debian until version 10.0 (http=
-s://www.mellanox.com/products/infiniband-drivers/linux/mlnx_ofed) which is =
-Kernel 4.19.
-> > > But because in Kernel 4.19, not all AF-XDP features are available, I =
-had to upgrade. I was not sure which Kernel-Version would be the minimum in=
- order to be able to use AF-XDP completely so I went with 5.4.
-> > > Installation was successfull  (with *--skip-distro-check*) so I thoug=
-ht this should work?
-> >
-> > You better contact somebody from Mellanox for this info. I do not
-> > know. But Mellanox has zero-copy support in kernel 5.4.
-> >
-> > > > > I actually have to correct myself: Incomming packets are 1442 byt=
-es.
-> > > > > Can you give me the link between packet size and whether the NIC =
-is running in SKB or DRV mode?
-> > > >
-> > > > Sorry, do not understand this. Could you please elaborate?
-> > > >
-> > >
-> > > You answered to my reply that packets are 1492 bytes "Seems that you =
-are using SKB mode then, not zero-copy." so because of this I thought there=
- is a relation between packet size and SKB mode?
-> >
-> > There is no relationship between SKB mode and packet size. They are
-> > orthogonal. Though there is a relationship between packet size and
-> > performance and of course SKB mode vs zero-copy mode and performance.
-> >
-> > > > > Mr. Brouer held a talk about (https://people.netfilter.org/hawk/p=
-resentations/driving-IT2017/driving-IT-2017_XDP_eBPF_technology_Jesper_Brou=
-er.pdf)   about XDP, mentioning in slide 11/27 that *mlx5 (v4.9)* has nativ=
-e XDP support.
-> > > >
-> > > > Yes, but only if you use queue id>=3D 32. What queue id are you bin=
-ding to?
-> > > >
-> > >
-> > > Usually it is queue 0 but I also tried queue 32 and queue 36 - but th=
-at didn't change anything on the behavior.
-> >
-> > It should make a difference, if I remember correctly, but somebody
-> > from Mellanox certainly knows better. Try sending a mail to Maxim who
-> > wrote the Mellanox driver support. Maxim Mikityanskiy
-> > <maximmi@mellanox.com>.
-> >
-> > /Magnus
-> >
->
-> Thank you!
-> Just one more question regarding *ksoftirqd*-load. This paper seems to ta=
-lk about the mentioned issue: http://vger.kernel.org/lpc_net2018_talks/lpc1=
-8_paper_af_xdp_perf-v2.pdf that *ksoftirqd* is producing high load. A state=
-d solution to this problem would be *busy polling*. I am not sure if *busy =
-polling* is something I have to assign via *setsockopt* in my userspace pro=
-gram or if this already taken care of by libbpf?
-> Nevertheless, I tried it like this:
->
->                 $ cat /boot/config-5.4.0-4-amd64 | grep "CONFIG_NET_RX_BU=
-SY_POLL"
->                 CONFIG_NET_RX_BUSY_POLL=3Dy
->
->                 $ sysctl net.core.busy_poll=3D50
->
-> and in my user-space program:
->
->                 int busy_poll_usec =3D 50;
->                 if(setsockopt(xsk_socket__fd(xsk_sockets[i]->xsk), SOL_SO=
-CKET, SO_BUSY_POLL, (char *)&busy_poll_usec, sizeof(busy_poll_usec)) < 0) {
->                         fprintf(stderr, "Failed to set `SO_BUSY_POLL`: %s=
-\n", strerror(errno));
->                         break;
->                 }
->
->                 /* some code inbetween */
->
->                 while(!global_exit) {
->                         const int ret =3D poll(fds, fd_count, 2);
->                         if (ret <=3D 0) {
->                                 continue;
->                         }
->
->                         for(int i =3D 0; i < fd_count; i++) {
->                                 struct xsk_socket_info *socket =3D xsk_so=
-ckets[i];
->                                 if(atomic_exchange(&socket->stats_sync.lo=
-ck, 1) =3D=3D 0) {
->                                         handle_receive_packets(socket);
->                                         atomic_fetch_xor(&socket->stats_s=
-ync.lock, 1); /* release socket-lock */
->                                 }
->                         }
->                 }
->
-> but this only has the effect that my userspace program is now at 50% load=
- (previously around 13%) with *ksoftirqd* still running at 100% (and even w=
-orse pps).
-> Is this the expected effect on what I did?
+*xdpsock_user.c* (https://github.com/torvalds/linux/blob/master/samples/bpf/xdpsock_user.c) implements multiple AF-XDP sockets on the same RX-Queue using shared Umem.
+The sockets are then processed in a for-loop like this (1:1 copy):
 
-Busy-polling will improve your latency (throughput might go either
-way) at the cost of higher CPU load. Note that busy-polling is NOT
-supported with AF_XDP. I sent out an RFC for this a year ago but ended
-up implementing something else (the need_wakeup flag) that solved the
-problem I had in in a better way. But it would still be beneficial to
-support busy-poll for AF_XDP, but I am not working on it or planning
-on doing it.
+		struct pollfd fds[MAX_SOCKS] = {};
+		int i, ret;
 
-/Magnus
+		for (i = 0; i < num_socks; i++) {
+			fds[i].fd = xsk_socket__fd(xsks[i]->xsk);
+			fds[i].events = POLLIN;
+		}
 
-> > > > /Magnus
-> > > >
-> > > > >
-> > > > > > > Just to make sure: Those 650k packets are arriving on the sam=
-e RX-Queue (even though this NIC has multiple RX-Queues I want to test maxi=
-mum bandwith for a single RX-Queue).
-> > > > > > >
-> > > > > > > > > I didn't observe a dramatic change as I've hoped to. Are =
-there some other ways to reduce interrupt load (user-space application and =
-ksoftirq are already running on different CPUs)?
-> > > > > > > >
-> > > > > > > > The need_wakeup flag has a big impact when you run the soft=
-irq and the
-> > > > > > > > application thread on the same core. When using two cores f=
-or this, it
-> > > > > > > > has less of an impact.
-> > > > > > > >
-> > > > > > > > /Magnus
-> > > > > > > >
-> > > > > > > > > NIC: Mellanox Technologies MT27800
-> > > > > > > > >
-> > > > > > > > > Best regards
-> > > > > > > > >
-> > > > > > > > > Max
-> > > > > > > > >
-> > > > > > >
-> > > > >
+		for (;;) {
+			if (opt_poll) {
+				ret = poll(fds, num_socks, opt_timeout);
+				if (ret <= 0)
+					continue;
+			}
+
+			for (i = 0; i < num_socks; i++)
+				rx_drop(xsks[i], fds);
+
+			if (benchmark_done)
+				break;
+		}
+
+This approach works fine in my implementation as well but I was wondering if it is possible to spawn a thread for every socket and let those threads process receiving packets in a parallel fashion.
+After processing is done (right before they go to sleep to wait for the next batch of packets), those threads are adding an entry to a message queue, instructing another thread (which is processing the queue) to free Umem-Fill-Queue and RX-Ring memory of that socket.
+I know that Umem is only single producer / single consumer so I went into the implementation with the mindset that it probably wouldn't work out - and it didn't. But now I am wondering whether this is not possible by design (this means that indeed every socket of a RX-Queue using shared umem has to be processed sequentially) or if I did something wrong.
+So this is how a thread processes incoming packets:
+
+		uint32_t idx_rx = 0;
+		const int rcvd = xsk_ring_cons__peek(&xsk_socket->rx, INT32_MAX, &idx_rx);
+		if (rcvd == 0) {
+			continue;
+		}
+
+		uint32_t idx_fq = 0;
+		const int ret = xsk_ring_prod__reserve(&xsk_socket->umem->fq, rcvd, &idx_fq);
+                /* continue checking if ret != rcvd ... */
+		if(ret == rcvd) {
+			for (uint32_t i = idx_rx; i < (idx_rx + rcvd); i++) {
+				const struct xdp_desc *desc = xsk_ring_cons__rx_desc(&xsk_socket->rx, i);
+				uint64_t addr = desc->addr;
+				const uint32_t len = desc->len;
+				const uint64_t orig = xsk_umem__extract_addr(addr);
+
+				addr = xsk_umem__add_offset_to_addr(addr);
+
+				const int hdr_size = process_packet(xsk_socket, addr, len);
+				*xsk_ring_prod__fill_addr(&xsk_socket->umem->fq, idx_fq++) = orig;
+				
+				xsk_socket->stats.rx_bytes += (len - hdr_size);
+			}
+
+			xsk_socket->stats.rx_packets += rcvd;
+
+			struct xsk_thread_msg msg;
+			msg.xsk_rx = &xsk_socket->rx;
+			msg.xsk_rx_rcvd = rcvd;
+			msg.xsk_prod_reserve_amnt = ret;
+			if(msgsnd(msg_queue_id, (void*)(&msg), sizeof(struct xsk_thread_msg), 0) < 0) {
+				fprintf(stderr, "Failed to add msg from xsk-socket: %s\n", strerror(errno));
+			}
+		
+		}
+
+and those messages are then received by another thread:
+
+		struct xsk_thread_msg msg;
+		while(!global_exit) {
+			memset(&msg, 0, sizeof(struct xsk_thread_msg));
+			if(msgrcv(msg_queue_id, (void*)(&msg), sizeof(struct xsk_thread_msg), 0, 0) == -1) {
+				fprintf(stderr, "Failed to receive message: %s\n", strerror(errno));
+			} else {
+				xsk_ring_cons__release(msg.xsk_rx, msg.xsk_rx_rcvd);
+				xsk_ring_prod__submit(&umem_info->fq, msg.xsk_prod_reserve_amnt);
+			}
+		}
+
+What I am observing is that it works for a few seconds or so and then packet loss gradually increases to 100% (e.g. sequence numbers don't match up) but the amount of received packets stays the same.
+
