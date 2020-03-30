@@ -2,155 +2,91 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90476193FD6
-	for <lists+xdp-newbies@lfdr.de>; Thu, 26 Mar 2020 14:35:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D47A1980C0
+	for <lists+xdp-newbies@lfdr.de>; Mon, 30 Mar 2020 18:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCZNfu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 26 Mar 2020 09:35:50 -0400
-Received: from postout2.mail.lrz.de ([129.187.255.138]:39891 "EHLO
-        postout2.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbgCZNfu (ORCPT
+        id S1730060AbgC3QQ4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 30 Mar 2020 12:16:56 -0400
+Received: from relay0141.mxlogin.com ([199.181.239.141]:44643 "EHLO
+        relay0141.mxlogin.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729431AbgC3QQ4 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:35:50 -0400
-Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
-        by postout2.mail.lrz.de (Postfix) with ESMTP id 48p5bR4BWpzymG
-        for <xdp-newbies@vger.kernel.org>; Thu, 26 Mar 2020 14:35:47 +0100 (CET)
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -0.584
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.584 tagged_above=-999 required=5
-        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
-        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
-        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
-        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
-        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
-        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
-        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
-        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_URL_HTTP=0.001,
-        LRZ_HAS_URL_HTTP_SINGLE=0.001, LRZ_HAS_X_ORIG_IP=0.001,
-        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
-        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
-        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
-Received: from postout2.mail.lrz.de ([127.0.0.1])
-        by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-        with LMTP id 6cCxscgbxzIg for <xdp-newbies@vger.kernel.org>;
-        Thu, 26 Mar 2020 14:35:47 +0100 (CET)
-Received: from BADWLRZ-SWMBX03.ads.mwn.de (BADWLRZ-SWMBX03.ads.mwn.de [IPv6:2001:4ca0:0:108::159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client CN "BADWLRZ-SWMBX03", Issuer "BADWLRZ-SWMBX03" (not verified))
-        by postout2.mail.lrz.de (Postfix) with ESMTPS id 48p5bR2V6Vzyft
-        for <xdp-newbies@vger.kernel.org>; Thu, 26 Mar 2020 14:35:47 +0100 (CET)
-Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
- BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 26 Mar 2020 14:35:47 +0100
-Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
- BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
- 15.01.1913.010; Thu, 26 Mar 2020 14:35:47 +0100
-From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-To:     Xdp <xdp-newbies@vger.kernel.org>
-Subject: Is there a way to process multiple shared umem sockets on same
- RX-queue in parallel?
-Thread-Topic: Is there a way to process multiple shared umem sockets on same
- RX-queue in parallel?
-Thread-Index: AQHWA3N007xG7v0DXEOrz9V9fCLzpg==
-Date:   Thu, 26 Mar 2020 13:35:47 +0000
-Message-ID: <c442671a3c7145a7b76b1f871e2b01cf@hm.edu>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Exchange-Organization-AuthAs: Internal
-X-MS-Exchange-Organization-AuthMechanism: 04
-X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2003:c6:4f25:4be0:801c:6db5:405:327c]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 12:16:56 -0400
+X-Greylist: delayed 301 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 12:16:56 EDT
+Received: from filter004.mxroute.com ([149.28.56.236] 149.28.56.236.vultr.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by relay0141.mxlogin.com (ZoneMTA) with ESMTPSA id 1712c36a4a40000766.001
+ for <xdp-newbies@vger.kernel.org>
+ (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
+ Mon, 30 Mar 2020 16:11:50 +0000
+X-Zone-Loop: 301d8b49c785929f38d8fccb3c2175100c12b189269e
+X-Originating-IP: [149.28.56.236]
+Received: from ocean.mxroute.com (ocean.mxroute.com [195.201.59.214])
+        by filter004.mxroute.com (Postfix) with ESMTPS id A816F3EDAB
+        for <xdp-newbies@vger.kernel.org>; Mon, 30 Mar 2020 16:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=84ZQ9H/H8nSkwKFgEPYC6+vZfadrqG2hjDD8shBfmRA=; b=Ijx8Brb4Zya7oG2dfX3mmcOHEc
+        Y7zw4jZjZY3Jsd7l/8XZbIePyhatiDBXHzLr3zLX3NspgdoGLBsVdOfIUhIDm5Rb6/HX4jxZ4WTuB
+        MRC661NgzFfqeD6umJS5FDsNlvIcdl2b0EmfcVXriOeS4yqwur0ZAmxM56HIB71olg2TUBdECZIfb
+        5LXrVSNWqX2Xt04Gm/czlojkKFv6LR4eZChy7dkoMoUK6fiIOahXkpF8Hpucw6F+u03K12s0NRqFt
+        NFCxxzzHaebkLhfuUFz+t+q+m8aVHePREEOscbaAjQsvtOAzaR1gXZLVthSMpxEGE5dxnef6DU1X0
+        XVA9Edpw==;
+To:     xdp-newbies@vger.kernel.org
+From:   Christian Deacon <gamemann@gflclan.com>
+Subject: Using AF_XDP To Modify Outgoing Packets
+Message-ID: <7902d2f1-1c21-f3e8-5035-352bba130d50@gflclan.com>
+Date:   Mon, 30 Mar 2020 11:11:49 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-OutGoing-Spam-Status: No, score=-10.0
+X-AuthUser: gamemann@gflclan.com
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-*xdpsock_user.c* (https://github.com/torvalds/linux/blob/master/samples/bpf/xdpsock_user.c) implements multiple AF-XDP sockets on the same RX-Queue using shared Umem.
-The sockets are then processed in a for-loop like this (1:1 copy):
+Hey everyone,
 
-		struct pollfd fds[MAX_SOCKS] = {};
-		int i, ret;
 
-		for (i = 0; i < num_socks; i++) {
-			fds[i].fd = xsk_socket__fd(xsks[i]->xsk);
-			fds[i].events = POLLIN;
-		}
+I am fairly new to XDP and AF_XDP programming. Therefore, I apologize if 
+this question sounds silly.
 
-		for (;;) {
-			if (opt_poll) {
-				ret = poll(fds, num_socks, opt_timeout);
-				if (ret <= 0)
-					continue;
-			}
 
-			for (i = 0; i < num_socks; i++)
-				rx_drop(xsks[i], fds);
+To my understanding, an XDP program cannot process outgoing packets 
+since it doesn't support the TX path. However, I read that AF_XDP 
+sockets support both receiving and transmitting packets inside the user 
+space while achieving zero-copy. I am trying to create a C program that 
+modifies outgoing packets on an interface and trying to do this the 
+fastest way possible. Unfortunately, I cannot use IPTables for this.
 
-			if (benchmark_done)
-				break;
-		}
 
-This approach works fine in my implementation as well but I was wondering if it is possible to spawn a thread for every socket and let those threads process receiving packets in a parallel fashion.
-After processing is done (right before they go to sleep to wait for the next batch of packets), those threads are adding an entry to a message queue, instructing another thread (which is processing the queue) to free Umem-Fill-Queue and RX-Ring memory of that socket.
-I know that Umem is only single producer / single consumer so I went into the implementation with the mindset that it probably wouldn't work out - and it didn't. But now I am wondering whether this is not possible by design (this means that indeed every socket of a RX-Queue using shared umem has to be processed sequentially) or if I did something wrong.
-So this is how a thread processes incoming packets:
+I wanted to know if there is any way to use AF_XDP sockets to modify 
+outgoing packets on an interface. I wasn't sure if the AF_XDP sockets 
+only support receiving traffic from the XDP program when using the 
+redirect function or not.
 
-		uint32_t idx_rx = 0;
-		const int rcvd = xsk_ring_cons__peek(&xsk_socket->rx, INT32_MAX, &idx_rx);
-		if (rcvd == 0) {
-			continue;
-		}
 
-		uint32_t idx_fq = 0;
-		const int ret = xsk_ring_prod__reserve(&xsk_socket->umem->fq, rcvd, &idx_fq);
-                /* continue checking if ret != rcvd ... */
-		if(ret == rcvd) {
-			for (uint32_t i = idx_rx; i < (idx_rx + rcvd); i++) {
-				const struct xdp_desc *desc = xsk_ring_cons__rx_desc(&xsk_socket->rx, i);
-				uint64_t addr = desc->addr;
-				const uint32_t len = desc->len;
-				const uint64_t orig = xsk_umem__extract_addr(addr);
+If this isn't possible, are there any plans to add TX path support into 
+XDP in the future? I'm also not sure what else I can do to achieve fast 
+packet processing for this. I looked into using standard AF_PACKET 
+sockets. However, since that makes a copy of the packet from the kernel, 
+I'd assume that's pretty slow and I'd have to find a way to block the 
+original packets (probably doing something with IPTables). I might also 
+look into DPDK, but I want to see if using AF_XDP sockets for outgoing 
+packet processing is possible first because it looks like it's going to 
+take a while to learn DPDK.
 
-				addr = xsk_umem__add_offset_to_addr(addr);
 
-				const int hdr_size = process_packet(xsk_socket, addr, len);
-				*xsk_ring_prod__fill_addr(&xsk_socket->umem->fq, idx_fq++) = orig;
-				
-				xsk_socket->stats.rx_bytes += (len - hdr_size);
-			}
+Any help is highly appreciated and thank you for your time!
 
-			xsk_socket->stats.rx_packets += rcvd;
 
-			struct xsk_thread_msg msg;
-			msg.xsk_rx = &xsk_socket->rx;
-			msg.xsk_rx_rcvd = rcvd;
-			msg.xsk_prod_reserve_amnt = ret;
-			if(msgsnd(msg_queue_id, (void*)(&msg), sizeof(struct xsk_thread_msg), 0) < 0) {
-				fprintf(stderr, "Failed to add msg from xsk-socket: %s\n", strerror(errno));
-			}
-		
-		}
-
-and those messages are then received by another thread:
-
-		struct xsk_thread_msg msg;
-		while(!global_exit) {
-			memset(&msg, 0, sizeof(struct xsk_thread_msg));
-			if(msgrcv(msg_queue_id, (void*)(&msg), sizeof(struct xsk_thread_msg), 0, 0) == -1) {
-				fprintf(stderr, "Failed to receive message: %s\n", strerror(errno));
-			} else {
-				xsk_ring_cons__release(msg.xsk_rx, msg.xsk_rx_rcvd);
-				xsk_ring_prod__submit(&umem_info->fq, msg.xsk_prod_reserve_amnt);
-			}
-		}
-
-What I am observing is that it works for a few seconds or so and then packet loss gradually increases to 100% (e.g. sequence numbers don't match up) but the amount of received packets stays the same.
 
