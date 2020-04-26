@@ -2,93 +2,115 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D971B87B9
-	for <lists+xdp-newbies@lfdr.de>; Sat, 25 Apr 2020 18:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 505C41B916C
+	for <lists+xdp-newbies@lfdr.de>; Sun, 26 Apr 2020 18:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgDYQfH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 25 Apr 2020 12:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbgDYQfG (ORCPT
+        id S1726146AbgDZQHY (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 26 Apr 2020 12:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725778AbgDZQHX (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 25 Apr 2020 12:35:06 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593D9C09B04D
-        for <xdp-newbies@vger.kernel.org>; Sat, 25 Apr 2020 09:35:06 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id g74so13535097qke.13
-        for <xdp-newbies@vger.kernel.org>; Sat, 25 Apr 2020 09:35:06 -0700 (PDT)
+        Sun, 26 Apr 2020 12:07:23 -0400
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC5DC061A0F
+        for <xdp-newbies@vger.kernel.org>; Sun, 26 Apr 2020 09:07:23 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id t12so3314995oot.2
+        for <xdp-newbies@vger.kernel.org>; Sun, 26 Apr 2020 09:07:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F3AkqRDNrvfoqt9vVhdrC+gQhSSUve3iT9LTMIhVR6g=;
-        b=J/B+MHE9ZNOVlFFopdb12d4Si9Ge6WUriookuAY97UQId+C3C1xJhkTdhFuIp/PVyI
-         9ymAjquEGnxeYrpbBEztrqqAo2kEFPeTAYOgp7qvRjSdCPW15n5Cra2txHv+zeqHYVzc
-         2hL7oQeNBz9PW84XL2j2LjJgyvITIfobpdXddWxLhGOpzyd854kFN0zftOrdJMkXRWOf
-         Fns/AU6RN4meQ6/flaDu7qU0x3zhsRUbEdcOzd467QiW3+VcbnJ/pXF+tSDU5p5fT1tk
-         fl79rxQIbfpn44Nm0a58PH0RIzZhFrXU3Y1cLCS+i4QISrEFdxGIkyP/FGfrlY/5A0V1
-         Y2sQ==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=whDN6kY62CGZ19sIAEVmRaM63t6zzMcR/tUPd9NfgF8=;
+        b=IBAX/U8s8FHE4BPu0LxoKwkoxHweGFe9rGIpUagk93xnshfsJa5XqZC+gW4cEHpvS4
+         /tzfAI2yYz4RCv0kuTSAAun5Ei3vlmO2M+KmIXfafolrg2D4HMq7eEIrVW5ANETMrV6I
+         RllfJgVUV67bDVNFz0Y4iMcUlO1Fy0HM6hpnnc2hrmx8hnVvegPrvbxgxUF4ju3+aWQM
+         QCIlgqVhx5YzwNKmrCjM5ifWZYwc/6t+I6uxgn0xRPITvJXFPbaHwfrBZ9s6EiW5R+sv
+         24HG0iPfcZM+s46uYG2qONuqaSH3uaIc31koaL9/n3mg+uOazuLBPZvm+LcapVVZZS4x
+         zlEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F3AkqRDNrvfoqt9vVhdrC+gQhSSUve3iT9LTMIhVR6g=;
-        b=f23I0CKddm6keAbelIBR1wz2mENKTEKZNQlAZNvIB26H/xrUMulk6za6wSywPBIwzc
-         sAmi9ICgLTgC4Hps15w0NpMl27N9QLD6vxk+IeK/UzwKTM1/XSqCmdn8vKeAetrghKra
-         BuDr/axsS79lMEbhDc6QztnbUHgHv2in47KdnWO9RE50yw834cxITt8n6H7f7p4M+CZ+
-         ICg0Fcf97pdy5et0qIxhQaymPxpZKdecrOgFzQRCznbaUqH7A+UT9y3rXuRRKdEaVIl7
-         5RvDrZI9gFd1eW+aVXQmdOjXASfXAmjAwnIKNa7n6dR/DBaHHGQXBnYsBvAbHzcCI7CG
-         Mw4Q==
-X-Gm-Message-State: AGi0PuYE3YB6pp4Ln+XWmnJyIbY7IDtPldqssyU8SlSyjPFcfoplDHoY
-        Uz0ae5rmgF8G5fJk1u5hTcXLnXAe
-X-Google-Smtp-Source: APiQypLlpztfmbcEG2czS1oKH+BBIam5B0We++NexxkSPuP4rHjFX+DONee8FL4iuKLFf1o3Gb0omg==
-X-Received: by 2002:a05:620a:2202:: with SMTP id m2mr14287731qkh.426.1587832505513;
-        Sat, 25 Apr 2020 09:35:05 -0700 (PDT)
-Received: from gmail.com (pool-74-104-133-20.bstnma.fios.verizon.net. [74.104.133.20])
-        by smtp.gmail.com with ESMTPSA id p202sm5953730qke.120.2020.04.25.09.35.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 25 Apr 2020 09:35:04 -0700 (PDT)
-Date:   Sat, 25 Apr 2020 12:34:58 -0400
-From:   Sowmini Varadhan <sowmini05@gmail.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Re: building eBPF
-Message-ID: <20200425163458.GB455@gmail.com>
-References: <20200425122225.GA455@gmail.com>
- <20200425145619.4405a50d@carbon>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=whDN6kY62CGZ19sIAEVmRaM63t6zzMcR/tUPd9NfgF8=;
+        b=DGD1IbtOUa1c7/nzR2gCo5ktg15CbVue8ZRB+OBh4nzc9/oA8YbE6RgOQDIMlnUX74
+         SDjviDBMSnS1OYGCst7aGiMgRBXRqyY+TLbCIeF4PtRHfUrVEBle6m6ARiZn5kLzVUlh
+         srt38kUZllRrdQdLZaPeX9s7+pUEjLxwIgmqpHxhIz2EhyBQ6Dk3P7hDzvdoQ05TqVTG
+         FB+EnokPYR2F7uaHuXt/hhomm8t/GQRrmRAD+tD+Htf5duteICDKZD7lKBY9nox2G6+k
+         wT78SCtbMjSzW03QRzwtE9IYxcywjZDARoxXh82UlhwN5VCuPs5XlfM4ERPMbc23fBF0
+         LHvw==
+X-Gm-Message-State: AGi0PubfT6atZ/ZJm6T8yM4E9v1lDBDfzU6uhBeCzoeqcxhoA9A4ruAr
+        jR1km/D5DMU2cpiSUbfWGrLihRVw4l0re/XgzH0oh+2i
+X-Google-Smtp-Source: APiQypKiAUtDCNLRpsnuNTJxC2D+BfakUgPXfUc3MGz6tWSEJVGFcw1Qfc9363Z/iPbO4xlR5urlNf2fBUf0OthxRh8=
+X-Received: by 2002:a4a:d355:: with SMTP id d21mr4576343oos.66.1587917242452;
+ Sun, 26 Apr 2020 09:07:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200425145619.4405a50d@carbon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Jesse DuMond <suttonshiredev@gmail.com>
+Date:   Sun, 26 Apr 2020 12:07:11 -0400
+Message-ID: <CAJEJvEW31-O9x-0WsipVqSf-kPy8HnWnB6gG2jeQTH5WWm2iqw@mail.gmail.com>
+Subject: Error creating a AF_XDP socket after deleting
+To:     xdp-newbies@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000002b810005a433cbab"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On (04/25/20 14:56), Jesper Dangaard Brouer wrote:
-> 
-> The kernel's samples/bpf/ should still builds with LLVM-9 (and lower).
-> Follow instructions in the README.rst file[1].
-> 
-> There are pre-build Debian and Ubuntu packages for LLVM-10 here:
->  https://apt.llvm.org/
+--0000000000002b810005a433cbab
+Content-Type: text/plain; charset="UTF-8"
 
-thanks that helped me install llvm-10
+Hi there,
 
-However, after all my adventures, I  end up with
-# ls /usr/bin/llc*
-/usr/bin/llc  /usr/bin/llc-10  /usr/bin/llc-5.0  /usr/bin/llc-6.0  /usr/bin/llc-7
-and the default points at 6.0 so I had to go and tweak Makefile
-to use clang-10 and llc-10
+I am writing some test code that tries  repeatedly to create a umem
+and socket and then deletes them both. I'm using the libbpf function
+xsk_umem__create/delete and xsk_socket__create/xsk_socket__delete. I
+am getting an EBUSY from xsk_socket__create when trying to create a
+socket after deleting a socket on the same interface and queue number.
+The attached program reproduces the error.
 
-After that, samples builds and runs (thanks for that hint!).
-But not selftests.  However, samples is good enough for my experiments,
-for now.
+I've traced the EBUSY error to this call to xdp_umem_assign_dev in the
+kernel: https://github.com/torvalds/linux/blob/v5.3/net/xdp/xsk.c#L500
+That call is made during the bind call in xsk_socket__create. As far
+as I can tell this error is because the work of xdp_umem_clear_dev is
+actually called asynchronously after xsk_socket__delete. Putting a
+sleep between xsk_socket__delete and xsk_socket__create makes this
+code succeed.
 
-> I suggest you start with the XDP-tutorial[2], it (still) works with older
-> LLVM versions: [2] https://github.com/xdp-project/xdp-tutorial
+Am I trying to do something that is not supposed to be supported?
 
-will do.  
+--0000000000002b810005a433cbab
+Content-Type: text/x-csrc; charset="US-ASCII"; name="test.c"
+Content-Disposition: attachment; filename="test.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k9h8dw8g0>
+X-Attachment-Id: f_k9h8dw8g0
 
---Sowmini
+LyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8KI2luY2x1ZGUgPGVycm5vLmg+
+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcu
+aD4KI2luY2x1ZGUgPHN5cy9tbWFuLmg+CiNpbmNsdWRlIDx1bmlzdGQuaD4KCiNpbmNsdWRlIDxi
+cGYvbGliYnBmLmg+CiNpbmNsdWRlIDxicGYveHNrLmg+CiNpbmNsdWRlIDxicGYvYnBmLmg+Cgpp
+bnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpCnsKCXZvaWQgKmJ1ZnM7CglzdHJ1Y3QgeHNr
+X3VtZW0gKnVtZW07CglzdHJ1Y3QgeHNrX3NvY2tldCAqc29ja2V0OwoJc3RydWN0IHhza19yaW5n
+X3Byb2QgZnE7CglzdHJ1Y3QgeHNrX3JpbmdfY29ucyBjcTsKCXN0cnVjdCB4c2tfcmluZ19wcm9k
+IHR4OwoJc3RydWN0IHhza19yaW5nX2NvbnMgcng7CglzdHJ1Y3QgeHNrX3VtZW1fY29uZmlnIHVj
+ZmcgPSB7CgkJLmZpbGxfc2l6ZSA9IDQsCgkJLmNvbXBfc2l6ZSA9IDQsCgkJLmZyYW1lX3NpemUg
+PSAyMDQ4LAoJCS5mcmFtZV9oZWFkcm9vbSA9IDAsCgkJLmZsYWdzID0gMAoJfTsKCXN0cnVjdCB4
+c2tfc29ja2V0X2NvbmZpZyBzY2ZnID0gewoJCS5yeF9zaXplID0gNCwKCQkudHhfc2l6ZSA9IDQs
+CgkJLmxpYmJwZl9mbGFncyA9IFhTS19MSUJCUEZfRkxBR1NfX0lOSElCSVRfUFJPR19MT0FELAoJ
+CS5iaW5kX2ZsYWdzID0gMCwKCQkueGRwX2ZsYWdzID0gMAoJfTsKCWludCByZXQ7CgoJYnVmcyA9
+IG1tYXAoTlVMTCwgNCAqIDIwNDgsCgkJICAgIFBST1RfUkVBRCB8IFBST1RfV1JJVEUsCgkJICAg
+IE1BUF9QUklWQVRFIHwgTUFQX0FOT05ZTU9VUywgLTEsIDApOwoJaWYgKGJ1ZnMgPT0gTUFQX0ZB
+SUxFRCkgewoJCXByaW50ZigiRVJST1I6IG1tYXAgZmFpbGVkXG4iKTsKCQlleGl0KEVYSVRfRkFJ
+TFVSRSk7Cgl9CgoJcmV0ID0geHNrX3VtZW1fX2NyZWF0ZSgmdW1lbSwgYnVmcywgNCoyMDQ4LCAm
+ZnEsICZjcSwgJnVjZmcpOwoJaWYgKHJldCkgewoJCXByaW50ZigiRVJST1I6IHhza191bWVtX19j
+cmVhdGUgZmFpbGVkOiAlZCAoJXMpXG4iLCAtcmV0LCBzdHJlcnJvcigtcmV0KSk7CgkJZXhpdCgx
+KTsKCX0KCgoJcmV0ID0geHNrX3NvY2tldF9fY3JlYXRlKCZzb2NrZXQsICJ0ZXN0IiwgMCwgdW1l
+bSwgJnJ4LCAmdHgsICZzY2ZnKTsKCWlmIChyZXQpIHsKCQlwcmludGYoIkVSUk9SOiB4c2tfc29j
+a2V0X19jcmVhdGUgZmFpbGVkOiAlZCAoJXMpXG4iLCByZXQsIHN0cmVycm9yKC1yZXQpKTsKCQll
+eGl0KDEpOwoJfQoKCXhza19zb2NrZXRfX2RlbGV0ZShzb2NrZXQpOwoJeHNrX3VtZW1fX2RlbGV0
+ZSh1bWVtKTsKCS8vc2xlZXAoMSk7CglyZXQgPSB4c2tfdW1lbV9fY3JlYXRlKCZ1bWVtLCBidWZz
+LCA0KjIwNDgsICZmcSwgJmNxLCAmdWNmZyk7CglpZiAocmV0KSB7CgkJcHJpbnRmKCJFUlJPUjog
+c2Vjb25kIHhza191bWVtX19jcmVhdGUgZmFpbGVkOiAlZCAoJXMpXG4iLCAtcmV0LCBzdHJlcnJv
+cigtcmV0KSk7CgkJZXhpdCgxKTsKCX0KCgoJcmV0ID0geHNrX3NvY2tldF9fY3JlYXRlKCZzb2Nr
+ZXQsICJ0ZXN0IiwgMCwgdW1lbSwgJnJ4LCAmdHgsICZzY2ZnKTsKCWlmIChyZXQpIHsKCQlwcmlu
+dGYoIkVSUk9SOiBzZWNvbmQgeHNrX3NvY2tldF9fY3JlYXRlIGZhaWxlZDogJWQgKCVzKVxuIiwg
+cmV0LCBzdHJlcnJvcigtcmV0KSk7CgkJZXhpdCgxKTsKCX0KCglyZXR1cm4gMDsKfQo=
+--0000000000002b810005a433cbab--
