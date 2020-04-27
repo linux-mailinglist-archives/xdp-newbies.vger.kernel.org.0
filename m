@@ -2,77 +2,101 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F8911B97CB
-	for <lists+xdp-newbies@lfdr.de>; Mon, 27 Apr 2020 08:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1035D1BA0B7
+	for <lists+xdp-newbies@lfdr.de>; Mon, 27 Apr 2020 12:03:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgD0GxO (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 27 Apr 2020 02:53:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:9165 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbgD0GxO (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 27 Apr 2020 02:53:14 -0400
-IronPort-SDR: Sbz+zVz6nIC7GKMYJWKWPyULKc1M4JfSxsn2Gr0VAj2Fzg0qGlOAx8Gx8k/+eKisO0jcS70vXD
- KzC+KMjzKcMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2020 23:53:13 -0700
-IronPort-SDR: VSprQeKRlealBeZxewc4UqK2keFnjAtL5rS3moRhKtovOATPcEwYTaZHV4tR2WZALtTF9dM67u
- SmZ/VBY4lvTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,323,1583222400"; 
-   d="scan'208";a="404153448"
-Received: from ranger.igk.intel.com ([10.102.21.164])
-  by orsmga004.jf.intel.com with ESMTP; 26 Apr 2020 23:53:12 -0700
-Date:   Mon, 27 Apr 2020 08:50:29 +0200
-From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Jesse DuMond <suttonshiredev@gmail.com>,
-        Xdp <xdp-newbies@vger.kernel.org>
-Subject: Re: Error creating a AF_XDP socket after deleting
-Message-ID: <20200427065029.GA19189@ranger.igk.intel.com>
-References: <CAJEJvEW31-O9x-0WsipVqSf-kPy8HnWnB6gG2jeQTH5WWm2iqw@mail.gmail.com>
- <CAJ8uoz0mcu=6_Czw-Y=v-MgRcCRxspkPfFJ4SaQamE-6jCwfkQ@mail.gmail.com>
+        id S1726721AbgD0KDt (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 27 Apr 2020 06:03:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22614 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726243AbgD0KDs (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 27 Apr 2020 06:03:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587981827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JhzniwgNhTYmgURhNwjyH3hxTWsQ6s8FrNmCTHSo5Zk=;
+        b=MBjgmSCzHK/YDrKk67en0tr2EgJmPIeA2gdq4EH0ORob1mizPyY9gQxytbfqse77LcASQ2
+        jv5okc6acQdAC6fWTkFVW/fuA8xDpj9LOXag2vzIbpIaRmidBdgIUlHII6b2qDK9OcFQ4P
+        2nJTxO1JRPJZ7k/QuiKo+X4M0BpJb/A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-420-Mc0A4ENMM_ObfRobTW9OGg-1; Mon, 27 Apr 2020 06:03:43 -0400
+X-MC-Unique: Mc0A4ENMM_ObfRobTW9OGg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C9B9BFC1;
+        Mon, 27 Apr 2020 10:03:42 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 062AF60C84;
+        Mon, 27 Apr 2020 10:03:35 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 12:03:33 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Sowmini Varadhan <sowmini05@gmail.com>
+Cc:     brouer@redhat.com,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Subject: Re: building eBPF
+Message-ID: <20200427120333.7e6cedfc@carbon>
+In-Reply-To: <20200427002027.GE488@gmail.com>
+References: <20200425122225.GA455@gmail.com>
+        <20200425145619.4405a50d@carbon>
+        <20200427002027.GE488@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ8uoz0mcu=6_Czw-Y=v-MgRcCRxspkPfFJ4SaQamE-6jCwfkQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 08:38:03PM +0200, Magnus Karlsson wrote:
-> On Sun, Apr 26, 2020 at 6:08 PM Jesse DuMond <suttonshiredev@gmail.com> wrote:
-> >
-> > Hi there,
-> >
-> > I am writing some test code that tries  repeatedly to create a umem
-> > and socket and then deletes them both. I'm using the libbpf function
-> > xsk_umem__create/delete and xsk_socket__create/xsk_socket__delete. I
-> > am getting an EBUSY from xsk_socket__create when trying to create a
-> > socket after deleting a socket on the same interface and queue number.
-> > The attached program reproduces the error.
-> >
-> > I've traced the EBUSY error to this call to xdp_umem_assign_dev in the
-> > kernel: https://github.com/torvalds/linux/blob/v5.3/net/xdp/xsk.c#L500
-> > That call is made during the bind call in xsk_socket__create. As far
-> > as I can tell this error is because the work of xdp_umem_clear_dev is
-> > actually called asynchronously after xsk_socket__delete. Putting a
-> > sleep between xsk_socket__delete and xsk_socket__create makes this
-> > code succeed.
-> >
-> > Am I trying to do something that is not supposed to be supported?
-> 
-> No, you are doing everything correctly. The tear down of a socket is
-> unfortunately asynchronous due to legacy reasons that are not true
-> anymore. We do have a item in the backlog to make this synchronous,
-> but have not gotten around to it yet. So sorry, we have to live with
-> this for a while more.
+On Sun, 26 Apr 2020 20:20:27 -0400
+Sowmini Varadhan <sowmini05@gmail.com> wrote:
 
-For now I guess that in case of EBUSY the application can just repeat the
-call to xsk_socket__create?
+> With the latest iproute2 (built from master, 'ip -V' reports
+> iproute2-ss200330) when I try to run tc_l2_redirect.sh
+> I get errors like the following. What am I missing?
 
+The iproute2 BPF-loader does not support BTF.  I think upstream agrees
+that it would be too much work to add (and maintain) it, so the current
+plan[1] is to convert iproute2 to use libbpf instead.
+
+Also notice that BPF-map layout is not compatible with libbpf.  Thus,
+yet another hint not to use iproute2 to load XDP programs. (Toke have
+done some initial work with libbpf maps, that will allow us AFAIK to be
+backward compatible when converting iproute2 to libbpf).
+
+Why do you want to use 'tc' to load XDP?
+
+
+The XDP-tutorial[2] shows how to use libbpf from your C-programs, and
+XDP-tools[3] contains a xdp-loader that you can use instead.
+
+[1] https://xdp-project.net/#Port-iproute2-to-libbpf
+[2] https://github.com/xdp-project/xdp-tutorial
+[3] https://github.com/xdp-project/xdp-tools/tree/master/xdp-loader
+
+
+> (full transcript of output from run is in the run.out attachment)
 > 
-> /Magnus
+>   :
+> + tc filter add dev ve2 ingress bpf da obj ./tc_l2_redirect_kern.o sec l2_to_iptun_ingress_forward
+> 
+> BTF debug data section '.BTF' rejected: Invalid argument (22)!
+>  - Length:       3554
+
+I actually think this is only a warning, and the program is actually
+loaded...
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
