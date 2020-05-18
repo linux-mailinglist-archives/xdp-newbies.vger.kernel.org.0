@@ -2,160 +2,192 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB9B1D73BD
-	for <lists+xdp-newbies@lfdr.de>; Mon, 18 May 2020 11:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C3C71D796C
+	for <lists+xdp-newbies@lfdr.de>; Mon, 18 May 2020 15:14:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbgERJRO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Mon, 18 May 2020 05:17:14 -0400
-Received: from postout1.mail.lrz.de ([129.187.255.137]:38999 "EHLO
-        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgERJRO (ORCPT
+        id S1726775AbgERNOb (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 18 May 2020 09:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgERNOa (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 18 May 2020 05:17:14 -0400
-Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
-        by postout1.mail.lrz.de (Postfix) with ESMTP id 49QYLc0073zyTC;
-        Mon, 18 May 2020 11:17:11 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
-X-Spam-Flag: NO
-X-Spam-Score: -0.585
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.585 tagged_above=-999 required=5
-        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
-        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
-        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
-        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
-        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
-        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
-        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
-        LRZ_HAS_IN_REPLY_TO=0.001, LRZ_HAS_THREAD_INDEX=0.001,
-        LRZ_HAS_X_ORIG_IP=0.001, LRZ_MSGID_HL32=0.001,
-        LRZ_RCVD_BADWLRZ_EXCH=0.001, LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5,
-        RDNS_NONE=0.793, SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
-Received: from postout1.mail.lrz.de ([127.0.0.1])
-        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-        with LMTP id p1LUhxi2PGEx; Mon, 18 May 2020 11:17:11 +0200 (CEST)
-Received: from BADWLRZ-SWMBB04.ads.mwn.de (BADWLRZ-SWMBB04.ads.mwn.de [IPv6:2001:4ca0:0:108::155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client CN "BADWLRZ-SWMBB04", Issuer "BADWLRZ-SWMBB04" (not verified))
-        by postout1.mail.lrz.de (Postfix) with ESMTPS id 49QYLb5Ms4zyRf;
-        Mon, 18 May 2020 11:17:11 +0200 (CEST)
-Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
- BADWLRZ-SWMBB04.ads.mwn.de (2001:4ca0:0:108::155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Mon, 18 May 2020 11:17:06 +0200
-Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
- BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
- 15.01.1979.003; Mon, 18 May 2020 11:17:06 +0200
-From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-CC:     Xdp <xdp-newbies@vger.kernel.org>
-Subject: AW: How does the Kernel decide which Umem frame to choose for the
- next packet?
-Thread-Topic: How does the Kernel decide which Umem frame to choose for the
- next packet?
-Thread-Index: AQHWLO9U7O2WHQ+3+k6Y+F2inJ0qdqitZ4+AgAAh0gU=
-Date:   Mon, 18 May 2020 09:17:06 +0000
-Message-ID: <0f2212ea98c74001b5c0282bfb6718d7@hm.edu>
-References: <ba88e0ff11b940fe8855a0dd43c947ae@hm.edu>,<CAJ8uoz1wQcCN6N_NPQhG5OFOyBp-a2Mqwh+nqeTGYqOeL_dCLw@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1wQcCN6N_NPQhG5OFOyBp-a2Mqwh+nqeTGYqOeL_dCLw@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Exchange-Organization-AuthAs: Internal
-X-MS-Exchange-Organization-AuthMechanism: 04
-X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [79.201.59.10]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 18 May 2020 09:14:30 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F41C061A0C
+        for <xdp-newbies@vger.kernel.org>; Mon, 18 May 2020 06:14:30 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id d7so904475vsh.0
+        for <xdp-newbies@vger.kernel.org>; Mon, 18 May 2020 06:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TSF6D+0GUqTXmjb7A1m0v4biH0PuniPwU3xOo+n208I=;
+        b=N0nIIfwjVaNmjQlnEgFiq74PxTyvKBV+91U6192JQKhRvqITX3GKSwLrc3GzDidmCU
+         MOeQomv+aJ1xCcFBZSknG1dmb60pYxUq5+27BOoMaqBX7isfzSh6sTTMC4580JKvwKuD
+         XGBi/Ojho6O2p0mAvY7XLcTvfiDYTUH9vV/RLuWtNHzq4Y5zuzS5T85G9G69IMSlpG9p
+         2z0tLudjTulyv228q07lGNIa/dCp5HlLzVXF1m7xmFQkBD6HRUkS5cc34sE8iE0wu4QS
+         6802GAMsyL2/PI1jABmHfjQbmmSevfPqTX3Pv9ipF7kRQ+rgp/M/7832Un9lS9ykeF3Q
+         OFEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TSF6D+0GUqTXmjb7A1m0v4biH0PuniPwU3xOo+n208I=;
+        b=IJtElAr1X7jyfkgEYZDYPnj6tXnzrxEVxJL3exapmq06t/X9XzAOBl8LtAICWGdjcc
+         VsTT5XnFvBUGx8W/FeUCUFVHjTkKvtVGN6ZizVJ38bAITWmT+k/LhDyKrrQFfZx45fTb
+         CKg5JY89aRoQuo4XUidvM9z+cQ5V7B3VVdrMQGT13a+mdoVc30j4S+ougBEX5Kebe/uB
+         UpO29kkkBRYCTb13JulJ2NuauEQ1tWJWEH99TAqQ3QLVJitGKU4Zy2rUYjvaxdEuRFkG
+         /Fva7FOKGmcM7QhkPWULofQEzX7J3u0mfsSYpJvwWvwfHU14OCs9T0xgd0Oi3w9f1Q4q
+         JY4Q==
+X-Gm-Message-State: AOAM533aMCTgErHwceZhA9uCwxD/HBpqjcicRF8kgQ+s6eLpqEkwTfCL
+        Q5OQtg3fsQ2J0bqi8DQWpGLusjr9+IdCq1y5vx9IdpH9Pi8=
+X-Google-Smtp-Source: ABdhPJwPq867bbpJQqUG+wnZgyODtJirQojGbHDVQD6d6jxbLxG3XqaHde+m5YeOJcs10MML/EWaruDE2BfUyB158RA=
+X-Received: by 2002:a67:ed51:: with SMTP id m17mr11023961vsp.158.1589807669854;
+ Mon, 18 May 2020 06:14:29 -0700 (PDT)
 MIME-Version: 1.0
+References: <ba88e0ff11b940fe8855a0dd43c947ae@hm.edu> <CAJ8uoz1wQcCN6N_NPQhG5OFOyBp-a2Mqwh+nqeTGYqOeL_dCLw@mail.gmail.com>
+ <0f2212ea98c74001b5c0282bfb6718d7@hm.edu>
+In-Reply-To: <0f2212ea98c74001b5c0282bfb6718d7@hm.edu>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Mon, 18 May 2020 15:14:18 +0200
+Message-ID: <CAJ8uoz33iGMze_Au6RQDqzsM8Po_E20ZxSxT21TFCwJwkKdW1g@mail.gmail.com>
+Subject: Re: How does the Kernel decide which Umem frame to choose for the
+ next packet?
+To:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+Cc:     Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-> User-space decides this by what frames it enters into the fill ring.
-> Kernel-space uses the frames in order from that ring.
-> 
-> /Magnus
+On Mon, May 18, 2020 at 11:17 AM Gaul, Maximilian
+<maximilian.gaul@hm.edu> wrote:
+>
+> > User-space decides this by what frames it enters into the fill ring.
+> > Kernel-space uses the frames in order from that ring.
+> >
+> > /Magnus
+>
+> Thank you for your reply Magnus,
+>
+> I am sorry to ask again but I am not so sure when this happens.
+> So I first check my socket RX-ring for new packets:
+>
+>                 xsk_ring_cons__peek(&xsk_socket->rx, 1024, &idx_rx)
+>
+> which looks like this:
+>
+>                 static inline size_t xsk_ring_cons__peek(struct xsk_ring_=
+cons *cons,
+>                                                          size_t nb, __u32=
+ *idx)
+>                 {
+>                         size_t entries =3D xsk_cons_nb_avail(cons, nb);
+>
+>                         if (entries > 0) {
+>                                 /* Make sure we do not speculatively read=
+ the data before
+>                                  * we have received the packet buffers fr=
+om the ring.
+>                                  */
+>                                 libbpf_smp_rmb();
+>
+>                                 *idx =3D cons->cached_cons;
+>                                 cons->cached_cons +=3D entries;
+>                         }
+>
+>                         return entries;
+>                 }
+>
+> where `idx_rx` is the starting position of descriptors for the new packet=
+s in the RX-ring.
+>
+> My first question here is: How can there already be descriptors of packet=
+s in my RX-ring if I didn't enter any frames into the fill ring of the umem=
+ yet?
+> So I assume libbpf did this for me already?
 
-Thank you for your reply Magnus,
+Yes, that is correct.
 
-I am sorry to ask again but I am not so sure when this happens.
-So I first check my socket RX-ring for new packets:
+> After this call I know how many packets are waiting. So I reserve exactly=
+ as many Umem frames:
+>
+>                 xsk_ring_prod__reserve(&umem_info->fq, rx_rcvd_amnt, &idx=
+_fq);
+>
+> which looks like this:
+>
+>                 static inline size_t xsk_ring_prod__reserve(struct xsk_ri=
+ng_prod *prod,
+>                                                                 size_t nb=
+, __u32 *idx)
+>                 {
+>                         if (xsk_prod_nb_free(prod, nb) < nb)
+>                                 return 0;
+>
+>                         *idx =3D prod->cached_prod;
+>                         prod->cached_prod +=3D nb;
+>
+>                         return nb;
+>                 }
+>
+> But what am I exactly reserving here? How can I reserve anything from the=
+ Umem without telling it the RX-ring of my socket?
 
-		xsk_ring_cons__peek(&xsk_socket->rx, 1024, &idx_rx)
+You are reserving descriptor slots in a producer ring.
 
-which looks like this:
+> After  this, I extract the RX-ring packet descriptors, starting at `idx_r=
+x`:
+>
+>                 const struct xdp_desc *desc =3D xsk_ring_cons__rx_desc(&x=
+sk_socket->rx, idx_rx + i);
+>
+> I am also not entirely certain with the zero-copy aspect of AF-XDP. As fa=
+r as I know the NIC writes incoming packets via DMA directly into system me=
+mory. But this time system memory means the Umem area - right? Where with n=
+on-zero-copy this would be any position in memory and the Kernel first has =
+to copy the packets into the Umem area?
 
-		static inline size_t xsk_ring_cons__peek(struct xsk_ring_cons *cons,
-							 size_t nb, __u32 *idx)
-		{
-			size_t entries = xsk_cons_nb_avail(cons, nb);
+In zero-copy mode, the NIC DMA:s the packet straight into the umem, so
+they are immediately seen by the user space process.
 
-			if (entries > 0) {
-				/* Make sure we do not speculatively read the data before
-				 * we have received the packet buffers from the ring.
-				 */
-				libbpf_smp_rmb();
+> I am also a bit confused what the size of a RX-queue means in this contex=
+t. Assuming the output of ethtool:
+>
+>                 $ ethtool -g eth20
+>                 Ring parameters for eth20:
+>                 Pre-set maximums:
+>                 RX:             8192
+>                 RX Mini:        0
+>                 RX Jumbo:       0
+>                 TX:             8192
+>                 Current hardware settings:
+>                 RX:             1024
+>                 RX Mini:        0
+>                 RX Jumbo:       0
+>                 TX:             1024
+>
+> Does this mean that at the moment my NIC can store 1024 incoming packets =
+inside its own memory?
 
-				*idx = cons->cached_cons;
-				cons->cached_cons += entries;
-			}
+The NIC does not have its own memory. This just means that their can
+be 1024 packets that will be processed by the NIC or have been
+processed by the NIC but not handled by the driver. Nothing you need
+to care about unless you are performance optimizing, or writing a
+driver of course :-).
 
-			return entries;
-		}
+> So there is no connection between the RX-queue size of the NIC and the Um=
+em area?
 
-where `idx_rx` is the starting position of descriptors for the new packets in the RX-ring.
+Correct.
 
-My first question here is: How can there already be descriptors of packets in my RX-ring if I didn't enter any frames into the fill ring of the umem yet?
-So I assume libbpf did this for me already?
+/Magnus
 
-After this call I know how many packets are waiting. So I reserve exactly as many Umem frames:
-
-		xsk_ring_prod__reserve(&umem_info->fq, rx_rcvd_amnt, &idx_fq);
-
-which looks like this:
-
-		static inline size_t xsk_ring_prod__reserve(struct xsk_ring_prod *prod,
-								size_t nb, __u32 *idx)
-		{
-			if (xsk_prod_nb_free(prod, nb) < nb)
-				return 0;
-
-			*idx = prod->cached_prod;
-			prod->cached_prod += nb;
-
-			return nb;
-		}
-
-But what am I exactly reserving here? How can I reserve anything from the Umem without telling it the RX-ring of my socket?
-
-After  this, I extract the RX-ring packet descriptors, starting at `idx_rx`:
-
-		const struct xdp_desc *desc = xsk_ring_cons__rx_desc(&xsk_socket->rx, idx_rx + i);
-
-I am also not entirely certain with the zero-copy aspect of AF-XDP. As far as I know the NIC writes incoming packets via DMA directly into system memory. But this time system memory means the Umem area - right? Where with non-zero-copy this would be any position in memory and the Kernel first has to copy the packets into the Umem area?
-
-I am also a bit confused what the size of a RX-queue means in this context. Assuming the output of ethtool:
-
-		$ ethtool -g eth20
-		Ring parameters for eth20:
-		Pre-set maximums:
-		RX:             8192
-		RX Mini:        0
-		RX Jumbo:       0
-		TX:             8192
-		Current hardware settings:
-		RX:             1024
-		RX Mini:        0
-		RX Jumbo:       0
-		TX:             1024
-
-Does this mean that at the moment my NIC can store 1024 incoming packets inside its own memory? So there is no connection between the RX-queue size of the NIC and the Umem area?
-
-Sorry for this wall of text. Maybe you can answer a few of my questions, I hope they are not too confusing.
-
-Thank you so much
-
-Max
+> Sorry for this wall of text. Maybe you can answer a few of my questions, =
+I hope they are not too confusing.
+>
+> Thank you so much
+>
+> Max
