@@ -2,93 +2,168 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5C71D846D
-	for <lists+xdp-newbies@lfdr.de>; Mon, 18 May 2020 20:13:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1304D1DEB4F
+	for <lists+xdp-newbies@lfdr.de>; Fri, 22 May 2020 17:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732490AbgERSCR (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 18 May 2020 14:02:17 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24716 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731181AbgERSCQ (ORCPT
+        id S1730632AbgEVO7v (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 22 May 2020 10:59:51 -0400
+Received: from relay0196.mxlogin.com ([199.181.239.196]:36353 "EHLO
+        relay0196.mxlogin.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730019AbgEVOuH (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 18 May 2020 14:02:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589824934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YWsnl4IY0e1jB9VkIGxF4j2ofW7aeycItCRFtD3Fd3k=;
-        b=JcVwy8qwHrkpaAKR2gNljoVTBrgbS3gYmUbf7Nj7vQ7zGbBNflK3j+Ih1gJpAZ4JLoNadm
-        0b3SMDAA7APCYrjvZkJRkGbFKcVoObx7zvTne0k2+nF6YqPGEPUvQ6MVFljP5xu4WVtvN/
-        83y+X9eGdMpmeaPjVdz3BqNq8DZhg4g=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-15l7TxenN0-zwCNzf8ziRw-1; Mon, 18 May 2020 14:02:12 -0400
-X-MC-Unique: 15l7TxenN0-zwCNzf8ziRw-1
-Received: by mail-lf1-f71.google.com with SMTP id r143so3906721lff.13
-        for <xdp-newbies@vger.kernel.org>; Mon, 18 May 2020 11:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=YWsnl4IY0e1jB9VkIGxF4j2ofW7aeycItCRFtD3Fd3k=;
-        b=WnQl1yYn2U5/kaX1dVnvVbTRIEE8h33xYx6xr3p0LAkazIHnezQu79emYGezWZyEqZ
-         VZgM7XYvRpJSzFj8HqdDr6T4cJfl6sDYl0dNQlULdRwZxySr9M+52fTSnuLMjzKLKwxv
-         QJb02vu2UeP/J6wyO1Izj+Hky9Z3+j9IcHueiEYKRKG+0ar7qjPP0/MpvNNOs9CWpCq/
-         57K3AXnqXbqhS7ByAXAKtxkn2kRKLfWIze3zfl9OWFm9ulDSPr0mKN21P/ZAtB0I1Sji
-         HWQ1iiJHPJM73Wq/98ED3C2AfqHgWNr8vvpNnk+lH6dCmQ0HoHOOIhOudotDGwTgbDeT
-         VlVw==
-X-Gm-Message-State: AOAM5336Qk6hsdE+ZnFPfexsHHkcvMshDIBld92OY4E1q+BWTQL+aKFQ
-        f8csA13CRwqYoC0/bXGIwErFgIL7wxhdmxBzY/ilbf5q0QCQ/d2ERwAG0J0il3raGK4oQwZkZqS
-        9YEu4ZuwZ7eoGyrzP6TOgmgk=
-X-Received: by 2002:a2e:9ada:: with SMTP id p26mr11623265ljj.14.1589824930229;
-        Mon, 18 May 2020 11:02:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxbd0sn5Ev8zaAXRshv3R8fGFiwP4HXVCqMjTaaZT8pwTP3tEp2aUssvQCcN+KT0mGJOpr1fA==
-X-Received: by 2002:a2e:9ada:: with SMTP id p26mr11623256ljj.14.1589824929987;
-        Mon, 18 May 2020 11:02:09 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id u8sm7533039lff.38.2020.05.18.11.02.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 11:02:09 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BEB08181510; Mon, 18 May 2020 20:02:08 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     "Main\, George" <mainge@rose-hulman.edu>,
-        "xdp-newbies\@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Re: XDP_PASS and XDP_REDIRECT
-In-Reply-To: <DM6PR18MB2475DD12FB5A8D747CA6ABEF9CB80@DM6PR18MB2475.namprd18.prod.outlook.com>
-References: <DM6PR18MB2475DD12FB5A8D747CA6ABEF9CB80@DM6PR18MB2475.namprd18.prod.outlook.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 18 May 2020 20:02:08 +0200
-Message-ID: <87eerhnmu7.fsf@toke.dk>
+        Fri, 22 May 2020 10:50:07 -0400
+Received: from filter003.mxroute.com ([168.235.111.26] 168-235-111-26.cloud.ramnode.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by relay0196.mxlogin.com (ZoneMTA) with ESMTPSA id 1723cdcce1700054f2.001
+ for <xdp-newbies@vger.kernel.org>
+ (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
+ Fri, 22 May 2020 14:50:03 +0000
+X-Zone-Loop: 49fcfef24020d19789711ebe6f286aded0d547c545bd
+X-Originating-IP: [168.235.111.26]
+Received: from ocean.mxroute.com (ocean.mxroute.com [195.201.59.214])
+        by filter003.mxroute.com (Postfix) with ESMTPS id 889EF60028
+        for <xdp-newbies@vger.kernel.org>; Fri, 22 May 2020 14:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dvAaAux3OAaemrol1qmm/+Dz8L7AcQzqNfKOwFt85ys=; b=JPE16S47eNV9GPNU2JFUw07brl
+        AjwF5Q1SN0LywpQlrjkxhYpKtTjsJVdh6mjBJpgWnt4D/6bPw7+cBN0HAonhEdYEnlqzd4pCOiBhv
+        CjUNskZoYPNEn+6gNFHAbx/9R8RQBbrMpQfp+gSygKD6QRMu3TFb2vWRnqCV7urq6Gn3JxDvC9hjo
+        gVRIOKk2ocSEoxG9lhoEo4zOKDVnmanp3CBaXJsQIVUeLhqx5nflA4JW8Hs0+V0uiFDERtUzDDBTr
+        AajJbRlUogWVmwG6WiKzjddDpJxGbw9iqS//v5XWV2cc2WoS2Fg3aWlNvQc8EPws9ITEca/4cinLp
+        8DDQflJg==;
+Subject: Re: XDP Software Issue - Payload Matching
+To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        xdp-newbies@vger.kernel.org
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>
+References: <9f91026d-e3da-ff7c-b2dd-a4a795e6975b@gflclan.com>
+ <878shyg3e9.fsf@toke.dk> <bbf21c58-09b3-b80f-11ab-548b229b9bdb@gflclan.com>
+ <87ftc5ut0q.fsf@toke.dk> <edbf300d-a687-7652-d702-d58be09fd541@gflclan.com>
+ <874ksjuca6.fsf@toke.dk>
+From:   Christian Deacon <gamemann@gflclan.com>
+Message-ID: <a8acdb19-2d7d-43d6-67a7-3ad926ae27c4@gflclan.com>
+Date:   Fri, 22 May 2020 09:49:56 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <874ksjuca6.fsf@toke.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-OutGoing-Spam-Status: No, score=-10.0
+X-AuthUser: gamemann@gflclan.com
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-"Main, George" <mainge@rose-hulman.edu> writes:
+Hey Toke,
 
-> Hello All,
+I apologize for the delay on this. I've been working on a couple other 
+XDP/BPF projects recently.
+
+Thank you for the information you provided!
+
+Do you know of any open-source projects/examples that uses the method 
+you're suggesting to compare packet data without using for/while loops? 
+I haven't tried implementing the code yet, but I'm not entirely sure how 
+I am going to do so.
+
+I will give it a shot and I'll also take a look at the pull requests 
+Jesper made :)
+
+Thank you again!
+
+
+On 5/13/2020 9:42 AM, Toke Høiland-Jørgensen wrote:
+> Christian Deacon <gamemann@gflclan.com> writes:
 >
-> I am working on an XDP Content Based Router project. The basic concept
-> is that a machine running an XDP program acts as a gateway and accepts
-> TCP connections from outside machines. Upon receiving a message it
-> converts the packet to UDP and uses bpf_redirect_map to send the
-> packet out through another interface.
+>> Hey Toke,
+>>
+>> Thank you for your response!
+>>
+>> Unfortunately, I still haven't been able to get the for loop to work
+>> properly. I've also noticed if I use `iph->ihl * 4` when initializing
+>> the `byte` pointer, it produces the following error:
+>>
+>> ```
+>> R5 !read_ok
+>> processed 732 insns (limit 1000000) max_states_per_insn 4 total_states
+>> 16 peak_states 16 mark_read 10
+>> ```
+>>
+>> It seems I need to use a static size such as `sizeof(struct iphdr)`.
+>> Though, not all packets would have an IP header length of 20 bytes. I've
+>> tried performing checks with the length as well:
+>>
+>> ```
+>> uint8_t len = iph->ihl * 4;
+>>
+>> if (len < 20)
+>> {
+>>       return XDP_DROP;
+>> }
+>> else if (len > 36)
+>> {
+>>       return XDP_DROP;
+>> }
+>>
+>> // Setting len to 20 or any other value works fine.
+>> // len = 20;
+>>
+>> uint8_t *byte = data + sizeof(struct ethhdr) + len + l4headerLen;
+>> ```
+>>
+>> However, no luck. I'm not sure what I can do to make BPF believe this is
+>> safe.
+> Hmm, maybe have a look at Jesper's experiments with getting to the end
+> of the packet:
 >
-> The problem I am encountering is that I want to be able to pass the
-> message to userspace (where the TCP server resides) using XDP_PASS in
-> addition to the redirect. I'm somewhat looking for a way to emulate
-> the functionality of bpf_clone_redirect, but with support for XDP
-> driver mode.
+> https://github.com/xdp-project/xdp-tutorial/pull/123
+> https://github.com/xdp-project/xdp-tutorial/pull/124
 >
-> Is this even possible right now? Are there any workarounds?
-
-I am not sure I quite understand what it is you're trying to do, but no,
-there is currently no way to get more than a single action for the same
-packet.
-
--Toke
-
+> Not sure if he ended up concluding anything definite about what the best
+> technique is :)
+>
+>> I was also wondering about the following:
+>>
+>>   > Use a matching algorithm that doesn't require looping through the
+>> packet byte-by-byte as you're doing now. For instance, you could have a
+>> hash map that uses the payload you're trying to match as the key with an
+>> appropriate chunk size.
+>>
+>> Do you know of any BPF Helper/kernel functions that can hash the
+>> payload? I looked at the BPF Helpers function list, but wasn't able to
+>> find anything for XDP sadly. I would like to attempt to implement
+>> something like this to see if I can avoid for loops since they aren't
+>> working well with BPF from what I've seen.
+> No, there's no direct hashing helper for XDP. I just meant that you
+> could use the (chunk of) the payload directly as a key in a hashmap.
+> Something like:
+>
+> struct hash_key {
+>         u8 payload[CHUNK_SIZE];
+> }
+>
+> int xdp_main(ctx) {
+>      struct hash_key lookup_key = {};
+>      int *verdict;
+>
+>      [...]
+>
+>      memcpy(&lookup_key, ctx->data, CHUNK_SIZE);
+>      verdict = bpf_map_lookup_elem(&lookup_key, ...);
+>
+>      if (verdict)
+>        do_something_with(*verdict);
+>
+> }
+>
+> (You'd still need to convince the verifier that the memcpy from packet
+> data is safe, of course).
+>
+> -Toke
+>
