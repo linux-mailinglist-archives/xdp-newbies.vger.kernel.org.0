@@ -2,123 +2,177 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 663161E012C
-	for <lists+xdp-newbies@lfdr.de>; Sun, 24 May 2020 19:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C241E0163
+	for <lists+xdp-newbies@lfdr.de>; Sun, 24 May 2020 20:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387762AbgEXRfy (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 24 May 2020 13:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387656AbgEXRfy (ORCPT
+        id S2387844AbgEXSNd (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 24 May 2020 14:13:33 -0400
+Received: from relay0114.mxlogin.com ([199.181.239.114]:37475 "EHLO
+        relay0114.mxlogin.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387823AbgEXSNc (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 24 May 2020 13:35:54 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0967FC061A0E
-        for <xdp-newbies@vger.kernel.org>; Sun, 24 May 2020 10:35:54 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id v4so12339322qte.3
-        for <xdp-newbies@vger.kernel.org>; Sun, 24 May 2020 10:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7DZWtVSj7KuhvihBEq6j5wEVcR3QG0ZSz5zRJufMxQM=;
-        b=CpecwuOYci7u1U5RHKT2swxJPXja+9zaQwiXskBhCDTDHI2za8/KwUglDV40fI802T
-         OgqtGmZjlQ9sDABMclKrJ4FrfqQEXZWlxe60Lp9dodJuGbM6OLzmCxI9wljloSJfQhb+
-         zAns5PYtaCziGCHaoXd5xcqaQxBaEHY9A6MBHEzZoOVbfHwD8yBKlT5RFwFe6kMiWRlN
-         uAIBqZzYIlGPcFuPfJnLA2RL+ZJUhrL2PFzua0DetbEGpaERXICNQrUpceMXuneRVSid
-         0xUSY54BESJcst+BuAjKn4uzeHVP6WxnJR4lxL3Srm7z7FKI41+1hjoyafFqrJdAUyvU
-         D+yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7DZWtVSj7KuhvihBEq6j5wEVcR3QG0ZSz5zRJufMxQM=;
-        b=r1Flog50RPsnYDAOylChIWPnG3AuocHSUINd33UEOoWYdSi6nx7KQ1bvZI/MS02Kkv
-         SNUOLjnxTPmPbef+7BdbrNSb8/VHHlayxTWlnQFzCwXHk4at98aDNf9vhfx+o2Tr7SCB
-         VumRUA5VDzSsDASgwjdRoI35WWivRFs7O8laUar5dFtE3JnhlFowe/dfp1yRZoPO680x
-         VCr0SUtU80MGHaAMt+vIhsjot42HmgdNZcxcrhf74qZ4JYFt034uJY55GIP1weOStuIQ
-         Pw3rPr28b1UCvNQ2OBLHo/cg9Xkm+CWARvB5CZGMHySyj+iwlZul4gyhK5DAXDk12Ne+
-         KuUw==
-X-Gm-Message-State: AOAM530DgPnMRmQaRWKpYY5dpqLXlCt1AF2hF8eb2BGh1Akv2jFrcKUa
-        A76bLmK33+3ixGohoSVlhhHSNwdq
-X-Google-Smtp-Source: ABdhPJyKY/pFN8e+Or7cwSx5lQjVh4KbKZbe3xxojucvmEllW3h+F4r7LgBK9AOwDnX1WOYO5RO6KQ==
-X-Received: by 2002:ac8:36c8:: with SMTP id b8mr23029665qtc.212.1590341753099;
-        Sun, 24 May 2020 10:35:53 -0700 (PDT)
-Received: from ?IPv6:2601:284:8202:10b0:dde6:2665:8a05:87c9? ([2601:284:8202:10b0:dde6:2665:8a05:87c9])
-        by smtp.googlemail.com with ESMTPSA id k190sm12241421qkf.40.2020.05.24.10.35.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 May 2020 10:35:52 -0700 (PDT)
+        Sun, 24 May 2020 14:13:32 -0400
+Received: from filter003.mxroute.com ([168.235.111.26] 168-235-111-26.cloud.ramnode.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by relay0114.mxlogin.com (ZoneMTA) with ESMTPSA id 17247e3cee800054f2.001
+ for <xdp-newbies@vger.kernel.org>
+ (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
+ Sun, 24 May 2020 18:13:31 +0000
+X-Zone-Loop: de7e4fd18f8c497e79ab99db29f7e9e4845b360f9e30
+X-Originating-IP: [168.235.111.26]
+Received: from ocean.mxroute.com (ocean.mxroute.com [195.201.59.214])
+        by filter003.mxroute.com (Postfix) with ESMTPS id 6958160013
+        for <xdp-newbies@vger.kernel.org>; Sun, 24 May 2020 18:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pgikGtQl5j7YHqXan1E4MY/CPiKh9umevqqhyrf5UPA=; b=vx4TRV4cyJz2zRJbOWuijaNl83
+        flTkux3ZYjKaoaeUiawpoXf8OV3wjQw2gLaLAYEm++HuCd8iTDrEZ7PDuDHuymMa9C4EfQZX1x8Dn
+        xI++PRKbOL4cA4UuNIN4h7kZvDeQZfcabXR9mwxPhiXBdpFo08B2Kd2FYRW+Dcf7bk0OARRwgxKpO
+        S2UJxvddBWyOrZU4wI8EYeOgs/u0/MTFvdI//2b7REDEPjMNUzsE3SfZM9OmUrmCQXlURTwLD8jvQ
+        /TKgcAb5KKXQ4L76oMKyJa2U127KstEp1U30KiKRpEzqvegGFAlhU2kxca3t/04BBYb0BT30reKsN
+        fgoCTG9Q==;
 Subject: Re: AF_XDP Side Of Project Breaking With XDP-Native
-To:     Christian Deacon <gamemann@gflclan.com>,
+To:     David Ahern <dsahern@gmail.com>,
         Jesper Dangaard Brouer <brouer@redhat.com>
 Cc:     xdp-newbies@vger.kernel.org
 References: <50fe1ab5-55e7-980b-54d4-cd1d5e864865@gflclan.com>
  <20200522175136.5a6fdc55@carbon>
  <cd32e639-018e-2346-9570-f2167dfe651e@gflclan.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <6709130c-a676-127d-ac9d-d0ab35397b0d@gmail.com>
-Date:   Sun, 24 May 2020 11:35:51 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+ <6709130c-a676-127d-ac9d-d0ab35397b0d@gmail.com>
+From:   Christian Deacon <gamemann@gflclan.com>
+Message-ID: <2ed7d441-1a98-b4c1-8799-733ae286ed5e@gflclan.com>
+Date:   Sun, 24 May 2020 13:13:27 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <cd32e639-018e-2346-9570-f2167dfe651e@gflclan.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <6709130c-a676-127d-ac9d-d0ab35397b0d@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OutGoing-Spam-Status: No, score=-10.0
+X-AuthUser: gamemann@gflclan.com
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 5/22/20 10:12 AM, Christian Deacon wrote:
-> Hey Jesper,
-> 
-> 
-> I apologize for not providing that information before. The driver is
-> `virtio_net`. Unfortunately, I'm not sure what the NIC driver on the
-> cluster is. Once my program's code is confirmed to be correct, I will
-> try reaching out to our hosting provider to see if they can provide this
-> information if the NIC's driver is the suspected cause to this issue.
-> 
-> ```
-> 
-> root@SEAV21:~/AF_XDP-Test# ethtool -i ens3
-> driver: virtio_net
-> version: 1.0.0
-> firmware-version:
-> expansion-rom-version:
-> bus-info: 0000:00:03.0
-> supports-statistics: yes
-> supports-test: no
-> supports-eeprom-access: no
-> supports-register-dump: no
-> supports-priv-flags: no
-> ```
-> 
-> 
+Hey David,
 
-Is this a 4-cpu VM or 8 cpu VM?
 
-A previous response had:
+Thank you for your response!
 
-root@SEAV21:~/AF_XDP-Test# ethtool -l ens3
+
+The VM only has one CPU right now. It's possible the cluster has 8 RX 
+queues I'd imagine, but I don't have that information sadly. I executed 
+the same command on another VM I have with two CPUs (not being used for 
+the XDP-native testing):
+
+
+```
+
+root@Test:~# ethtool -l ens3
 Channel parameters for ens3:
 Pre-set maximums:
-RX:             0
-TX:             0
-Other:          0
-Combined:       8
+RX:             0
+TX:             0
+Other:          0
+Combined:       8
 Current hardware settings:
-RX:             0
-TX:             0
-Other:          0
-Combined:       1
+RX:             0
+TX:             0
+Other:          0
+Combined:       2
+```
 
-The 8 for pre-set max says the nic has 8 queues. If it is a 4-vcpu vm,
-then try
 
-ethtool -L ens3 combined 4
+I did receive this from my hosting provider when asking which NIC driver 
+they use:
 
-which leaves 4 for xdp. If it is an 8 cpu VM I believe you are out of
-luck given current requirements.
+
+```
+
+Hello,
+
+Thanks for your inquiry.
+
+We do not pass through the host node's NIC to your VPS.
+
+Because of that, it's not relevant what NIC driver we are using on our 
+host nodes.
+
+Thanks for your patience.
+
+```
+
+
+To my understanding, if the NIC isn't offloading packets directly to our 
+VPS, wouldn't this destroy the purpose of using XDP-native over 
+XDP-generic/SKB mode for performance in our case? I was under the 
+assumption that was the point of XDP-native. If so, I'm not sure why the 
+program is loading with XDP-native without any issues besides the AF_XDP 
+program.
+
+
+I will admit I've been wondering what the difference is between 
+`XDP_FLAGS_DRV_MODE` (XDP-native) and `XDP_FLAGS_HW_MODE` since I 
+thought XDP-native was offloading packets from the NIC.
+
+
+Thank you for the help!
+
+
+On 5/24/2020 12:35 PM, David Ahern wrote:
+> On 5/22/20 10:12 AM, Christian Deacon wrote:
+>> Hey Jesper,
+>>
+>>
+>> I apologize for not providing that information before. The driver is
+>> `virtio_net`. Unfortunately, I'm not sure what the NIC driver on the
+>> cluster is. Once my program's code is confirmed to be correct, I will
+>> try reaching out to our hosting provider to see if they can provide this
+>> information if the NIC's driver is the suspected cause to this issue.
+>>
+>> ```
+>>
+>> root@SEAV21:~/AF_XDP-Test# ethtool -i ens3
+>> driver: virtio_net
+>> version: 1.0.0
+>> firmware-version:
+>> expansion-rom-version:
+>> bus-info: 0000:00:03.0
+>> supports-statistics: yes
+>> supports-test: no
+>> supports-eeprom-access: no
+>> supports-register-dump: no
+>> supports-priv-flags: no
+>> ```
+>>
+>>
+> Is this a 4-cpu VM or 8 cpu VM?
+>
+> A previous response had:
+>
+> root@SEAV21:~/AF_XDP-Test# ethtool -l ens3
+> Channel parameters for ens3:
+> Pre-set maximums:
+> RX:             0
+> TX:             0
+> Other:          0
+> Combined:       8
+> Current hardware settings:
+> RX:             0
+> TX:             0
+> Other:          0
+> Combined:       1
+>
+> The 8 for pre-set max says the nic has 8 queues. If it is a 4-vcpu vm,
+> then try
+>
+> ethtool -L ens3 combined 4
+>
+> which leaves 4 for xdp. If it is an 8 cpu VM I believe you are out of
+> luck given current requirements.
