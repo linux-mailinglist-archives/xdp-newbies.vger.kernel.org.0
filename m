@@ -2,162 +2,100 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D49CA1E02FB
-	for <lists+xdp-newbies@lfdr.de>; Sun, 24 May 2020 23:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DBC21E1BA6
+	for <lists+xdp-newbies@lfdr.de>; Tue, 26 May 2020 09:00:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbgEXVZe (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 24 May 2020 17:25:34 -0400
-Received: from qrelay173.mxroute.com ([172.82.139.173]:32937 "EHLO
-        qrelay173.mxroute.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387830AbgEXVZe (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 24 May 2020 17:25:34 -0400
-Received: from filter004.mxroute.com ([149.28.56.236] 149.28.56.236.vultr.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by qrelay173.mxroute.com (ZoneMTA) with ESMTPA id 172489399b1000add6.001
- for <xdp-newbies@vger.kernel.org>;
- Sun, 24 May 2020 21:25:32 +0000
-X-Zone-Loop: d707377b3fe3b465184fad819deeefab8ba38989c2bf
-X-Originating-IP: [149.28.56.236]
-Received: from ocean.mxroute.com (ocean.mxroute.com [195.201.59.214])
-        by filter004.mxroute.com (Postfix) with ESMTPS id 5B4C63EAD9
-        for <xdp-newbies@vger.kernel.org>; Sun, 24 May 2020 21:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YdCuXg2p6gyV/qTHbp/h+2wyBAu0xA7W5Xbdy6w5FOA=; b=iQdboEDuHzFMwftbz6fNJhCbKf
-        L0//bivUHKRwIBWr97+FSXcjuJVGfN+cCv2zQ55uNK6WbWWxHAfJAZxzkml/ToFVnVyLh+i6vHhTh
-        7raaEtEj9CHu54sXIDl/rSMhSO9sb/LZaiJNAm7mLUapCKc/dnkfk8YrLwqBc+rjaPaFKlWH0PKiw
-        9LlZggYGglpnWSFm6dQQ/QHlVn7JOuRjhkAepvaZ6Ae5XsDzy4SfzkD+LPRDGBtlTWv0agRF6ba/l
-        uXX1LJydsn1+Y/dFNsg7EVqmLfVSA9XucrmW9b5e2imOdESEVLBqU+3eNWalJcVdHZGmRjE/Hn7Av
-        4jpkAfWw==;
-Subject: Re: AF_XDP Side Of Project Breaking With XDP-Native
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        xdp-newbies@vger.kernel.org
-References: <50fe1ab5-55e7-980b-54d4-cd1d5e864865@gflclan.com>
- <20200522175136.5a6fdc55@carbon>
- <cd32e639-018e-2346-9570-f2167dfe651e@gflclan.com>
- <6709130c-a676-127d-ac9d-d0ab35397b0d@gmail.com>
- <2ed7d441-1a98-b4c1-8799-733ae286ed5e@gflclan.com>
- <f4a901ef-6edf-0b92-5ec1-d931956c0ffd@gmail.com>
- <25405fb0-83f3-066a-629f-f89044e2cce7@gflclan.com>
- <791e4566-0944-399f-fade-550c60ea8643@gmail.com>
-From:   Christian Deacon <gamemann@gflclan.com>
-Message-ID: <edfe88b4-7006-f571-17c3-087c88bbaa2f@gflclan.com>
-Date:   Sun, 24 May 2020 16:25:27 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <791e4566-0944-399f-fade-550c60ea8643@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        id S1731359AbgEZHAg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 26 May 2020 03:00:36 -0400
+Received: from mail-db8eur05on2068.outbound.protection.outlook.com ([40.107.20.68]:30049
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731341AbgEZHAd (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 26 May 2020 03:00:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BD6MqHcFm5jUySvTlz+4RgYZmP1NtwRVoTDQqxObsLuVklAPAQQG2988D9dE0mMOWDOg8SBnLzhO9ywZY1W45NhQhj9DuT02JKifnI+ObOzJG4L74DoLIWSZl6XF8FuM7s1gyefa4kOR0qA6lUhYf7Sb82xHosw/uNtQ17DJpM8ecfD36nxLdIYmchsPuZgz8FvoZb9jbq4iWVzLNyvJgTcF56oXyIGJrIyo2IuNVlgPGp7YEatmg4yLEAdgtgqzYszopF95Q685bwUDwQgKIbmPv5aIltAZCifs4iPqT1vbFXtTCuyAp9VqBiZXxnxkFX5zkjke/BhqbgIPAWvLLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iGbk3p3BDgiYCRwTyrqy/oYHEPOjsRGpe3kRS4bTzxg=;
+ b=R/TzK27+CzNo6YXe7WNdNw6xlEsifob/T/uoZda3TDIatFn1UzQVoUIc1PtYt9a5ukyvWqXfUBiGCiY2qAu7YrJrKuAsDT6Nseos2o0izhZ2vkrKBOoORmbUdXt3O48AD5HriqYlU6izLBbNtDLzkBKs/NcyLJhtvmsei/BguiBtMTsdB6KKyHTdhjhOEAuHeBNO7jMHLcrwB7qSG0EgPAPRiE41/+c5nXpORz1wQ/gavW70eX5LyrF6OO0BgoOZ1abQUtkIcfTphkDBnNeoLs8l0b/phe3ikeJQUb9+ZRcGccYN7arK+Xh/9Ki/tWW/tK62INoUnxKgxBM/qY3kMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fer.hr; dmarc=pass action=none header.from=fer.hr; dkim=pass
+ header.d=fer.hr; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ferhr.onmicrosoft.com;
+ s=selector2-ferhr-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iGbk3p3BDgiYCRwTyrqy/oYHEPOjsRGpe3kRS4bTzxg=;
+ b=l2JrRd/8EAHLoG6FFSubImc/zN2iqV2k+6HA9WGfeQvmmnK2Knvuj23cOOzTLT/SioCs3LYf4Byo6hcxjVR5KtYamo5UbS0Gck3rZyIImJKwt+rFnu18RF6IuN1Pb36Etkc/vbve+ZkW7mafJcN25niIF6K6krWT5wz1VKqzYpg=
+Received: from AM0PR08MB3345.eurprd08.prod.outlook.com (2603:10a6:208:5c::30)
+ by AM0PR08MB2945.eurprd08.prod.outlook.com (2603:10a6:208:63::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Tue, 26 May
+ 2020 07:00:30 +0000
+Received: from AM0PR08MB3345.eurprd08.prod.outlook.com
+ ([fe80::e85c:2e73:cb2:5f4]) by AM0PR08MB3345.eurprd08.prod.outlook.com
+ ([fe80::e85c:2e73:cb2:5f4%3]) with mapi id 15.20.3021.029; Tue, 26 May 2020
+ 07:00:30 +0000
+From:   Denis Salopek <Denis.Salopek@fer.hr>
+To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: XDP_REDIRECT forwarding speed
+Thread-Topic: XDP_REDIRECT forwarding speed
+Thread-Index: AQHWMytXvoozc+R8o0SstslgMG/5uA==
+Date:   Tue, 26 May 2020 07:00:30 +0000
+Message-ID: <AM0PR08MB3345DF6A3FABBCF262B39E968BB00@AM0PR08MB3345.eurprd08.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-OutGoing-Spam-Status: No, score=-10.0
-X-AuthUser: gamemann@gflclan.com
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fer.hr;
+x-originating-ip: [93.138.136.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cc997399-92c0-48fe-c9cf-08d801427a9c
+x-ms-traffictypediagnostic: AM0PR08MB2945:
+x-microsoft-antispam-prvs: <AM0PR08MB2945692C0A700F66DAC8145B8BB00@AM0PR08MB2945.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 041517DFAB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wN9isiU0seUmSiND6saUefoxwPY4pL36eJ6zR+oBfLl+kk5qMkWsmhJKa4F6R0nQT45zTGvN83N6Awbne0g7cBdHbA47mgo1cLE3SmLd3xWE6Yaht940n4Pu6VXOeuyy58d3a84VMEWgh44OvrE+ru8NStpc2u578iA5GYkkhysUv6XVyLj1MohGkjvDAHneuJjVWzNGgsXJ9Pai5lM4Q6LgFVyISumjU1kiPDNn0UX2Ep8ixIqsQZxaGzMykO5Dl/+aaEkqtSit5O3aFhmfEsV6Yah0s3xXu0zpBtw3D43fo9skvMIPOB5ZYiKiMMShnAmBChbhyC96OzG4GdgWw/HfKkTfvGhWzDKQMSzC6/FxvGQmPMEeQwOTknunZMBF3xQdAaJCSszRNNvX6p0FeA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3345.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39850400004)(136003)(346002)(396003)(26005)(316002)(6506007)(786003)(186003)(9686003)(86362001)(66946007)(66446008)(64756008)(66476007)(8676002)(8936002)(71200400001)(76116006)(66556008)(4744005)(7696005)(55016002)(5660300002)(966005)(7116003)(6916009)(33656002)(91956017)(2906002)(478600001)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Eer45z+sTZlSyHe1g0/fFdxP8Zry3I0ye3ELN5CTJ1qdDZRFuqaqrVlger5qyufQKp8Hta2ljysGLDioqPSDWzrrgkJpcLjq3FHBSAuNDkAa70Mdi1ApcYL86W456fT0BK9xQhJBSKncYtihnV5fG9pQtO5OXFaj31I1Ik6nyd3ff64JlHVeA0l19M3dIYdKGD+2uPmAEpv+iyJ0L2TeiLLlkR6vzi6jx7tVa716w7p1f0FHDWtuFZtZwBZjCt3WP8Mye71Lspoa2/P1mYKB7lLoQEBhSIARdG8WkxfQ4E5JyRlf0qxh5spv226fMMGvET7IIufteOiCYmBm/nH2GPqW1RYfKpZpiDbASu+FU1Lt7ibHgUxQttFeza4Scflcy8vHcOZlY/RSZMbzklKrgq+KXJRzmU79F/1UGk6dlIea6xcPwd5kaVsY/RYFCPxXVlLMjDthba0VbwN/U+hihT8MhtgvBXV7marSjtilte6kjtTcJCfcK4szkFVeSidG
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: fer.hr
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc997399-92c0-48fe-c9cf-08d801427a9c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2020 07:00:30.8070
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: ca71eddc-cc7b-4e5b-95bd-55b658e696be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wmUl7mbFSQUshxtpZnSY7OcvjkeehNgC28cF+9FvFrEcKCy4fDG055zzxkHaR1k2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB2945
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hey David,
-
-
-Thank you for this!
-
-
-I will be looking into implementing the packet parsers into my current 
-projects with XDP to simplify code :)
-
-
-In regards to the AF_XDP issue, now that I know it should be working 
-with the `virtio_net` driver under XDP-native, I'm not sure why I keep 
-receiving a device is busy error after the first XDP attach. I also have 
-a second issue with Compressor, AF_XDP, and XDP-native which is the 
-AF_XDP program isn't sending packets back to the client via TX. It works 
-fine with XDP-generic, though.
-
-
-https://github.com/Dreae/compressor/blob/master/src/compressor_cache_user.c#L283
-
-
-I discovered that `rcvd` is returning 0 when XDP-native is enabled, but 
-returns a number higher than 0 when using XDP-generic. I'd imagine this 
-is due to outdated AF_XDP code, though. I'll continue digging deeper 
-into that issue after the first issue is resolved (the device is too 
-busy error).
-
-
-Thank you again for all the help!
-
-
-On 5/24/2020 3:23 PM, David Ahern wrote:
-> On 5/24/20 1:27 PM, Christian Deacon wrote:
->> As of right now, the packet processing software I'm using forwards
->> traffic to another server via XDP_TX. It also drops any traffic via
->> XDP_DROP that doesn't match our filters (these filters aren't included
->> in the open-source project linked below). Do you know if there would be
->> any real performance advantage using XDP-native over XDP-generic in our
->> case with the `virtio_net` driver for XDP_TX and XDP_DROP actions? We're
->> currently battling (D)DoS attacks. Therefore, I'm trying to do
->> everything I can to drop these packets as fast as possible.
-> native will be much faster than generic.
->
->>
->> If you would like to inspect the source code for this project, here's a
->> link to the GitHub repository:
->>
->>
->> https://github.com/Dreae/compressor
->>
->>
->> I'm also working on a bigger open-source project with a friend that'll
->> drop traffic based off of filtering rules with XDP (it'll be version two
->> of the project I linked above) and we plan to use it on VMs with the
->> `virtio_net` driver. Therefore, it'll be useful to know if XDP-native
->> will provide a performance advantage over XDP-generic when dropping
->> packets.
->>
-> Looking at:
-> https://github.com/Dreae/compressor/blob/master/src/compressor_filter_kern.c
->
-> A packet parser would simplify that code a lot - and make it more
-> readable. For example:
->
-> https://github.com/dsahern/bpf-progs/blob/master/ksrc/flow.c
-> https://github.com/dsahern/bpf-progs/blob/master/ksrc/flow.h
->
-> It is modeled to a huge degree after the kernel's flow dissector. It
-> needs to be extended to handle IPIP, but that is straightforward. The
-> flow struct can also expanded to save the various header locations. You
-> don't care about IPv6 so you could make the v6 code based on #ifdef
-> CONFIG options to compile it out.
->
-> I have an acl program that uses it, but I make too many changes to it
-> right now to make it public. Example use of the flow parser:
->
->          void *data_end = (void *)(long)ctx->data_end;
->          void *data = (void *)(long)ctx->data;
->          struct ethhdr *eth = data;
->          struct flow fl = {};
->          void *nh = eth + 1;
->          u16 h_proto;
->          int rc;
->
->          if (nh > data_end)
->                  return true;
->
->          h_proto = eth->h_proto;
-> 	/* vlan handling here if relevant */
->
->          rc = parse_pkt(&fl, h_proto, nh, data_end, 0);
->          if (rc)
->                  // you might just want DROP here
->                  return rc > 0 ? XDP_PASS : XDP_DROP;
->
->          ...
->          make decisions based on L3 address family (AF_INET), L4 protocol
-> , etc
+Hi!=0A=
+=0A=
+I want to make sure I did everything right to make my XDP program=0A=
+(simple forwarding with bpf_redirect_map) as fast as possible. Is following=
+=0A=
+advices and gotchas from this: =0A=
+https://www.mail-archive.com/netdev@vger.kernel.org/msg184139.html enough=
+=0A=
+or are there some additional/newer recommendations? I managed to get near=
+=0A=
+line-rate on my Intel X520s (on Ryzen 3700X and one queue/CPU), but not=0A=
+quite 14.88 Mpps so I was wondering is there something else to speed=0A=
+things up even more.=0A=
+=0A=
+Also, are there any recommended settings/tweaks for bidirectional=0A=
+forwarding? I suppose there would be a drop in performance compared to=0A=
+single direction, but has anyone done any benchmarks?=0A=
+=0A=
+Regards,=0A=
+Denis=
