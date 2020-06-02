@@ -2,84 +2,90 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 291D81EB7CA
-	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Jun 2020 11:01:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 708761EBED9
+	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Jun 2020 17:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726110AbgFBJBy (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 2 Jun 2020 05:01:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55908 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726160AbgFBJBx (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 2 Jun 2020 05:01:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591088512;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sK3WiQXtgpaWClyVB5ijt9CaY/tWjd1uv2b5imFTmxE=;
-        b=hdRTzFbpzFgxLM7nEB1G+hvU70gIKDBAwZHY043eW5noo62MpV3YhLrL1xbqisExdrn4lh
-        RfKOOyBvsdqBjO1Gb7REbGgMrr22mcTlI1ZmHsUV4hI3TxM8CBufJVDgf6ssq/CRZIv35X
-        6Ug24MOPNV80FPJBaFEHZZMz02IV3tE=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-tgMi4e2aOXqvfzKNH_cVIw-1; Tue, 02 Jun 2020 05:01:50 -0400
-X-MC-Unique: tgMi4e2aOXqvfzKNH_cVIw-1
-Received: by mail-ej1-f70.google.com with SMTP id e14so3837396ejt.16
-        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jun 2020 02:01:50 -0700 (PDT)
+        id S1726342AbgFBPPi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Jun 2020 11:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgFBPPi (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Jun 2020 11:15:38 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53635C08C5C0
+        for <xdp-newbies@vger.kernel.org>; Tue,  2 Jun 2020 08:15:38 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id g1so9500341edv.6
+        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jun 2020 08:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XGUqY+/7fF3GjL9tpVZRl4PMGmlb70kJZqctOG3rTO8=;
+        b=G5QO8Vs6JqoNBvnbrQ3flnTRvx26c3HL5RP6KcXnMN4oUlyHWe9nFA9RMmGehLGJEy
+         DAqz1eDyLbvDxpJz4mRDATu2V3mFRWb40rNe4D98wVBKssZLMMpE7jXIbglb/6sdhzXH
+         GDlq7Y2QC+HcCXsfB3pof88vXLC0TGKa3KV9zKqtog0YF0lcoJYDhSaK3Ugz3qsavBXJ
+         VxKj/Gg/CmcDoILs4n0hHOVVaYif+EtsTUf15dkEea1NO8gKOuTXDk3zS8ZdByGKCyua
+         cqgaeIORvIF055GJen8crddvPiNrpIwCuytCCbpMbCB+nt/yVsQ1HGUsr+FJdyBQv1je
+         ewbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=sK3WiQXtgpaWClyVB5ijt9CaY/tWjd1uv2b5imFTmxE=;
-        b=Pmz8dU5/Sp63YLjqiZq5bFnmpO2lKbQ52Q/92E6ScSm2JF/66UY2LXtzSo5UP3xGHX
-         TOpl9wNatL1LAKkhbboJ5IxrV77nghQZCmjCHOSx7WPJ6hJvHHHsGjdyKyGmK0TeFMyB
-         yRocAy7WzN2MZpIp+lGI4VctkYZ7BddJMUIAQEJu449vAT7+ET6Flm2Zn5Ce+nsgiRKp
-         tJn5agEiFj8cX4oocB64Lgpu84z3ZwQ3afYJi7PCrdSnO8YUrOagUhOTH0FMl+UNW0Vs
-         Ly1E0o1F+z08s58R46TbqF1nfLHREFmIsCkc/k0LflzLuNaE6WtoXwl+JioQTtoyi6Gx
-         VXew==
-X-Gm-Message-State: AOAM5321kpA1rRyaMR9Tw9zUgq/0hF+7VRrZ04ukvchH/TxMyyTyFxAv
-        OV2/9EoUEx6g3ombFLXJvgLLq5kWPf38n03/QNNMx9AtVSRImxxsZQxS+DGmypz8uviFpKxyKku
-        ZbR4bxGzsNMRC0zeibpt0GLk=
-X-Received: by 2002:a17:906:cede:: with SMTP id si30mr18445505ejb.315.1591088509136;
-        Tue, 02 Jun 2020 02:01:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyHzmCJGATRXhMDZapM+BCJodTnGB/aici3/CevsEuPFA+MVB/T6266n6E0p0AdmhOjkBbsFA==
-X-Received: by 2002:a17:906:cede:: with SMTP id si30mr18445488ejb.315.1591088508964;
-        Tue, 02 Jun 2020 02:01:48 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id y26sm1228641edv.91.2020.06.02.02.01.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 02:01:48 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id C1789182797; Tue,  2 Jun 2020 11:01:47 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     maharishi bhargava <bhargavamaharishi@gmail.com>,
-        xdp-newbies@vger.kernel.org
-Subject: Re: XDP_REDIRECT with xsks_map and dev_map
-In-Reply-To: <CA+Jwd2y5Pjh+QMrH9vjBtHhvG2EC1MCfm-A2Pq2hjRPEvJ1J1Q@mail.gmail.com>
-References: <CA+Jwd2y5Pjh+QMrH9vjBtHhvG2EC1MCfm-A2Pq2hjRPEvJ1J1Q@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Tue, 02 Jun 2020 11:01:47 +0200
-Message-ID: <87d06hzvr8.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XGUqY+/7fF3GjL9tpVZRl4PMGmlb70kJZqctOG3rTO8=;
+        b=AqvhUApwmon52PvrSJAkOuU5q7v13WU4h4svGclsow9TUiXLg5Ew4V2FT5tuCnZJFl
+         vktyRfDO5kM/mcr9Oe72chcXiOjMSAm4vu3B9WyoUn2AQU3q9xi/Mb4a1coqnnot/8dq
+         ZuqnDs82+59UO37ueyVp/7thJZB2IwDJyZON28mpYA8lNEvDLy4aQPVbXGj0goqGVKCY
+         pPU6oPEUkNTiurcke9QfmZTNWPC6bwp8piRg9+KnAGJHJsbOihmRofhV8ryM82P35kzZ
+         Q6km95S+F+YjEt4WvDGScNuhwgCJZ6MFFQgEbYDL6HAz4vIysG/QIci/Xz2oqPj4bgWm
+         AmeA==
+X-Gm-Message-State: AOAM531SD7LUXR8ZazMO4uQSg+V4qU1/IZhgYOsVSlNBXLVpaDoep0Ms
+        +lnjdr9uQ6TCeAdpbE1BqZhi9PKZTtwLUk+BP/8=
+X-Google-Smtp-Source: ABdhPJz0+iPYu/Uz/Rybb2hG8ww/JQqBbwGz+ST82YTb2w2J+UH+FvlGZQiOHeZ8Gwk65ZcbO8PhC99+ohGqxuCbCV4=
+X-Received: by 2002:aa7:cd41:: with SMTP id v1mr14171711edw.378.1591110936962;
+ Tue, 02 Jun 2020 08:15:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CA+Jwd2y5Pjh+QMrH9vjBtHhvG2EC1MCfm-A2Pq2hjRPEvJ1J1Q@mail.gmail.com>
+ <87d06hzvr8.fsf@toke.dk>
+In-Reply-To: <87d06hzvr8.fsf@toke.dk>
+From:   maharishi bhargava <bhargavamaharishi@gmail.com>
+Date:   Tue, 2 Jun 2020 20:45:25 +0530
+Message-ID: <CA+Jwd2z4_tGfh9wS_CJQL36O_vYyv5knXkm6=A+UvNNtojEcrw@mail.gmail.com>
+Subject: Re: XDP_REDIRECT with xsks_map and dev_map
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-maharishi bhargava <bhargavamaharishi@gmail.com> writes:
+On Tue 2 Jun, 2020, 14:31 Toke H=C3=B8iland-J=C3=B8rgensen, <toke@redhat.co=
+m> wrote:
+>
+> maharishi bhargava <bhargavamaharishi@gmail.com> writes:
+>
+> > Hi, in my XDP program, I want to redirect some packets using AF_XDP
+> > and redirect other packets directly from driver space.
+> > Redirection through AF_XDP works fine, but redirection through dev map
+> > stops after some packets are processed.
+>
+> Do you mean it stops even if you are *only* redirecting to a devmap, or
+> if you are first redirecting a few packets to AF_XDP, then to devmap?
+>
+> Also, which driver(s) are the physical NICs you're redirecting to/from
+> using, and which kernel version are you on?
+>
+> -Toke
 
-> Hi, in my XDP program, I want to redirect some packets using AF_XDP
-> and redirect other packets directly from driver space.
-> Redirection through AF_XDP works fine, but redirection through dev map
-> stops after some packets are processed.
 
-Do you mean it stops even if you are *only* redirecting to a devmap, or
-if you are first redirecting a few packets to AF_XDP, then to devmap?
 
-Also, which driver(s) are the physical NICs you're redirecting to/from
-using, and which kernel version are you on?
+Currently, I'm trying to redirect packets only using devmap. But also
+have code for redirection using AF_XDP(only when a given condition is
+satisfied). A DPDK program is running in userspace which will receive
+packets from AF_XDP.
 
--Toke
+Drivers: ixgbe (2x10GbE Intel NIC)
+Kernel version 5.3
 
+- Maharishi Bhargava
