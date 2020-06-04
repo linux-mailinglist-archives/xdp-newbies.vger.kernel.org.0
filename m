@@ -2,85 +2,101 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A83D1EE55A
-	for <lists+xdp-newbies@lfdr.de>; Thu,  4 Jun 2020 15:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1C51EEB16
+	for <lists+xdp-newbies@lfdr.de>; Thu,  4 Jun 2020 21:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgFDNav convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 4 Jun 2020 09:30:51 -0400
-Received: from mail-oln040092071014.outbound.protection.outlook.com ([40.92.71.14]:30862
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728547AbgFDNav (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:30:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gj2le8VVjSl6g/iTHIGBctY+NIbsI44ram68pm1NkL3ebfkfk/7OVuwnQli9ntAHRVjH5fvchQyMN4NVK1yXl54sNLDUjeOmZ+cZfqJa4IF3aoX7DO9xRZJmQEYhcRgOXphF4acP6ZaIGtis1G68MIogN4AaworVDG1lnw9oup0bmxRmM08rQQ3qYzpeNFreRyTqCz5WQvZnxVomhu8E2XeCPa9GMacdy65ul2yjdvs8Wl74ld12UaI53psH8W1ImPhbgKB2RUexpMaTU+CGZ8B2sCn8BUYcfZoz/Cu0p45hqrN9oNH3EI4v1e++AEZIBAayItoAT3NDuEVFAIseMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8icrB5TcyRL0vXNn2eCjFSF0AO+tcfM1nYkL2cJ8/Z4=;
- b=MYdLrtjnzk2FkfHF83bvMkDwTKMshMRMcjvPOoss6GuV2eDAU7elwAkws5AnpKqm0wWFUunGjB85Mc/ZR0XsS7DQCz9DW7KfG+fthGlH2M8lnH892vZnxtIjiVl9fDfr/pW61uM+R5T6516B//6PNnffQD3T3DEnOkyvxM7e1YNwcgWgFfnWoAYUpGjmdymSv6/0JbzbksN2xlsiMm0uuBRnL2/dOl4odt5V4rTymq/Bwz/CLj3WMG/2wmEViUnptTSY6s8UVpriWmWJXBh1F3bMuUxkKK1gNTjz5vCD4fUyYz0XewFeHbDLUoIt7yoH/vhkeqz5QM7/FJ3DNc3Atg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR03FT012.eop-EUR03.prod.protection.outlook.com
- (2a01:111:e400:7e0a::4a) by
- DB5EUR03HT009.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e0a::132)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 4 Jun
- 2020 13:30:48 +0000
-Received: from DB7PR08MB3130.eurprd08.prod.outlook.com
- (2a01:111:e400:7e0a::43) by DB5EUR03FT012.mail.protection.outlook.com
- (2a01:111:e400:7e0a::161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend
- Transport; Thu, 4 Jun 2020 13:30:48 +0000
-Received: from DB7PR08MB3130.eurprd08.prod.outlook.com
- ([fe80::1096:7af0:893c:6f59]) by DB7PR08MB3130.eurprd08.prod.outlook.com
- ([fe80::1096:7af0:893c:6f59%4]) with mapi id 15.20.3066.018; Thu, 4 Jun 2020
- 13:30:48 +0000
-From:   Federico Parola <fede.parola@hotmail.it>
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Lightweight packet timestamping
-Thread-Topic: Lightweight packet timestamping
-Thread-Index: AQHWOnHQlLnyAZiVv0mslffaZPxs+qjIcifQgAABDww=
-Date:   Thu, 4 Jun 2020 13:30:48 +0000
-Message-ID: <DB7PR08MB3130BA2C0F90E0819577C5289E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
-References: <DB7PR08MB3130BDD01387627E7FAD775F9E890@DB7PR08MB3130.eurprd08.prod.outlook.com>,<DB7PR08MB3130C02AB04133E07146F40D9E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
-In-Reply-To: <DB7PR08MB3130C02AB04133E07146F40D9E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
-Accept-Language: it-IT, en-US
-Content-Language: it-IT
+        id S1729093AbgFDTZ2 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Thu, 4 Jun 2020 15:25:28 -0400
+Received: from postout1.mail.lrz.de ([129.187.255.137]:36635 "EHLO
+        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728476AbgFDTZ2 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 Jun 2020 15:25:28 -0400
+Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
+        by postout1.mail.lrz.de (Postfix) with ESMTP id 49dG2X60G4zyYQ
+        for <xdp-newbies@vger.kernel.org>; Thu,  4 Jun 2020 21:25:24 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.586
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.586 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_X_ORIG_IP=0.001,
+        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
+        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
+        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout1.mail.lrz.de ([127.0.0.1])
+        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id C8i1G4yPd6NL for <xdp-newbies@vger.kernel.org>;
+        Thu,  4 Jun 2020 21:25:24 +0200 (CEST)
+Received: from BADWLRZ-SWMBX05.ads.mwn.de (BADWLRZ-SWMBX05.ads.mwn.de [IPv6:2001:4ca0:0:108::161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX05", Issuer "BADWLRZ-SWMBX05" (not verified))
+        by postout1.mail.lrz.de (Postfix) with ESMTPS id 49dG2X4JBhzyYL
+        for <xdp-newbies@vger.kernel.org>; Thu,  4 Jun 2020 21:25:24 +0200 (CEST)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX05.ads.mwn.de (2001:4ca0:0:108::161) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1979.3; Thu, 4 Jun 2020 21:25:24 +0200
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1979.003; Thu, 4 Jun 2020 21:25:24 +0200
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     Xdp <xdp-newbies@vger.kernel.org>
+Subject: Intel 10G 2P X520 Adapter doesn't receive anything with AF XDP
+Thread-Topic: Intel 10G 2P X520 Adapter doesn't receive anything with AF XDP
+Thread-Index: AQHWOqPu+5xj7fx2CEmhKaGvaWOLCQ==
+Date:   Thu, 4 Jun 2020 19:25:23 +0000
+Message-ID: <7ec53b8f30524ffba36bb264c6d023fc@hm.edu>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:F7241F31D8C5152E63AE7DD0E314A258A40B75E517A6831ECDA66CDCDF675044;UpperCasedChecksum:9BF7FDFA76D22FB67FA515A780169F852FDB1752747171F0B3C74FF356D2D69E;SizeAsReceived:7014;Count:45
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [IjkTyoq6npXlqsXvhphd310wX6AJN7E6]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 45
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: da9b1129-0059-4483-6517-08d8088b7e48
-x-ms-traffictypediagnostic: DB5EUR03HT009:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8CYTbWuncUl6np3y9M5d0mm96lCi+abjWnGvQ6wBvLIrWxD+83jh804BxZSUi7IHcXXytxn4C7esow+A34BZwvG9RT30+bcaM1GssCPfZCzFLcmGo6sIS54GIHxZ7yIEQwtv97pMAlRXALEH0JwqNMzsKhsq09jSKs1D1MGKN+iQQWu85N4oZPWPiuRCwjzOGGTuIFubXx9u2coNAQ89tQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3130.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-x-ms-exchange-antispam-messagedata: 7NoAVmupdjx4Y+LV00mcJ5wJHyrEPCoD/yBLaUfg57/e2dKTKEkVFWcxVgTdseHD+/X/GyGvH3M2gu73FpzqWPcHhMKsn+Q+gfCYcvqMeqOuS1253XDq+jIpeMPP3tGEuLfyI9fsqKCprk3k0V1axw==
-x-ms-exchange-transport-forked: True
+x-originating-ip: [80.246.32.33]
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: da9b1129-0059-4483-6517-08d8088b7e48
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 13:30:48.4085
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT009
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello everybody,
-I'm implementing a token bucket algorithm to apply rate limit to traffic and I need the timestamp of packets to update the bucket. To get this information I'm using the bpf_ktime_get_ns() helper but I've discovered it has a non negligible impact on performance. I've seen there is work in progress to make hardware timestamps available to XDP programs, but I don't know if this feature is already available. Is there a faster way to retrieve this information?
-Thanks for your attention.
+Sorry to ask another question but I don't get this working.
 
-Federico Parola
+I have this AF_XDP test program which creates an ordinary SOCK_RAW socket and adds a multicast address to it via IP_ADD_MEMBERSHIP.
+Then it loads a BPF program and launches an AF_XDP socket which then processes packets of that multicast.
+
+This works fine on my Mellanox ConnectX5 card, but it doesn't work on my Intel 10G 2P X520 (Kernel 5.6.0 and driver ixgbe 5.1.0-k).
+I have an array map in the BPF program which counts the amount of packets received on each RX-Queue:
+
+		SEC("xdp_sock") int xdp_sock_prog(struct xdp_md *ctx) {
+
+			const void *data = (void*)(unsigned long)ctx->data;
+			const void *data_end = (void*)(unsigned long)ctx->data_end;
+			const int rx_queue_idx = ctx->rx_queue_index;
+
+			const struct ethhdr *eth = (struct ethhdr*)(data);
+
+			unsigned long *idx_counter = bpf_map_lookup_elem(&rx_queue_pckt_counter_map, &rx_queue_idx);
+			if(idx_counter != NULL) {
+				*idx_counter += 1;
+			}
+
+I can then look at this map via bpftool. What I found is that almost no packets are received: only like 4 packets on RX-Queues 1, 2, 3, 4 which I assume are random pings in the network or something but nothing significant (the multicast stream would have a packet rate of 270k pps).
+
+The strange thing now is that everything works fine if I just use that generic Linux socket to receive the packets (without any XDP / AF_XDP / BPF involved).
+
+Any ideas why that is?
+
+Best regards
+
+Max
+
