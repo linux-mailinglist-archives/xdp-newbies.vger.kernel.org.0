@@ -2,130 +2,96 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75F7D1EF6E5
-	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jun 2020 13:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34C6E1EF700
+	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jun 2020 14:05:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFEL54 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 5 Jun 2020 07:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgFEL54 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 5 Jun 2020 07:57:56 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11834C08C5C2
-        for <xdp-newbies@vger.kernel.org>; Fri,  5 Jun 2020 04:57:56 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id u17so5426368vsu.7
-        for <xdp-newbies@vger.kernel.org>; Fri, 05 Jun 2020 04:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O1ZM95d6Aro/9U2uRsQQi6lI/sIS89ctlU+UdbRZ918=;
-        b=XREjQDCFBr75LLR7HzUTtsfuMokh3uGNg9578QjA0pLpUChPQ0SruVs6mbxLiA76tS
-         SCt1Y+jyVr8BToyMk1fFG/aDOLeOphiio0Rzxp2rVi8bRM3B/bW7Y8OpZC4ieAGmhHHY
-         RUBLwJevHWXcuhHMxbjmrJU4OmeO2M3m7kwdW4i9kI4NWe5Aj4h5dIYuCfr7EqBI6U63
-         ZzAjIK4SQ6PNHL7MJvYMG2kuFHmdf5TxWRTphBo+7VwzEGz8gZImD5iNvRwX6yVDmD74
-         YRqWeOVlFpCgJo6Cyg50LwiruDvDAnMRZZsbDtr9x6wzL7+SkURO7e5SrfNiyy14+WQ/
-         W7cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O1ZM95d6Aro/9U2uRsQQi6lI/sIS89ctlU+UdbRZ918=;
-        b=pHe8I9WTWXNsUcyhVf25B0WhRB5X4A006jFhTR+aqpbnLzLGTa8zIT9FWrWfu+Yk+4
-         TuKasgnSz/e72Xuox7DHYqCMbXICL39ppnx55rtRgmhtONylabYfXgDgMI5+cfsmI05V
-         28LrpXl2dGkV8/zXhKFrF+SrZmM1B9J41QduDJ84edfvXOva2HvIswjnaLXq+JxGoiq4
-         LKneX+e14jSxOsbFLX+kQia0A7p6Je3hIHF+c+cqn0UClPSuXxExRoEKFtTZb186bVjF
-         D7ENWrIkB5PYKzUy+tZmEqyWlRqMKHH+hdn2zOOnMrIaWXT6hnDm3PtsvTIXiz4sngOd
-         oVnw==
-X-Gm-Message-State: AOAM533jNAKeOT9sONttCIglJLb1sw2UtsbrrTYBtwaABeG2bDdqeyWb
-        fM0YeCleXaHcQEJMSN3qWEyNoE3QlGY36YFl/IWW8Q8AyA8=
-X-Google-Smtp-Source: ABdhPJyo5Gcccot040Ue+8E1wjzoISxcwnAn0LQSrywHanYausge3eddUyhS0YRKNdU1Flq7x4WgHprPp8STZOXajKY=
-X-Received: by 2002:a67:8c09:: with SMTP id o9mr5431621vsd.23.1591358275108;
- Fri, 05 Jun 2020 04:57:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <a5741e0f3b90422f8c53a8bd54f06d8a@hm.edu>
-In-Reply-To: <a5741e0f3b90422f8c53a8bd54f06d8a@hm.edu>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Fri, 5 Jun 2020 13:57:44 +0200
-Message-ID: <CAJ8uoz3V1F4MB9yprixAReFqPCW9bE4SbV58Gs-D7qdSXtz6sg@mail.gmail.com>
-Subject: Re: Intel X520 looses ethtool flow-type rule the moment a BPF / XDP
+        id S1726410AbgFEMFc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 5 Jun 2020 08:05:32 -0400
+Received: from postout1.mail.lrz.de ([129.187.255.137]:42467 "EHLO
+        postout1.mail.lrz.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgFEMFc (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 5 Jun 2020 08:05:32 -0400
+Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
+        by postout1.mail.lrz.de (Postfix) with ESMTP id 49dhDV0gx9zyVg;
+        Fri,  5 Jun 2020 14:05:30 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.585
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.585 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_IN_REPLY_TO=0.001, LRZ_HAS_THREAD_INDEX=0.001,
+        LRZ_HAS_X_ORIG_IP=0.001, LRZ_MSGID_HL32=0.001,
+        LRZ_RCVD_BADWLRZ_EXCH=0.001, LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5,
+        RDNS_NONE=0.793, SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout1.mail.lrz.de ([127.0.0.1])
+        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id TnLmdzyxt3WJ; Fri,  5 Jun 2020 14:05:29 +0200 (CEST)
+Received: from BADWLRZ-SWMBX04.ads.mwn.de (BADWLRZ-SWMBX04.ads.mwn.de [IPv6:2001:4ca0:0:108::160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX04", Issuer "BADWLRZ-SWMBX04" (not verified))
+        by postout1.mail.lrz.de (Postfix) with ESMTPS id 49dhDT6RvfzyVX;
+        Fri,  5 Jun 2020 14:05:29 +0200 (CEST)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX04.ads.mwn.de (2001:4ca0:0:108::160) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1979.3; Fri, 5 Jun 2020 14:05:29 +0200
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1979.003; Fri, 5 Jun 2020 14:05:29 +0200
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>
+CC:     Xdp <xdp-newbies@vger.kernel.org>
+Subject: AW: Intel X520 looses ethtool flow-type rule the moment a BPF / XDP
  program is loaded
-To:     "Gaul, Maximilian" <maximilian.gaul@hm.edu>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Thread-Topic: Intel X520 looses ethtool flow-type rule the moment a BPF / XDP
+ program is loaded
+Thread-Index: AQHWOyon4hZVPYvzk0ifXX+vh3PLTqjJyS8AgAAicRU=
+Date:   Fri, 5 Jun 2020 12:05:29 +0000
+Message-ID: <0d6aad4ae9f9484cb158845d73c37f5d@hm.edu>
+References: <a5741e0f3b90422f8c53a8bd54f06d8a@hm.edu>,<CAJ8uoz3V1F4MB9yprixAReFqPCW9bE4SbV58Gs-D7qdSXtz6sg@mail.gmail.com>
+In-Reply-To: <CAJ8uoz3V1F4MB9yprixAReFqPCW9bE4SbV58Gs-D7qdSXtz6sg@mail.gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [80.246.32.33]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:18 PM Gaul, Maximilian <maximilian.gaul@hm.edu> wrote:
->
-> Hello,
->
-> I have an Intel X520 10Gbit/s NIC with driver:
->
->                 $ sudo ethtool -i eth5
->                 driver: ixgbe
->                 version: 5.7.1
->                 firmware-version: 0x80000827, 16.5.19
->                 expansion-rom-version:
->                 bus-info: 0000:04:00.1
->                 supports-statistics: yes
->                 supports-test: yes
->                 supports-eeprom-access: yes
->                 supports-register-dump: yes
->                 supports-priv-flags: yes
->
-> and Kernel:
->
->                 $ uname -a
->                 Linux 5.6.0-2-amd64
->
-> I tried this tutorial before hand: https://software.intel.com/content/www/us/en/develop/articles/setting-up-intel-ethernet-flow-director.html
->
-> Unfortunately I am experiencing some strange behavior in combination with AF_XDP.
->
-> For example, I am adding an ethtool flow-type rule like this:
->
->                 $ sudo ethtool -N eth5 flow-type udp4 dst-ip 239.0.1.1 dst-port 5500 action 0
->                 Added rule with ID 4093
->
-> Checking it is there:
->
->                 $ sudo ethtool -n eth5
->                 16 RX rings available
->                 Total 1 rules
->
->                 Filter: 4093
->                                 Rule Type: UDP over IPv4
->                                 Src IP addr: 0.0.0.0 mask: 255.255.255.255
->                                 Dest IP addr: 239.0.1.1 mask: 0.0.0.0
->                                 TOS: 0x0 mask: 0xff
->                                 Src port: 0 mask: 0xffff
->                                 Dest port: 5500 mask: 0x0
->                                 VLAN EtherType: 0x0 mask: 0xffff
->                                 VLAN: 0x0 mask: 0xffff
->                                 User-defined: 0x0 mask: 0xffffffffffffffff
->                                 Action: Direct to queue 0
->
-> After that I am launching my AF_XDP program which firsts loads a compiled BPF-object file into the kernel (without any errors).
-> I am checking ethtool again:
->
->                 $ sudo ethtool -n eth5
->                 16 RX rings available
->                 Total 0 rules
->
-> Any ideas why that is? I am not saying that my program is bug-free but it worked fine in combination with Mellannox ConnectX5 and Broadcom 1Gbit/s NIC (without zcopy on the broadcom though).
+> Max,
+> 
+> This is unfortunately a known issue with this older NIC. The newer
+> Intel NICs such as i40e (Fortville) and ice (Columbiaville) work as
+> you would expect. They do remember filter settings after enabling XDP.
+> 
+> /Magnus
+> 
 
-Max,
+Thank you for your reply Magnus.
 
-This is unfortunately a known issue with this older NIC. The newer
-Intel NICs such as i40e (Fortville) and ice (Columbiaville) work as
-you would expect. They do remember filter settings after enabling XDP.
+That is unfortunate but looks like I am not able to change anything about it.
 
-/Magnus
+Do you know if there are other problems with AF_XDP and that NIC?
 
-> Thank you
->
-> Max
+For example, I am adding a multicast address membership to a generic Linux socket and then loading a BPF / XDP program.
+
+After loading the BPF program I no longer receive any packets (tcpdump -i eth5).
+
+Thank you
+
+Max
