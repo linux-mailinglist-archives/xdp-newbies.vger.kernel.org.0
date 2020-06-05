@@ -2,263 +2,136 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 484151EEE03
-	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jun 2020 00:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6E81EF656
+	for <lists+xdp-newbies@lfdr.de>; Fri,  5 Jun 2020 13:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgFDW4o (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 4 Jun 2020 18:56:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56267 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726221AbgFDW4o (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 Jun 2020 18:56:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591311401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t2sAOPMDFb8RhL6uvTpwNIa+xN61vUAbg4AYTokPIIw=;
-        b=YptppkA1Ka/m6WdiDPFw8S6g4/XOZsGorOJUjwz0DlWAFyZOok1UFUPuQuVFUrePNEVPly
-        j2O/4pVeW08BVOgNeYOi6rfUt/Z8Yij3JMaBWKu4dlWXjBuWS1cVuRIKLjLnorvQDz6/Em
-        IHyLYMSpMllwujaPnvtymnZjYTwn02g=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-v-6Z8m8hNgyUI1xWHwdC5g-1; Thu, 04 Jun 2020 18:56:39 -0400
-X-MC-Unique: v-6Z8m8hNgyUI1xWHwdC5g-1
-Received: by mail-ej1-f72.google.com with SMTP id l2so2675649ejd.11
-        for <xdp-newbies@vger.kernel.org>; Thu, 04 Jun 2020 15:56:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=t2sAOPMDFb8RhL6uvTpwNIa+xN61vUAbg4AYTokPIIw=;
-        b=fxiV8anTw4LLgWoKfAaM2jY064YN6k7rh3fHIrik70/gcIa7bY+xxDPnnlTUS9SbHq
-         Jxv3zqynKa7b1ZjmVVMlj3YPhIQ+xrvcN6QTTrtFtjKDwfkh6p1EWL2Rv5ooGb29tqR7
-         jiXh97i1+Q0gXf/yVWWVMh/XDaaNDNXE8oVeBZ6nE54X6i4EGFFaT5m3ckWWPR7EtZzN
-         SSPub8mnm/mYavW0GF0CViDsRQHFskhBmVFzEAoMCAGCVgUy5W6v0jMN4FGMtuhnvmhh
-         aySlKs5/NhIVsJXSfA89k+f5Qp9MSKYpjNVUynMhnoSDHpxIMdjGH5GdSCoZPKj0zNOI
-         Xh3w==
-X-Gm-Message-State: AOAM532W3KSxIAeJZAEEV26SImpqAl+Wy8uit+7vvjrMlIDhduElTaML
-        CyFncT7QwsJH8HVBULYymN5PLpWsibeL4qJLEdA7FVJM3iSi0K/cY0WbNddNFJLUV0L4XNY6Au9
-        fB0TexOERbvQ5KTvA/GD/fJY=
-X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr6076184ejb.460.1591311398436;
-        Thu, 04 Jun 2020 15:56:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzCJhaJdK/77lJ6SPN/Z3Jk9WhUZvIx1MWTHkmXMij2PFMCZu63opfUDeK7L5PTin9zS4VYrg==
-X-Received: by 2002:a17:906:aac8:: with SMTP id kt8mr6076172ejb.460.1591311398129;
-        Thu, 04 Jun 2020 15:56:38 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id lx26sm2973107ejb.112.2020.06.04.15.56.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:56:37 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id A9C2718200D; Fri,  5 Jun 2020 00:56:33 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     maharishi bhargava <bhargavamaharishi@gmail.com>
-Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        xdp-newbies@vger.kernel.org,
-        Magnus Karlsson <magnus.karlsson@intel.com>
-Subject: Re: XDP_REDIRECT with xsks_map and dev_map
-In-Reply-To: <CA+Jwd2ww5csJOhbid7aSWHcC4MahDM8mu+y90pX+U3H9F2iJRQ@mail.gmail.com>
-References: <CA+Jwd2y5Pjh+QMrH9vjBtHhvG2EC1MCfm-A2Pq2hjRPEvJ1J1Q@mail.gmail.com> <87d06hzvr8.fsf@toke.dk> <CA+Jwd2z4_tGfh9wS_CJQL36O_vYyv5knXkm6=A+UvNNtojEcrw@mail.gmail.com> <877dwpmp7f.fsf@toke.dk> <CA+Jwd2xnb8Nuc6Y2V=04fBa2bXfaMy1FPyK8CsFnOkqyxrtEwg@mail.gmail.com> <87lfl4l8zu.fsf@toke.dk> <20200603104833.GA14391@ranger.igk.intel.com> <87ftbcl86e.fsf@toke.dk> <20200603110726.GA55184@ranger.igk.intel.com> <CA+Jwd2wPcKWkfGa=TszqODbm2sGiyXszy5LRKozab0JrsSoGBQ@mail.gmail.com> <874krskwz6.fsf@toke.dk> <CA+Jwd2ww5csJOhbid7aSWHcC4MahDM8mu+y90pX+U3H9F2iJRQ@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 05 Jun 2020 00:56:33 +0200
-Message-ID: <877dwme8ym.fsf@toke.dk>
+        id S1726516AbgFELRg convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+xdp-newbies@lfdr.de>); Fri, 5 Jun 2020 07:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgFELRf (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 5 Jun 2020 07:17:35 -0400
+Received: from postout1.mail.lrz.de (postout1.mail.lrz.de [IPv6:2001:4ca0:0:103::81bb:ff89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04369C08C5C2
+        for <xdp-newbies@vger.kernel.org>; Fri,  5 Jun 2020 04:17:35 -0700 (PDT)
+Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
+        by postout1.mail.lrz.de (Postfix) with ESMTP id 49dg9960T3zyZG
+        for <xdp-newbies@vger.kernel.org>; Fri,  5 Jun 2020 13:17:33 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -0.584
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.584 tagged_above=-999 required=5
+        tests=[ALL_TRUSTED=-1, BAYES_00=-1.9, LRZ_CT_PLAIN_ISO8859_1=0.001,
+        LRZ_DATE_TZ_0000=0.001, LRZ_DKIM_DESTROY_MTA=0.001,
+        LRZ_DMARC_OVERWRITE=0.001, LRZ_ENVFROM_FROM_ALIGNED_STRICT=0.001,
+        LRZ_ENVFROM_FROM_MATCH=0.001, LRZ_FROM_AP_PHRASE=0.001,
+        LRZ_FROM_HAS_A=0.001, LRZ_FROM_HAS_MDOM=0.001, LRZ_FROM_HAS_MX=0.001,
+        LRZ_FROM_HOSTED_DOMAIN=0.001, LRZ_FROM_NAME_IN_ADDR=0.001,
+        LRZ_FROM_PHRASE=0.001, LRZ_FWD_MS_EX=0.001, LRZ_HAS_CLANG=0.001,
+        LRZ_HAS_THREAD_INDEX=0.001, LRZ_HAS_URL_HTTP=0.001,
+        LRZ_HAS_URL_HTTP_SINGLE=0.001, LRZ_HAS_X_ORIG_IP=0.001,
+        LRZ_MSGID_HL32=0.001, LRZ_RCVD_BADWLRZ_EXCH=0.001,
+        LRZ_RCVD_MS_EX=0.001, LRZ_RDNS_NONE=1.5, RDNS_NONE=0.793,
+        SPF_HELO_NONE=0.001] autolearn=no autolearn_force=no
+Received: from postout1.mail.lrz.de ([127.0.0.1])
+        by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+        with LMTP id x2dHLChTK6el for <xdp-newbies@vger.kernel.org>;
+        Fri,  5 Jun 2020 13:17:33 +0200 (CEST)
+Received: from BADWLRZ-SWMBX04.ads.mwn.de (BADWLRZ-SWMBX04.ads.mwn.de [IPv6:2001:4ca0:0:108::160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client CN "BADWLRZ-SWMBX04", Issuer "BADWLRZ-SWMBX04" (not verified))
+        by postout1.mail.lrz.de (Postfix) with ESMTPS id 49dg994ML8zyZ5
+        for <xdp-newbies@vger.kernel.org>; Fri,  5 Jun 2020 13:17:33 +0200 (CEST)
+Received: from BADWLRZ-SWMBX03.ads.mwn.de (2001:4ca0:0:108::159) by
+ BADWLRZ-SWMBX04.ads.mwn.de (2001:4ca0:0:108::160) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1979.3; Fri, 5 Jun 2020 13:17:33 +0200
+Received: from BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e]) by
+ BADWLRZ-SWMBX03.ads.mwn.de ([fe80::b83a:fd44:92bb:7e5e%13]) with mapi id
+ 15.01.1979.003; Fri, 5 Jun 2020 13:17:33 +0200
+From:   "Gaul, Maximilian" <maximilian.gaul@hm.edu>
+To:     Xdp <xdp-newbies@vger.kernel.org>
+Subject: Intel X520 looses ethtool flow-type rule the moment a BPF / XDP
+ program is loaded
+Thread-Topic: Intel X520 looses ethtool flow-type rule the moment a BPF / XDP
+ program is loaded
+Thread-Index: AQHWOyon4hZVPYvzk0ifXX+vh3PLTg==
+Date:   Fri, 5 Jun 2020 11:17:33 +0000
+Message-ID: <a5741e0f3b90422f8c53a8bd54f06d8a@hm.edu>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Exchange-Organization-AuthAs: Internal
+X-MS-Exchange-Organization-AuthMechanism: 04
+X-MS-Exchange-Organization-AuthSource: BADWLRZ-SWMBX03.ads.mwn.de
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [80.246.32.33]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-maharishi bhargava <bhargavamaharishi@gmail.com> writes:
+Hello,
 
-> On Wed, Jun 3, 2020 at 8:39 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@red=
-hat.com> wrote:
->>
->> maharishi bhargava <bhargavamaharishi@gmail.com> writes:
->>
->> > On Wed, Jun 3, 2020 at 4:41 PM Maciej Fijalkowski
->> > <maciej.fijalkowski@intel.com> wrote:
->> >>
->> >> On Wed, Jun 03, 2020 at 01:07:05PM +0200, Toke H=C3=B8iland-J=C3=B8rg=
-ensen wrote:
->> >> > Maciej Fijalkowski <maciej.fijalkowski@intel.com> writes:
->> >> >
->> >> > > On Wed, Jun 03, 2020 at 12:49:25PM +0200, Toke H=C3=83=C6=92=C3=
-=82=C2=B8iland-J=C3=83=C6=92=C3=82=C2=B8rgensen wrote:
->> >> > >> maharishi bhargava <bhargavamaharishi@gmail.com> writes:
->> >> > >>
->> >> > >> > On Tue, Jun 2, 2020 at 9:31 PM Toke H=C3=83=C6=92=C3=82=C2=B8i=
-land-J=C3=83=C6=92=C3=82=C2=B8rgensen <toke@redhat.com> wrote:
->> >> > >> >>
->> >> > >> >> maharishi bhargava <bhargavamaharishi@gmail.com> writes:
->> >> > >> >>
->> >> > >> >> > On Tue 2 Jun, 2020, 14:31 Toke H=C3=83=C6=92=C3=82=C2=B8ila=
-nd-J=C3=83=C6=92=C3=82=C2=B8rgensen, <toke@redhat.com> wrote:
->> >> > >> >> >>
->> >> > >> >> >> maharishi bhargava <bhargavamaharishi@gmail.com> writes:
->> >> > >> >> >>
->> >> > >> >> >> > Hi, in my XDP program, I want to redirect some packets u=
-sing AF_XDP
->> >> > >> >> >> > and redirect other packets directly from driver space.
->> >> > >> >> >> > Redirection through AF_XDP works fine, but redirection t=
-hrough dev map
->> >> > >> >> >> > stops after some packets are processed.
->> >> > >> >> >>
->> >> > >> >> >> Do you mean it stops even if you are *only* redirecting to=
- a devmap, or
->> >> > >> >> >> if you are first redirecting a few packets to AF_XDP, then=
- to devmap?
->> >> > >> >> >>
->> >> > >> >> >> Also, which driver(s) are the physical NICs you're redirec=
-ting to/from
->> >> > >> >> >> using, and which kernel version are you on?
->> >> > >> >> >>
->> >> > >> >> >> -Toke
->> >> > >> >> >
->> >> > >> >> >
->> >> > >> >> >
->> >> > >> >> > Currently, I'm trying to redirect packets only using devmap=
-. But also
->> >> > >> >> > have code for redirection using AF_XDP(only when a given co=
-ndition is
->> >> > >> >> > satisfied). A DPDK program is running in userspace which wi=
-ll receive
->> >> > >> >> > packets from AF_XDP.
->> >> > >> >>
->> >> > >> >> Right, so it's just devmap redirect that breaks. What do you =
-mean
->> >> > >> >> 'redirection stops', exactly? How are you seeing this? Does x=
-dp_monitor
->> >> > >> >> (from samples/bpf) report any exceptions?
->> >> > >> >>
->> >> > >> >> -Toke
->> >> > >> >>
->> >> > >> > So, In my setup, there are three systems, Let's Assume A, B, C=
-. System
->> >> > >> > B is acting as a forwarder between A and C. So I can see the n=
-umber of
->> >> > >> > packets received at system C. To be specific, only 1024 packet=
-s are
->> >> > >> > received. If I remove the xsks_map part from the code and don'=
-t run
->> >> > >> > DPDK in userspace. This problem does not occur. Also if I forw=
-ard all
->> >> > >> > the packets using AF_XDP, there is no such issue.
->> >> > >>
->> >> > >> I thought you said you were seeing the problem when only redirec=
-ting to
->> >> > >> a devmap? So why does the xsk_map code impact this? I think you =
-may have
->> >> > >> to share some code...
->> >> > >
->> >> > > Isn't the case here that either xsk_map or dev_map consumes the f=
-rame and
->> >> > > therefore the latter doesn't see it? so cloning might be needed h=
-ere?
->> >> >
->> >> > Yeah, certainly you can't redirect *the same packet* to both xsk_ma=
-p and
->> >> > devmap - but that wasn't what I understood was the use case here?
->> >>
->> >> Maybe the best would be if Maharishi shared the code as you requested=
- :)
->> >>
->> >> >
->> >> > -Toke
->> >> >
->> > CODE:
->> > BPF MAPS:
->> >
->> >
->> > struct bpf_map_def SEC("maps") xsks_map =3D {
->> >     .type =3D BPF_MAP_TYPE_XSKMAP,
->> >     .key_size =3D sizeof(int),
->> >     .value_size =3D sizeof(int),
->> >     .max_entries =3D 64,  /* Assume netdev has no more than 64 queues =
-*/
->> > };
->> >
->> > struct bpf_map_def SEC("maps") tx_port =3D {
->> >     .type =3D BPF_MAP_TYPE_DEVMAP,
->> >     .key_size =3D sizeof(int),
->> >     .value_size =3D sizeof(int),
->> >     .max_entries =3D 1024,
->> > };
->> >
->> > struct Ingress_qos_lts_value{
->> >     struct bpf_spin_lock lock;
->> >     u64 timestamp;
->> > };
->> > struct bpf_map_def SEC("maps") Ingress_qos_lts =3D {
->> >     .type =3D BPF_MAP_TYPE_ARRAY,
->> >     .key_size =3D sizeof(u32),
->> >     .value_size =3D sizeof(struct Ingress_qos_lts_value),
->> >     .max_entries =3D 1025,
->> > };
->> > BPF_ANNOTATE_KV_PAIR(Ingress_qos_lts,u32,struct Ingress_qos_lts_value);
->> >
->> >
->> > SEC("prog")
->> > int ebpf_filter(struct xdp_md *ctx){
->> >     struct xdp_output xout;
->> >    xout.output_port =3D 1;
->> >     void* ebpf_packetStart =3D ((void*)(long)ctx->data);
->> >     void* ebpf_packetEnd =3D ((void*)(long)ctx->data_end);
->> >     u64 rate =3D 100;//100 Kbps
->> >     rate *=3D 1000*1000*100;//10 Gbps
->> >     u32 key =3D 1;//some key
->> >     u64 packet_length=3D(ebpf_packetEnd-ebpf_packetStart-42)*8;
->> >     packet_length *=3D 1000000000; //packet length * 10^9, to convert
->> > rate from second to nanosecond
->> >     struct Ingress_qos_lts_value* val;
->> >     val =3D bpf_map_lookup_elem(&Ingress_qos_lts, &key);
->> >     u64 now =3D bpf_ktime_get_ns();
->> >     u64 lts;
->> >     if (val) {
->> >         bpf_spin_lock(&val->lock);
->> >         lts =3D *(&val->timestamp)+(packet_length/rate);
->> >         if(now>lts){
->> >             lts =3D now;
->> >         }
->> >         *(&val->timestamp) =3D lts;
->> >         bpf_spin_unlock(&val->lock);
->> >                     // printk("Time : %x %x\n",lts,now);
->> >         if(lts>now){
->> >             return bpf_redirect_map(&xsks_map, ctx->rx_queue_index, 0);
->> >         }
->> >     }
->> >     return  bpf_redirect_map(&tx_port,xout.output_port,0);
->> > }
->> >
->> > So, Basically this code redirects the packet to some other interface
->> > or sends the packet to userspace based on the incoming packet rate.
->>
->> Well, if you say it goes away when you remove the xsk code, the obvious
->> explanation would be that the packets are being redirected to userspace
->> instead? What does xdp_monitor say?
->>
->> -Toke
->>
-> No packets are not going to userspace. NIC stops processing any more
-> packets after 1024 redirected packets. I'll post the results of
-> xdp_monitor asap.
->
-> Also, one piece of information that might be helpful. In DPDK's
-> default code for creating xsk_socket, the value of bind_flags was 0.
-> When I changed it to XDP_COPY(1 << 1), everything started working
-> correctly. So, is it something like, the socket was getting created in
-> zero-copy mode and as far as I know, kernel version 5.3 does not
-> support zero-copy mode. Due to this xdp_redirect using DEVMAP was not
-> working as expected.
+I have an Intel X520 10Gbit/s NIC with driver:
 
-Hmm, in zero-copy mode packets are DMA'ed directly into the
-userspace-provided buffer (hence zero copies). Pretty sure this is
-incompatible with forwarding them to the stack, whether or not the
-kernel supports zero-copy in the first place.
+		$ sudo ethtool -i eth5
+		driver: ixgbe
+		version: 5.7.1
+		firmware-version: 0x80000827, 16.5.19
+		expansion-rom-version: 
+		bus-info: 0000:04:00.1
+		supports-statistics: yes
+		supports-test: yes
+		supports-eeprom-access: yes
+		supports-register-dump: yes
+		supports-priv-flags: yes
 
-Cc Magnus who will know for sure.
+and Kernel:
 
--Toke
+		$ uname -a
+		Linux 5.6.0-2-amd64
 
+I tried this tutorial before hand: https://software.intel.com/content/www/us/en/develop/articles/setting-up-intel-ethernet-flow-director.html
+
+Unfortunately I am experiencing some strange behavior in combination with AF_XDP.
+
+For example, I am adding an ethtool flow-type rule like this:
+
+		$ sudo ethtool -N eth5 flow-type udp4 dst-ip 239.0.1.1 dst-port 5500 action 0
+		Added rule with ID 4093
+
+Checking it is there:
+
+		$ sudo ethtool -n eth5
+		16 RX rings available
+		Total 1 rules
+
+		Filter: 4093
+				Rule Type: UDP over IPv4
+				Src IP addr: 0.0.0.0 mask: 255.255.255.255
+				Dest IP addr: 239.0.1.1 mask: 0.0.0.0
+				TOS: 0x0 mask: 0xff
+				Src port: 0 mask: 0xffff
+				Dest port: 5500 mask: 0x0
+				VLAN EtherType: 0x0 mask: 0xffff
+				VLAN: 0x0 mask: 0xffff
+				User-defined: 0x0 mask: 0xffffffffffffffff
+				Action: Direct to queue 0
+
+After that I am launching my AF_XDP program which firsts loads a compiled BPF-object file into the kernel (without any errors).
+I am checking ethtool again:
+
+		$ sudo ethtool -n eth5
+		16 RX rings available
+		Total 0 rules
+
+Any ideas why that is? I am not saying that my program is bug-free but it worked fine in combination with Mellannox ConnectX5 and Broadcom 1Gbit/s NIC (without zcopy on the broadcom though).
+
+Thank you
+
+Max
