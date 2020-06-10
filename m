@@ -2,87 +2,115 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 184921F5109
-	for <lists+xdp-newbies@lfdr.de>; Wed, 10 Jun 2020 11:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C890A1F5131
+	for <lists+xdp-newbies@lfdr.de>; Wed, 10 Jun 2020 11:32:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgFJJVi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 10 Jun 2020 05:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgFJJVh (ORCPT
+        id S1727809AbgFJJc2 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 10 Jun 2020 05:32:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44579 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727769AbgFJJc1 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 10 Jun 2020 05:21:37 -0400
-Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B9DDC03E96B
-        for <xdp-newbies@vger.kernel.org>; Wed, 10 Jun 2020 02:21:35 -0700 (PDT)
-Received: by mail-vs1-xe29.google.com with SMTP id 190so802857vsr.9
-        for <xdp-newbies@vger.kernel.org>; Wed, 10 Jun 2020 02:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=wrjX1VjjnsL6cuxa3TB142dXk1tgwtF7a3/VOP9X9MU=;
-        b=BOuB7YVN+L8yBSQn7NyvO/RzYo4NNjllgAaMJh+Hy4GpkNscDsJONiVr8gUVfmk50U
-         diUNax1yzWMpBF6hyVTjDU0xxPq7Pm+X1hBzJ7aoWg0qhp8vCXg5yGY+ey33mJwzPtON
-         124KP43fbQaOePiBA58gxT0pgaDMRg2P9fg1ozV/B3IKtaSMMf3zQ4lZFMVnF+3tJ9Et
-         tfa3I17DEOYbiikqwhQudCJFb//nDHUtewHzomG+4SWqjddhhJ/sbZ21CKlGHw7nI3BQ
-         l7IFPH9lJ5j/GIWyx2CrkGJOUJVP32mPdzdHvlpt/cM0lKijEhyj+6jjOI+j9TTzGGYl
-         im6w==
+        Wed, 10 Jun 2020 05:32:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591781545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5FlRHXmeBboarkTSpXdeBV8U7XG+XcuVsmgDpRsRNj0=;
+        b=R7+QK8xWPZTnotO4YAWBLgXvWk76GPCg2bQgSpfp0qBIt9dApB5WEAqB/9gGIDusj+ENFQ
+        aC8ypv88ULYpXhq/KgrFs6nISDrwKpmgGwzKbQsentlRfQHYYYHq1aVaP17DtOlQPhk9dV
+        +CeYxmrNS5Wx+DXk5xyTQzoKYx9kgfA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-GuD7EHkQOrGx3B__HDiX2w-1; Wed, 10 Jun 2020 05:32:21 -0400
+X-MC-Unique: GuD7EHkQOrGx3B__HDiX2w-1
+Received: by mail-ej1-f70.google.com with SMTP id ca6so821441ejb.7
+        for <xdp-newbies@vger.kernel.org>; Wed, 10 Jun 2020 02:32:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=wrjX1VjjnsL6cuxa3TB142dXk1tgwtF7a3/VOP9X9MU=;
-        b=UOKS4Yl83Rs00xqRPMHXxcmQEnZLiQY5vsloKwpwakvxvBXpJ27/TEz/z6wgB+rHHr
-         Kj9arC5pAKV+Q7zPHT3uf/CYnjM1EGbteRCVS5E8bj5rojzz2agl33yujg0YEnLwqbQ+
-         aiJWrVLxE0uCJ8E8c+X93v3wkry4ycMBRCO0DieKqmPSMZWgiltj801UQw4RDBcM+YS9
-         E6TdsjVln8t5gPfSJzk4Pb7S7ag8eWTzSGHPDbcKMEUYeV+0p5hkpGHX6OcTOv6JY0Dg
-         wz3Rawj2umo+l4gP4K0CxtF7HovJHJM0HQi+IP93oGU7+1FiGqWVnsbliqmUKsx3tX7C
-         B1ag==
-X-Gm-Message-State: AOAM532sQ+uzkouxoc93X+x9tVFJDRWh6BNNM2eVx4LGliEyktkkc0Db
-        1rWYchuIorRt4ljgS3mXWUOZq1V7c66TrR+OSarqJTJLHvI=
-X-Google-Smtp-Source: ABdhPJxOn0KZltu93vpW23ONtMNfEweqmpSeos9/06myyJGswWwTnB0CHRCKPk3/7ke0/0Q6TX+zP3XoOSQ77KaBfWQ=
-X-Received: by 2002:a67:e957:: with SMTP id p23mr1704091vso.190.1591780894417;
- Wed, 10 Jun 2020 02:21:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=5FlRHXmeBboarkTSpXdeBV8U7XG+XcuVsmgDpRsRNj0=;
+        b=rqJhy3Ieo79ELsePwZU/RDm0jT6ZaXNQ5SYZnpqI8U910TwcIWUVzAEdUEYa7vBDpo
+         f/sQ0nShc3IvUR1zH4KwZm0lJo8dpMO3drucfUGPFNwIcpQJ0Ceh8/jgn744iftyyIQN
+         OTzNJ8p2EMjBsvFk3LXXokvoc18MX2S7jTZfV+TXTvPJTZAgtRasdiInq/Ie8D1eZZT9
+         f4aFMaOE9RN/tuMLpQMHnhjz67mV/KosSHu0S22sRvFEXZLh/lepSPzKy5BsCzqpJo1G
+         IuG51oNL+LcM37BhojrN5joUI1fEpMLO5qnPSNCDwte4panmZMX46Kc3k169oieXIhYS
+         7IEg==
+X-Gm-Message-State: AOAM532e//1SSRi6278VCetdrnQDjXegmc/pOWYaqkM9Ovc/DZaLLhI0
+        FyOJtJNP1zwMiWfv+qKcZtV817YmYjGs+ItzYFrYjjkYktZKItZswicr44+byAxV8ggkqB6lUmz
+        LGncJp+72Pn+3SfxHudSPidg=
+X-Received: by 2002:a50:fc0d:: with SMTP id i13mr1654472edr.260.1591781540763;
+        Wed, 10 Jun 2020 02:32:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwfKtttEKq7frvgLeGrCA182m4IklpzpwsZ62Kp13NRRY6hydsEmBt2OBnouwhTGuOlW0X1LA==
+X-Received: by 2002:a50:fc0d:: with SMTP id i13mr1654446edr.260.1591781540438;
+        Wed, 10 Jun 2020 02:32:20 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id n5sm17526745edq.13.2020.06.10.02.32.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2020 02:32:19 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id F0EB91814F0; Wed, 10 Jun 2020 11:32:18 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Elerion <elerion1000@gmail.com>, xdp-newbies@vger.kernel.org
+Subject: Re: How to load BTF style maps?
+In-Reply-To: <CAMDScm=VZJMZYN=SXo9OAshY=yYxwtavLDgTvu1qEasg77JyLw@mail.gmail.com>
+References: <CAMDScm=VZJMZYN=SXo9OAshY=yYxwtavLDgTvu1qEasg77JyLw@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 10 Jun 2020 11:32:18 +0200
+Message-ID: <87ftb38dwd.fsf@toke.dk>
 MIME-Version: 1.0
-From:   Elerion <elerion1000@gmail.com>
-Date:   Wed, 10 Jun 2020 02:21:23 -0700
-Message-ID: <CAMDScm=VZJMZYN=SXo9OAshY=yYxwtavLDgTvu1qEasg77JyLw@mail.gmail.com>
-Subject: How to load BTF style maps?
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-I have maps written in the old style like this:
+Elerion <elerion1000@gmail.com> writes:
 
-struct bpf_map_def SEC("maps") xdp_stats_map = {
-.type        = BPF_MAP_TYPE_ARRAY,
-.key_size    = sizeof(__u32),
-.value_size  = sizeof(struct datarec),
-.max_entries = XDP_ACTION_MAX,
-};
+> I have maps written in the old style like this:
+>
+> struct bpf_map_def SEC("maps") xdp_stats_map = {
+> .type        = BPF_MAP_TYPE_ARRAY,
+> .key_size    = sizeof(__u32),
+> .value_size  = sizeof(struct datarec),
+> .max_entries = XDP_ACTION_MAX,
+> };
+>
+> I changed it to the new BTF style like this but now the example BPF
+> loader from the kernel doesn't work anymore.
+>
+> struct {
+>     __uint(type, BPF_MAP_TYPE_ARRAY);
+>     __uint(max_entries,  XDP_ACTION_MAX);
+>     __type(key,  __u32);
+>     __type(value,  struct datarec);
+> }  xdp_stats_map SEC(".maps");
+>
+> I used this to load my program
+> https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c
+>
+> But now it fails to load. First thing I noticed was the I had to
+> change "maps" to ".maps"
+> https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c#L563
+>
+> But then bpf_create_map_node fails because all the arguments are 0. I
+> dumped the buffer here
+> https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c#L489
+> and it just copies 28 bytes of zeroes for each map I have.
+>
+> How do you load BTF style maps? bpf_load.c doesn't seem to work on them.
 
-I changed it to the new BTF style like this but now the example BPF
-loader from the kernel doesn't work anymore.
+Hmm, bpf_load.c seems to be using old-style loading (not libbpf) and so
+wouldn't understand BTF-defined maps. I guess we should fix that.
 
-struct {
-    __uint(type, BPF_MAP_TYPE_ARRAY);
-    __uint(max_entries,  XDP_ACTION_MAX);
-    __type(key,  __u32);
-    __type(value,  struct datarec);
-}  xdp_stats_map SEC(".maps");
+In the meantime, you can try one of the following options:
 
-I used this to load my program
-https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c
+Use xdp-loader from xdp-tools (since this seems to be an XDP use case?):
+https://github.com/xdp-project/xdp-tools
 
-But now it fails to load. First thing I noticed was the I had to
-change "maps" to ".maps"
-https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c#L563
+Use bpftool (in tools/bpf/bpftool in the kernel source tree).
 
-But then bpf_create_map_node fails because all the arguments are 0. I
-dumped the buffer here
-https://github.com/torvalds/linux/blob/master/samples/bpf/bpf_load.c#L489
-and it just copies 28 bytes of zeroes for each map I have.
+-Toke
 
-How do you load BTF style maps? bpf_load.c doesn't seem to work on them.
