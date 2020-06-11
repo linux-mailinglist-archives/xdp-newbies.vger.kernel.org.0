@@ -2,81 +2,96 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 064161F5DE0
-	for <lists+xdp-newbies@lfdr.de>; Wed, 10 Jun 2020 23:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B1A1F661A
+	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jun 2020 13:00:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgFJVul (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 10 Jun 2020 17:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgFJVuk (ORCPT
+        id S1727036AbgFKLAO (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 11 Jun 2020 07:00:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49557 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726407AbgFKLAK (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 10 Jun 2020 17:50:40 -0400
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62066C03E96B
-        for <xdp-newbies@vger.kernel.org>; Wed, 10 Jun 2020 14:50:39 -0700 (PDT)
-Received: by mail-vs1-xe2d.google.com with SMTP id r11so2226319vsj.5
-        for <xdp-newbies@vger.kernel.org>; Wed, 10 Jun 2020 14:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ob3e95frNUFNe7Nsw1vUYqyMp3bDMOZxQWtqkTgqhuY=;
-        b=mCl8NbQSG1f+SMqZ2FLyg10/MRacIWWd5AF/J+7FqYnDNyD0P3MRI1DeWKfih7W0+7
-         haTAx++//AvDMEb70MgE7NO8bX7V3oFyuE/tGXiqwbsrVOWv1KXHtZEmOZcxw+ijfBBp
-         iqBtagqW2wE8y6/inXgqoUTSjk7+scVWZ5AVfQPp328VS2k2JSjgUhpfuZJy0IKnwHmK
-         0S0gAaJqpMbx95q3MdwXeIMut89LeZtg7iiOVaWSij2kXgAxItsJS/84ZBs63OGnjd6k
-         28PmIBBjxab2iOd9o5CM6eaWyClwjGAEz7Up/17fN0xVKa9CRJDAjhb1aDQat116KrtP
-         N/jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ob3e95frNUFNe7Nsw1vUYqyMp3bDMOZxQWtqkTgqhuY=;
-        b=aLGnkm2lGOEli2iKBfbDO1JYvntz5vn4tRO+ljWCw0rgXIDWzsK24WfkBBldxJ/Uil
-         OKCn/qZco6QWTbqXFPX27WzECknP+/z8uvlVok3sW95CCkRVp1U8/2QqIVyeQe7C8QcG
-         rNA525eBbsw3m0LbZy3C1bkQxAv8LdGM1YmwE+2U/Y6q7mLG2rW005emroU4iRwS25Fw
-         H9yPpvclzhDceJ5Wr9dvak/xVBg1XKCz3ZHmCDh1G7Vt0UH5c7Y5grEwKRgHFTCHGtUG
-         CU6ldMFvY1DPLXyO9gCcEa084IuYgm/g/yuvf3ewo6hwrQNU8zBTjghM6ILBfC2nXXM6
-         s9jQ==
-X-Gm-Message-State: AOAM531+3NGtnb2g9yDXbmKl8fFPzy68W/eSM89cr38eG2k+nPB2Z3bM
-        dFLgqAC5y7zsG6P0X58BXqyZG/sCUATTfiyfJYKyjBfZ
-X-Google-Smtp-Source: ABdhPJyClPLasu1/PP7K1oaADh3/c3K7wqTnzuieSlZDnFJ2ZEoOeDje8Fh/9JCLcoxgSGEkVw8Ie93oKbhjB2eRSDc=
-X-Received: by 2002:a67:d597:: with SMTP id m23mr4484438vsj.209.1591825838636;
- Wed, 10 Jun 2020 14:50:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAMDScmnpbPgs+mB_aMY16aXLMMWBgfu0sqna06MH8RPoGpw7_Q@mail.gmail.com>
- <87imfy7hrx.fsf@toke.dk> <CAMDScmm5nCzeffaeEuSFHATunsH36XW2VzbsFCuWhU5OYr_naA@mail.gmail.com>
- <87a71a7gay.fsf@toke.dk>
-In-Reply-To: <87a71a7gay.fsf@toke.dk>
-From:   Elerion <elerion1000@gmail.com>
-Date:   Wed, 10 Jun 2020 14:50:27 -0700
-Message-ID: <CAMDScmnTYKfjMjiqLGduY4Pk3X0D7RQhjtY7DuPmh65VMNeCRw@mail.gmail.com>
+        Thu, 11 Jun 2020 07:00:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591873209;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tjEOiVvDYw9J9HrlxrdpORbRDHPi5Ga65mVy4ncGYq4=;
+        b=Eu7k9NPX2SOVFfgsmvp3FRTc9Dw+p55689lh3AJ5A472Lpdowjo2TVtC3pv2KWTRlaohjh
+        OAABAlIQLLu2N6CEIvEVeVLdJ6fdHDAheNiXswcoCCWpDKn8FqdZa0WlN6n5iIRXlpxPVu
+        vL0C13pUrBMLJ3OTgQ+a1lyYHwxFAbY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-PwtJQ2BXMdKDxbDNFZE0DA-1; Thu, 11 Jun 2020 07:00:05 -0400
+X-MC-Unique: PwtJQ2BXMdKDxbDNFZE0DA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CF61805DC6;
+        Thu, 11 Jun 2020 11:00:04 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0CCA1A92C;
+        Thu, 11 Jun 2020 10:59:53 +0000 (UTC)
+Date:   Thu, 11 Jun 2020 12:59:52 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Elerion <elerion1000@gmail.com>,
+        "iovisor-dev@lists.iovisor.org" <iovisor-dev@lists.iovisor.org>
+Cc:     brouer@redhat.com,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        xdp-newbies@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Yonghong Song <ys114321@gmail.com>
 Subject: Re: Error loading xdp program that worked with bpf_load
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20200611125952.3527dfdb@carbon>
+In-Reply-To: <CAMDScmnTYKfjMjiqLGduY4Pk3X0D7RQhjtY7DuPmh65VMNeCRw@mail.gmail.com>
+References: <CAMDScmnpbPgs+mB_aMY16aXLMMWBgfu0sqna06MH8RPoGpw7_Q@mail.gmail.com>
+        <87imfy7hrx.fsf@toke.dk>
+        <CAMDScmm5nCzeffaeEuSFHATunsH36XW2VzbsFCuWhU5OYr_naA@mail.gmail.com>
+        <87a71a7gay.fsf@toke.dk>
+        <CAMDScmnTYKfjMjiqLGduY4Pk3X0D7RQhjtY7DuPmh65VMNeCRw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Never mind, I fixed it by downgrading to Clang 9.
+(Cross-posting to iovisor-dev)
 
-It appears to be an issue with Clang/LLVM 10+
+Seeking input from BPF-llvm developers. How come Clang/LLVM 10+ is
+generating incompatible BTF-info in ELF file, and downgrading to LLVM-9
+fixes the issue ?
 
-https://github.com/cilium/ebpf/issues/43
 
-On Wed, Jun 10, 2020 at 2:38 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> Elerion <elerion1000@gmail.com> writes:
->
-> > [69] FUNC xdp_program type_id=3D68 vlen !=3D 0
->
-> 'vlen !=3D 0' is the error. Not sure why you hit that; what's the output
-> of 'bpftool btf dump file yourprog.o' ?
->
-> -Toke
->
+On Wed, 10 Jun 2020 14:50:27 -0700 Elerion <elerion1000@gmail.com> wrote:
+
+> Never mind, I fixed it by downgrading to Clang 9.
+>=20
+> It appears to be an issue with Clang/LLVM 10+
+>=20
+> https://github.com/cilium/ebpf/issues/43
+>=20
+> On Wed, Jun 10, 2020 at 2:38 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
+dhat.com> wrote:
+> >
+> > Elerion <elerion1000@gmail.com> writes:
+> > =20
+> > > [69] FUNC xdp_program type_id=3D68 vlen !=3D 0 =20
+> >
+> > 'vlen !=3D 0' is the error. Not sure why you hit that; what's the output
+> > of 'bpftool btf dump file yourprog.o' ?
+> >
+> > -Toke
+> > =20
+
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
