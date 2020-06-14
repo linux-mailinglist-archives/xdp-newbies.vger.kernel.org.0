@@ -2,151 +2,165 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBB9A1F6F2E
-	for <lists+xdp-newbies@lfdr.de>; Thu, 11 Jun 2020 23:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B211F87C6
+	for <lists+xdp-newbies@lfdr.de>; Sun, 14 Jun 2020 10:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726153AbgFKVLe (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 11 Jun 2020 17:11:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
+        id S1726785AbgFNIzn (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 14 Jun 2020 04:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgFKVLe (ORCPT
+        with ESMTP id S1726099AbgFNIzn (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 11 Jun 2020 17:11:34 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C22CC08C5C1
-        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jun 2020 14:11:34 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id q2so4189256vsr.1
-        for <xdp-newbies@vger.kernel.org>; Thu, 11 Jun 2020 14:11:34 -0700 (PDT)
+        Sun, 14 Jun 2020 04:55:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F1CC03E969
+        for <xdp-newbies@vger.kernel.org>; Sun, 14 Jun 2020 01:55:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so14067865wrc.7
+        for <xdp-newbies@vger.kernel.org>; Sun, 14 Jun 2020 01:55:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=dectris.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Amg5K8UZYf/pcSH63NuYfHfKRPGqy4q/vtDKKGe9kJQ=;
-        b=T1adjEREHNcsSWH0bKvEiDdmS6rVQbG6lLjPK+Q2RxPqmieT/1w0MdwDkw3L1SkgSz
-         Kee1xf+XougsLhRuml0inSYLSkEq2nPy3hTzsv8RN7c3JiQp12IcoFvOx7ppKS5oxFjy
-         8A6ouj4pnboWOBnLW2KgNyMIRA+fm1s2GjqjToL18si0Bl8XDn7Px4bt0TVa7Z+jE2iR
-         qwQc5f5jQeu7Honrxsqz5Ow1u558OsIeTm5N55iMU1+N5k0GAMA69epIbKHXCc2OrgfC
-         4JTnjmVFjiFTo3AWmOejMFBk+BKEwuqixqz+C/HxJPsLFBFduh765DRWjIUvXTixZMh1
-         Jw1A==
+         :cc;
+        bh=llpwFJx7bM20R9a6/mhnv06HJ/te3x1vavOQOVX/2CQ=;
+        b=S7dzRgrpCv/EKte3nuNXBUVvfSn6Nl5+56xXsIBrcFZDTH6ry7SkYeor2FuubMsuYY
+         4mgvYdZm1Sq8pCyD5XWASNJDqsrY9l6aIueXdnoj+HjjZ6OTB40a0jigH72PgSqypvSa
+         VckOVTMG2I+N2BVFHFIgtJc106U7SFL0UHTVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Amg5K8UZYf/pcSH63NuYfHfKRPGqy4q/vtDKKGe9kJQ=;
-        b=IU7MVz766SCvhCrEmRAPS0gP1tLqy4uRjOe7eaupKD0ce3I85jWXL/B0efdZeO23L3
-         g6BAABgSqj4EJcRIcXoYJtiPEJyYY7Cda00HeNGAkApN5nhqMZqHQOEISwwJKCOxLlEm
-         JyJpC0qAAfDyy/OS2Oidx79TEO06S/tHX52jEmzHQ0di+K/ZDfrXNV1kb/wlOjSsJcbw
-         Oj/0xIztdkcFZywybfZt5VuGQeHZRUGa3QLyH2q4Q1XzTjDT8rfciA0ZAr2iHIT4V860
-         8QxBANFeYtM3vbV1FriU1RgH6d1sdMLs3tQumRXuOqBcZyo7yDn2PcGzkqumIO9KsHm/
-         Q7dQ==
-X-Gm-Message-State: AOAM5311t7Tx8rSaxUbl35K5e6aMEHFyxyKT7ldsnx/qId9i6r1nCPWK
-        GU9jqEdylAT127LRuUIEzvo4l1oNa2Q2YkPlHjI=
-X-Google-Smtp-Source: ABdhPJyFXZ26rG+jfXrA3HFViWpTS5ftqZVrJxx4THgT+21tkKWYguurE9NdFJyc+PdGpkJubRtPJ/Tf42A5Zc2ED6I=
-X-Received: by 2002:a67:ee0d:: with SMTP id f13mr8281953vsp.147.1591909892433;
- Thu, 11 Jun 2020 14:11:32 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=llpwFJx7bM20R9a6/mhnv06HJ/te3x1vavOQOVX/2CQ=;
+        b=Dgz40Zrfkq9L43bzK+ovXNEsDF5JBzN2T4u81Ozpoyq0DsIPKSTe3l0b9avYy41St+
+         ljvZ/ib3p0AzuXHExlORmYaZFz9SRqISRJbVJ5BXCv1FXuNqmgxGMngxH2WYyjBUUYX8
+         2hRUYij4uqAparpnhIdnfzLY7PFhcAHrnvYsWtPrKG28a9UX4mZK2LIH18if8SZKWcyX
+         kCO/wkjudSF+Gb8dDgTe9F+P52gtc/lfGIAnNXdCrLTpRk1l1BMaH5srbJ0SdyaVATzs
+         KGprziXTw/CTKNI56YH65ETFmba7gODa2i9Gv3sGr6QVWZy6fRgjQXJsMxT4GTlPwx0b
+         NuVg==
+X-Gm-Message-State: AOAM533NNvIlowimL1yixON/bxBp7xr7EuqvbI/4DGtfvXvz3ZRh+24g
+        g+fCe8mxVv5o0bM365vLl0BFisA6mpa3ovgyl2+aFQ==
+X-Google-Smtp-Source: ABdhPJyHz5Bhhj8GoMeDgXuhUhmcgBPzIWtD0lcvZ73CyDndfoVYYyIdA6vV0AaurwANQRaXjov6ypLV5gq6aCZtlxw=
+X-Received: by 2002:a05:6000:1202:: with SMTP id e2mr22446338wrx.231.1592124941461;
+ Sun, 14 Jun 2020 01:55:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMDScmnpbPgs+mB_aMY16aXLMMWBgfu0sqna06MH8RPoGpw7_Q@mail.gmail.com>
- <87imfy7hrx.fsf@toke.dk> <CAMDScmm5nCzeffaeEuSFHATunsH36XW2VzbsFCuWhU5OYr_naA@mail.gmail.com>
- <87a71a7gay.fsf@toke.dk> <CAMDScmnTYKfjMjiqLGduY4Pk3X0D7RQhjtY7DuPmh65VMNeCRw@mail.gmail.com>
- <20200611125952.3527dfdb@carbon> <CAEf4BzafLSnjjqdeH9-Wu7J69a=7_3gmqqDBV8ysTOTmnvmtyw@mail.gmail.com>
- <CAMDScmk+vXCwOYkWhwUcdg95EsCsJNBnM0Jj=nHQLcGPJxiAgw@mail.gmail.com> <CAEf4BzZRd6HU8XWAdTkGggQtcKY+f_Ha2Oe4oeNGCpESGkpq4g@mail.gmail.com>
-In-Reply-To: <CAEf4BzZRd6HU8XWAdTkGggQtcKY+f_Ha2Oe4oeNGCpESGkpq4g@mail.gmail.com>
-From:   Elerion <elerion1000@gmail.com>
-Date:   Thu, 11 Jun 2020 14:11:21 -0700
-Message-ID: <CAMDScm=+UWLw-o1QJj5q2D0EFtdF4hRDzmCgmnzzho_ppJ7cjg@mail.gmail.com>
-Subject: Re: Error loading xdp program that worked with bpf_load
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        "iovisor-dev@lists.iovisor.org" <iovisor-dev@lists.iovisor.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        Yonghong Song <ys114321@gmail.com>
+References: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
+ <CAHApi-=YSo=sOTkRxmY=fct3TePFFdG9oPTRHWYd1AXjk0ACfw@mail.gmail.com>
+ <20190902110818.2f6a8894@carbon> <fd3ee317865e9743305c0e88e31f27a2d51a0575.camel@mellanox.com>
+In-Reply-To: <fd3ee317865e9743305c0e88e31f27a2d51a0575.camel@mellanox.com>
+From:   Kal Cutter Conley <kal.conley@dectris.com>
+Date:   Sun, 14 Jun 2020 10:55:30 +0200
+Message-ID: <CAHApi-k=9Szxm0QMD4N4PW9Lq8L4hW6e7VfyBePzrTgvKGRs5Q@mail.gmail.com>
+Subject: Re: net/mlx5e: bind() always returns EINVAL with XDP_ZEROCOPY
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     "brouer@redhat.com" <brouer@redhat.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+        "toke.hoiland-jorgensen@kau.se" <toke.hoiland-jorgensen@kau.se>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "gospo@broadcom.com" <gospo@broadcom.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bjorn.topel@intel.com" <bjorn.topel@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello here's some of the basic information, I don't have a minimum
-code sample to reproduce the error and I don't really feel inclined to
-spend the time to make one since I have already found a solution. I'm
-not able to release the production code we are using.
+Hi Saeed,
+Thanks for explaining the reasoning behind the special mlx5 queue
+numbering with XDP zerocopy.
 
-5.3.0-53-generic #47~18.04.1-Ubuntu SMP Thu May 7 13:10:50 UTC 2020
-x86_64 x86_64 x86_64 GNU/Linux
-Ubuntu clang version
-10.0.1-++20200529024103+a634a80615b-1~exp1~20200529124721.169
-Target: x86_64-pc-linux-gnu
+We have a process using AF_XDP that also shares the network interface
+with other processes on the system. ethtool rx flow classification
+rules are used to route the traffic to the appropriate XSK queue
+N..(2N-1). The issue is these queues are only valid as long they are
+active (as far as I can tell). This means if my AF_XDP process dies
+other processes no longer receive ingress traffic routed over queues
+N..(2N-1) even though my XDP program is still loaded and would happily
+always return XDP_PASS. Other drivers do not have this usability issue
+because they use queues that are always valid. Is there a simple
+workaround for this issue? It seems to me queues N..(2N-1) should
+simply map to 0..(N-1) when they are not active?
 
-You can find the discussion here:
+Kal
 
-https://www.spinics.net/lists/xdp-newbies/msg01730.html
 
-On Thu, Jun 11, 2020 at 1:46 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Tue, Sep 3, 2019 at 10:19 PM Saeed Mahameed <saeedm@mellanox.com> wrote:
 >
-> On Thu, Jun 11, 2020 at 1:41 PM Elerion <elerion1000@gmail.com> wrote:
+> On Mon, 2019-09-02 at 11:08 +0200, Jesper Dangaard Brouer wrote:
+> > On Sun, 1 Sep 2019 18:47:15 +0200
+> > Kal Cutter Conley <kal.conley@dectris.com> wrote:
 > >
-> > I am using libbpf from here https://github.com/libbpf/libbpf I'm not
-> > using ebpf. I just linked to the ebpf issue because it seems like the
-> > only thing related to this problem when I googled it.
->
-> Ok, that I can help with, then.
->
-> What's the kernel version? Where I can find repro? Steps, etc.
-> Basically, a bit more context would help, as I wasn't part of initial
-> discussion.
->
->
+> > > Hi,
+> > > I figured out the problem. Let me document the issue here for
+> > > others
+> > > and hopefully start a discussion.
+> > >
+> > > The mlx5 driver uses special queue ids for ZC. If N is the number
+> > > of
+> > > configured queues, then for XDP_ZEROCOPY the queue ids start at N.
+> > > So
+> > > queue ids [0..N) can only be used with XDP_COPY and queue ids
+> > > [N..2N)
+> > > can only be used with XDP_ZEROCOPY.
 > >
-> > On Thu, Jun 11, 2020 at 9:34 AM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
+> > Thanks for the followup and explanation on how mlx5 AF_XDP queue
+> > implementation is different from other vendors.
+> >
+> >
+> > > sudo ethtool -L eth0 combined 16
+> > > sudo samples/bpf/xdpsock -r -i eth0 -c -q 0   # OK
+> > > sudo samples/bpf/xdpsock -r -i eth0 -z -q 0   # ERROR
+> > > sudo samples/bpf/xdpsock -r -i eth0 -c -q 16  # ERROR
+> > > sudo samples/bpf/xdpsock -r -i eth0 -z -q 16  # OK
 > > >
-> > > On Thu, Jun 11, 2020 at 4:00 AM Jesper Dangaard Brouer
-> > > <brouer@redhat.com> wrote:
-> > > >
-> > > > (Cross-posting to iovisor-dev)
-> > > >
-> > > > Seeking input from BPF-llvm developers. How come Clang/LLVM 10+ is
-> > > > generating incompatible BTF-info in ELF file, and downgrading to LL=
-VM-9
-> > > > fixes the issue ?
-> > > >
-> > > >
-> > > > On Wed, 10 Jun 2020 14:50:27 -0700 Elerion <elerion1000@gmail.com> =
-wrote:
-> > > >
-> > > > > Never mind, I fixed it by downgrading to Clang 9.
-> > > > >
-> > > > > It appears to be an issue with Clang/LLVM 10+
-> > > > >
-> > > > > https://github.com/cilium/ebpf/issues/43
-> > >
-> > > This is newer Clang recording that function is global, not static.
-> > > libbpf is sanitizing BTF to remove this flag, if kernel doesn't
-> > > support this. But given this is re-implementation of libbpf, that's
-> > > probably not happening, right?
-> > >
-> > > > >
-> > > > > On Wed, Jun 10, 2020 at 2:38 PM Toke H=C3=B8iland-J=C3=B8rgensen =
-<toke@redhat.com> wrote:
-> > > > > >
-> > > > > > Elerion <elerion1000@gmail.com> writes:
-> > > > > >
-> > > > > > > [69] FUNC xdp_program type_id=3D68 vlen !=3D 0
-> > > > > >
-> > > > > > 'vlen !=3D 0' is the error. Not sure why you hit that; what's t=
-he output
-> > > > > > of 'bpftool btf dump file yourprog.o' ?
-> > > > > >
-> > > > > > -Toke
-> > > > > >
-> > > >
-> > > >
-> > > > --
-> > > > Best regards,
-> > > >   Jesper Dangaard Brouer
-> > > >   MSc.CS, Principal Kernel Engineer at Red Hat
-> > > >   LinkedIn: http://www.linkedin.com/in/brouer
-> > > >
+> > > Why was this done? To use zerocopy if available and fallback on
+> > > copy
+> > > mode normally you would set sxdp_flags=0. However, here this is no
+> > > longer possible. To support this driver, you have to first try
+> > > binding
+> > > with XDP_ZEROCOPY and the special queue id, then if that fails, you
+> > > have to try binding again with a normal queue id. Peculiarities
+> > > like
+> > > this complicate the XDP user api. Maybe someone can explain the
+> > > benefits?
+> >
+>
+> in mlx5 we like to keep full functional separation between different
+> queues. Unlike other implementations in mlx5 kernel standard rx rings
+> can still function while xsk queues are opened. from user perspective
+> this should be very simple and very usefull:
+>
+> queues 0..(N-1): can't be used for XSK ZC since they are standard RX
+> queues managed by kernel  and driver
+> queues N..(2N-1): Are XSK user app managed queues, they can't be used
+> for anything else.
+>
+> benefits:
+> - RSS is not interrupted, Ongoing traffic and Current RX queues keeps
+> going normally when XSK apps are activated/deactivated on the fly.
+> - Well-defined full logical separation between different types of RX
+> queue.
+>
+> as Jesper explained we understand the confusion, and we will come up
+> with a solution the fits all vendors.
+>
+> > Thanks for complaining, it is actually valuable. It really illustrate
+> > the kernel need to improve in this area, which is what our talk[1] at
+> > LPC2019 (Sep 10) is about.
+> >
+> > Title: "Making Networking Queues a First Class Citizen in the Kernel"
+> >  [1] https://linuxplumbersconf.org/event/4/contributions/462/
+> >
+> > As you can see, several vendors are actually involved. Kudos to
+> > Magnus
+> > for taking initiative here!  It's unfortunately not solved
+> > "tomorrow",
+> > as first we have to agree this is needed (facility to register
+> > queues),
+> > then agree on API and get commitment from vendors, as this requires
+> > drivers changes.  There is a long road ahead, but I think it will be
+> > worthwhile in the end, as effective use of dedicated hardware queues
+> > (both RX and TX) is key to performance.
+> >
