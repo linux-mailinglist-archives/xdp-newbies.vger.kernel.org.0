@@ -2,165 +2,125 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B211F87C6
-	for <lists+xdp-newbies@lfdr.de>; Sun, 14 Jun 2020 10:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA6941FB90B
+	for <lists+xdp-newbies@lfdr.de>; Tue, 16 Jun 2020 18:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgFNIzn (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 14 Jun 2020 04:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgFNIzn (ORCPT
+        id S1731102AbgFPQAl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 16 Jun 2020 12:00:41 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27710 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731703AbgFPQAj (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 14 Jun 2020 04:55:43 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F1CC03E969
-        for <xdp-newbies@vger.kernel.org>; Sun, 14 Jun 2020 01:55:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h5so14067865wrc.7
-        for <xdp-newbies@vger.kernel.org>; Sun, 14 Jun 2020 01:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dectris.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=llpwFJx7bM20R9a6/mhnv06HJ/te3x1vavOQOVX/2CQ=;
-        b=S7dzRgrpCv/EKte3nuNXBUVvfSn6Nl5+56xXsIBrcFZDTH6ry7SkYeor2FuubMsuYY
-         4mgvYdZm1Sq8pCyD5XWASNJDqsrY9l6aIueXdnoj+HjjZ6OTB40a0jigH72PgSqypvSa
-         VckOVTMG2I+N2BVFHFIgtJc106U7SFL0UHTVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=llpwFJx7bM20R9a6/mhnv06HJ/te3x1vavOQOVX/2CQ=;
-        b=Dgz40Zrfkq9L43bzK+ovXNEsDF5JBzN2T4u81Ozpoyq0DsIPKSTe3l0b9avYy41St+
-         ljvZ/ib3p0AzuXHExlORmYaZFz9SRqISRJbVJ5BXCv1FXuNqmgxGMngxH2WYyjBUUYX8
-         2hRUYij4uqAparpnhIdnfzLY7PFhcAHrnvYsWtPrKG28a9UX4mZK2LIH18if8SZKWcyX
-         kCO/wkjudSF+Gb8dDgTe9F+P52gtc/lfGIAnNXdCrLTpRk1l1BMaH5srbJ0SdyaVATzs
-         KGprziXTw/CTKNI56YH65ETFmba7gODa2i9Gv3sGr6QVWZy6fRgjQXJsMxT4GTlPwx0b
-         NuVg==
-X-Gm-Message-State: AOAM533NNvIlowimL1yixON/bxBp7xr7EuqvbI/4DGtfvXvz3ZRh+24g
-        g+fCe8mxVv5o0bM365vLl0BFisA6mpa3ovgyl2+aFQ==
-X-Google-Smtp-Source: ABdhPJyHz5Bhhj8GoMeDgXuhUhmcgBPzIWtD0lcvZ73CyDndfoVYYyIdA6vV0AaurwANQRaXjov6ypLV5gq6aCZtlxw=
-X-Received: by 2002:a05:6000:1202:: with SMTP id e2mr22446338wrx.231.1592124941461;
- Sun, 14 Jun 2020 01:55:41 -0700 (PDT)
+        Tue, 16 Jun 2020 12:00:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592323237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5/ne6VwmBXj9BAwhXCvmh/9OS3++zH5jIR+gejYluJw=;
+        b=GKYnFNhCq4AN1sfJbqrRoexsyoQGRzTNZIoz7PCEG8cAuGyngcoqhU2d/75cRY9jXby0Kn
+        OzCxOUvKqqK8tQyxUi40diOirW/E+eK18N/0Jh8VcvdR8SAWyS404CLYFtAcoDpNClI5vE
+        ERqhp5hRn+nuuqP9kcRa7jONc3CGbYM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-abnSmRlvPcKCy9Hv3G2vBQ-1; Tue, 16 Jun 2020 12:00:13 -0400
+X-MC-Unique: abnSmRlvPcKCy9Hv3G2vBQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05FE9E918;
+        Tue, 16 Jun 2020 16:00:11 +0000 (UTC)
+Received: from carbon (unknown [10.40.208.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BEF810002BC;
+        Tue, 16 Jun 2020 16:00:02 +0000 (UTC)
+Date:   Tue, 16 Jun 2020 18:00:01 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc:     brouer@redhat.com, Federico Parola <fede.parola@hotmail.it>,
+        xdp-newbies@vger.kernel.org, "Kanthi P" <Pavuluri.kanthi@gmail.com>
+Subject: Re: Lightweight packet timestamping
+Message-ID: <20200616180001.7409bbad@carbon>
+In-Reply-To: <87d0667hm9.fsf@toke.dk>
+References: <DB7PR08MB3130BDD01387627E7FAD775F9E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
+        <DB7PR08MB3130C02AB04133E07146F40D9E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
+        <DB7PR08MB3130BA2C0F90E0819577C5289E890@DB7PR08MB3130.eurprd08.prod.outlook.com>
+        <b712de09-fd35-1d5e-1842-31bb3b2e163d@gmail.com>
+        <DB7PR08MB31304BCD517885F0E1C063F69E830@DB7PR08MB3130.eurprd08.prod.outlook.com>
+        <87d0667hm9.fsf@toke.dk>
 MIME-Version: 1.0
-References: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
- <CAHApi-=YSo=sOTkRxmY=fct3TePFFdG9oPTRHWYd1AXjk0ACfw@mail.gmail.com>
- <20190902110818.2f6a8894@carbon> <fd3ee317865e9743305c0e88e31f27a2d51a0575.camel@mellanox.com>
-In-Reply-To: <fd3ee317865e9743305c0e88e31f27a2d51a0575.camel@mellanox.com>
-From:   Kal Cutter Conley <kal.conley@dectris.com>
-Date:   Sun, 14 Jun 2020 10:55:30 +0200
-Message-ID: <CAHApi-k=9Szxm0QMD4N4PW9Lq8L4hW6e7VfyBePzrTgvKGRs5Q@mail.gmail.com>
-Subject: Re: net/mlx5e: bind() always returns EINVAL with XDP_ZEROCOPY
-To:     Saeed Mahameed <saeedm@mellanox.com>
-Cc:     "brouer@redhat.com" <brouer@redhat.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
-        "toke.hoiland-jorgensen@kau.se" <toke.hoiland-jorgensen@kau.se>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "gospo@broadcom.com" <gospo@broadcom.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bjorn.topel@intel.com" <bjorn.topel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Saeed,
-Thanks for explaining the reasoning behind the special mlx5 queue
-numbering with XDP zerocopy.
+On Wed, 10 Jun 2020 23:09:34 +0200
+Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> wrote:
 
-We have a process using AF_XDP that also shares the network interface
-with other processes on the system. ethtool rx flow classification
-rules are used to route the traffic to the appropriate XSK queue
-N..(2N-1). The issue is these queues are only valid as long they are
-active (as far as I can tell). This means if my AF_XDP process dies
-other processes no longer receive ingress traffic routed over queues
-N..(2N-1) even though my XDP program is still loaded and would happily
-always return XDP_PASS. Other drivers do not have this usability issue
-because they use queues that are always valid. Is there a simple
-workaround for this issue? It seems to me queues N..(2N-1) should
-simply map to 0..(N-1) when they are not active?
+> Federico Parola <fede.parola@hotmail.it> writes:
+>=20
+> > On 06/06/20 01:34, David Ahern wrote: =20
+> >> On 6/4/20 7:30 AM, Federico Parola wrote: =20
+> >>> Hello everybody,
+>
+> >>> I'm implementing a token bucket algorithm to apply rate limit to
+> >>> traffic and I need the timestamp of packets to update the bucket.
+> >>> To get this information I'm using the bpf_ktime_get_ns() helper
+> >>> but I've discovered it has a non negligible impact on
+> >>> performance. I've seen there is work in progress to make hardware
+> >>> timestamps available to XDP programs, but I don't know if this
+> >>> feature is already available. Is there a faster way to retrieve
+> >>> this information?
+>
+> >>> Thanks for your attention.
+> >>> =20
+> >> bpf_ktime_get_ns should be fairly light. What kind of performance loss
+> >> are you seeing with it? =20
+> >
+> > I've run some tests on a program forwarding packets between two=20
+> > interfaces and applying rate limit: using the bpf_ktime_get_ns() I can=
+=20
+> > process up to 3.84 Mpps, if I replace the helper with a lookup on a map=
+=20
+> > containing the current timestamp updated in user space I go up to 4.48
+> > Mpps.
 
-Kal
+((1/3.84*1000)-(1/4.48*1000) =3D 37.20 ns overhead)
 
+I was about to suggest doing something close to this.  That is, only call
+bpf_ktime_get_ns() once per NAPI poll-cycle, and store the timestamp in
+a map.  If you don't need super high per packet precision.  You can
+even use a per-CPU map to store the info (to avoid cross CPU
+cache/talk), because softirq will keep RX-processing pinned to a CPU.
 
-On Tue, Sep 3, 2019 at 10:19 PM Saeed Mahameed <saeedm@mellanox.com> wrote:
->
-> On Mon, 2019-09-02 at 11:08 +0200, Jesper Dangaard Brouer wrote:
-> > On Sun, 1 Sep 2019 18:47:15 +0200
-> > Kal Cutter Conley <kal.conley@dectris.com> wrote:
-> >
-> > > Hi,
-> > > I figured out the problem. Let me document the issue here for
-> > > others
-> > > and hopefully start a discussion.
-> > >
-> > > The mlx5 driver uses special queue ids for ZC. If N is the number
-> > > of
-> > > configured queues, then for XDP_ZEROCOPY the queue ids start at N.
-> > > So
-> > > queue ids [0..N) can only be used with XDP_COPY and queue ids
-> > > [N..2N)
-> > > can only be used with XDP_ZEROCOPY.
-> >
-> > Thanks for the followup and explanation on how mlx5 AF_XDP queue
-> > implementation is different from other vendors.
-> >
-> >
-> > > sudo ethtool -L eth0 combined 16
-> > > sudo samples/bpf/xdpsock -r -i eth0 -c -q 0   # OK
-> > > sudo samples/bpf/xdpsock -r -i eth0 -z -q 0   # ERROR
-> > > sudo samples/bpf/xdpsock -r -i eth0 -c -q 16  # ERROR
-> > > sudo samples/bpf/xdpsock -r -i eth0 -z -q 16  # OK
-> > >
-> > > Why was this done? To use zerocopy if available and fallback on
-> > > copy
-> > > mode normally you would set sxdp_flags=0. However, here this is no
-> > > longer possible. To support this driver, you have to first try
-> > > binding
-> > > with XDP_ZEROCOPY and the special queue id, then if that fails, you
-> > > have to try binding again with a normal queue id. Peculiarities
-> > > like
-> > > this complicate the XDP user api. Maybe someone can explain the
-> > > benefits?
-> >
->
-> in mlx5 we like to keep full functional separation between different
-> queues. Unlike other implementations in mlx5 kernel standard rx rings
-> can still function while xsk queues are opened. from user perspective
-> this should be very simple and very usefull:
->
-> queues 0..(N-1): can't be used for XSK ZC since they are standard RX
-> queues managed by kernel  and driver
-> queues N..(2N-1): Are XSK user app managed queues, they can't be used
-> for anything else.
->
-> benefits:
-> - RSS is not interrupted, Ongoing traffic and Current RX queues keeps
-> going normally when XSK apps are activated/deactivated on the fly.
-> - Well-defined full logical separation between different types of RX
-> queue.
->
-> as Jesper explained we understand the confusion, and we will come up
-> with a solution the fits all vendors.
->
-> > Thanks for complaining, it is actually valuable. It really illustrate
-> > the kernel need to improve in this area, which is what our talk[1] at
-> > LPC2019 (Sep 10) is about.
-> >
-> > Title: "Making Networking Queues a First Class Citizen in the Kernel"
-> >  [1] https://linuxplumbersconf.org/event/4/contributions/462/
-> >
-> > As you can see, several vendors are actually involved. Kudos to
-> > Magnus
-> > for taking initiative here!  It's unfortunately not solved
-> > "tomorrow",
-> > as first we have to agree this is needed (facility to register
-> > queues),
-> > then agree on API and get commitment from vendors, as this requires
-> > drivers changes.  There is a long road ahead, but I think it will be
-> > worthwhile in the end, as effective use of dedicated hardware queues
-> > (both RX and TX) is key to performance.
-> >
+It sounds like you update the timestamp from userspace, is that true?
+(Quote: "current timestamp updated in user space")
+
+I would suggest that you can leverage the softirq tracepoints (use
+SEC("raw_tracepoint/") for low overhead).  E.g. irq:softirq_entry
+(see when kernel calls trace_softirq_entry) to update the map once per
+NAPI/net_rx_action. I have a bpftrace based-tool[1] that measure
+network-softirq latency, e.g time it takes from "softirq_raise" until
+it is run "softirq_entry".  You can leverage ideas from that script,
+like 'vec =3D=3D 3' is NET_RX_SOFTIRQ to limit this to networking.
+
+[1] https://github.com/xdp-project/xdp-project/blob/master/areas/latency/so=
+ftirq_net_latency.bt
+
+> Can you share more details on the platform you're running this on?
+> I.e., CPU and chipset details, network driver, etc.
+
+Yes, please.  I plan to work on XDP-feature of extracting hardware
+offload-info from the drivers descriptor, like timestamps, vlan,
+rss-hash, checksum, etc.  If you tell me what NIC driver you are using,
+I could make sure to include that in the supported drivers.
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
