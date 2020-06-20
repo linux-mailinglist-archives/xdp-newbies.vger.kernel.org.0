@@ -2,509 +2,105 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D58202263
-	for <lists+xdp-newbies@lfdr.de>; Sat, 20 Jun 2020 09:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5539220233E
+	for <lists+xdp-newbies@lfdr.de>; Sat, 20 Jun 2020 12:43:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgFTHjf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 20 Jun 2020 03:39:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33699 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725880AbgFTHjb (ORCPT
+        id S1727983AbgFTKmw (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 20 Jun 2020 06:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728018AbgFTKmu (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 20 Jun 2020 03:39:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592638767;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9l8bX1JKmS3ZUvy2irnDeee0KT0i3PN0x6DcoxJbiVU=;
-        b=CQn4nzKPhsZk4y5ZkQoW1BA8EIw0DOLCr+JuFYez04YNdzvBFhbgX9KxPk7a2jT6CS6cXk
-        LGW49flcKxZUvwUz5hbDCV77MEfXIh5I9NE+8VD+B/N5TldSUFWirFIZkb/hnFdx8eKvXs
-        LFnuV8c881rk4LI5efRblofxZzqKBBk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-mc07k32RNDmkWkcui5E3MQ-1; Sat, 20 Jun 2020 03:39:23 -0400
-X-MC-Unique: mc07k32RNDmkWkcui5E3MQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8AC1DB36;
-        Sat, 20 Jun 2020 07:39:21 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4267119C4F;
-        Sat, 20 Jun 2020 07:39:16 +0000 (UTC)
-Date:   Sat, 20 Jun 2020 09:39:14 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Saddique A S <saddique.picasa@gmail.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Cc:     brouer@redhat.com, xdp-newbies@vger.kernel.org,
-        Tariq Toukan <ttoukan.linux@gmail.com>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>
-Subject: Re: CQ error on CQN 0x43e, syndrome 0x1
-Message-ID: <20200620093914.4c2277d6@carbon>
-In-Reply-To: <CAFqFp6EL0xUsmTK3yRa01C40+FZr6Dh+5W8Ek759wxbF96knPw@mail.gmail.com>
-References: <CAFqFp6EL0xUsmTK3yRa01C40+FZr6Dh+5W8Ek759wxbF96knPw@mail.gmail.com>
+        Sat, 20 Jun 2020 06:42:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C738C06174E
+        for <xdp-newbies@vger.kernel.org>; Sat, 20 Jun 2020 03:42:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l11so12025087wru.0
+        for <xdp-newbies@vger.kernel.org>; Sat, 20 Jun 2020 03:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dectris.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qjYrvX5Xg4/zDKs440DRFSzipo55xnvNBQlkBuatSQA=;
+        b=AiMu0NtKJP/nMRDzLWTG2nwqYgspLRLW6yNl4uXPO18PKQeONMPV4jLpfXhNnY6sjE
+         nxcmdYVlnkKeUHH5w1X/392WG7Jsmv14hqIyL3yTx+OVuPhlfbggUyKzthU2I+GcPkw+
+         h7x5e13y2YNYfx5EvhVLOpRjR2i0tXYbkIcco=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qjYrvX5Xg4/zDKs440DRFSzipo55xnvNBQlkBuatSQA=;
+        b=PlsCOKgYMU42mfDSZ7BkCavcbqzvPuQ/bkCKaPMJ/vmlWK2liVtf0AGnWsBHDCW9uo
+         4Kix8SIB2vTaAYWhRhhWlO9Yb6yGON0EH/Lbqnn0m7hrYoCralcTNI31v13zxJG4b/px
+         whLvNrmSkjIhPk0ynRalUhL7b9l8yol0E0cyCVeCpUbwr5oJRVVYAUlgRDWSNGFOpird
+         xsZVp6MOfK919nyhjNme6mwCFmuoC7birOUmbQrlOGJZsvg32wuRMvgzNLTDgmZYu4sF
+         djBXQ5d/03NICYuT4sZnebq7U/Czao2z9SgPchkL+gq19WXxw79/uztur403k2vYVGE2
+         +adw==
+X-Gm-Message-State: AOAM530FMQaBkq/g5ZxT/6pJCejgALGpI6yoNIkmuUbgvuiB6MwgKb7g
+        1EAjVWziJIRNwwYtIryzL0W1L699YrY0/FY7yYK43g==
+X-Google-Smtp-Source: ABdhPJw3azsvlXSiwIuxzPq0kHHHqC03dLWG0bY6WtuL95CkMoW7iqBzuNbtORpbMrNDSRywMgiz37GKhDGCc+yWYhE=
+X-Received: by 2002:adf:9525:: with SMTP id 34mr9025584wrs.313.1592649767455;
+ Sat, 20 Jun 2020 03:42:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <CAHApi-mMi2jYAOCrGhpkRVybz0sDpOSkLFCZfVe-2wOcAO_MqQ@mail.gmail.com>
+ <CAHApi-=YSo=sOTkRxmY=fct3TePFFdG9oPTRHWYd1AXjk0ACfw@mail.gmail.com>
+ <20190902110818.2f6a8894@carbon> <fd3ee317865e9743305c0e88e31f27a2d51a0575.camel@mellanox.com>
+ <CAHApi-k=9Szxm0QMD4N4PW9Lq8L4hW6e7VfyBePzrTgvKGRs5Q@mail.gmail.com> <20200618150347.ihtdvsfuurgfka7i@bsd-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200618150347.ihtdvsfuurgfka7i@bsd-mbp.dhcp.thefacebook.com>
+From:   Kal Cutter Conley <kal.conley@dectris.com>
+Date:   Sat, 20 Jun 2020 12:42:36 +0200
+Message-ID: <CAHApi-kMwnvRwJO8LT2UtrixVSd_bDgWybOP6H_eLTBmSFsd4A@mail.gmail.com>
+Subject: Re: net/mlx5e: bind() always returns EINVAL with XDP_ZEROCOPY
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "brouer@redhat.com" <brouer@redhat.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+        "toke.hoiland-jorgensen@kau.se" <toke.hoiland-jorgensen@kau.se>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "gospo@broadcom.com" <gospo@broadcom.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bjorn.topel@intel.com" <bjorn.topel@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-
-Below looks like a Mellanox specific driver/HW issue.
-Could someone from Mellanox please take a look?
-
-
-On Fri, 19 Jun 2020 11:51:13 -0700
-Saddique A S <saddique.picasa@gmail.com> wrote:
-
-> Hi,
+On Thu, Jun 18, 2020 at 5:23 PM Jonathan Lemon <jonathan.lemon@gmail.com> wrote:
 >
-> I am running the AF_XDP application in zero copy in a  VM(with kernel
-> 5.7.2) . At around 4.2Mpps ( 650 byte packets), the following message
-> starts appearing in dmesg
-> 
-> [ 1772.647659] mlx5_core 0000:00:06.0: cq_err_event_notifier:492:(pid
-> 0): CQ error on CQN 0x43e, syndrome 0x1
-> [ 1772.647666] mlx5_core 0000:00:06.0 ens6np0: mlx5e_cq_error_event:
-> cqn=0x00043e event=0x04
-> 
-> Can you please let me know what does this error mean?. Here are the
-> system details.
-> 
-> [ubuntu@lmg-vm2 ~]$ uname -a
-> Linux lmg-vm2.ncse.io 5.7.2-1.el8.elrepo.x86_64 #1 SMP Tue Jun 9
-> 15:21:08 EDT 2020 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> 
-> 
-> [ubuntu@lmg-vm2 ~]$ ethtool -i ens8np0
-> 
-> driver: mlx5_core
-> 
-> version: 5.0-0
-> 
-> firmware-version: 16.27.2008 (MT_0000000013)
-> 
-> expansion-rom-version:
-> 
-> bus-info: 0000:00:08.0
-> 
-> supports-statistics: yes
-> 
-> supports-test: yes
-> 
-> supports-eeprom-access: no
-> 
-> supports-register-dump: no
-> 
-> supports-priv-flags: yes
-> 
-> 
-> 
-> 
-> 
-> [ubuntu@lmg-vm2 ~]$ modinfo mlx5_core
-> 
-> filename:
-> /lib/modules/5.7.2-1.el8.elrepo.x86_64/kernel/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko.xz
-> 
-> version:        5.0-0
-> 
-> license:        Dual BSD/GPL
-> 
-> description:    Mellanox 5th generation network adapters (ConnectX
-> series) core driver
-> 
-> author:         Eli Cohen <eli@mellanox.com>
-> 
-> srcversion:     FE61933130A0F0255BCDE1E
-> 
-> alias:          pci:v000015B3d0000A2D6sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000A2D3sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000A2D2sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001021sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Fsv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Esv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Dsv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Csv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Bsv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d0000101Asv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001019sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001018sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001017sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001016sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001015sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001014sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001013sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001012sv*sd*bc*sc*i*
-> 
-> alias:          pci:v000015B3d00001011sv*sd*bc*sc*i*
-> 
-> depends:        nf_flow_table,pci-hyperv-intf,mlxfw,act_ct
-> 
-> retpoline:      Y
-> 
-> intree:         Y
-> 
-> name:           mlx5_core
-> 
-> vermagic:       5.7.2-1.el8.elrepo.x86_64 SMP mod_unload modversions
-> 
-> parm:           debug_mask:debug mask: 1 = dump cmd data, 2 = dump cmd
-> exec time, 3 = both. Default=0 (uint)
-> 
-> parm:           prof_sel:profile selector. Valid range 0 - 2 (uint)
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> On the hypervisor:
-> 
-> 
-> 
-> root@daytona3:/home/cse# mlxconfig -d /dev/mst/mt4121_pciconf0 q
-> 
-> 
-> 
-> Device #1:
-> 
-> ----------
-> 
-> 
-> 
-> Device type:    ConnectX5
-> 
-> Name:           MCX516A-CDA_Ax
-> 
-> Description:    ConnectX-5 Ex EN network interface card; 100GbE
-> dual-port QSFP28; PCIe4.0 x16; tall bracket; ROHS R6
-> 
-> Device:         /dev/mst/mt4121_pciconf0
-> 
-> 
-> 
-> Configurations:                              Next Boot
-> 
->          MEMIC_BAR_SIZE                      0
-> 
->          MEMIC_SIZE_LIMIT                    _256KB(1)
-> 
->          HOST_CHAINING_MODE                  DISABLED(0)
-> 
->          HOST_CHAINING_DESCRIPTORS           Array[0..7]
-> 
->          HOST_CHAINING_TOTAL_BUFFER_SIZE     Array[0..7]
-> 
->          FLEX_PARSER_PROFILE_ENABLE          0
-> 
->          FLEX_IPV4_OVER_VXLAN_PORT           0
-> 
->          ROCE_NEXT_PROTOCOL                  254
-> 
->          ESWITCH_HAIRPIN_DESCRIPTORS         Array[0..7]
-> 
->          ESWITCH_HAIRPIN_TOT_BUFFER_SIZE     Array[0..7]
-> 
->          PF_BAR2_SIZE                        0
-> 
->          NON_PREFETCHABLE_PF_BAR             False(0)
-> 
->          VF_VPD_ENABLE                       False(0)
-> 
->          STRICT_VF_MSIX_NUM                  False(0)
-> 
->          VF_NODNIC_ENABLE                    False(0)
-> 
->          NUM_OF_VFS                          6
-> 
->          PF_BAR2_ENABLE                      False(0)
-> 
->          SRIOV_EN                            True(1)
-> 
->          PF_LOG_BAR_SIZE                     5
-> 
->          VF_LOG_BAR_SIZE                     1
-> 
->          NUM_PF_MSIX                         63
-> 
->          NUM_VF_MSIX                         11
-> 
->          INT_LOG_MAX_PAYLOAD_SIZE            AUTOMATIC(0)
-> 
->          PCIE_CREDIT_TOKEN_TIMEOUT           0
-> 
->          PARTIAL_RESET_EN                    False(0)
-> 
->          SW_RECOVERY_ON_ERRORS               False(0)
-> 
->          RESET_WITH_HOST_ON_ERRORS           False(0)
-> 
->          ADVANCED_POWER_SETTINGS             False(0)
-> 
->          CQE_COMPRESSION                     BALANCED(0)
-> 
->          IP_OVER_VXLAN_EN                    False(0)
-> 
->          MKEY_BY_NAME                        False(0)
-> 
->          ESWITCH_IPV4_TTL_MODIFY_ENABLE      False(0)
-> 
->          PRIO_TAG_REQUIRED_EN                False(0)
-> 
->          UCTX_EN                             False(0)
-> 
->          PCI_ATOMIC_MODE
-> PCI_ATOMIC_DISABLED_EXT_ATOMIC_ENABLED(0)
-> 
->          TUNNEL_ECN_COPY_DISABLE             False(0)
-> 
->          LRO_LOG_TIMEOUT0                    6
-> 
->          LRO_LOG_TIMEOUT1                    7
-> 
->          LRO_LOG_TIMEOUT2                    8
-> 
->          LRO_LOG_TIMEOUT3                    13
-> 
->          LOG_DCR_HASH_TABLE_SIZE             11
-> 
->          DCR_LIFO_SIZE                       16384
-> 
->          ROCE_CC_PRIO_MASK_P1                255
-> 
->          ROCE_CC_ALGORITHM_P1                ECN(0)
-> 
->          ROCE_CC_PRIO_MASK_P2                255
-> 
->          ROCE_CC_ALGORITHM_P2                ECN(0)
-> 
->          CLAMP_TGT_RATE_AFTER_TIME_INC_P1    True(1)
-> 
->          CLAMP_TGT_RATE_P1                   False(0)
-> 
->          RPG_TIME_RESET_P1                   300
-> 
->          RPG_BYTE_RESET_P1                   32767
-> 
->          RPG_THRESHOLD_P1                    1
-> 
->          RPG_MAX_RATE_P1                     0
-> 
->          RPG_AI_RATE_P1                      5
-> 
->          RPG_HAI_RATE_P1                     50
-> 
->          RPG_GD_P1                           11
-> 
->          RPG_MIN_DEC_FAC_P1                  50
-> 
->          RPG_MIN_RATE_P1                     1
-> 
->          RATE_TO_SET_ON_FIRST_CNP_P1         0
-> 
->          DCE_TCP_G_P1                        1019
-> 
->          DCE_TCP_RTT_P1                      1
-> 
->          RATE_REDUCE_MONITOR_PERIOD_P1       4
-> 
->          INITIAL_ALPHA_VALUE_P1              1023
-> 
->          MIN_TIME_BETWEEN_CNPS_P1            2
-> 
->          CNP_802P_PRIO_P1                    6
-> 
->          CNP_DSCP_P1                         48
-> 
->          CLAMP_TGT_RATE_AFTER_TIME_INC_P2    True(1)
-> 
->          CLAMP_TGT_RATE_P2                   False(0)
-> 
->          RPG_TIME_RESET_P2                   300
-> 
->          RPG_BYTE_RESET_P2                   32767
-> 
->          RPG_THRESHOLD_P2                    1
-> 
->          RPG_MAX_RATE_P2                     0
-> 
->          RPG_AI_RATE_P2                      5
-> 
->          RPG_HAI_RATE_P2                     50
-> 
->          RPG_GD_P2                           11
-> 
->          RPG_MIN_DEC_FAC_P2                  50
-> 
->          RPG_MIN_RATE_P2                     1
-> 
->          RATE_TO_SET_ON_FIRST_CNP_P2         0
-> 
->          DCE_TCP_G_P2                        1019
-> 
->          DCE_TCP_RTT_P2                      1
-> 
->          RATE_REDUCE_MONITOR_PERIOD_P2       4
-> 
->          INITIAL_ALPHA_VALUE_P2              1023
-> 
->          MIN_TIME_BETWEEN_CNPS_P2            2
-> 
->          CNP_802P_PRIO_P2                    6
-> 
->          CNP_DSCP_P2                         48
-> 
->          LLDP_NB_DCBX_P1                     False(0)
-> 
->          LLDP_NB_RX_MODE_P1                  OFF(0)
-> 
->          LLDP_NB_TX_MODE_P1                  OFF(0)
-> 
->          LLDP_NB_DCBX_P2                     False(0)
-> 
->          LLDP_NB_RX_MODE_P2                  OFF(0)
-> 
->          LLDP_NB_TX_MODE_P2                  OFF(0)
-> 
->          DCBX_IEEE_P1                        True(1)
-> 
->          DCBX_CEE_P1                         True(1)
-> 
->          DCBX_WILLING_P1                     True(1)
-> 
->          DCBX_IEEE_P2                        True(1)
-> 
->          DCBX_CEE_P2                         True(1)
-> 
->          DCBX_WILLING_P2                     True(1)
-> 
->          KEEP_ETH_LINK_UP_P1                 True(1)
-> 
->          KEEP_IB_LINK_UP_P1                  False(0)
-> 
->          KEEP_LINK_UP_ON_BOOT_P1             False(0)
-> 
->          KEEP_LINK_UP_ON_STANDBY_P1          False(0)
-> 
->          KEEP_ETH_LINK_UP_P2                 True(1)
-> 
->          KEEP_IB_LINK_UP_P2                  False(0)
-> 
->          KEEP_LINK_UP_ON_BOOT_P2             False(0)
-> 
->          KEEP_LINK_UP_ON_STANDBY_P2          False(0)
-> 
->          NUM_OF_VL_P1                        _4_VLs(3)
-> 
->          NUM_OF_TC_P1                        _8_TCs(0)
-> 
->          NUM_OF_PFC_P1                       8
-> 
->          NUM_OF_VL_P2                        _4_VLs(3)
-> 
->          NUM_OF_TC_P2                        _8_TCs(0)
-> 
->          NUM_OF_PFC_P2                       8
-> 
->          DUP_MAC_ACTION_P1                   LAST_CFG(0)
-> 
->          SRIOV_IB_ROUTING_MODE_P1            LID(1)
-> 
->          IB_ROUTING_MODE_P1                  LID(1)
-> 
->          DUP_MAC_ACTION_P2                   LAST_CFG(0)
-> 
->          SRIOV_IB_ROUTING_MODE_P2            LID(1)
-> 
->          IB_ROUTING_MODE_P2                  LID(1)
-> 
->          PCI_WR_ORDERING                     per_mkey(0)
-> 
->          MULTI_PORT_VHCA_EN                  False(0)
-> 
->          PORT_OWNER                          True(1)
-> 
->          ALLOW_RD_COUNTERS                   True(1)
-> 
->          RENEG_ON_CHANGE                     True(1)
-> 
->          TRACER_ENABLE                       True(1)
-> 
->          IP_VER                              IPv4(0)
-> 
->          BOOT_UNDI_NETWORK_WAIT              0
-> 
->          UEFI_HII_EN                         False(0)
-> 
->          BOOT_DBG_LOG                        False(0)
-> 
->          UEFI_LOGS                           DISABLED(0)
-> 
->          BOOT_VLAN                           1
-> 
->          LEGACY_BOOT_PROTOCOL                PXE(1)
-> 
->          BOOT_INTERRUPT_DIS                  False(0)
-> 
->          BOOT_LACP_DIS                       True(1)
-> 
->          BOOT_VLAN_EN                        False(0)
-> 
->          BOOT_PKEY                           0
-> 
->          ATS_ENABLED                         False(0)
-> 
->          DYNAMIC_VF_MSIX_TABLE               False(0)
-> 
->          EXP_ROM_UEFI_x86_ENABLE             False(0)
-> 
->          EXP_ROM_PXE_ENABLE                  True(1)
-> 
->          ADVANCED_PCI_SETTINGS               False(0)
-> 
->          SAFE_MODE_THRESHOLD                 10
-> 
->          SAFE_MODE_ENABLE                    True(1)
-> 
-> root@daytona3:/home/cse#
-> 
-> 
-> Thanks
-> 
-> Saddique
-> 
+> On Sun, Jun 14, 2020 at 10:55:30AM +0200, Kal Cutter Conley wrote:
+> > Hi Saeed,
+> > Thanks for explaining the reasoning behind the special mlx5 queue
+> > numbering with XDP zerocopy.
+> >
+> > We have a process using AF_XDP that also shares the network interface
+> > with other processes on the system. ethtool rx flow classification
+> > rules are used to route the traffic to the appropriate XSK queue
+> > N..(2N-1). The issue is these queues are only valid as long they are
+> > active (as far as I can tell). This means if my AF_XDP process dies
+> > other processes no longer receive ingress traffic routed over queues
+> > N..(2N-1) even though my XDP program is still loaded and would happily
+> > always return XDP_PASS. Other drivers do not have this usability issue
+> > because they use queues that are always valid. Is there a simple
+> > workaround for this issue? It seems to me queues N..(2N-1) should
+> > simply map to 0..(N-1) when they are not active?
+>
+> If your XDP program returns XDP_PASS, the packet should be delivered to
+> the xsk socket.  If the application isn't running, where would it go?
+>
+> I do agree that the usability of this can be improved.  What if the flow
+> rules are inserted and removed along with queue creatioin/destruction?
 
+I think I misunderstood your suggestion here. Do you mean the rules
+should be inserted / removed on the hardware level but still show in
+ethtool even if they are not active in the hardware? In this case the
+rules always occupy a "location" but just never apply if the
+respective queues are not "enabled". I think this would be the best
+possible solution.
 
+> --
+> Jonathan
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Kal
