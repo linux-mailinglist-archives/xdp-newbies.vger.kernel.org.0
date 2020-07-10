@@ -2,72 +2,85 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D416421AD3B
-	for <lists+xdp-newbies@lfdr.de>; Fri, 10 Jul 2020 05:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CADC821B44F
+	for <lists+xdp-newbies@lfdr.de>; Fri, 10 Jul 2020 13:55:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgGJDEM (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 9 Jul 2020 23:04:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgGJDEM (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 9 Jul 2020 23:04:12 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106D5C08C5CE
-        for <xdp-newbies@vger.kernel.org>; Thu,  9 Jul 2020 20:04:12 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id q15so4279770wmj.2
-        for <xdp-newbies@vger.kernel.org>; Thu, 09 Jul 2020 20:04:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=content-transfer-encoding:from:mime-version:date:subject:message-id
-         :to;
-        bh=ccvOwmY6oLZG88cPcv3MTpOiZLWvpF+fGsriLI9tC38=;
-        b=YPtLxguayktkYUv3odI2uzXf0UCrFHq/4mDaVBqAMN96EUsPBce+XJOjI8b2HU/ZoN
-         5w6kOBzLp4cIcTNbVvrAhB4RhDSTrFjpPWB//d1z9nKs0/js5Bqx1KAoS0TmFZrxQHEz
-         1pG883/5bZe+ckgQn87ksf9JAI7ctq2QEnA/UtclZ1EBcdEY3vYzRMU2aJrcdZHyaJY4
-         Y0MjiuGfRht1AKOJ5rlRYyH3dDJcrbq/3YyTAyg7jjewZP97vMSeW2q6iwpWSJPXaQvG
-         yngzUZwABXoi82voDdTAd/GgPIklgiS7r7CM4m/G9pRv3xyhDVq6fo/E+ejDme+LVYIm
-         6r/w==
+        id S1726912AbgGJLzf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 10 Jul 2020 07:55:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59659 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726820AbgGJLze (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Fri, 10 Jul 2020 07:55:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594382133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lWcUS7/Jdvuidpb9zMcAh0QInQQG0m+Uk4yXib6bKO8=;
+        b=Et/Zaf/mOVlaQhd+a1a0KP2kn9fM3UAMjIsqKqb3lk3T793ijlpqKZ+9wWjW+Zn7Bx/2jE
+        PjEy06jdWzHGfxfi0ycKUjvDWgRkJueENClQ8tbZhzS/lxYjTt4jmX+NduQhRS/Hylxllb
+        YzfCqBZeFk5adATCyLlU/DZ3kgjjKXk=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-TX6eXeLVO8Gnr0RlxqfTTA-1; Fri, 10 Jul 2020 07:55:31 -0400
+X-MC-Unique: TX6eXeLVO8Gnr0RlxqfTTA-1
+Received: by mail-pj1-f69.google.com with SMTP id gp8so3960000pjb.9
+        for <xdp-newbies@vger.kernel.org>; Fri, 10 Jul 2020 04:55:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version:date
-         :subject:message-id:to;
-        bh=ccvOwmY6oLZG88cPcv3MTpOiZLWvpF+fGsriLI9tC38=;
-        b=AsUQ8Ssq3RetmuixezXlCPBHpW0AdHw8M9e8Annuv9dhprmTbw5d19kvGQ3HFEP9kH
-         hF1SPi6noJxjliXp/+tBA9hyIoZkMsh4zuoImEFqTLvgw99sfB67rbO/RXGzQ+ZjfnCu
-         bt+758NzjX7ZJ5e8Bw/AcxekAQrAp31ipyYlX15/YZquFdcx7oveUEfcEWbMG0BvkN2i
-         h6hmbNrZErX4fUJdUaJaszCqTpSa1EI43H7qw/I3Oop/asTjYgP0SPCkR0RLhQkQ3Igp
-         Gv/m2Zxik+zgHpnd7Ct1RIyOwwXZOkMOo80XHpfZYs7CuV7+WxO7atoe8WPE131hDSTY
-         FTFQ==
-X-Gm-Message-State: AOAM532dA3V4YsM/a7m2VZLbqz2zi/jEWQIGIqfQyIeLy5nH+8u3ixhh
-        ps0Z0pzFPh+1RPwr+PWKBPzFL9HA
-X-Google-Smtp-Source: ABdhPJyNYLVGu8FZP/A6Qq4DxQLOEF+93Dthdey1IUiJQKpWpYzWz3YLWPMPrsWqyPhq/VsD3ozZhw==
-X-Received: by 2002:a7b:cbcb:: with SMTP id n11mr2694310wmi.99.1594350250024;
-        Thu, 09 Jul 2020 20:04:10 -0700 (PDT)
-Received: from ?IPv6:2a01:4c8:53:b80f:cec:6ee:dab9:67b9? ([2a01:4c8:53:b80f:cec:6ee:dab9:67b9])
-        by smtp.gmail.com with ESMTPSA id p25sm6757408wmg.39.2020.07.09.20.04.09
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 20:04:09 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Cameron Boness <xdevps3@gmail.com>
-Mime-Version: 1.0 (1.0)
-Date:   Fri, 10 Jul 2020 04:04:08 +0100
-Subject: TCP Payload
-Message-Id: <449BEAB8-F4ED-489D-BF59-8993637268DB@gmail.com>
-To:     xdp-newbies@vger.kernel.org
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=lWcUS7/Jdvuidpb9zMcAh0QInQQG0m+Uk4yXib6bKO8=;
+        b=mg/5Qhn2xeVLoJFZSTa6QV4VbrXufYvL5/18hfE0AvSnlz9DcV87RteMfm6ODM2Spn
+         qryiNJsTS/5U3pDjuhZRXLZmb8TaG3ZLwjHfTWiPH77w92gyznU9oMkL9bMf6MOTB89g
+         07T2UPI0sPgB1R+UbGns75ZHXGEyCyaFnm7lR57xF11U8fWPu1d3YuXo80vk3koIXUK9
+         Ud1rrsSyVDmZIEBXWq24H2y7DHDfhJIlyFZBorNAMTD1aynE+Mc2uADKDMF7r/HSAvW4
+         ziwdhZZZr4JKsgcbum/hd67O76uni4LSuYmx9jkxW2cEeVCqY8c3E3q3vNALyDprk8Yt
+         LI1w==
+X-Gm-Message-State: AOAM5316wWZ45uq3hh09BVeFllMmeA2fJTXf7TU7Rb4t0L/pWqz70v6I
+        QYv2l+9PJqryQpc/KlE4bB54IvUijdAHJnqxk7i5HRbTLMYDk/5oa7CHtbbF3j0MemEZ+Br4Gph
+        F6rb4lPMhHGX5+7bXK7Zp09o=
+X-Received: by 2002:a63:d911:: with SMTP id r17mr56113126pgg.202.1594382130838;
+        Fri, 10 Jul 2020 04:55:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyYE43QTKnaKucai93EG0wce54drshO4iDApEhNE9OfQy1NqiG+E0jKHdkIzcRY4vkJx4IkWw==
+X-Received: by 2002:a63:d911:: with SMTP id r17mr56113109pgg.202.1594382130574;
+        Fri, 10 Jul 2020 04:55:30 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id r191sm5708085pfr.181.2020.07.10.04.55.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 04:55:29 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 0450C1808CD; Fri, 10 Jul 2020 13:55:24 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Cameron Boness <xdevps3@gmail.com>, xdp-newbies@vger.kernel.org
+Subject: Re: TCP Payload
+In-Reply-To: <449BEAB8-F4ED-489D-BF59-8993637268DB@gmail.com>
+References: <449BEAB8-F4ED-489D-BF59-8993637268DB@gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 10 Jul 2020 13:55:23 +0200
+Message-ID: <87o8onk2j8.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi,
+Cameron Boness <xdevps3@gmail.com> writes:
 
-I want to be able to read the data being sent in TCP payloads using XDP (in c=
-), but so far all I can read is a number of headers (eth->iph->tcp->dns). Is=
- it possible to get the TCP payload (i.e. client sent data) from xdp_md at a=
-ll? Been looking online for hours, doesn't seem like anyone who's done XDP t=
-hat's posted about it has ever parsed such data, hoping it's possible :(
+> Hi,
+>
+> I want to be able to read the data being sent in TCP payloads using
+> XDP (in c), but so far all I can read is a number of headers
+> (eth->iph->tcp->dns). Is it possible to get the TCP payload (i.e.
+> client sent data) from xdp_md at all? Been looking online for hours,
+> doesn't seem like anyone who's done XDP that's posted about it has
+> ever parsed such data, hoping it's possible :(
 
-Thanks=
+Could you please be a bit more specific about your problem? What,
+exactly, have you tried, and what is the reason why it doesn't work?
+Posting code samples and error messages may be helpful...
+
+-Toke
+
