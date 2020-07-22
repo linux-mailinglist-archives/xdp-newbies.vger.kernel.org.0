@@ -2,86 +2,80 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6A25227FF8
-	for <lists+xdp-newbies@lfdr.de>; Tue, 21 Jul 2020 14:33:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DF2222A29A
+	for <lists+xdp-newbies@lfdr.de>; Thu, 23 Jul 2020 00:48:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgGUMdz (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 21 Jul 2020 08:33:55 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:47566 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726904AbgGUMdy (ORCPT
+        id S1733064AbgGVWs0 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 22 Jul 2020 18:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbgGVWsZ (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 21 Jul 2020 08:33:54 -0400
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.137])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id D385E20055;
-        Tue, 21 Jul 2020 12:33:53 +0000 (UTC)
-Received: from us4-mdac16-28.at1.mdlocal (unknown [10.110.49.210])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id D28B66009B;
-        Tue, 21 Jul 2020 12:33:53 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.49.107])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 6681922004D;
-        Tue, 21 Jul 2020 12:33:53 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 2D7FB280073;
-        Tue, 21 Jul 2020 12:33:53 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jul
- 2020 13:33:49 +0100
-Subject: Re: IP fragmentation
-To:     Alexander Petrovsky <askjuise@gmail.com>
-CC:     <xdp-newbies@vger.kernel.org>
-References: <CAH57y_Rxm9_eB5jyjJ2OryLd6HB6mXSG8s-MR3BWs-99PVNG0g@mail.gmail.com>
- <6de242a4-263a-bbde-7af4-68532904e4b3@solarflare.com>
- <CAH57y_T9_K0L_cGjBQ+2C9UuRtw28Nqjk1FUB+F+3=WJVVZaqg@mail.gmail.com>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <8b809ac6-9e12-527c-d39e-0bab9dc743e2@solarflare.com>
-Date:   Tue, 21 Jul 2020 13:33:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CAH57y_T9_K0L_cGjBQ+2C9UuRtw28Nqjk1FUB+F+3=WJVVZaqg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
+        Wed, 22 Jul 2020 18:48:25 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD098C0619DC;
+        Wed, 22 Jul 2020 15:48:25 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 34A3511E8DD83;
+        Wed, 22 Jul 2020 15:31:39 -0700 (PDT)
+Date:   Wed, 22 Jul 2020 15:48:20 -0700 (PDT)
+Message-Id: <20200722.154820.1749937838006185071.davem@davemloft.net>
+To:     netdev@vger.kernel.org
+CC:     linux-wireless@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org, lwn@lwn.net
+Subject: LPC 2020 Networking and BPF Track CFP (Reminder)
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25554.003
-X-TM-AS-Result: No-7.494400-8.000000-10
-X-TMASE-MatchedRID: 9zTThWtzImvmLzc6AOD8DfHkpkyUphL9Bha8voHItvs52X8YwVUEWz2j
-        /N8mMgrkZVjyUGpX40tkqbtr29UAtPFRSoBCNktyfY+iJfFQBxcEa8g1x8eqF4DpStszePepfch
-        1j1sC/Zp5ppC82zAKlu085wUDvKVH0XHdPjDglDqqNnzrkU+2mjQAl7cHmp8GEt/W/Pt5w8c+/G
-        6N86d0S+LzNWBegCW2RYvisGWbbS+No+PRbWqfRDsAVzN+Ov/sd74X0Xo0NB5h52MfLGRAuo6te
-        y9u8PN2y39sHH1nfDDr6ewAyxZtJg==
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--7.494400-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25554.003
-X-MDID: 1595334833-szcG6nH602jQ
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 Jul 2020 15:31:39 -0700 (PDT)
 Sender: xdp-newbies-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On 20/07/2020 15:47, Alexander Petrovsky wrote:
-> Unfortunately, for UDP I can't pick some _random_ host in case the
-> first _seen_ fragment it's not a First Fragment (frag_off=0, MF=1). In
-> this case, I have to accumulate ALL fragments in map. And on each
-> received fragment check, is all fragments are collected. I did it in
-> my PoC with AF_XDP, but in PoC all seems unreliable.
 
-That's why I say punt in that case (XDP_PASS and then have something
- else downstream of it to handle the slowpath.  However people did LB
- before XDP came along.  Idk, netfilter?  Does that have hooks post-
- reassembly?)
-And probably when punting also record a map entry saying "we punted
- this IPID" so that when the First Frag shows up, the slowpath gets
- to see that one too and can do its reassembly.
-So the map doesn't have to accumulate the fragments (the slowpath does
- that), just their offsets and lengths so XDP can tell when all frags
- have been passed to the slowpath and delete the map entry.
+[ The deadline is a week and a half away, please get your submissions
+  in soon! ]
 
--ed
+This is a reminder for the call for proposals for the networking and
+bpf track at the Linux Plumbers Conference on the wider internet,
+which will be happening on August 24th-28th, 2020.
+
+This year the technical committee is comprised of:
+
+David S. Miller <davem@davemloft.net>
+Alexei Starovoitov <ast@kernel.org>
+Daniel Borkmann <daniel@iogearbox.net>
+Jakub Sitnicki <jakub@cloudflare.com>
+Paolo Abeni <pabeni@redhat.com>
+Jakub Kicinski <kuba@kernel.org>
+Michal Kubecek <mkubecek@suse.cz>
+Sabrina Dubroca <sd@queasysnail.net>
+
+We are seeking talks of 40 minutes in length (including Q & A),
+optionally accompanied by papers of 2 to 10 pages in length.  The
+papers, while not required, are very strongly encouraged by the
+committee.  The submitters intention to provide a paper will be taken
+into consideration as a criteria when deciding which proposals to
+accept.
+
+Any kind of advanced networking and/or bpf related topic will be
+considered.
+
+Please submit your proposals on the LPC website at:
+
+	https://www.linuxplumbersconf.org/event/7/abstracts/#submit-abstract
+
+And be sure to select "Networking & BPF Summit" in the Track
+pulldown menu.
+
+Proposals must be submitted by August 2nd, and submitters will be
+notified of acceptance by August 9th.
+
+Final slides and papers (as PDF) are due on August 24th, the first day of
+the conference.
