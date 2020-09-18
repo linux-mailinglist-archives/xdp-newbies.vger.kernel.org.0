@@ -2,77 +2,82 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ACDB26F544
-	for <lists+xdp-newbies@lfdr.de>; Fri, 18 Sep 2020 07:04:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5B726FA7E
+	for <lists+xdp-newbies@lfdr.de>; Fri, 18 Sep 2020 12:21:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgIRFEc (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 18 Sep 2020 01:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbgIRFEb (ORCPT
+        id S1725882AbgIRKVx (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 18 Sep 2020 06:21:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27021 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbgIRKVx (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 18 Sep 2020 01:04:31 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2CEC06174A
-        for <xdp-newbies@vger.kernel.org>; Thu, 17 Sep 2020 22:04:31 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id i26so6278084ejb.12
-        for <xdp-newbies@vger.kernel.org>; Thu, 17 Sep 2020 22:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Jn6Q9HNli9jXZ2HiiPPkrHCuNBnno0lGBtnX2zXYM9k=;
-        b=FSMnor3sa1ayML9NpMmHLJAUE96T+3rkYMpZYiSyUnMIcB1dhR23ygyON3EXM3F+m1
-         pJgyjIoy/GTLVxQV78Q1CzYMBs4AAum1Y1gD73YnKlkjkOIgRlLW1m3/fFDy6FksLaTk
-         uWVpYkuEhMXT39DGnf+5lSOmJa34DSDZLiRA6Q6OeFnZGVZY3BT24mMxfjsxEuBGwJ9L
-         L7Mz/PwZu9iwmAWRGgIDk119/h5LtE90zU4Wav0zk47XU+XRvXzvxq/6yXug8hA+lAPX
-         VyWaa6ybYCQJM1zj3vmV8+ZC+PTE38wDXtIv9tCWaKRq1q0O0drlYoHHNcurfbegdTIU
-         lMJA==
+        Fri, 18 Sep 2020 06:21:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600424512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sS+8PQs4IYXiHDTcvLHBLWWa41MniAx2QGiRAct/0pw=;
+        b=Cp0eTJG/IwdzzfNhvcobMLDC6mTNOMh/Wvedg2KghUBTa5x8yIhtYkuJFB26cVdM2BqIqd
+        UiTODDmp6JLAMKLBqOhQja1tjOZ8lmFGJrOri4rMKrYtjJhAHfaRmExxSJfkj0b+MvfC8k
+        aX9U78tscbHVUlRnJKelqeATDLwyyvA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-Voq-dieQPOyLDGd5r2D7nQ-1; Fri, 18 Sep 2020 06:21:50 -0400
+X-MC-Unique: Voq-dieQPOyLDGd5r2D7nQ-1
+Received: by mail-ed1-f70.google.com with SMTP id r19so2086859edq.12
+        for <xdp-newbies@vger.kernel.org>; Fri, 18 Sep 2020 03:21:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Jn6Q9HNli9jXZ2HiiPPkrHCuNBnno0lGBtnX2zXYM9k=;
-        b=XPqAJdSjW1BgSp90a9A3qQngRDw62TvBMxjBAiD48FmA3T5wtGmF0TEobm0X18EBTJ
-         Ppbb2nLs1AtnFjl7hkQD/S0QIUpsHILJjrGxSqEPwKxW4wZgfoCJr4s5UVLg2f/8uZ5Y
-         O7q1HlGZB3EeTH/QwzrgQvcXsyl2oy6LDv4p+Dl9rGGfIplbc0MxogNyHxHB3MhMHOP8
-         AHfA+RrIuUlnNmfFA2jbejpK1GrvoGtdcAMuuDDf+WvPdwiLi8LBM+FihkdX57jBoJV7
-         M2ncQnPwC7QPJ8dOeBqJd0K7yVgBvVlH2NNOFrvNHX+w/B4DQfWPc0g2lb3XNjpK2mmH
-         2rag==
-X-Gm-Message-State: AOAM532VIH7zVAepU1ObzIq2/uxy0CPianHlEm6d+1wog0H6Ze/U6VAV
-        gxW5vscWIOFHlgjfuCQanPXNlqlaRgT6LlgzLU5VUA9vmGk=
-X-Google-Smtp-Source: ABdhPJwV7YfRuXaJTKeN5+ITzA885md3YxkvgWTHXA1dKOKQ7KEN/A752/gzTwZNT9JLFH4rW4ccasoGX1sTxpQWJ/w=
-X-Received: by 2002:a17:906:facb:: with SMTP id lu11mr35803582ejb.249.1600405469069;
- Thu, 17 Sep 2020 22:04:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=sS+8PQs4IYXiHDTcvLHBLWWa41MniAx2QGiRAct/0pw=;
+        b=FJCjK23Mi/mGQIhsaB6BTXrbqXp539bbzOvVX890s8kJ6W7xI3wDTLiYo5hQdiCERG
+         447L5gktBAc63Y9VKHvQIHFPiwth7HzTFNP0HrewPLN3+pVzndgGEBQxDq/nUs0adIEZ
+         GV/mm5R17zeZbSN+lydswU68Ny6I+DWg51KmoSR6rgZeQlVqtd+NFxbPi0NDREzplVPx
+         /4ofpXRuJKupn6re1aErrxzmQ23J3KiIgNxzBKydsV9bFLPYVwoeKtw+QGEBBtWpPBhA
+         tdPnE3tVu0CZvmaOM8kr3Eh8++TQYhzwTW8q2nEEDn8K1JN8IpxlrY1okrt31jewUa4V
+         vEew==
+X-Gm-Message-State: AOAM532/KLulBza7kpKXtiuBP4yjmsim2OnS/WBnejaUyKAmSjTngvVq
+        9XrUlkAtZS7VQ8W1MjyFGve6wo+RMZoOifUp9v24w5GanB7fOvW8g96HvOk33TbhnlIk5NklabH
+        PCmV1L7QxNWNboIS0VHyrkU8=
+X-Received: by 2002:a17:906:f6c9:: with SMTP id jo9mr34947913ejb.233.1600424508936;
+        Fri, 18 Sep 2020 03:21:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzM+rpby3p/6OMwGp9jmX0hq2fLZzvID3gum3G7ynirbkI8WakbuzXnhFHpWbUYebjQEQ/bvg==
+X-Received: by 2002:a17:906:f6c9:: with SMTP id jo9mr34947899ejb.233.1600424508699;
+        Fri, 18 Sep 2020 03:21:48 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id v17sm1927005ejj.55.2020.09.18.03.21.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Sep 2020 03:21:48 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 88C48183A90; Fri, 18 Sep 2020 12:21:47 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     ThomasPtacek@gmail.com, xdp-newbies@vger.kernel.org
+Subject: Re: bpf_redirect and xdpgeneric
+In-Reply-To: <CANDGNvbX+BwA_ZUmw2rxH5FGLFsCVH33Tw3RCk3e3Qo69J+4qw@mail.gmail.com>
+References: <CANDGNvbX+BwA_ZUmw2rxH5FGLFsCVH33Tw3RCk3e3Qo69J+4qw@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 18 Sep 2020 12:21:47 +0200
+Message-ID: <87lfh7fkqs.fsf@toke.dk>
 MIME-Version: 1.0
-Reply-To: ThomasPtacek@gmail.com
-From:   Thomas Ptacek <thomasptacek@gmail.com>
-Date:   Fri, 18 Sep 2020 00:04:18 -0500
-Message-ID: <CANDGNvbX+BwA_ZUmw2rxH5FGLFsCVH33Tw3RCk3e3Qo69J+4qw@mail.gmail.com>
-Subject: bpf_redirect and xdpgeneric
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Weird question:
+Thomas Ptacek <thomasptacek@gmail.com> writes:
 
-Should there be a reason for me to expect bpf_redirect to fail when
-redirecting, in XDP, to the egress of an xdpgeneric device?
+> Weird question:
+>
+> Should there be a reason for me to expect bpf_redirect to fail when
+> redirecting, in XDP, to the egress of an xdpgeneric device?
 
-I'm redirecting from an XDP program on a tap device, out the igb eno1
-to the Internet (and fixing MAC addresses). I can redirect to other
-tap devices, but not to eno1.
+What does 'the egress of an xdpgeneric device' mean, exactly? I.e.,
+could you share some more details of your setup, please?
 
-I was going to try with bpf_redirect_map, but I'm having tooling
-trouble there (I can't get iproute2 to load a BPF object file with a
-pinned DEVMAP; it complains that the flags don't match). But for my
-purposes, bpf_redirect would be fine.
+In general, mixing native and generic mode XDP is not likely to work
+well...
 
-(My testbed is 5.6, for whatever that's worth).
+-Toke
 
-This mailing list is fantastic and you are all excellent. Thanks
-whether or not anyone has any thoughts.
-
----
-Thomas H. Ptacek
