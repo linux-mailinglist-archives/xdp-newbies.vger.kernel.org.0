@@ -2,308 +2,202 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82EF527B58C
-	for <lists+xdp-newbies@lfdr.de>; Mon, 28 Sep 2020 21:41:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A124C27B6D3
+	for <lists+xdp-newbies@lfdr.de>; Mon, 28 Sep 2020 23:06:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgI1Tlo (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 28 Sep 2020 15:41:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42257 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726621AbgI1Tlo (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 28 Sep 2020 15:41:44 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601322101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WYGDCBVyVNakDh7qCABEdfW6ghqd4N7uA5vorgPVxtc=;
-        b=O7wnnEl9emYT9FnXQszpv18fKjcRM0vGrbjRicBGn8qYtx0UctgWr7NnSPgcGOnOenNvxn
-        UJ9+mNpyIkPBnH8PaL6yqEStoJjwcpQ+fqlwGesLP6CYFkgUwR2okBdn501AAg6X8GUNnd
-        BjgeR925Gq0OKp9ZH7kO/D8RDd7i57I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-g0zitIU1PTOCmary8_1xTQ-1; Mon, 28 Sep 2020 15:41:36 -0400
-X-MC-Unique: g0zitIU1PTOCmary8_1xTQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DF4D802B46;
-        Mon, 28 Sep 2020 19:41:35 +0000 (UTC)
-Received: from [192.168.241.128] (ovpn-112-113.ams2.redhat.com [10.36.112.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F47310013C4;
-        Mon, 28 Sep 2020 19:41:24 +0000 (UTC)
-From:   "Eelco Chaudron" <echaudro@redhat.com>
-To:     andriin@fb.com, "Alexei Starovoitov" <ast@kernel.org>,
-        "Toke =?utf-8?b?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=" <toke@redhat.com>,
-        "Jesper Dangaard Brouer" <brouer@redhat.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Jiri <jolsa@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@gmail.com>,
-        "Eelco Chaudron" <echaudro@redhat.com>
-Subject: Re: XDP/eBPF/jit problem, system crash, with some ctx access changes
-Date:   Mon, 28 Sep 2020 21:41:23 +0200
-Message-ID: <B587E451-F749-4E48-8621-CC9FBB15FEEA@redhat.com>
-In-Reply-To: <153DBF54-2F39-48B0-872A-4C21A4544BB7@redhat.com>
-References: <153DBF54-2F39-48B0-872A-4C21A4544BB7@redhat.com>
+        id S1726590AbgI1VG3 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 28 Sep 2020 17:06:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:10792 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbgI1VG2 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 28 Sep 2020 17:06:28 -0400
+IronPort-SDR: A1NrpmGBSHIQqMgVVlPMQxAY9bJXhyZeTmameeM7UZs8cnO1xGVsMG7pU12LZTudB9Lqu4hf6L
+ svK3UuzQAA+A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="141443629"
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="141443629"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 11:04:23 -0700
+IronPort-SDR: 1N9k8ovZh50wPJL8pSpNfZpUY4C2hgf5i2nrLe93aYFIAzoGigte/4Pr2eWVn0U7+GBRoPhPFD
+ t4EghvsVvewA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,313,1596524400"; 
+   d="scan'208";a="384498016"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by orsmga001.jf.intel.com with ESMTP; 28 Sep 2020 11:04:22 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 28 Sep 2020 11:04:22 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 28 Sep 2020 11:04:22 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Mon, 28 Sep 2020 11:04:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G2fqvGLvBuOv96x1q7ocEgHh0GUJxFl+FVpP+uaghz7NZter6uUYFoVWghpGZUvIekT6YOmlpFA6V7rFYmkRAYr97vAB07aRp2kXCLJD7/T+czOElDUWtc5BaV6wvaGekwceFIJqibrdXl+emM7K9tWMij9Ncw5dwZNZUCflPueEG0OCvrmKf9l4e2Z2EEcQrPOH0VRq+bp/PO0qV9xLAy966Efxo3V9/HTCZ2MsZ7OENtu4sxVgS8NGu/crhSbq8k3wlJjyBoY8ENNkrsiRTA0dRJUmVHpmK03eRpBOMsWR7rBeMUodPQD5OVaW+M/ALhFXOytaMg/EkefyFLTimA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqGTM3b490tlAbBsVXaP3i0aGu9orWd/nzrdPBNW6vE=;
+ b=h6GyyxDo827zGQWoam3vI3U498jYr1NCjGI94Q4C1YBvf3z6UsGn9JSWgGT966o+GKeLHNrziQ2cEMPpEU21XfgM3TW550Flxiurtl3hPxmA77ISWw20PRirndO16bWmzYK8UYJ0VZhWCVgulQvCWynkxO7NaXogWD8/n/xp3WoVAOF7vwfScw5DerU7cv19rjIJS+rKotEMS+vbBjG+p50ZfdieqrnspGA7b+syB0OZOYuEyUMgQHnMb3YSgtxTADfG24EmW7etNvHKwomeVasoQhSAltG6NviszjuM0cNybbC9ZN0qd85gNLuXSljHZkJaTEGlb6XaUZ9/7t1ZjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HqGTM3b490tlAbBsVXaP3i0aGu9orWd/nzrdPBNW6vE=;
+ b=kxiogR9ZfIpdYZezQLeLz6CU5opxxSKZ7jP8+Z9VIP0MG1Uu0nmwO5DByI+v6WIqHMix2dZGXcO3cRz0bbE9oDQSnaGvTeb50nJYoZVA1+zIH8Jdc4xPnimecERvMc0W6p4yJsTnTz5SragYkfK74hQ40u3iDIsOgmZnaDx4qSk=
+Received: from SN6PR11MB3229.namprd11.prod.outlook.com (2603:10b6:805:ba::28)
+ by SA0PR11MB4560.namprd11.prod.outlook.com (2603:10b6:806:93::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.23; Mon, 28 Sep
+ 2020 18:04:14 +0000
+Received: from SN6PR11MB3229.namprd11.prod.outlook.com
+ ([fe80::acc4:9465:7e88:506e]) by SN6PR11MB3229.namprd11.prod.outlook.com
+ ([fe80::acc4:9465:7e88:506e%7]) with mapi id 15.20.3412.026; Mon, 28 Sep 2020
+ 18:04:14 +0000
+From:   "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>
+To:     "sven.auhagen@voleatech.de" <sven.auhagen@voleatech.de>,
+        "brouer@redhat.com" <brouer@redhat.com>
+CC:     "toke@redhat.com" <toke@redhat.com>,
+        "dsahern@gmail.com" <dsahern@gmail.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "ThomasPtacek@gmail.com" <ThomasPtacek@gmail.com>
+Subject: Re: [Intel-wired-lan] bpf_redirect and xdpgeneric
+Thread-Topic: [Intel-wired-lan] bpf_redirect and xdpgeneric
+Thread-Index: AQHWlautwx7HOxyUlU60IEBtWc0SXql+OyEAgAAdEoA=
+Date:   Mon, 28 Sep 2020 18:04:14 +0000
+Message-ID: <f1a1a7c89fce4ba5c78da65700e02d353bb9e5d4.camel@intel.com>
+References: <CANDGNvbX+BwA_ZUmw2rxH5FGLFsCVH33Tw3RCk3e3Qo69J+4qw@mail.gmail.com>
+         <87lfh7fkqs.fsf@toke.dk>
+         <CANDGNvbY=8XEJP=S3e+5V2RU6u0zjRE3YDo62bhV-Qaje=++2A@mail.gmail.com>
+         <5f7f5056-d1de-737b-2d76-cd37e4a4db8e@gmail.com>
+         <20200928172449.50a3e755@carbon>
+         <20200928162010.wpv6ukqscuxaxtnj@svensmacbookair.sven.lan>
+In-Reply-To: <20200928162010.wpv6ukqscuxaxtnj@svensmacbookair.sven.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+authentication-results: voleatech.de; dkim=none (message not signed)
+ header.d=none;voleatech.de; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.134.136.204]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c7494c5-5ce6-4200-7362-08d863d8e8cf
+x-ms-traffictypediagnostic: SA0PR11MB4560:
+x-microsoft-antispam-prvs: <SA0PR11MB45603446C7BE2E70B4BC6470C6350@SA0PR11MB4560.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uFUxtOolvNj8jn2D8WeBDVHrX5cV+g/LO0NGA8fMqJXVaUOpsqXyNwmfdCtjywtpPe85sTwJ5abTBbrKnUOf9MNFfMdwMrHiSbZxfU4UQyXqbgZ58fruA6QGtHQQugwX+kjmryNcVuerATOFuX3RZDOVkrowsW1NoVTcn5EjcDJ7iWk0CKdqDAYTuW9UvJKmES7XKhIJc+SaSzyAK01m4lgD/9Usn0fvx/t2B5zKrRpD0a5MtjS08HH9kyQeeq/vnzQP/eYm+toXAL9COuJXWlWIF2P//QBF4oPYjIexIH1W752jRwUsZfEIxTuBp8y8H5LNa5ggoiDH6jcUFbXWhjAUR1BNM4f6ssC+D6QeNL8m4Su0oyJ32n3L3uJ9DmoSBmyXDqeq8MW6RmVwcmrbWvk2LmTqglr1BE2Hs7jDI04+uXDSAoMm9dj+mULT13fGcjlrGt6oS+icU+YoxEMBj3D1sgaVnennQS5T9RcnsbhsFCYWr7YKkpT0pWB9BiOH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3229.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(376002)(396003)(346002)(136003)(6486002)(26005)(186003)(86362001)(36756003)(316002)(478600001)(110136005)(71200400001)(54906003)(2616005)(66574015)(45080400002)(2906002)(91956017)(76116006)(6512007)(66946007)(4326008)(5660300002)(966005)(53546011)(66446008)(8936002)(6506007)(66476007)(8676002)(66556008)(64756008)(99106002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Vn2l6+nvYNS+7jYf+CbqidxhmNQI5ZHtUl1mEZJhbNg6DbvuyhnQYvuXy8DDYOLeWHV0yrgNzCzInysoNcwqaHZ5rhRKNg9j/9XitF8B0ugGPkbDXjVXiEhuNbU4ZoYZNNkpM91KnMpPerG0BBj3uyrJOUPIw6SKoy9fShiK9q5+/q5iq1w2pfZ0zTpaRLeOtbUJb8QDGJ/2fR231pwplVcjKnYS8LXA1s7mlcvnz0BVlXvLSCPPpMhBaFBwhJgCwi5TsSKQ5Dz9LkoWmrm07akExBkYWf1fUvrygc9rJQ75IKPDTZxJZJ5ckdAZ7l5DbtvVJSV09z400V9v+jqE23giAwDzRJy8sW+IPBLlUZRTpbVcwKDnKB9N/RZE+11xRFSvvJWqCD3oIp3tYquP/Gor5oyu4SkcPLXrOV69Gbk5NGDzegXRVBfqPz63smUmmyZTGZKIEoLnOREqa/WMdR+XCO3Tp0M6GRFCMM0AFz7SbftFT+AsxW/1sF9Fa24TSevON3YntFehIPm5wMsB3J4mWvgDOc5qu7G0C0JwbDCvFv9xB1NRWLYcRmQ4jMP3WZ/I12R4ZDRlVYE9A9sGr58se4Ca8Y5nEn1m2RoQru+2n1nrcdnot/M9YDfekmYKSi4BkEcqvSVxU65qtTpCAg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8DDCDB3E6EADCA41BDD5503307BB68C2@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3229.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c7494c5-5ce6-4200-7362-08d863d8e8cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2020 18:04:14.1491
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VMH7XSgThhVIKGu47VOMfTVuyMb3soHuAZ1tA4CSDnQU0cV+Xflp4douYN7H3h1iRgQxaljXCEMCoyIvLpK2W/MHjmzXNLmdEVhBaCCwTNU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4560
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi all once more…
-
-I got an offline email from Bjorn decoding the first backtrace which 
-made it all clear (I was looking at the second one :).
-
-Here is a fragment of the xlated code:
-
-; data = (void *)(long)xdp->data;
-  604: (79) r1 = *(u64 *)(r1 +56)
-  605: (55) if r1 != 0x0 goto pc+1
-  606: (79) r1 = *(u64 *)(r1 +0)
-
-
-Now the jited code:
-
-; data = (void *)(long)xdp->data;
-  595:   mov    0x38(%rdi),%rdi
-  599:   test   %rdi,%rdi
-  59c:   jne    0x00000000000005a2
-  59e:   mov    0x0(%rdi),%rdi
-
-It might not be obvious, but in this case, both the source and 
-destination registers are the same!!
-
-Briefly looking at some other code in the filter.c code, I found some 
-instances where they check for this and copy the content to a temp 
-region in the ctx structure.
-
-However, SOCK_ADDR_STORE_NESTED_FIELD_OFF might have the same problem as 
-my code!
-
-I’ll rework my code to deal with the src=dst part. But more code might 
-exist that has the same problem…
-
-Cheers,
-
-Eelco
-
-On 28 Sep 2020, at 17:19, Eelco Chaudron wrote:
-
-> Hi all,
->
-> I'm working on a PoC for some XDP multi-buffer access, but I'm running 
-> into some jit/eBPF problem.
->
-> Here is a piece of code I added in bpf_convert_ctx_access(), on 
-> net-next:
->
->   @@ -8496,9 +8531,17 @@ static u32 xdp_convert_ctx_access(enum b
->
->       switch (si->off) {
->       case offsetof(struct xdp_md, data):
->   -		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct xdp_buff, data),
->   +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct xdp_buff,
->   +						       mb_data),
->   +				      si->dst_reg, si->src_reg,
->   +				      offsetof(struct xdp_buff, mb_data));
->   +		/* if (dst_reg != NULL) goto A */
->   +		*insn++ = BPF_JMP_IMM(BPF_JNE, si->dst_reg, 0, 1);
->   +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct xdp_buff,
->   +						       data),
->                         si->dst_reg, si->src_reg,
->                         offsetof(struct xdp_buff, data));
->   +		/* A: */
->           break;
->
-> However, when executing the xdp_noinline self-test I get a segfault 
-> (and yes, I'm 100% sure mb_data is always NULL):
->
-> $ sudo ./test_progs --name xdp_noinline
-> Killed
->
-> [   19.333353] BUG: kernel NULL pointer dereference, address: 
-> 0000000000000000
-> [   19.333376] #PF: supervisor read access in kernel mode
-> [   19.333383] #PF: error_code(0x0000) - not-present page
-> [   19.333391] PGD 7b756067 P4D 7b756067 PUD 7850b067 PMD 0
-> [   19.333401] Oops: 0000 [#1] SMP NOPTI
-> [   19.333408] CPU: 1 PID: 1579 Comm: test_progs Not tainted 
-> 5.9.0-rc6+ #70
-> [   19.333416] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
-> BIOS 1.13.0-2.fc32 04/01/2014
-> [   19.333428] RIP: 0010:bpf_prog_2a72cd80d0b49e12_F+0x59a/0x6d8
-> [   19.333436] Code: ff ff 48 8b 78 08 48 83 c7 01 48 89 78 08 48 8b 
-> 78 00 4c 01 ef 48 89 78 00 48 8b 7d 90 48 8b 77 08 48 8b 7f 38 48 85 
-> ff 75 04 <48> 8b 7f 00 48 89 fa 48 83 c2 04 48 39 f2 0f 87 28 fb ff ff 
-> 8b 73
-> [   19.333457] RSP: 0018:ffffb7330099fc70 EFLAGS: 00010246
-> [   19.333465] RAX: ffffd732ffc8adf0 RBX: ffff9575b73d6958 RCX: 
-> 0000000000000020
-> [   19.333474] RDX: ffff9575b6c4d000 RSI: ffff9575b6c4d136 RDI: 
-> 0000000000000000
-> [   19.333483] RBP: ffffb7330099fd08 R08: ffff9575b6c4d0ec R09: 
-> 0000000000000000
-> [   19.333491] R10: 40bf273800000000 R11: 0000000000000003 R12: 
-> 0000000000000000
-> [   19.333500] R13: 000000000000007b R14: 4343917700000001 R15: 
-> ffffb7330098dff8
-> [   19.333510] FS:  00007f7274403740(0000) GS:ffff9575bdc80000(0000) 
-> knlGS:0000000000000000
-> [   19.333520] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   19.333527] CR2: 0000000000000000 CR3: 0000000076d22006 CR4: 
-> 0000000000370ee0
-> [   19.333538] Call Trace:
-> [   19.333547]  bpf_prog_32ab9add9cf981b8_F+0x9e/0x7d8
-> [   19.333562]  bpf_test_run+0xc4/0x270
-> [   19.333585]  ? __bpf_arch_text_poke+0xaf/0x170
-> [   19.333593]  bpf_prog_test_run_xdp+0x11a/0x250
-> [   19.333607]  __do_sys_bpf+0x8fe/0x1e60
-> [   19.333628]  do_syscall_64+0x33/0x40
-> [   19.333647]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   19.333661] RIP: 0033:0x7f727450437d
-> [   19.333667] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e 
-> fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 
-> 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d eb 6a 0c 00 f7 d8 64 89 
-> 01 48
-> [   19.333688] RSP: 002b:00007ffd8b7a8888 EFLAGS: 00000206 ORIG_RAX: 
-> 0000000000000141
-> [   19.333698] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 
-> 00007f727450437d
-> [   19.333707] RDX: 0000000000000078 RSI: 00007ffd8b7a88e0 RDI: 
-> 000000000000000a
-> [   19.333716] RBP: 00007ffd8b7a88a0 R08: 00007ffd8b7a89e8 R09: 
-> 00007ffd8b7a88e0
-> [   19.333725] R10: 00007ffd8b7a8a40 R11: 0000000000000206 R12: 
-> 00007f72744036b8
-> [   19.333734] R13: 00007ffd8b7a8980 R14: 00007ffd8b7a89c0 R15: 
-> 00007ffd8b7a89e0
-> [   19.333743] Modules linked in: fuse nft_fib_inet nft_fib_ipv4 
-> nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 
-> nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 
-> nf_defrag_ipv4 ip6_tables nft_compat ip_set rfkill nf_tables nfnetlink 
-> intel_rapl_msr intel_rapl_common cirrus kvm_intel kvm drm_kms_helper 
-> joydev virtio_net irqbypass net_failover failover virtio_balloon 
-> i2c_piix4 drm ip_tables xfs libcrc32c crct10dif_pclmul crc32_pclmul 
-> crc32c_intel ghash_clmulni_intel serio_raw ata_generic qemu_fw_cfg 
-> pata_acpi
-> [   19.333811] CR2: 0000000000000000
->
-> Quickly looking at the xlated and jit code the transformation looks 
-> fine.
->
->
-> As an experiment, I just tried to load the register twice, and this 
-> has the same kind of weird effect on the xdp_noinline selftest:
->
->   @@ -8496,9 +8531,21 @@ static u32 xdp_convert_ctx_access(enum b
->
->       switch (si->off) {
->       case offsetof(struct xdp_md, data):-		*insn++ = 
-> BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct xdp_buff, data),
->                         si->dst_reg, si->src_reg,
->                         offsetof(struct xdp_buff, data));
->   +		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct xdp_buff,
->   +						       data),
->   +				      si->dst_reg, si->src_reg,
->   +				      offsetof(struct xdp_buff, data));
->           break;
->
-> segfault:
->
-> [ 3038.299210] general protection fault, probably for non-canonical 
-> address 0x298691604040000: 0000 [#5] SMP NOPTI
-> [ 3038.301016] CPU: 0 PID: 8629 Comm: test_progs Tainted: G      D     
->       5.9.0-rc6+ #71
-> [ 3038.301795] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
-> BIOS 1.13.0-2.fc32 04/01/2014
-> [ 3038.302334] RIP: 0010:bpf_prog_162f3a446f46ea21_F+0x5bf/0xbe4
-> [ 3038.302876] Code: 08 48 8b 7f 00 48 8b 7f 00 48 89 fa 48 83 c2 04 
-> 48 39 f2 0f 87 2b fb ff ff 8b 73 00 49 c7 c2 59 8f 60 ad 49 c1 e2 20 
-> 4c 09 d6 <89> 77 00 e9 12 fb ff ff cc cc cc cc cc cc cc cc cc cc cc cc 
-> cc cc
-> [ 3038.303951] RSP: 0018:ffff98bfc0ab3c70 EFLAGS: 00010282
-> [ 3038.304496] RAX: ffffb8bfbfc14460 RBX: ffff8cf8f8c1b158 RCX: 
-> 0000000000000020
-> [ 3038.305015] RDX: 0298691604040004 RSI: ad608f5900001234 RDI: 
-> 0298691604040000
-> [ 3038.305542] RBP: ffff98bfc0ab3d08 R08: ffff8cf8b4de90ec R09: 
-> 0000000000000000
-> [ 3038.306037] R10: ad608f5900000000 R11: 0000000000000003 R12: 
-> ffff8cf8b5168000
-> [ 3038.306526] R13: 000000000000007b R14: d88f9de400000001 R15: 
-> ffff98bfc0ac3758
-> [ 3038.307018] FS:  00007fa431a63740(0000) GS:ffff8cf8fdc00000(0000) 
-> knlGS:0000000000000000
-> [ 3038.307527] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 3038.308012] CR2: 000055f843d74790 CR3: 0000000078a6c003 CR4: 
-> 0000000000370ef0
-> [ 3038.308512] Call Trace:
-> [ 3038.308986]  bpf_prog_fe85f1fb8b720358_F+0x99/0x7f0
-> [ 3038.309460]  bpf_test_run.cold+0x35/0x9d
-> [ 3038.309939]  ? __bpf_arch_text_poke+0xaf/0x170
-> [ 3038.310420]  bpf_prog_test_run_xdp+0x11a/0x250
-> [ 3038.310878]  __do_sys_bpf+0x8fe/0x1e60
-> [ 3038.311323]  do_syscall_64+0x33/0x40
-> [ 3038.311758]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [ 3038.312189] RIP: 0033:0x7fa431b6437d
-> [ 3038.312622] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e 
-> fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 
-> 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d eb 6a 0c 00 f7 d8 64 89 
-> 01 48
-> [ 3038.313471] RSP: 002b:00007ffc8b6cea28 EFLAGS: 00000206 ORIG_RAX: 
-> 0000000000000141
-> [ 3038.313907] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 
-> 00007fa431b6437d
-> [ 3038.314361] RDX: 0000000000000078 RSI: 00007ffc8b6cea80 RDI: 
-> 000000000000000a
-> [ 3038.314775] RBP: 00007ffc8b6cea40 R08: 00007ffc8b6ceb88 R09: 
-> 00007ffc8b6cea80
-> [ 3038.315182] R10: 00007ffc8b6cebe0 R11: 0000000000000206 R12: 
-> 00007fa431a636b8
-> [ 3038.315589] R13: 00007ffc8b6ceb20 R14: 00007ffc8b6ceb60 R15: 
-> 0000000000000000
-> [ 3038.315970] Modules linked in: fuse nft_fib_inet nft_fib_ipv4 
-> nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 
-> nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 
-> nf_defrag_ipv4 ip6_tables nft_compat ip_set rfkill nf_tables nfnetlink 
-> intel_rapl_msr intel_rapl_common kvm_intel kvm virtio_net net_failover 
-> joydev irqbypass virtio_balloon cirrus failover drm_kms_helper 
-> i2c_piix4 drm ip_tables xfs libcrc32c crct10dif_pclmul crc32_pclmul 
-> crc32c_intel serio_raw ghash_clmulni_intel ata_generic qemu_fw_cfg 
-> pata_acpi
-> [ 3038.317936] ---[ end trace bcf61aee1cf2ba1f ]---
->
->
-> If I look at the translated code, it looks fine, I see a couple of 
-> references that look like:
->
-> ; void *data = (void *)(long)ctx->data;
->    3: (79) r1 = *(u64 *)(r4 +0)
->    4: (79) r1 = *(u64 *)(r4 +0)
->
-> When I look at the jited code I see the same:
->
-> ; void *data = (void *)(long)ctx->data;
->   25:   mov    0x0(%rcx),%rdi
->   29:   mov    0x0(%rcx),%rdi
->
->
-> If I try to find the “bpf_prog_fe85f1fb8b720358” in the “bpftool 
-> prog dump jited id 88” output I can not find it :( Any idea where I 
-> should look for it?
->
->
-> Anyone any idea before I start digging into the world of jit?
->
->
-> Thanks,
->
-> Eelco
-
+T24gTW9uLCAyMDIwLTA5LTI4IGF0IDE4OjIwICswMjAwLCBTdmVuIEF1aGFnZW4gd3JvdGU6DQo+
+IE9uIE1vbiwgU2VwIDI4LCAyMDIwIGF0IDA1OjI0OjQ5UE0gKzAyMDAsIEplc3BlciBEYW5nYWFy
+ZCBCcm91ZXINCj4gd3JvdGU6DQo+ID4gT24gRnJpLCAxOCBTZXAgMjAyMCAxNDoyNzo0NSAtMDYw
+MA0KPiA+IERhdmlkIEFoZXJuIDxkc2FoZXJuQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4g
+PiBPbiA5LzE4LzIwIDEyOjQyIFBNLCBUaG9tYXMgUHRhY2VrIHdyb3RlOg0KPiA+ID4gPiBUaGUg
+c2V0dXAgaXMgcHJldHR5IHNpbXBsZS4gVGhlcmUncyBhbiBlbm8xIChpZ2IgZHJpdmVyKSwgdG8N
+Cj4gPiA+ID4gd2hpY2ggb3VyDQo+ID4gPiA+IGRlZmF1bHQgcm91dGUgcG9pbnRzLiBPbiB0aGUg
+c2FtZSBib3ggYXJlIHNldmVyYWwgVk1zLiBUaGVyZSdzDQo+ID4gPiA+IGEgdGFwDQo+ID4gPiA+
+IGludGVyZmFjZSAoZm9yIGVhY2ggVk0sIGNhbGwgaXQgdGFwWCkuIFRyYWZmaWMgZm9yIGEgVk0g
+Zmxvd3MNCj4gPiA+ID4gaW4gZnJvbQ0KPiA+ID4gPiB0aGUgSW50ZXJuZXQgb24gZW5vMSBhbmQg
+aXMgZGlyZWN0ZWQgdG8gdGFwWDsgdGhlIHJlc3BvbnNlDQo+ID4gPiA+IHRyYWZmaWMNCj4gPiA+
+ID4gZmxvd3MgaW4gdGhlIG90aGVyIGRpcmVjdGlvbi4NCj4gPiA+ID4gDQo+ID4gPiA+IEknbSBk
+ZWxpYmVyYXRlbHkgc2ltcGxpZnlpbmcgaGVyZToNCj4gPiA+ID4gDQo+ID4gPiA+IGVubzEgcnVu
+cyBhbiBYRFAgcHJvZ3JhbSB0aGF0IGRvZXMgc29tZSBsaWdodHdlaWdodCBJUA0KPiA+ID4gPiBy
+ZXdyaXRpbmcgZnJvbQ0KPiA+ID4gPiBhbnljYXN0IGFkZHJlc3NlcyB0byBpbnRlcm5hbCBWTSBh
+ZGRyZXNzZXMgb24gaW5ncmVzcy4gZW5vMSdzDQo+ID4gPiA+IFhEUA0KPiA+ID4gPiBwcm9ncmFt
+IGN1cnJlbnRseSBYRFBfUEFTUydzIHJld3JpdHRlbiBwYWNrZXRzIHRvIHRoZSBJUCBzdGFjaywN
+Cj4gPiA+ID4gd2hlcmUNCj4gPiA+ID4gdGhleSdyZSByb3V0ZWQgdG8gdGhlIFZNJ3MgdGFwLiBU
+aGlzIHdvcmtzIGZpbmUuDQo+ID4gPiA+IA0KPiA+ID4gPiB0YXBYIHJ1bnMgYW4gWERQIHByb2dy
+YW0gdGhhdCBkb2VzIHRoZSBzYW1lIHJld3JpdGluZyBpbg0KPiA+ID4gPiByZXZlcnNlLg0KPiA+
+ID4gPiBSaWdodCBub3csIGl0IGFsc28gWERQX1BBU1MncyBwYWNrZXRzIHRvIHRoZSBzdGFjaywg
+d2hpY2ggYWxzbw0KPiA+ID4gPiB3b3Jrcw0KPiA+ID4gPiAtLS0gdGhlIHN0YWNrIHJvdXRlcyBy
+ZXNwb25zZSB0cmFmZmljIG91dCBlbm8xLg0KPiA+ID4gPiANCj4gPiA+ID4gSSdtIHBsYXlpbmcg
+d2l0aCBYRFBfUkVESVJFQ1QnaW5nIGluc3RlYWQgb2YgWERQX1BBU1MnaW5nLg0KPiA+ID4gPiAN
+Cj4gPiA+ID4gSSBoYXZlIHRoZSBpZmluZGV4ZXMgYW5kIE1BQyBhZGRyZXNzZXMgKGFuZCB0aG9z
+ZSBvZiBJUA0KPiA+ID4gPiBuZWlnaGJvcnMpIGluDQo+ID4gPiA+IGEgbWFwIC0tLSBhIG5vcm1h
+bCBIQVNIIG1hcCwgbm90IGEgREVWTUFQLiBVc2luZyB0aGF0IG1hcCwgSQ0KPiA+ID4gPiBjYW4N
+Cj4gPiA+ID4gc3VjY2Vzc2Z1bGx5IHJlZGlyZWN0IHRyYWZmaWMgZnJvbSB0YXBYIHRvIGFyYml0
+cmFyeSBvdGhlciB0YXANCj4gPiA+ID4gaW50ZXJmYWNlcy4gV2hhdCBJIGNhbid0IGRvIGlzIHJl
+ZGlyZWN0IHBhY2tldHMgZnJvbSB0YXBYIHRvDQo+ID4gPiA+IGVubzEsDQo+ID4gPiA+IHdoaWNo
+IGlzIHdoYXQgdGhlIHN5c3RlbSBhY3R1YWxseSBuZWVkcyB0byBkby4NCj4gPiA+ID4gICANCj4g
+PiA+IA0KPiA+ID4gWERQX1JFRElSRUNUIHNlbmRzIHRoZSBwYWNrZXQgdG8gYSBkZXZpY2VzIG5k
+b194ZHBfeG1pdCBmdW5jdGlvbi4NCj4gPiA+IHRhcA0KPiA+ID4gaW1wbGVtZW50cyBpdCBoZW5j
+ZSBlbm8xIC0+IHRhcCB3b3JrczsgaWdiIGRvZXMgbm90IG1lYW5pbmcgdGFwDQo+ID4gPiAtPiBl
+bm8xDQo+ID4gPiBmYWlscy4NCj4gPiANCj4gPiBUaGVyZSBpcyBjbGVhcmx5IGEgcmVhbC1saWZl
+IHVzZS1jYXNlIGZvciBhZGRpbmcgbmF0aXZlLVhEUCBzdXBwb3J0DQo+ID4gZm9yDQo+ID4gaWdi
+IGRyaXZlci4gIFN2ZW4gKGNjKSBoYXZlIGltcGxlbWVudGVkIHRoaXMgKHY2WzFdKSwgYnV0IHNv
+bWV0aGluZw0KPiA+IGlzDQo+ID4gY2F1c2luZyB0aGlzIHBhdGNoIHRvIG5vdCBtb3ZlIGZvcndh
+cmQsIHdoYXQgaXMgc3RhbGxpbmcgSW50ZWwNCj4gPiBtYWludGFpbmVycz8NCj4gDQo+IFRoZSBo
+b2xkdXAgaXMgZnJvbSB0aGUgSW50ZWwgZ3V5cy4NCj4gVGhlcmUgaXMgYSB2NyB3aXRoIHRoZSBj
+aGFuZ2VzIGZvciBLZXJuZWwgNS45IGJ1dCBpdCB3YXMgb25seSBwb3N0ZWQNCj4gb24NCj4gdGhl
+IEludGVsIGxpc3Q6DQo+IA0KPiANCmh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcHJvamVj
+dC9pbnRlbC13aXJlZC1sYW4vcGF0Y2gvMjAyMDA5MDIyMDMyMjIuMTg1MTQxLTEtYW50aG9ueS5s
+Lm5ndXllbkBpbnRlbC5jb20vDQo+IA0KPiBUaGV5IHRlc3RlZCBpdCBsYXN0IHdlZWsgc28gaXQg
+c2hvdWxkIGhvcGVmdWxseSBiZSBtZXJnZWQgaW4gdGhlIG5leHQNCj4gd2luZG93Lg0KDQpUaGVy
+ZSB3ZXJlIHNvbWUgZW1haWwgaXNzdWVzIHdoaWNoIHByZXZlbnRlZCB1cyBmcm9tIHNlbmRpbmcg
+aXQgb3V0DQpzb29uZXIgKGFmdGVyIGl0IHdhcyB0ZXN0ZWQpLiBUaGUgaXNzdWUgd2FzIHJlc29s
+dmVkIEZyaWRheSwgSSBqdXN0DQpzZW50IHRoZSBwYXRjaCB0byBuZXRkZXY6DQoNCg0KaHR0cHM6
+Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L25ldGRldi9wYXRjaC8yMDIwMDkyODE3NTkw
+OC4zMTg1MDItMi1hbnRob255Lmwubmd1eWVuQGludGVsLmNvbS8NCg0KVGhhbmtzLA0KVG9ueQ0K
+DQo+ID4gDQo+ID4gVG8gVGhvbWFzLCB5b3UgY291bGQgdHJ5IG91dCB0aGUgcGF0Y2hbMl0gYW5k
+IHJlcG9ydCBiYWNrIGlmIGl0DQo+ID4gd29ya3MNCj4gPiBmb3IgeW91PyAgKEkgdGhpbmsgaXQg
+d2lsbCBoZWxwIG1vdmluZyBwYXRjaCBmb3J3YXJkLi4uKQ0KPiA+IA0KPiANCj4gSSB3b3VsZCBi
+ZSBpbnRlcmVzdGVkIGlmIGl0IHdvcmtzIGZvciB5b3UgYXMgd2VsbC4NCj4gDQo+IEJlc3QNCj4g
+U3Zlbg0KPiANCj4gPiBbMV0gDQo+ID4gaHR0cHM6Ly9ldXIwMy5zYWZlbGlua3MucHJvdGVjdGlv
+bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGbG9yZS5rZXJuZWwub3JnJTJGbmV0ZGV2
+JTJGMjAyMDA5MDIwNTQ1MDkuMjNqYnY1ZnlqM290emlxMiU0MHN2ZW5zbWFjYm9va2Fpci5zdmVu
+LmxhbiUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDc3Zlbi5hdWhhZ2VuJTQwdm9sZWF0ZWNoLmRlJTdD
+Y2JkNzYyZTVhMDI0NDg4ZjQ5MWIwOGQ4NjNjMmI2Y2IlN0NiODJhOTlmNjc5ODE0YTcyOTUzNDRk
+MzUyOThmODQ3YiU3QzAlN0MwJTdDNjM3MzY5MDM1MjI5MjkwODAxJmFtcDtzZGF0YT1QdiUyQlRF
+UWVZNGxjUG5JcHJnMG42SzBuSE9NTWxNbzJxbHJjbXhxV051TFklM0QmYW1wO3Jlc2VydmVkPTAN
+Cj4gPiBbMl0gDQo+ID4gaHR0cHM6Ly9ldXIwMy5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29r
+LmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZwYXRjaHdvcmsub3psYWJzLm9yZyUyRnByb2plY3QlMkZu
+ZXRkZXYlMkZwYXRjaCUyRjIwMjAwOTAyMDU0NTA5LjIzamJ2NWZ5ajNvdHppcTIlNDBzdmVuc21h
+Y2Jvb2thaXIuc3Zlbi5sYW4lMkYmYW1wO2RhdGE9MDIlN0MwMSU3Q3N2ZW4uYXVoYWdlbiU0MHZv
+bGVhdGVjaC5kZSU3Q2NiZDc2MmU1YTAyNDQ4OGY0OTFiMDhkODYzYzJiNmNiJTdDYjgyYTk5ZjY3
+OTgxNGE3Mjk1MzQ0ZDM1Mjk4Zjg0N2IlN0MwJTdDMCU3QzYzNzM2OTAzNTIyOTI5MDgwMSZhbXA7
+c2RhdGE9Q21sRXJhbUwlMkZIR3o3NDVONkhQJTJGV1J6UHdaczBFUmgza1E4JTJCaiUyRklVenR3
+JTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4gLS0gDQo+ID4gQmVzdCByZWdhcmRzLA0KPiA+ICAgSmVz
+cGVyIERhbmdhYXJkIEJyb3Vlcg0KPiA+ICAgTVNjLkNTLCBQcmluY2lwYWwgS2VybmVsIEVuZ2lu
+ZWVyIGF0IFJlZCBIYXQNCj4gPiAgIExpbmtlZEluOiANCj4gPiBodHRwczovL2V1cjAzLnNhZmVs
+aW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy5saW5rZWRp
+bi5jb20lMkZpbiUyRmJyb3VlciZhbXA7ZGF0YT0wMiU3QzAxJTdDc3Zlbi5hdWhhZ2VuJTQwdm9s
+ZWF0ZWNoLmRlJTdDY2JkNzYyZTVhMDI0NDg4ZjQ5MWIwOGQ4NjNjMmI2Y2IlN0NiODJhOTlmNjc5
+ODE0YTcyOTUzNDRkMzUyOThmODQ3YiU3QzAlN0MwJTdDNjM3MzY5MDM1MjI5MjkwODAxJmFtcDtz
+ZGF0YT1MSlV0MzhHQWtkWFMyclc3V0clMkJVUzBkNmVWeFpmbDNWSnF5SHZOc3FMbVklM0QmYW1w
+O3Jlc2VydmVkPTANCj4gPiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fDQo+IEludGVsLXdpcmVkLWxhbiBtYWlsaW5nIGxpc3QNCj4gSW50ZWwt
+d2lyZWQtbGFuQG9zdW9zbC5vcmcNCj4gaHR0cHM6Ly9saXN0cy5vc3Vvc2wub3JnL21haWxtYW4v
+bGlzdGluZm8vaW50ZWwtd2lyZWQtbGFuDQo=
