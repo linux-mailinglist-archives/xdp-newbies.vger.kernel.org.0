@@ -2,55 +2,55 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB7C2890B4
-	for <lists+xdp-newbies@lfdr.de>; Fri,  9 Oct 2020 20:23:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF3D82890BB
+	for <lists+xdp-newbies@lfdr.de>; Fri,  9 Oct 2020 20:25:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390371AbgJISXf (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 9 Oct 2020 14:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33416 "EHLO
+        id S2388113AbgJISZp (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 9 Oct 2020 14:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731198AbgJISXf (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 9 Oct 2020 14:23:35 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53813C0613D2;
-        Fri,  9 Oct 2020 11:23:35 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id j76so7943201ybg.3;
-        Fri, 09 Oct 2020 11:23:35 -0700 (PDT)
+        with ESMTP id S1731198AbgJISZp (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 9 Oct 2020 14:25:45 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652B7C0613D2;
+        Fri,  9 Oct 2020 11:25:45 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id n142so7935191ybf.7;
+        Fri, 09 Oct 2020 11:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QGDeCJKVZUZU9FlKazWZGzhq32jE98lo3iMZ2Sd6y0U=;
-        b=k3MRv52ArAFwLA5/6/0Fckm67Z6+9YC+T15B+OL3zEeO2OBCMknKZnJ8gbn2T3QmXb
-         fiHjpK1VrG0/6ZX/5N8FF8WImgUYpzpi0y/8aJQ1CGY7O+A0TdR0qXqZCDbdMrvuAUXN
-         auaHtQGJHpBo4N9AWjQWNBO+ApThPrOTWaH7mrdGiWK/LLCmorZ5EKXbh9DmobIJf0jx
-         B2KtdblgtmO0CmW3XqnxYIDlT2M+l/qIRloyLRYPylPd70BbHkwEbu+VgAiXA116Yvfm
-         xky8AmLUaH6z0hX4CLkm/s3zKcXmKZWBWVJ6lS2mxVYJyIM8Ve/GSLxru0+0GbEspqYb
-         41eg==
+        bh=w3/V6yYsXysnNEFkgRPOGNYEt9gqSHP3Qv8pHd7z8Qk=;
+        b=RaQdeI5DQhI8g2OSPSu/tKAN/N1NdbHZUE99pa2rYvW7NXP7eemMRpxFFHrhofsjgO
+         scfmFP66S2N4M/7yqNXAHfpLRDyxxxhk0O4rLcab/v1+jngA5txF2YfiF5VfmxooYgN4
+         +hBCS8hz0MMvNWNUjXkAtXgoMeKcpgNmN5FM70yem/Ep+EDKzQkGOoTwYBTmME7c366l
+         tYYLFa35Be05jVLuZN9KsooD2xFQXNywO27t0Uop976zwJQMBishJ1JTYjnXalGT+r3I
+         dP5d8jCrQjRg8yEyXhpPZE4iQhEDU3PAhBJZL3KqJ756OivWegXAXqF9VCRQA9rewoJh
+         njQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QGDeCJKVZUZU9FlKazWZGzhq32jE98lo3iMZ2Sd6y0U=;
-        b=qzu/3N+Dwo4VuP/rpviwLVU0420lJ31mIrFj4ivgKPYwQhkXMIu3yBxZcoWelg9Z6g
-         sWIjuwudKsK0AqSOknzVBhl7NhX21ZxMkTtn5NlElR9LAlG9/+pR1HVkoicWfbv3Kam+
-         8L9WcsGusNr/TBu3joOz89NC0SIMnXKQ9Zkd0QBW+3IkB/k/6hhGuNIYFjizVb9UcnSc
-         GRLupDKT0VjboAgoxnWjN2XCnqnrBxjgnbui6e0UU5FVF0jtz5mdx4TI9UkbrpSuWrF0
-         RUha7PHl5BsqhB0CiYHiW21GF3cNUJl84m7+vZ86k8Uxs0KlDpUJzhhKFiRmi6sPrejk
-         EngA==
-X-Gm-Message-State: AOAM531lnbVJp1g6U2h5QJa9GG/5Trdq3PZice5INpFeA45kNDlbUw2N
-        TcvXE7K74hTSugiBJ69fJPrmuu4ihZxqsSxaGX0=
-X-Google-Smtp-Source: ABdhPJzIEtTxAXavDw406psjcDSZzKPQ26vbxjOMxfnT0frp9QZZeTfVhMhmqgrM9DrSimGeuVEYEyZbGBwguv7x9ro=
-X-Received: by 2002:a25:c7c6:: with SMTP id w189mr9806345ybe.403.1602267814628;
- Fri, 09 Oct 2020 11:23:34 -0700 (PDT)
+        bh=w3/V6yYsXysnNEFkgRPOGNYEt9gqSHP3Qv8pHd7z8Qk=;
+        b=WJ4tABxPyhxdaab5l/mTmtZc+Z4pvGlcu8ENsKLK9B6FzRyzO9m6rrwhPgP3bqV/31
+         dZbtPBaRpRjb6G5t7bURaYdoBwgY3RwHgTUZfJdz+jlJV64UyzJiQvJC6w5xShtC+lg0
+         rwPHhIdmG0UW0fJyIPDXJT3pvnbKOF6wDc1VCsVWNK71EBN8+9dkfZRj8YZssNkm+5r/
+         iDmNLGo3sfTuiq6BELSWrsJHXfhVS0y2sdkVWb9NCc93iTbyqHBfeByAz4EMzgpe6hHn
+         UVrFHJ/JZFxQ0lgX9fSNGaOuvJEk12ki2k+E/yFRnoi3MT/3ur3J/yY4QjQ3vFt6Q71B
+         aOIg==
+X-Gm-Message-State: AOAM531e8XquEs+18KZONdCgOgL4p0gBzqb/By33h933obcHuwoGBwng
+        CL56eHYODUiWg7RolX5+k5o+u+uAEFRb/imlJ0I=
+X-Google-Smtp-Source: ABdhPJxzumGlc1qUke2IisC0XwV8peRFq/+4oHxa4WpCThvnQiVrWuKLb3sjD+g1Lp4CMcBCNHYiS3N5o8eY0f7VyAg=
+X-Received: by 2002:a25:2687:: with SMTP id m129mr18817284ybm.425.1602267944674;
+ Fri, 09 Oct 2020 11:25:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-3-danieltimlee@gmail.com>
-In-Reply-To: <20201009160353.1529-3-danieltimlee@gmail.com>
+References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-4-danieltimlee@gmail.com>
+In-Reply-To: <20201009160353.1529-4-danieltimlee@gmail.com>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 9 Oct 2020 11:23:23 -0700
-Message-ID: <CAEf4Bzao-mCaQ4BnvoFZ_-wMSuoJ3JMJw1SAuy9bNRwy0E7qdg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/3] samples: bpf: Replace attach_tracepoint() to
- attach() in xdp_redirect_cpu
+Date:   Fri, 9 Oct 2020 11:25:33 -0700
+Message-ID: <CAEf4Bzai3y8yHcYAnSBhZ3Wa8nvDcsUw=1o5S-xn42DwPKUndQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/3] samples: bpf: refactor XDP kern program maps
+ with BTF-defined map
 To:     "Daniel T. Lee" <danieltimlee@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -65,74 +65,69 @@ X-Mailing-List: xdp-newbies@vger.kernel.org
 
 On Fri, Oct 9, 2020 at 9:04 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
 >
-> From commit d7a18ea7e8b6 ("libbpf: Add generic bpf_program__attach()"),
-> for some BPF programs, it is now possible to attach BPF programs
-> with __attach() instead of explicitly calling __attach_<type>().
+> Most of the samples were converted to use the new BTF-defined MAP as
+> they moved to libbpf, but some of the samples were missing.
 >
-> This commit refactors the __attach_tracepoint() with libbpf's generic
-> __attach() method. In addition, this refactors the logic of setting
-> the map FD to simplify the code. Also, the missing removal of
-> bpf_load.o in Makefile has been fixed.
+> Instead of using the previous BPF MAP definition, this commit refactors
+> xdp_monitor and xdp_sample_pkts_kern MAP definition with the new
+> BTF-defined MAP format.
+>
+> Also, this commit removes the max_entries attribute at PERF_EVENT_ARRAY
+> map type. The libbpf's bpf_object__create_map() will automatically
+> set max_entries to the maximum configured number of CPUs on the host.
 >
 > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
 > ---
->  samples/bpf/Makefile                |   2 +-
->  samples/bpf/xdp_redirect_cpu_user.c | 138 +++++++++++++---------------
->  2 files changed, 67 insertions(+), 73 deletions(-)
+>  samples/bpf/xdp_monitor_kern.c     | 60 +++++++++++++++---------------
+>  samples/bpf/xdp_sample_pkts_kern.c | 14 +++----
+>  samples/bpf/xdp_sample_pkts_user.c |  1 -
+>  3 files changed, 36 insertions(+), 39 deletions(-)
 >
 
 [...]
 
->  #define NUM_TP 5
-> +#define NUM_MAP 9
->  struct bpf_link *tp_links[NUM_TP] = { 0 };
-
-= {}
-
-> +static int map_fds[NUM_MAP];
->  static int tp_cnt = 0;
+> --- a/samples/bpf/xdp_sample_pkts_kern.c
+> +++ b/samples/bpf/xdp_sample_pkts_kern.c
+> @@ -5,14 +5,12 @@
+>  #include <bpf/bpf_helpers.h>
 >
->  /* Exit return codes */
+>  #define SAMPLE_SIZE 64ul
+> -#define MAX_CPUS 128
+> -
+> -struct bpf_map_def SEC("maps") my_map = {
+> -       .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+> -       .key_size = sizeof(int),
+> -       .value_size = sizeof(u32),
+> -       .max_entries = MAX_CPUS,
+> -};
+> +
+> +struct {
+> +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> +       __type(key, int);
+> +       __type(value, u32);
 
-[...]
 
-> -static struct bpf_link * attach_tp(struct bpf_object *obj,
-> -                                  const char *tp_category,
-> -                                  const char* tp_name)
-> +static int init_tracepoints(struct bpf_object *obj)
->  {
-> +       char *tp_section = "tracepoint/";
->         struct bpf_program *prog;
-> -       struct bpf_link *link;
-> -       char sec_name[PATH_MAX];
-> -       int len;
-> +       const char *section;
+this actually will generate unnecessary libbpf warnings, because
+PERF_EVENT_ARRAY doesn't support BTF types for key/value. So use
+__uint(key_size, sizeof(int)) and __uint(value_size, sizeof(u32))
+instead.
+
+> +} my_map SEC(".maps");
 >
-> -       len = snprintf(sec_name, PATH_MAX, "tracepoint/%s/%s",
-> -                      tp_category, tp_name);
-> -       if (len < 0)
-> -               exit(EXIT_FAIL);
-> +       bpf_object__for_each_program(prog, obj) {
-> +               section = bpf_program__section_name(prog);
-> +               if (strncmp(section, tp_section, strlen(tp_section)) != 0)
-> +                       continue;
-
-that's a convoluted and error-prone way (you can also use "tp/bla/bla"
-for tracepoint programs, for example). Use
-bpf_program__is_tracepoint() check.
-
+>  SEC("xdp_sample")
+>  int xdp_sample_prog(struct xdp_md *ctx)
+> diff --git a/samples/bpf/xdp_sample_pkts_user.c b/samples/bpf/xdp_sample_pkts_user.c
+> index 991ef6f0880b..4b2a300c750c 100644
+> --- a/samples/bpf/xdp_sample_pkts_user.c
+> +++ b/samples/bpf/xdp_sample_pkts_user.c
+> @@ -18,7 +18,6 @@
 >
-> -       prog = bpf_object__find_program_by_title(obj, sec_name);
-> -       if (!prog) {
-> -               fprintf(stderr, "ERR: finding progsec: %s\n", sec_name);
-> -               exit(EXIT_FAIL_BPF);
-> +               tp_links[tp_cnt] = bpf_program__attach(prog);
-> +               if (libbpf_get_error(tp_links[tp_cnt])) {
-> +                       tp_links[tp_cnt] = NULL;
-> +                       return -EINVAL;
-> +               }
-> +               tp_cnt++;
->         }
+>  #include "perf-sys.h"
 >
-
-[...]
+> -#define MAX_CPUS 128
+>  static int if_idx;
+>  static char *if_name;
+>  static __u32 xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
+> --
+> 2.25.1
+>
