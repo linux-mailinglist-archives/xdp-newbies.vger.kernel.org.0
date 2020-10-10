@@ -2,55 +2,58 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26FA12890D2
-	for <lists+xdp-newbies@lfdr.de>; Fri,  9 Oct 2020 20:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0D628A047
+	for <lists+xdp-newbies@lfdr.de>; Sat, 10 Oct 2020 13:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbgJISaB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 9 Oct 2020 14:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34426 "EHLO
+        id S1730059AbgJJLrA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 10 Oct 2020 07:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388240AbgJISaB (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 9 Oct 2020 14:30:01 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11219C0613D2;
-        Fri,  9 Oct 2020 11:30:01 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id b142so7934608ybg.9;
-        Fri, 09 Oct 2020 11:30:01 -0700 (PDT)
+        with ESMTP id S1728919AbgJJKUC (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Sat, 10 Oct 2020 06:20:02 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8B1C0613E1;
+        Sat, 10 Oct 2020 02:56:05 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e22so16612819ejr.4;
+        Sat, 10 Oct 2020 02:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wPYR1XCw2CHMtKERpHn+P66N/lX3Kc4UU6HrVKuMVLg=;
-        b=cBdWPln7Bzz/a9GnOWgIBN6QkUjaH5CSD3bi3K/WZfh3LcHuOVPunpURPyg5qiKQQ2
-         B4MzAMZU7fWXHSHhImCOsNkYeRQyiS2LN+/O+kyXhcyrG1FRu7MAtuyIZ1f91aZtSirg
-         eO6lG8vJI15ObWRevYcTW+VYpPt+XFxLOlLzrpfslqDZkeXo30g2IN8lPEURBIKt8azh
-         k7+Dy0LsPCgjEFhXJvBRy0vC71FGiqrCLQiUJ7uAN8pvtiqkGGONrAYPTjhvq+8eImXb
-         5Ca9N3GELpUVfC74hup7MXbEzH0OhdQxNu/kh18GX8l1mX0zlFCD5lLMZzm8rOGK5Qql
-         f8dQ==
+        bh=VR/tQHvJwBGuUu8JsJE9tUxiX1G5oEfON4+74b7xloE=;
+        b=aKfWe9sQ2EhbomX3OoQsQ5kk5LwyBcn3Znd1S+SsiJ9XQD0JEojmwv1efkWq1RB5AB
+         gMsu5JI4EFqEOKht2wEqtLttpT13VVUpTVxtEGa1goF+GRBGyoJV3caU5hUnJc+N8FYt
+         4nqelkdQ/3Npr4BAirZZO8gJ4WdIGf+6Eh9nqj4nJk7KBPgMEVaWz0YdexP6FobC5Qqn
+         61UQTZlotYDo2EKneuMkLSSaaqqG60d3kvm+954yODnEwsWN4q7U4YgVQFWM+VJOsIAq
+         fYNWBQ8gcgS4Es/yiA1NvN87ZTeJaxfTkOmnxRo3zSxpV976K9cCdt1ReUidUVZ3/MuY
+         itnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wPYR1XCw2CHMtKERpHn+P66N/lX3Kc4UU6HrVKuMVLg=;
-        b=pru5Qc7cXqO5gaHSCeztGQVyIPudf2SL1UN+vxs6ysPk0wocS5pukzD4Ld/ZbhdpgE
-         4IR3n44Z2Kt4yLbm3mMg+wZSAIPpzzx+ddgGduEoy3osEJEtyziU/pOU7fyFQImH1o88
-         bjzQNqpAufdARRXniQ+9uxFGcAqelSKuAquK1Q7dDA4LPYEKildZFYtIMb1KuMTjLHPK
-         Q7kXykj7k62PR0I0JMGTMPLPTLuOzxLyi+IgIZjtLAm5r9d1aaWyCDdFHFRjiytOfYsK
-         b6RGkgLqWu/+9RlaxoiiH1Ug5GDVwlQeGUnRKtk/hxFmE/yDUU5XNAm1td5D2E3aBONv
-         J+TQ==
-X-Gm-Message-State: AOAM532VX8eCfsCJdfYGxjdSWXYiPPoEDOLliisnpjeFreqDX8hDsL02
-        dtxCIS0D6h15Yw97e5ciG5ri0EgiINq5slhnSEY=
-X-Google-Smtp-Source: ABdhPJzc7KQ0asHvWNhe0QOPDN5Aazv4uob54x6oPwpVHbmE04qba53tCDqGfjODwq0oNJNwrCMNuVeCkOYPalmE7u8=
-X-Received: by 2002:a25:2d41:: with SMTP id s1mr18499463ybe.459.1602268200350;
- Fri, 09 Oct 2020 11:30:00 -0700 (PDT)
+        bh=VR/tQHvJwBGuUu8JsJE9tUxiX1G5oEfON4+74b7xloE=;
+        b=s1wQZT7tCErCTBWilbVAM/WSW/sChwyctvpf0AbYmFmyHKRJI5QvX5dw1XuskEUQMb
+         rWsTGPlI8+hFVkS3OQGSvzoFP0bWDsTIkDyA2EhO4PlGZHJBG6geXPE0tKlZvt910hc4
+         Onug4LPbNVMsll5+YBa4Kqz081aEgm+1wk3pRZuK22N9ofoWSjwQdohDo6qxZNzPF3SW
+         5cFzd2GPOsCqky3bi5lYRSzKSKKGS98rkqugO4mN4ji8sP2JNkVcpy7gIdSuTuqJ7aQP
+         AvXcpwl4ncWDCeiX5bzEZzDeerr8Ir3youhXyXOgq5y8ExMbtI77RHfzy2tfzL+EBo0L
+         YkWw==
+X-Gm-Message-State: AOAM530J8YQBjX3gQi5tizAv/TkhKifZO66xtdwFikzR7InzccZTlKUx
+        uNl0J3M8fUKqknjP2WKqn8GcO38kChHxj4VjlA==
+X-Google-Smtp-Source: ABdhPJwZykUG0Thgw1Kayj5L/BQM/DvuxDe82XXX7C6oeM+gqc8HOJie+y57a4eYTKEntKRM6UoqdmvFo2YOoCqYjj0=
+X-Received: by 2002:a17:906:590d:: with SMTP id h13mr18186970ejq.226.1602323764107;
+ Sat, 10 Oct 2020 02:56:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009160353.1529-1-danieltimlee@gmail.com>
-In-Reply-To: <20201009160353.1529-1-danieltimlee@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 9 Oct 2020 11:29:49 -0700
-Message-ID: <CAEf4BzZJgsd3OkcgULc7_Hxhg_ZcSmp+XT0e--8EMkz9_+5Qxg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/3] samples: bpf: Refactor XDP programs with libbpf
-To:     "Daniel T. Lee" <danieltimlee@gmail.com>
+References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-4-danieltimlee@gmail.com>
+ <CAEf4Bzai3y8yHcYAnSBhZ3Wa8nvDcsUw=1o5S-xn42DwPKUndQ@mail.gmail.com>
+In-Reply-To: <CAEf4Bzai3y8yHcYAnSBhZ3Wa8nvDcsUw=1o5S-xn42DwPKUndQ@mail.gmail.com>
+From:   "Daniel T. Lee" <danieltimlee@gmail.com>
+Date:   Sat, 10 Oct 2020 18:55:49 +0900
+Message-ID: <CAEKGpzgPepj2c=tvwgwH93OLDvq_GCDjGeoh_w3VCFwUuE=HPA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/3] samples: bpf: refactor XDP kern program maps
+ with BTF-defined map
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
         Jesper Dangaard Brouer <brouer@redhat.com>,
@@ -62,57 +65,79 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, Oct 9, 2020 at 9:04 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
+On Sat, Oct 10, 2020 at 3:25 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> To avoid confusion caused by the increasing fragmentation of the BPF
-> Loader program, this commit would like to convert the previous bpf_load
-> loader with the libbpf loader.
+> On Fri, Oct 9, 2020 at 9:04 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
+> >
+> > Most of the samples were converted to use the new BTF-defined MAP as
+> > they moved to libbpf, but some of the samples were missing.
+> >
+> > Instead of using the previous BPF MAP definition, this commit refactors
+> > xdp_monitor and xdp_sample_pkts_kern MAP definition with the new
+> > BTF-defined MAP format.
+> >
+> > Also, this commit removes the max_entries attribute at PERF_EVENT_ARRAY
+> > map type. The libbpf's bpf_object__create_map() will automatically
+> > set max_entries to the maximum configured number of CPUs on the host.
+> >
+> > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+> > ---
+> >  samples/bpf/xdp_monitor_kern.c     | 60 +++++++++++++++---------------
+> >  samples/bpf/xdp_sample_pkts_kern.c | 14 +++----
+> >  samples/bpf/xdp_sample_pkts_user.c |  1 -
+> >  3 files changed, 36 insertions(+), 39 deletions(-)
+> >
 >
-> Thanks to libbpf's bpf_link interface, managing the tracepoint BPF
-> program is much easier. bpf_program__attach_tracepoint manages the
-> enable of tracepoint event and attach of BPF programs to it with a
-> single interface bpf_link, so there is no need to manage event_fd and
-> prog_fd separately.
+> [...]
 >
-> And due to addition of generic bpf_program__attach() to libbpf, it is
-> now possible to attach BPF programs with __attach() instead of
-> explicitly calling __attach_<type>().
+> > --- a/samples/bpf/xdp_sample_pkts_kern.c
+> > +++ b/samples/bpf/xdp_sample_pkts_kern.c
+> > @@ -5,14 +5,12 @@
+> >  #include <bpf/bpf_helpers.h>
+> >
+> >  #define SAMPLE_SIZE 64ul
+> > -#define MAX_CPUS 128
+> > -
+> > -struct bpf_map_def SEC("maps") my_map = {
+> > -       .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+> > -       .key_size = sizeof(int),
+> > -       .value_size = sizeof(u32),
+> > -       .max_entries = MAX_CPUS,
+> > -};
+> > +
+> > +struct {
+> > +       __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> > +       __type(key, int);
+> > +       __type(value, u32);
 >
-> This patchset refactors xdp_monitor with using this libbpf API, and the
-> bpf_load is removed and migrated to libbpf. Also, attach_tracepoint()
-> is replaced with the generic __attach() method in xdp_redirect_cpu.
-> Moreover, maps in kern program have been converted to BTF-defined map.
 >
-> Daniel T. Lee (3):
->   samples: bpf: Refactor xdp_monitor with libbpf
->   samples: bpf: Replace attach_tracepoint() to attach() in
->     xdp_redirect_cpu
->   samples: bpf: refactor XDP kern program maps with BTF-defined map
->
->  samples/bpf/Makefile                |   4 +-
->  samples/bpf/xdp_monitor_kern.c      |  60 ++++++------
->  samples/bpf/xdp_monitor_user.c      | 144 +++++++++++++++++++++-------
->  samples/bpf/xdp_redirect_cpu_user.c | 138 +++++++++++++-------------
->  samples/bpf/xdp_sample_pkts_kern.c  |  14 ++-
->  samples/bpf/xdp_sample_pkts_user.c  |   1 -
->  6 files changed, 211 insertions(+), 150 deletions(-)
->
-> --
-> 2.25.1
+> this actually will generate unnecessary libbpf warnings, because
+> PERF_EVENT_ARRAY doesn't support BTF types for key/value. So use
+> __uint(key_size, sizeof(int)) and __uint(value_size, sizeof(u32))
+> instead.
 >
 
-Thanks for this clean up, Daniel! It's great! I left a few nits here
-and there in the appropriate patches.
+Thanks for the great review!
+I'll fix it right away and send the next version of patch.
 
-There still seem to be a bunch of users of bpf_load.c, which would be
-nice to get rid of completely. But before you go do that, consider
-integrating BPF skeleton into samples/bpf Makefile. That way instead
-of all those look ups of maps/programs by name, you'd be writing a
-straightforward skel->maps.my_map and similar short and non-failing
-code. This should make the overall time spent on conversion much
-smaller (and more pleasant, IMO).
 
-You've dealt with a lot of samples/bpf reworking, so it should be too
-hard for you to figure out the best way to do this, but check
-selftests/bpf's Makefile, if you need some ideas. Or just ask for
-help. Thanks!
+> > +} my_map SEC(".maps");
+> >
+> >  SEC("xdp_sample")
+> >  int xdp_sample_prog(struct xdp_md *ctx)
+> > diff --git a/samples/bpf/xdp_sample_pkts_user.c b/samples/bpf/xdp_sample_pkts_user.c
+> > index 991ef6f0880b..4b2a300c750c 100644
+> > --- a/samples/bpf/xdp_sample_pkts_user.c
+> > +++ b/samples/bpf/xdp_sample_pkts_user.c
+> > @@ -18,7 +18,6 @@
+> >
+> >  #include "perf-sys.h"
+> >
+> > -#define MAX_CPUS 128
+> >  static int if_idx;
+> >  static char *if_name;
+> >  static __u32 xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
+> > --
+> > 2.25.1
+> >
