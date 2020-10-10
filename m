@@ -2,56 +2,55 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E494A28A03B
-	for <lists+xdp-newbies@lfdr.de>; Sat, 10 Oct 2020 13:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBEDE28A41E
+	for <lists+xdp-newbies@lfdr.de>; Sun, 11 Oct 2020 01:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgJJLic (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 10 Oct 2020 07:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38920 "EHLO
+        id S2389148AbgJJWzW (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 10 Oct 2020 18:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbgJJKUC (ORCPT
+        with ESMTP id S1731526AbgJJTyP (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 10 Oct 2020 06:20:02 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06461C0613E7;
-        Sat, 10 Oct 2020 03:09:01 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id p13so11961871edi.7;
-        Sat, 10 Oct 2020 03:09:00 -0700 (PDT)
+        Sat, 10 Oct 2020 15:54:15 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1126C0613E1;
+        Sat, 10 Oct 2020 03:41:57 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id h24so16657620ejg.9;
+        Sat, 10 Oct 2020 03:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2u/FYiRZYg0jlbMYQJDVSfy4QaCXsq7tXWs5W7D5VoA=;
-        b=M3Eumw0msG+svHWDgfMyn8t0lD/I/Ri7vS5SQmEPCz5fxCv2x1cHbxGWAc9APCShVr
-         JyEN8UQu+DNlcMMaod7sN/1EIcWopAGAcixecB+9MVohiuBfN0qRvh7ywQ8TJcPwaZzs
-         YGFtiR20V4L458PCs3BqVh0Zo5XXkZ8Q9J4pTSjxUZJTQQ9BMTRKHuDPsRrom5NwrwxX
-         4ozR8TT4A8rcrGRioP+N7rchFL8txMPqP6idg9xAZbm+EUe04ItfXtXnf4IPYdMsaXru
-         sSQRel37IqBfkJZJXjos6LZ9w222/F7KIcgJU8M7BvaM9mu8L4088Z5FRf41z3zIJEUF
-         tOqw==
+        bh=Q0R9T/xjTYd8YM1YuxiZqhLetAqKvDe7d2GoM9PR4T0=;
+        b=QLOPe1HNq4PEN+NYyq7WP9uqLahgeN1ZUq4Dy1Z5YB2717pWaU116qSqtBP5gWtwuX
+         iXm2mmdyj7BtZ83XwyBCsct0JfWKT2HdKa/W7J62k+YxrfNi2csKsgO1uHZpetuE/ADt
+         trFRpuz+GhuY+/DBqFeVjrs2lLCbh4vC9zI14W2HmFlBD2dzLXZAYuO3xOc8TLZrEoh3
+         XLhI7T/3q3kTv4XcyxRw4xQ0XGJl3+eA05NFuu33bXbmfwJjiOTozgctGXzDUExd7mZh
+         DLHvXuEf6b50uTVioTINBLS9DR7eNU21Z1Tp9pFbvGs3K1jmBGLhzzRjEfYu1PjuXeJ4
+         dAJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2u/FYiRZYg0jlbMYQJDVSfy4QaCXsq7tXWs5W7D5VoA=;
-        b=qjyEjiC2wbBDky7eH6HPH0Vp5pO3nCiXivnzUmDOHvM+YTFlm+n2obZrJ5yNCc2upu
-         rAfUYam8/WlNe2DJc26uukTtIpjvpHmfU1ZTa3ScQzhmb8ia3X9Ow2DYG7jECCumLEVH
-         rmhQqbKEU+hKor+/o59x1l7o827gOboc2EqcMBNcd5aJG7Sr13o9YZgSN70rp+So0g3c
-         f+a8LsfhWMZa53RgzSTiZjh+Dq8PHnSjbhCx5Orm3az1OZg6ZnoHAiTF5N08CesQXKhc
-         hKVBfufHN9HbsaFCafm2+P5ZtRzt3Ppm/19+cjhKGwag6VLUQI4Bwiziwtnp5NNi+HtM
-         J6Ug==
-X-Gm-Message-State: AOAM530cgZMiZXL+ZEvpO875JRX+/dP+YBF6In6wXhj+hH2Yo+RdonEl
-        zPrCaolkKGwb1dYvY81seQSo6JByQ4IXNVme/qJg7j/0opAZ
-X-Google-Smtp-Source: ABdhPJz8Qo4DZGrU8DHUc5b10nkKSIGd/ZuyqcqtpD0fWUdZgcaWDGoDt1qfQHQqyELaXkvm72rmue4ixWoMXVXM6Q8=
-X-Received: by 2002:a50:cbc7:: with SMTP id l7mr3770872edi.148.1602324539440;
- Sat, 10 Oct 2020 03:08:59 -0700 (PDT)
+        bh=Q0R9T/xjTYd8YM1YuxiZqhLetAqKvDe7d2GoM9PR4T0=;
+        b=KZnD/0XfIhfUQ7f+vN60F4GQym4cOVo5y1HVFlUq5yPPsvItlfSQrfHQk6M1lyssLJ
+         oiIrGQBvu7ffWfQ7tcUTblzJl49parD8/TMySPvj/MDOqSz6Ci5tuLCO6lflGFKMkCa5
+         CmtV2e98kx7gnDLO4AAr4eJmOKaLiUU12opQ3nIWq9VeXGchqntrYVHztAwWcuCYNVN7
+         uNY66iqfbrhBzvJNzQXBsHlDsnJW0Ny0AVNAeTimjRqrx80iyA7GuUPqVwpAljwQsFwy
+         HwOVVlvmH4h3kdh1uiQRQpay2q18s1EIiy7MTP5mVwBbkTYrHyRRX/Hox7RbUGSANofY
+         TsbA==
+X-Gm-Message-State: AOAM532ES8O3Fpki6VHlp+ygkkib2iSQxfyGupcrE9DXwl6yiKC7epmv
+        w5FdZYC/ZdC+ZZhbG7CiC5rRd/Y2w4Br4y23IA==
+X-Google-Smtp-Source: ABdhPJxKQoe78oDHWUDRuuqNUY3mYbvskdCUa+EYsPSOxWECTTDGnY31Y9b1FI8blNFliUzOHoPf0wwesiMAmREOV28=
+X-Received: by 2002:a17:906:f89:: with SMTP id q9mr18365181ejj.337.1602326516525;
+ Sat, 10 Oct 2020 03:41:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-2-danieltimlee@gmail.com>
- <CAEf4BzYNF_BbwXM-HFFSk=ybJRdR=_P1OcVwxZ6dav6_b4BOWw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYNF_BbwXM-HFFSk=ybJRdR=_P1OcVwxZ6dav6_b4BOWw@mail.gmail.com>
+References: <20201009160353.1529-1-danieltimlee@gmail.com> <CAEf4BzZJgsd3OkcgULc7_Hxhg_ZcSmp+XT0e--8EMkz9_+5Qxg@mail.gmail.com>
+In-Reply-To: <CAEf4BzZJgsd3OkcgULc7_Hxhg_ZcSmp+XT0e--8EMkz9_+5Qxg@mail.gmail.com>
 From:   "Daniel T. Lee" <danieltimlee@gmail.com>
-Date:   Sat, 10 Oct 2020 19:08:45 +0900
-Message-ID: <CAEKGpzjcYCgOFCN2f4M-X-mnozTrcayp4jQVb6YB9cYE0M8F8A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/3] samples: bpf: Refactor xdp_monitor with libbpf
+Date:   Sat, 10 Oct 2020 19:41:40 +0900
+Message-ID: <CAEKGpzjakqueq9B8eziCB1iv24j3Qs+YDqZBtbO6GSqJoOUBEA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/3] samples: bpf: Refactor XDP programs with libbpf
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -64,14 +63,14 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sat, Oct 10, 2020 at 3:17 AM Andrii Nakryiko
+On Sat, Oct 10, 2020 at 3:30 AM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
 >
 > On Fri, Oct 9, 2020 at 9:04 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
 > >
 > > To avoid confusion caused by the increasing fragmentation of the BPF
-> > Loader program, this commit would like to change to the libbpf loader
-> > instead of using the bpf_load.
+> > Loader program, this commit would like to convert the previous bpf_load
+> > loader with the libbpf loader.
 > >
 > > Thanks to libbpf's bpf_link interface, managing the tracepoint BPF
 > > program is much easier. bpf_program__attach_tracepoint manages the
@@ -79,161 +78,57 @@ On Sat, Oct 10, 2020 at 3:17 AM Andrii Nakryiko
 > > single interface bpf_link, so there is no need to manage event_fd and
 > > prog_fd separately.
 > >
-> > This commit refactors xdp_monitor with using this libbpf API, and the
-> > bpf_load is removed and migrated to libbpf.
+> > And due to addition of generic bpf_program__attach() to libbpf, it is
+> > now possible to attach BPF programs with __attach() instead of
+> > explicitly calling __attach_<type>().
 > >
-> > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-> > ---
-> >  samples/bpf/Makefile           |   2 +-
-> >  samples/bpf/xdp_monitor_user.c | 144 ++++++++++++++++++++++++---------
-> >  2 files changed, 108 insertions(+), 38 deletions(-)
+> > This patchset refactors xdp_monitor with using this libbpf API, and the
+> > bpf_load is removed and migrated to libbpf. Also, attach_tracepoint()
+> > is replaced with the generic __attach() method in xdp_redirect_cpu.
+> > Moreover, maps in kern program have been converted to BTF-defined map.
+> >
+> > Daniel T. Lee (3):
+> >   samples: bpf: Refactor xdp_monitor with libbpf
+> >   samples: bpf: Replace attach_tracepoint() to attach() in
+> >     xdp_redirect_cpu
+> >   samples: bpf: refactor XDP kern program maps with BTF-defined map
+> >
+> >  samples/bpf/Makefile                |   4 +-
+> >  samples/bpf/xdp_monitor_kern.c      |  60 ++++++------
+> >  samples/bpf/xdp_monitor_user.c      | 144 +++++++++++++++++++++-------
+> >  samples/bpf/xdp_redirect_cpu_user.c | 138 +++++++++++++-------------
+> >  samples/bpf/xdp_sample_pkts_kern.c  |  14 ++-
+> >  samples/bpf/xdp_sample_pkts_user.c  |   1 -
+> >  6 files changed, 211 insertions(+), 150 deletions(-)
+> >
+> > --
+> > 2.25.1
 > >
 >
-> [...]
+> Thanks for this clean up, Daniel! It's great! I left a few nits here
+> and there in the appropriate patches.
 >
-> > +static int tp_cnt;
-> > +static int map_cnt;
-> >  static int verbose = 1;
-> >  static bool debug = false;
-> > +struct bpf_map *map_data[NUM_MAP] = { 0 };
-> > +struct bpf_link *tp_links[NUM_TP] = { 0 };
+> There still seem to be a bunch of users of bpf_load.c, which would be
+> nice to get rid of completely. But before you go do that, consider
+> integrating BPF skeleton into samples/bpf Makefile. That way instead
+> of all those look ups of maps/programs by name, you'd be writing a
+> straightforward skel->maps.my_map and similar short and non-failing
+> code. This should make the overall time spent on conversion much
+> smaller (and more pleasant, IMO).
 >
-> this syntax means "initialize *only the first element* to 0
-> (explicitly) and the rest of elements to default (which is also 0)".
-> So it's just misleading, use ` = {}`.
->
+> You've dealt with a lot of samples/bpf reworking, so it should be too
+> hard for you to figure out the best way to do this, but check
+> selftests/bpf's Makefile, if you need some ideas. Or just ask for
+> help. Thanks!
 
-Thanks for the great review!
+Thanks for the great feedback!
 
-Come to think of it, it could be confusing as you mentioned. I will
-remove the unnecessary initializer in the next patch and resend it.
-
-> >
-> >  static const struct option long_options[] = {
-> >         {"help",        no_argument,            NULL, 'h' },
-> > @@ -41,6 +65,15 @@ static const struct option long_options[] = {
-> >         {0, 0, NULL,  0 }
-> >  };
-> >
-> > +static void int_exit(int sig)
-> > +{
-> > +       /* Detach tracepoints */
-> > +       while (tp_cnt)
-> > +               bpf_link__destroy(tp_links[--tp_cnt]);
-> > +
->
-> see below about proper cleanup
->
-> > +       exit(0);
-> > +}
-> > +
-> >  /* C standard specifies two constants, EXIT_SUCCESS(0) and EXIT_FAILURE(1) */
-> >  #define EXIT_FAIL_MEM  5
-> >
->
-> [...]
->
-> >
-> > -static void print_bpf_prog_info(void)
-> > +static void print_bpf_prog_info(struct bpf_object *obj)
-> >  {
-> > -       int i;
-> > +       struct bpf_program *prog;
-> > +       struct bpf_map *map;
-> > +       int i = 0;
-> >
-> >         /* Prog info */
-> > -       printf("Loaded BPF prog have %d bpf program(s)\n", prog_cnt);
-> > -       for (i = 0; i < prog_cnt; i++) {
-> > -               printf(" - prog_fd[%d] = fd(%d)\n", i, prog_fd[i]);
-> > +       printf("Loaded BPF prog have %d bpf program(s)\n", tp_cnt);
-> > +       bpf_object__for_each_program(prog, obj) {
-> > +               printf(" - prog_fd[%d] = fd(%d)\n", i++, bpf_program__fd(prog));
-> >         }
-> >
-> > +       i = 0;
-> >         /* Maps info */
-> > -       printf("Loaded BPF prog have %d map(s)\n", map_data_count);
-> > -       for (i = 0; i < map_data_count; i++) {
-> > -               char *name = map_data[i].name;
-> > -               int fd     = map_data[i].fd;
-> > +       printf("Loaded BPF prog have %d map(s)\n", map_cnt);
-> > +       bpf_object__for_each_map(map, obj) {
-> > +               const char *name = bpf_map__name(map);
-> > +               int fd           = bpf_map__fd(map);
-> >
-> > -               printf(" - map_data[%d] = fd(%d) name:%s\n", i, fd, name);
-> > +               printf(" - map_data[%d] = fd(%d) name:%s\n", i++, fd, name);
->
-> please move out increment into a separate statement, no need to
-> confuse readers unnecessarily
->
-
-I will fix it at the following patch.
-
-> >         }
-> >
-> >         /* Event info */
-> > -       printf("Searching for (max:%d) event file descriptor(s)\n", prog_cnt);
-> > -       for (i = 0; i < prog_cnt; i++) {
-> > -               if (event_fd[i] != -1)
-> > -                       printf(" - event_fd[%d] = fd(%d)\n", i, event_fd[i]);
-> > +       printf("Searching for (max:%d) event file descriptor(s)\n", tp_cnt);
-> > +       for (i = 0; i < tp_cnt; i++) {
-> > +               int fd = bpf_link__fd(tp_links[i]);
-> > +
-> > +               if (fd != -1)
-> > +                       printf(" - event_fd[%d] = fd(%d)\n", i, fd);
-> >         }
-> >  }
-> >
-> >  int main(int argc, char **argv)
-> >  {
->
-> [...]
->
-> > +       obj = bpf_object__open_file(filename, NULL);
-> > +       if (libbpf_get_error(obj)) {
-> > +               printf("ERROR: opening BPF object file failed\n");
-> > +               obj = NULL;
-> >                 return EXIT_FAILURE;
-> >         }
-> > -       if (!prog_fd[0]) {
-> > -               printf("ERROR - load_bpf_file: %s\n", strerror(errno));
-> > +
-> > +       /* load BPF program */
-> > +       if (bpf_object__load(obj)) {
->
-> would be still good to call bpf_object__close(obj) here, this will
-> avoid warnings about memory leaks, if you run this program under ASAN
->
-> > +               printf("ERROR: loading BPF object file failed\n");
-> >                 return EXIT_FAILURE;
-> >         }
-> >
-> > +       for (type = 0; type < NUM_MAP; type++) {
-> > +               map_data[type] =
-> > +                       bpf_object__find_map_by_name(obj, map_type_strings[type]);
-> > +
-> > +               if (libbpf_get_error(map_data[type])) {
-> > +                       printf("ERROR: finding a map in obj file failed\n");
->
-> same about cleanup, goto into single cleanup place would be
-> appropriate throughout this entire function, probably.
->
-
-Jump to single cleanup will be much more intuitive.
-I will update and send the next version of patch right away.
+Thank you for letting me know about the BPF features that I can apply.
+Currently, I'm not familiar with the BPF skeleton yet, but I'll take a good
+look at the BPF skeleton to apply it in a more advanced form.
 
 Thank you for your time and effort for the review.
 
+-- 
 Best,
-Daniel
-
-> > +                       return EXIT_FAILURE;
-> > +               }
-> > +               map_cnt++;
-> > +       }
-> > +
->
-> [...]
+Daniel T. Lee
