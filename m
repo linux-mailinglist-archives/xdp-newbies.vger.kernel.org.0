@@ -2,57 +2,56 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E066328A00E
-	for <lists+xdp-newbies@lfdr.de>; Sat, 10 Oct 2020 12:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E494A28A03B
+	for <lists+xdp-newbies@lfdr.de>; Sat, 10 Oct 2020 13:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgJJKfe (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 10 Oct 2020 06:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
+        id S1730205AbgJJLic (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sat, 10 Oct 2020 07:38:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728751AbgJJKbs (ORCPT
+        with ESMTP id S1728942AbgJJKUC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Sat, 10 Oct 2020 06:31:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39FDC0613E3;
-        Sat, 10 Oct 2020 02:58:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id 33so11880361edq.13;
-        Sat, 10 Oct 2020 02:58:47 -0700 (PDT)
+        Sat, 10 Oct 2020 06:20:02 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06461C0613E7;
+        Sat, 10 Oct 2020 03:09:01 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id p13so11961871edi.7;
+        Sat, 10 Oct 2020 03:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SeitlzLVHovjLjm98fbptQsAkFvsyB8947FeMfcf+nE=;
-        b=DKGgVKSP3QSuXW5E7dmqH0yjGz0cWfWzDO85bh02XzBoRSghupAWFyIHUl7anZVJI7
-         lt57yGodPiUl3bm8SxZSmnc9TXXJFc81yJxgLfNlxBDgOp8eNZ8FbsijBqFjt8dfEC9J
-         u9etbhAByT9QXPia7pSoG5gzhL7ESeEfrHHy05oOUawy7QK7afGsDL5yzBDeqjTbG14e
-         buK3SuKVrp1v2LWHM55/7MbvY2jn0z41epKuNOZPDsZx33a7JeJXTCkzIUq8wrLm2WB2
-         JdhD+ddlJ1CebUCRjykN2yCIIMi1En+s3xP/TcnKN/MIkIufQunzC5gbysR2oWmWGZIC
-         biXQ==
+        bh=2u/FYiRZYg0jlbMYQJDVSfy4QaCXsq7tXWs5W7D5VoA=;
+        b=M3Eumw0msG+svHWDgfMyn8t0lD/I/Ri7vS5SQmEPCz5fxCv2x1cHbxGWAc9APCShVr
+         JyEN8UQu+DNlcMMaod7sN/1EIcWopAGAcixecB+9MVohiuBfN0qRvh7ywQ8TJcPwaZzs
+         YGFtiR20V4L458PCs3BqVh0Zo5XXkZ8Q9J4pTSjxUZJTQQ9BMTRKHuDPsRrom5NwrwxX
+         4ozR8TT4A8rcrGRioP+N7rchFL8txMPqP6idg9xAZbm+EUe04ItfXtXnf4IPYdMsaXru
+         sSQRel37IqBfkJZJXjos6LZ9w222/F7KIcgJU8M7BvaM9mu8L4088Z5FRf41z3zIJEUF
+         tOqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SeitlzLVHovjLjm98fbptQsAkFvsyB8947FeMfcf+nE=;
-        b=dWASRf6rvsWBzKfADWo7fXsFvoSb2Ftkvd6EMcgmYiE3IEKJxGmfLLRAcOIs1JE2+K
-         PEsjFRbMi4lIVQI6jRggWPpVgOjIWc0xWK0cvvfQQQ2GP8WdxzASiAzFBJc+qyElGoQM
-         QhrbVgsWaqxaQ7HC6BGox9kTPQOE38K/TZABfe7N+FTLQBW28LZJVAifGV5sIVvFIHI2
-         b1TQ2OAtq523s7p91PH/N82jmcBlNWDQA9pKvv6avV7p2Y0qdyZ3h++1hbxwM4PM1OiT
-         H/y+dN8jr+xOuqQ/SWL2C1L5Hxd0odc/5gpEKcCdceesEavhDxplJzAuzqLx+2nfP4EW
-         RUvw==
-X-Gm-Message-State: AOAM530V7h0iaoyilbxo0E2YMD9fUsL63P0/PJC5VxLrGLmFySMGRavR
-        G3GGEco63Fnbvefjtn7Ilv+Kk9ckj7ZeNN7vPg==
-X-Google-Smtp-Source: ABdhPJwEKdbtc+BVmGyUHEb3yux15x0kwE3MJTtARqdGa3MJTwe+n1g36kKA0Gj7BTvmIbEkl6XjBD8gHgUjealKiws=
-X-Received: by 2002:aa7:d719:: with SMTP id t25mr3757681edq.11.1602323926187;
- Sat, 10 Oct 2020 02:58:46 -0700 (PDT)
+        bh=2u/FYiRZYg0jlbMYQJDVSfy4QaCXsq7tXWs5W7D5VoA=;
+        b=qjyEjiC2wbBDky7eH6HPH0Vp5pO3nCiXivnzUmDOHvM+YTFlm+n2obZrJ5yNCc2upu
+         rAfUYam8/WlNe2DJc26uukTtIpjvpHmfU1ZTa3ScQzhmb8ia3X9Ow2DYG7jECCumLEVH
+         rmhQqbKEU+hKor+/o59x1l7o827gOboc2EqcMBNcd5aJG7Sr13o9YZgSN70rp+So0g3c
+         f+a8LsfhWMZa53RgzSTiZjh+Dq8PHnSjbhCx5Orm3az1OZg6ZnoHAiTF5N08CesQXKhc
+         hKVBfufHN9HbsaFCafm2+P5ZtRzt3Ppm/19+cjhKGwag6VLUQI4Bwiziwtnp5NNi+HtM
+         J6Ug==
+X-Gm-Message-State: AOAM530cgZMiZXL+ZEvpO875JRX+/dP+YBF6In6wXhj+hH2Yo+RdonEl
+        zPrCaolkKGwb1dYvY81seQSo6JByQ4IXNVme/qJg7j/0opAZ
+X-Google-Smtp-Source: ABdhPJz8Qo4DZGrU8DHUc5b10nkKSIGd/ZuyqcqtpD0fWUdZgcaWDGoDt1qfQHQqyELaXkvm72rmue4ixWoMXVXM6Q8=
+X-Received: by 2002:a50:cbc7:: with SMTP id l7mr3770872edi.148.1602324539440;
+ Sat, 10 Oct 2020 03:08:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-3-danieltimlee@gmail.com>
- <CAEf4Bzao-mCaQ4BnvoFZ_-wMSuoJ3JMJw1SAuy9bNRwy0E7qdg@mail.gmail.com>
-In-Reply-To: <CAEf4Bzao-mCaQ4BnvoFZ_-wMSuoJ3JMJw1SAuy9bNRwy0E7qdg@mail.gmail.com>
+References: <20201009160353.1529-1-danieltimlee@gmail.com> <20201009160353.1529-2-danieltimlee@gmail.com>
+ <CAEf4BzYNF_BbwXM-HFFSk=ybJRdR=_P1OcVwxZ6dav6_b4BOWw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYNF_BbwXM-HFFSk=ybJRdR=_P1OcVwxZ6dav6_b4BOWw@mail.gmail.com>
 From:   "Daniel T. Lee" <danieltimlee@gmail.com>
-Date:   Sat, 10 Oct 2020 18:58:31 +0900
-Message-ID: <CAEKGpzgXLbSyEuZ9x01k2vkRPFXJDTsreCqXUov7sfiL+BTE5A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/3] samples: bpf: Replace attach_tracepoint() to
- attach() in xdp_redirect_cpu
+Date:   Sat, 10 Oct 2020 19:08:45 +0900
+Message-ID: <CAEKGpzjcYCgOFCN2f4M-X-mnozTrcayp4jQVb6YB9cYE0M8F8A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/3] samples: bpf: Refactor xdp_monitor with libbpf
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -65,84 +64,176 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sat, Oct 10, 2020 at 3:23 AM Andrii Nakryiko
+On Sat, Oct 10, 2020 at 3:17 AM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
 >
 > On Fri, Oct 9, 2020 at 9:04 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
 > >
-> > From commit d7a18ea7e8b6 ("libbpf: Add generic bpf_program__attach()"),
-> > for some BPF programs, it is now possible to attach BPF programs
-> > with __attach() instead of explicitly calling __attach_<type>().
+> > To avoid confusion caused by the increasing fragmentation of the BPF
+> > Loader program, this commit would like to change to the libbpf loader
+> > instead of using the bpf_load.
 > >
-> > This commit refactors the __attach_tracepoint() with libbpf's generic
-> > __attach() method. In addition, this refactors the logic of setting
-> > the map FD to simplify the code. Also, the missing removal of
-> > bpf_load.o in Makefile has been fixed.
+> > Thanks to libbpf's bpf_link interface, managing the tracepoint BPF
+> > program is much easier. bpf_program__attach_tracepoint manages the
+> > enable of tracepoint event and attach of BPF programs to it with a
+> > single interface bpf_link, so there is no need to manage event_fd and
+> > prog_fd separately.
+> >
+> > This commit refactors xdp_monitor with using this libbpf API, and the
+> > bpf_load is removed and migrated to libbpf.
 > >
 > > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
 > > ---
-> >  samples/bpf/Makefile                |   2 +-
-> >  samples/bpf/xdp_redirect_cpu_user.c | 138 +++++++++++++---------------
-> >  2 files changed, 67 insertions(+), 73 deletions(-)
+> >  samples/bpf/Makefile           |   2 +-
+> >  samples/bpf/xdp_monitor_user.c | 144 ++++++++++++++++++++++++---------
+> >  2 files changed, 108 insertions(+), 38 deletions(-)
 > >
 >
 > [...]
 >
-> >  #define NUM_TP 5
-> > +#define NUM_MAP 9
-> >  struct bpf_link *tp_links[NUM_TP] = { 0 };
+> > +static int tp_cnt;
+> > +static int map_cnt;
+> >  static int verbose = 1;
+> >  static bool debug = false;
+> > +struct bpf_map *map_data[NUM_MAP] = { 0 };
+> > +struct bpf_link *tp_links[NUM_TP] = { 0 };
 >
-> = {}
+> this syntax means "initialize *only the first element* to 0
+> (explicitly) and the rest of elements to default (which is also 0)".
+> So it's just misleading, use ` = {}`.
 >
-> > +static int map_fds[NUM_MAP];
-> >  static int tp_cnt = 0;
+
+Thanks for the great review!
+
+Come to think of it, it could be confusing as you mentioned. I will
+remove the unnecessary initializer in the next patch and resend it.
+
 > >
-> >  /* Exit return codes */
+> >  static const struct option long_options[] = {
+> >         {"help",        no_argument,            NULL, 'h' },
+> > @@ -41,6 +65,15 @@ static const struct option long_options[] = {
+> >         {0, 0, NULL,  0 }
+> >  };
+> >
+> > +static void int_exit(int sig)
+> > +{
+> > +       /* Detach tracepoints */
+> > +       while (tp_cnt)
+> > +               bpf_link__destroy(tp_links[--tp_cnt]);
+> > +
+>
+> see below about proper cleanup
+>
+> > +       exit(0);
+> > +}
+> > +
+> >  /* C standard specifies two constants, EXIT_SUCCESS(0) and EXIT_FAILURE(1) */
+> >  #define EXIT_FAIL_MEM  5
+> >
 >
 > [...]
 >
-> > -static struct bpf_link * attach_tp(struct bpf_object *obj,
-> > -                                  const char *tp_category,
-> > -                                  const char* tp_name)
-> > +static int init_tracepoints(struct bpf_object *obj)
+> >
+> > -static void print_bpf_prog_info(void)
+> > +static void print_bpf_prog_info(struct bpf_object *obj)
 > >  {
-> > +       char *tp_section = "tracepoint/";
-> >         struct bpf_program *prog;
-> > -       struct bpf_link *link;
-> > -       char sec_name[PATH_MAX];
-> > -       int len;
-> > +       const char *section;
+> > -       int i;
+> > +       struct bpf_program *prog;
+> > +       struct bpf_map *map;
+> > +       int i = 0;
 > >
-> > -       len = snprintf(sec_name, PATH_MAX, "tracepoint/%s/%s",
-> > -                      tp_category, tp_name);
-> > -       if (len < 0)
-> > -               exit(EXIT_FAIL);
+> >         /* Prog info */
+> > -       printf("Loaded BPF prog have %d bpf program(s)\n", prog_cnt);
+> > -       for (i = 0; i < prog_cnt; i++) {
+> > -               printf(" - prog_fd[%d] = fd(%d)\n", i, prog_fd[i]);
+> > +       printf("Loaded BPF prog have %d bpf program(s)\n", tp_cnt);
 > > +       bpf_object__for_each_program(prog, obj) {
-> > +               section = bpf_program__section_name(prog);
-> > +               if (strncmp(section, tp_section, strlen(tp_section)) != 0)
-> > +                       continue;
->
-> that's a convoluted and error-prone way (you can also use "tp/bla/bla"
-> for tracepoint programs, for example). Use
-> bpf_program__is_tracepoint() check.
->
-
-Thanks for the review!
-I think that's a much better way. I will send the next patch with applying
-that method.
-
-> >
-> > -       prog = bpf_object__find_program_by_title(obj, sec_name);
-> > -       if (!prog) {
-> > -               fprintf(stderr, "ERR: finding progsec: %s\n", sec_name);
-> > -               exit(EXIT_FAIL_BPF);
-> > +               tp_links[tp_cnt] = bpf_program__attach(prog);
-> > +               if (libbpf_get_error(tp_links[tp_cnt])) {
-> > +                       tp_links[tp_cnt] = NULL;
-> > +                       return -EINVAL;
-> > +               }
-> > +               tp_cnt++;
+> > +               printf(" - prog_fd[%d] = fd(%d)\n", i++, bpf_program__fd(prog));
 > >         }
 > >
+> > +       i = 0;
+> >         /* Maps info */
+> > -       printf("Loaded BPF prog have %d map(s)\n", map_data_count);
+> > -       for (i = 0; i < map_data_count; i++) {
+> > -               char *name = map_data[i].name;
+> > -               int fd     = map_data[i].fd;
+> > +       printf("Loaded BPF prog have %d map(s)\n", map_cnt);
+> > +       bpf_object__for_each_map(map, obj) {
+> > +               const char *name = bpf_map__name(map);
+> > +               int fd           = bpf_map__fd(map);
+> >
+> > -               printf(" - map_data[%d] = fd(%d) name:%s\n", i, fd, name);
+> > +               printf(" - map_data[%d] = fd(%d) name:%s\n", i++, fd, name);
+>
+> please move out increment into a separate statement, no need to
+> confuse readers unnecessarily
+>
+
+I will fix it at the following patch.
+
+> >         }
+> >
+> >         /* Event info */
+> > -       printf("Searching for (max:%d) event file descriptor(s)\n", prog_cnt);
+> > -       for (i = 0; i < prog_cnt; i++) {
+> > -               if (event_fd[i] != -1)
+> > -                       printf(" - event_fd[%d] = fd(%d)\n", i, event_fd[i]);
+> > +       printf("Searching for (max:%d) event file descriptor(s)\n", tp_cnt);
+> > +       for (i = 0; i < tp_cnt; i++) {
+> > +               int fd = bpf_link__fd(tp_links[i]);
+> > +
+> > +               if (fd != -1)
+> > +                       printf(" - event_fd[%d] = fd(%d)\n", i, fd);
+> >         }
+> >  }
+> >
+> >  int main(int argc, char **argv)
+> >  {
+>
+> [...]
+>
+> > +       obj = bpf_object__open_file(filename, NULL);
+> > +       if (libbpf_get_error(obj)) {
+> > +               printf("ERROR: opening BPF object file failed\n");
+> > +               obj = NULL;
+> >                 return EXIT_FAILURE;
+> >         }
+> > -       if (!prog_fd[0]) {
+> > -               printf("ERROR - load_bpf_file: %s\n", strerror(errno));
+> > +
+> > +       /* load BPF program */
+> > +       if (bpf_object__load(obj)) {
+>
+> would be still good to call bpf_object__close(obj) here, this will
+> avoid warnings about memory leaks, if you run this program under ASAN
+>
+> > +               printf("ERROR: loading BPF object file failed\n");
+> >                 return EXIT_FAILURE;
+> >         }
+> >
+> > +       for (type = 0; type < NUM_MAP; type++) {
+> > +               map_data[type] =
+> > +                       bpf_object__find_map_by_name(obj, map_type_strings[type]);
+> > +
+> > +               if (libbpf_get_error(map_data[type])) {
+> > +                       printf("ERROR: finding a map in obj file failed\n");
+>
+> same about cleanup, goto into single cleanup place would be
+> appropriate throughout this entire function, probably.
+>
+
+Jump to single cleanup will be much more intuitive.
+I will update and send the next version of patch right away.
+
+Thank you for your time and effort for the review.
+
+Best,
+Daniel
+
+> > +                       return EXIT_FAILURE;
+> > +               }
+> > +               map_cnt++;
+> > +       }
+> > +
 >
 > [...]
