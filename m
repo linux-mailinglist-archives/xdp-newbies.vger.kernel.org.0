@@ -2,56 +2,72 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A6628D26C
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Oct 2020 18:41:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1D128D282
+	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Oct 2020 18:44:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgJMQlL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 13 Oct 2020 12:41:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34429 "EHLO
+        id S1727958AbgJMQo4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 13 Oct 2020 12:44:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34966 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727976AbgJMQlL (ORCPT
+        by vger.kernel.org with ESMTP id S1727696AbgJMQo4 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 13 Oct 2020 12:41:11 -0400
+        Tue, 13 Oct 2020 12:44:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602607269;
+        s=mimecast20190719; t=1602607494;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=bEmLSocy7JsEJzw7NbheB131gn6fKrCxti6N+vIu4DY=;
-        b=jAi6ELwyEqSFohqQpy0qZGK23lBGH7OhrHyGkEEMUaIR20vgoiiHq0fSaeErDUpQKulxN6
-        ufi5dI0VPA2Exr2bCajIiJJ3XOlr/INtUQRmm6Y2+zkyqXD+/Q/RQm1/le2oFQvkEyoC2g
-        NARsEVUlmtnnEZkdCOVyRpbmSzcZrZc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-504-A-v9A5FxPFO-zs_3FkZolg-1; Tue, 13 Oct 2020 12:41:06 -0400
-X-MC-Unique: A-v9A5FxPFO-zs_3FkZolg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3823879521;
-        Tue, 13 Oct 2020 16:41:05 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A70407665A;
-        Tue, 13 Oct 2020 16:41:01 +0000 (UTC)
-Date:   Tue, 13 Oct 2020 18:41:00 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Federico Parola <fede.parola@hotmail.it>
-Cc:     brouer@redhat.com, xdp-newbies@vger.kernel.org
+        bh=jGh6CHXYhI3qUL1YJM9lEW9HB3HTOIewbdZlVRoLEfQ=;
+        b=R0tllxTc8E0/tkBaPzmQJCzCarWg9nJ5sVJTLsN9bgf2tpQAUb6d4UjIBgdDPojJJ8rc+G
+        3V4XWGayOtkFHkwqEGEx1zNnzdqU6AJCTHcwWLgA1sjkYWCS4uk9BSXyUEANdbujAKivFl
+        SHh58TFxLE4t57WHv3SvNfvz79oTjaM=
+Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com
+ [209.85.221.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-527-MtjqD7CaPvCFmahCOLsyHg-1; Tue, 13 Oct 2020 12:44:53 -0400
+X-MC-Unique: MtjqD7CaPvCFmahCOLsyHg-1
+Received: by mail-vk1-f197.google.com with SMTP id y18so183685vkd.14
+        for <xdp-newbies@vger.kernel.org>; Tue, 13 Oct 2020 09:44:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=jGh6CHXYhI3qUL1YJM9lEW9HB3HTOIewbdZlVRoLEfQ=;
+        b=YlNkyBMjWddy4DHX+s4yCw4Sx1MyVlbuLPzjTnNp5KA/r7lzrNfBAw+4D41h/rV+/V
+         V0FmeuamOdf87EGPnuXFs9xNT1En7bWNIvK1un3H1cRZqQO5D//dZShE7tq33pGk+dga
+         uMTo756nWMBLSa4+NG3kHjevqIN+MDgX58abz5YDPqqfQy2c6KpZhf15DNlW0vlB0AjL
+         JKhPCEh9VV3ihm05sicP1PG+q7uf4XzzcjsxUXxDDDuGat/UsUzVl32PkqlO5rL376UP
+         li7VDBESgNbI4o0rmhr1Y4xh7IVoy4iVgBppfXN4XpnbG7/v0/FYLprmUhtcYvmz0nmm
+         Yuxg==
+X-Gm-Message-State: AOAM533a6L9bO7alQmUPNMYEglqah1x8s/g79WHrxomedD7Iu6UG44jY
+        UPJdTBoqQ8ENYH0v7kXSM3KQV2NWxCzFKpZfnVcL7y/re+uyBCoqVXmfDXkendo8o8sa+Deg2+h
+        /UZu4SC+9ZHR+JO0PLf8ShGA=
+X-Received: by 2002:a67:6991:: with SMTP id e139mr601604vsc.25.1602607492092;
+        Tue, 13 Oct 2020 09:44:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLgczWYdIUQU2JUzF09loUU5Mpjkmfwmu7MruVTh1koZFnm7RgV6juLnA1bAUasvkRj9ncAg==
+X-Received: by 2002:a67:6991:: with SMTP id e139mr601586vsc.25.1602607491782;
+        Tue, 13 Oct 2020 09:44:51 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id t6sm66193vke.28.2020.10.13.09.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2020 09:44:50 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 4357B181CC1; Tue, 13 Oct 2020 18:44:49 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Federico Parola <fede.parola@hotmail.it>,
+        xdp-newbies@vger.kernel.org
 Subject: Re: Multi-core scalability problems
-Message-ID: <20201013184100.0704963d@carbon>
 In-Reply-To: <VI1PR04MB3104C89EF8DCB98F5330F36C9E040@VI1PR04MB3104.eurprd04.prod.outlook.com>
 References: <VI1PR04MB3104C89EF8DCB98F5330F36C9E040@VI1PR04MB3104.eurprd04.prod.outlook.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Tue, 13 Oct 2020 18:44:49 +0200
+Message-ID: <87r1q29ita.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, 13 Oct 2020 15:49:03 +0200
-Federico Parola <fede.parola@hotmail.it> wrote:
+Federico Parola <fede.parola@hotmail.it> writes:
 
 > Hello,
 > I'm testing the performance of XDP when dropping packets using multiple 
@@ -66,32 +82,32 @@ Federico Parola <fede.parola@hotmail.it> wrote:
 > port) and I use flow direction rules on the rx NIC to send these flows 
 > to different queues/cores.
 > Here are my results:
-> 
+>
 > 1 FLOW:
 > Running XDP on dev:enp101s0f0 (ifindex:3) action:XDP_DROP options:no_touch
 > XDP stats       CPU     pps         issue-pps
 > XDP-RX CPU      0       17784270    0
 > XDP-RX CPU      total   17784270
-> 
+>
 > RXQ stats       RXQ:CPU pps         issue-pps
 > rx_queue_index    0:0   17784270    0
 > rx_queue_index    0:sum 17784270
 > ---
-> 
+>
 > 2 FLOWS:
 > Running XDP on dev:enp101s0f0 (ifindex:3) action:XDP_DROP options:no_touch
 > XDP stats       CPU     pps         issue-pps
 > XDP-RX CPU      0       7016363     0
 > XDP-RX CPU      1       7017291     0
 > XDP-RX CPU      total   14033655
-> 
+>
 > RXQ stats       RXQ:CPU pps         issue-pps
 > rx_queue_index    0:0   7016366     0
 > rx_queue_index    0:sum 7016366
 > rx_queue_index    1:1   7017294     0
 > rx_queue_index    1:sum 7017294
 > ---
-> 
+>
 > 4 FLOWS:
 > Running XDP on dev:enp101s0f0 (ifindex:3) action:XDP_DROP options:no_touch
 > XDP stats       CPU     pps         issue-pps
@@ -100,7 +116,7 @@ Federico Parola <fede.parola@hotmail.it> wrote:
 > XDP-RX CPU      2       2357042     0
 > XDP-RX CPU      3       2355396     0
 > XDP-RX CPU      total   9430425
-> 
+>
 > RXQ stats       RXQ:CPU pps         issue-pps
 > rx_queue_index    0:0   2359474     0
 > rx_queue_index    0:sum 2359474
@@ -110,60 +126,21 @@ Federico Parola <fede.parola@hotmail.it> wrote:
 > rx_queue_index    2:sum 2357040
 > rx_queue_index    3:3   2355392     0
 > rx_queue_index    3:sum 2355392
-> 
-
-This is what I see with i40e:
-
-unning XDP on dev:i40e2 (ifindex:6) action:XDP_DROP options:no_touch
-XDP stats       CPU     pps         issue-pps  
-XDP-RX CPU      1       8,411,547   0          
-XDP-RX CPU      2       2,804,016   0          
-XDP-RX CPU      3       2,803,600   0          
-XDP-RX CPU      4       5,608,380   0          
-XDP-RX CPU      5       13,999,125  0          
-XDP-RX CPU      total   33,626,671 
-
-RXQ stats       RXQ:CPU pps         issue-pps  
-rx_queue_index    0:3   2,803,600   0          
-rx_queue_index    0:sum 2,803,600  
-rx_queue_index    1:1   8,411,540   0          
-rx_queue_index    1:sum 8,411,540  
-rx_queue_index    2:2   2,804,015   0          
-rx_queue_index    2:sum 2,804,015  
-rx_queue_index    3:5   8,399,326   0          
-rx_queue_index    3:sum 8,399,326  
-rx_queue_index    4:4   5,608,372   0          
-rx_queue_index    4:sum 5,608,372  
-rx_queue_index    5:5   5,599,809   0          
-rx_queue_index    5:sum 5,599,809  
-
-
+>
 > I don't understand why overall performance is reducing with the number 
 > of cores, according to [1] I would expect it to increase until reaching 
 > a maximum value. Is there any parameter I should tune to overcome the 
 > problem?
 
-That is strange, as my results above show that it does scale on my
-testlab on same NIC i40e (Intel Corporation Ethernet Controller XL710
-for 40GbE QSFP+ (rev 02)).
+Yeah, this does look a bit odd. My immediate thought is that maybe your
+RXQs are not pinned to the cores correctly? There is nothing in
+xdp_rxq_info that ensures this, you have to configure the IRQ affinity
+manually. If you don't do this, I suppose the processing could be
+bouncing around on different CPUs leading to cache line contention when
+updating the stats map.
 
-Can you try to use this[2] tool:
- ethtool_stats.pl --dev enp101s0f0
+You can try to look at what the actual CPU load is on each core -
+'mpstat -P ALL -n 1' is my goto for this.
 
-And notice if there are any strange counters.
-
-
-[2] https://github.com/netoptimizer/network-testing/blob/master/bin/ethtool_stats.pl
- 
-> [1] 
-> https://github.com/tohojo/xdp-paper/blob/master/benchmarks/bench02_xdp_drop.org
-
-My best guess is that you have Ethernet flow-control enabled.
-Some ethtool counter might show if that is the case. 
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+-Toke
 
