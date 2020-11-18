@@ -2,56 +2,55 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E0F2B7451
-	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 03:48:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B8ED2B7458
+	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 03:50:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbgKRCp7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 17 Nov 2020 21:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43504 "EHLO
+        id S1726205AbgKRCtJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 17 Nov 2020 21:49:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgKRCp7 (ORCPT
+        with ESMTP id S1726202AbgKRCtI (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 17 Nov 2020 21:45:59 -0500
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9F0C0613D4;
-        Tue, 17 Nov 2020 18:45:57 -0800 (PST)
-Received: by mail-yb1-xb44.google.com with SMTP id o144so256678ybg.7;
-        Tue, 17 Nov 2020 18:45:57 -0800 (PST)
+        Tue, 17 Nov 2020 21:49:08 -0500
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E0AC0613D4;
+        Tue, 17 Nov 2020 18:49:08 -0800 (PST)
+Received: by mail-yb1-xb41.google.com with SMTP id w5so247665ybj.11;
+        Tue, 17 Nov 2020 18:49:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ctzLO7RF9R+R6bTNF1JmUiOWUerFkh9IT+Pm9FRZnFU=;
-        b=Ou5PCzWuq7zFcl0mKhzZT65Spu60KPFd5pxQaDMZ5HUdC7PFd6o3d9ED9BO8NX9zDF
-         3Akc5X6QIZVxbgwFjfxmM/jXF4AYS4nwD5bN1GUlkTlSKkj4plEzVPHjWQlSuKdGZauT
-         D9aBSTMRGMSYvvMvdZRNp49SOpA3WpqknFdZYfNQK/6gtvCKJeaOY6QT4PtxUn+gJMLN
-         fXrnp2W7Y49NGFsPnBMf+oMUVqLpB9alFz5imGVBVrCB6sIsAofQssdpSSo6R2FTjog0
-         IK5cAUuj0DSFroLu8Gj6TrBWXg5hbZPh/khVT8oGDeMl4kgnp7uKFFAJyItZYgs988Ho
-         KRXg==
+        bh=4tGBegvm7wEk8utzbc4kW94oTcRZevqQjKSDFT/ItuY=;
+        b=am7WFrQ9O+Ab/4h0E1qWRGnxglYQWrbDR4c9x3217xbY23inwLUs/F8+lNUfLlTkId
+         HGCnT+AwXazVk1py+U6BWUyTJvsE4DyGQgM2tdiaz30VvX+L7HiNw4SKIE0gydRSqsDx
+         Nw/vX31jWngubMVzILXN6Yr9fbYwWn4aU7c3LzT8BhHFAypelQtvKU3FyUl8erbmibuW
+         MoJqY+mo8Ycl1CmK2RB7z7zC4MbKcNHa0MSS5FtwUIpZ+Dzzlpylx42jceILbQPgY3Ry
+         SA7K7fB4Wj+OL/BK4EkMM5/DsEQmQuSLAx4QPz/BZnO98EVUe0GdqIKv6Y4ueiSRVhb0
+         MN9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ctzLO7RF9R+R6bTNF1JmUiOWUerFkh9IT+Pm9FRZnFU=;
-        b=SpJV9Af1ffoMYhNPE12e1eqLriPkQqkviC2A0uwAcZLI+fzQ/0NAVoddJNosTVbK6P
-         Q56IPbfX+cwPPXO4gmjoedMTqrvDYqvd41tl6OpnONlZuwZPP6D5gVQLfbypNCfi5j3X
-         +hHdxGEa14JCRVU8aMHWQb25IBZXcDAnASUNnTviduZcqpfFnl/uIdW1DqrU8EDOwZq5
-         vsKjNjczy8ljDbm3CfGbRHnZxpExhMyq9VRCuZT+DIsPx2DDJmonpK35sMzi9xBGxsAL
-         r0ygy6Vh/P0lGkbSyP+szFdnEiymH2QDqYWYO2oFpDPIrEM5r/dXAhy0Td4tMSKIsVTc
-         U9Dg==
-X-Gm-Message-State: AOAM531hFexcWdfcn4AZ8B0rjrBSNwUsWYonfypAyEU2Jhu5tMGB7Bjw
-        KlpKvb5EIotsfTaNHymseZQkG4UOwOsd76UfnfI=
-X-Google-Smtp-Source: ABdhPJyA/Dq30agoFur2L6zlv7I9lxHuKLHSgy8MIeBAuqLcByBxHFU2LcMyugPk//IrsC6US4cJM+bKjMUD1taZUjo=
-X-Received: by 2002:a25:2845:: with SMTP id o66mr4543777ybo.260.1605667556679;
- Tue, 17 Nov 2020 18:45:56 -0800 (PST)
+        bh=4tGBegvm7wEk8utzbc4kW94oTcRZevqQjKSDFT/ItuY=;
+        b=Yd/G62ekg2EXhn1zR7FXHMoONJHS2xdXOu5+K3ahWqEU0+wgU//msZlrhpYdCIhujJ
+         vs1WQc0B5bEYL315SZNcqStXuLSrE5K7Cl6a5jFiiaXpe9TLPPOiOKAG0iIEJ/0FrkzC
+         bW6YdM7a2sEzKqCs/r/cd+nVW91Uw/wHiRtnssakonA082gnGlRmgCFbqxyCV+SLq0UV
+         I+gOIyg6wTOSEqQfrYemh5YmJ/Q0q/vXTLA8avkSjOwXT4qNiRSNKLasW0FR6fHgXf3d
+         Sbc5ypcDCAkCoJn9e5xuVXvqZID9qDokFzJrAmM5oI+yNVwJyMRUaPzruSvDwoviZIYE
+         mZyQ==
+X-Gm-Message-State: AOAM533Wx7vl+sUmI3VEyR/L9rjc5XrGX3sGvdwBmGDvUuu33KB7vX5x
+        FQN4/2hy82TG7W4bwqdh+pSrxVXXVUq2Pc2J31A=
+X-Google-Smtp-Source: ABdhPJzDl57OjC0DVpWbugcubJ/3p9Q0HMaf/+b/qra0isMpRNoz0LDWKQWa2wdvyZbDvuTkD6Y2FRkywkvBItn7eTo=
+X-Received: by 2002:a25:df8e:: with SMTP id w136mr3502264ybg.230.1605667747855;
+ Tue, 17 Nov 2020 18:49:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20201117145644.1166255-1-danieltimlee@gmail.com> <20201117145644.1166255-7-danieltimlee@gmail.com>
-In-Reply-To: <20201117145644.1166255-7-danieltimlee@gmail.com>
+References: <20201117145644.1166255-1-danieltimlee@gmail.com> <20201117145644.1166255-10-danieltimlee@gmail.com>
+In-Reply-To: <20201117145644.1166255-10-danieltimlee@gmail.com>
 From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 Nov 2020 18:45:45 -0800
-Message-ID: <CAEf4BzaF9Uqfq1vQey6wBMjcfbg6aGUQfNk5Yj=vtzsfAb3WsQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 6/9] samples: bpf: refactor test_overhead program
- with libbpf
+Date:   Tue, 17 Nov 2020 18:48:57 -0800
+Message-ID: <CAEf4BzaOMOhX14zXGzkPmLxCHLj+e4a98d9YtT4RdJNNtrPnOQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 9/9] samples: bpf: remove bpf_load loader completely
 To:     "Daniel T. Lee" <danieltimlee@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -72,25 +71,31 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 6:57 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
+On Tue, Nov 17, 2020 at 6:58 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
 >
-> This commit refactors the existing program with libbpf bpf loader.
-> Since the kprobe, tracepoint and raw_tracepoint bpf program can be
-> attached with single bpf_program__attach() interface, so the
-> corresponding function of libbpf is used here.
+> Numerous refactoring that rewrites BPF programs written with bpf_load
+> to use the libbpf loader was finally completed, resulting in BPF
+> programs using bpf_load within the kernel being completely no longer
+> present.
 >
-> Rather than specifying the number of cpus inside the code, this commit
-> uses the number of available cpus with _SC_NPROCESSORS_ONLN.
+> This commit removes bpf_load, an outdated bpf loader that is difficult
+> to keep up with the latest kernel BPF and causes confusion.
 >
 > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
 > ---
->  samples/bpf/Makefile             |  2 +-
->  samples/bpf/test_overhead_user.c | 82 +++++++++++++++++++++++---------
->  2 files changed, 60 insertions(+), 24 deletions(-)
->
 
-LGTM.
+RIP, bpf_load().
+
+Probably makes more sense to combine this patch with the previous patch.
 
 Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>  samples/bpf/bpf_load.c          | 667 --------------------------------
+>  samples/bpf/bpf_load.h          |  57 ---
+>  samples/bpf/xdp2skb_meta_kern.c |   2 +-
+>  3 files changed, 1 insertion(+), 725 deletions(-)
+>  delete mode 100644 samples/bpf/bpf_load.c
+>  delete mode 100644 samples/bpf/bpf_load.h
+>
 
 [...]
