@@ -2,57 +2,56 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A34D72B8390
-	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 19:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5512B83DA
+	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 19:32:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgKRSDc (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 18 Nov 2020 13:03:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
+        id S1726644AbgKRSbi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 18 Nov 2020 13:31:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgKRSDc (ORCPT
+        with ESMTP id S1726629AbgKRSbi (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 18 Nov 2020 13:03:32 -0500
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB6CC0613D4;
-        Wed, 18 Nov 2020 10:03:32 -0800 (PST)
-Received: by mail-oi1-x243.google.com with SMTP id c80so3197429oib.2;
-        Wed, 18 Nov 2020 10:03:32 -0800 (PST)
+        Wed, 18 Nov 2020 13:31:38 -0500
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E742C0613D4;
+        Wed, 18 Nov 2020 10:31:38 -0800 (PST)
+Received: by mail-ot1-x342.google.com with SMTP id n89so2741669otn.3;
+        Wed, 18 Nov 2020 10:31:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=q3m6ruzi8yrhRHKgf6niw2+ejefydMk6FVAeq//2cpU=;
-        b=aTLnDIWWm5gpNqVlc2HNkReacSRkboHtJIdRaw6TzV0g3BlT/oLQ0twbZqCndMKLAU
-         XfZ/M7/4y1MC/jm3VsHP69lzkXxUXS1+qMkrvhT11vIGLuVJINebCzAFq9dwEnencEc/
-         7llczIMBEKOZJ32KzKSzqZPnXw+KIUk4s+tAOd3V2htPUIeAkk3MPs5wmpdkonbefUx8
-         YOVcK8vM6C+j05Q81C6uEKSpBSeEd0wlRo6h4xInFYiCsaQARQ5BIji2DdhRxB7zAVD0
-         ddMhC+vnMiswFIRElF6orI+zeCyiFwma+4aOkkPeKbSkV2VBYgaWmYUGDfx56AQ0xLRE
-         ZQnA==
+        bh=9elEQn62+w0ubYLwBnAdtc+sFOJJh0vSOLoYTmHU8ok=;
+        b=OPalrHrnNAc4IK4D4G5WWu7rYdsb15/NRxSflbqxoQ0wwvYD+NVhEySsL8VdFuI5lv
+         EF4wmBLYIl1EfYmQnu76fItk80/Y1Lp1cCG1uaLdP1sTrAKknwB7WEOsgkcwJDyi4gRV
+         igWrXu7V0QVnmNI2ALoeZIvTMz7CePap+J0LEWXtqbLiV/9LKZz/NdrMNZJlZ7M4KqiU
+         uVZNz4owmsSVch08OmFJ4FZw02m4AxcXevLoG5YQXpMTLhpdDRA/65oLuvWFrfcAgKo7
+         sxXTPEIibffQga9KHUsID09B+Wn3mgxKUNGWpdvChO9eBfNKxj7IATU9GCeh/qtF3UC8
+         WVFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=q3m6ruzi8yrhRHKgf6niw2+ejefydMk6FVAeq//2cpU=;
-        b=NY5VCzI70MKVUcBSxjQ8SIenRshHbQOcq4sXAwgLdxJ0yVcdKyJXVGRLFuRbrnmpDR
-         GQVXP3RXLyI4MWKYye+To0JoF3DBX0fWnRYxXKWwlShxa5o0ZGlsRZ/zasJm9+YsDuZh
-         xuj10oUoF9kyKbZ3g6G35p8P/bzlfZNijIEf/GU/J9mWQCPnF4z/0EhKoxVOOa3KKqSL
-         TelgXGFz8qTvL9UvFnv7rTqneBQxIfrwSJHtRBBbzI5jZxYCPZ4mEtGEZAQCKA9SuvQG
-         sa9Mu7gFJ4OtRZ06W/ZbCQRVKN4gZofBCGvtKx/L9eaKU+mVIPHgyYYdH+UMwBzr7Sz8
-         CqTA==
-X-Gm-Message-State: AOAM533G+Ahi7viRFnZBl3LrHe4gmcmIrMsezZ5dNiOyrfCfNL4ILG1+
-        QmsT1aLnIJSxvUNZa/qpUNZIqclQe02Q++Urkw==
-X-Google-Smtp-Source: ABdhPJzmBNIoXXZbyojhg5Y/QQvf3z/tuCLen5M9CZ7k0R1GGJhBqqikqGnvn3wCelMQ00kbmxhVb7ionuqu+0UppIc=
-X-Received: by 2002:aca:e007:: with SMTP id x7mr241667oig.40.1605722611397;
- Wed, 18 Nov 2020 10:03:31 -0800 (PST)
+        bh=9elEQn62+w0ubYLwBnAdtc+sFOJJh0vSOLoYTmHU8ok=;
+        b=WpLEjcYGde/4Yv2GOnPwV56an+6lDr/M8uZm0cFqx5pW3YkowuCo/LuhbqJwMfWHjX
+         TII5nRZ568v2jJvd6BptILXDrYuQzvufLgHt3fG3HS9QmNXAqLPC4iiAzFEmVz9hpgJP
+         oydm2WxxsB9FtcCqS35PMjonxk5J7VFuyvVvR/A3wRPVKemqmPn2egttwLGhhdOxr5Zm
+         SnErEll8jbBiJP8/QrawLgWeOrUnBiOIj+lQ656De9XPwG57BOgUDwXgxUBgtXq0ww9c
+         O0Zuzm54M7KJW7Y2kBK3MAnWjRpWsDA3Sl+8FKiPwaIqscHbWGcjx1a3BfVCZw1e5K0K
+         ffLg==
+X-Gm-Message-State: AOAM530NCVN+eQCXGkjEImmpPrvvJDDHSpQlIdTItSKGPLBpBh7zhz/4
+        RoE1yadNy3pedYW+2kHrNFe8+kCiDUkIjrYVuQ==
+X-Google-Smtp-Source: ABdhPJwCpHNPP44OEZtbEjP0+6VAuYwQK3LY/EhnN/tUiXjKq1h+um791bUX7To4V9nk0r5wSkdf4UToiF9Px3gndmA=
+X-Received: by 2002:a9d:438:: with SMTP id 53mr2097131otc.222.1605724296527;
+ Wed, 18 Nov 2020 10:31:36 -0800 (PST)
 MIME-Version: 1.0
 References: <20201117145644.1166255-1-danieltimlee@gmail.com>
- <20201117145644.1166255-4-danieltimlee@gmail.com> <20201118055832.q5zsgulnsbjawgyq@kafai-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20201118055832.q5zsgulnsbjawgyq@kafai-mbp.dhcp.thefacebook.com>
+ <20201117145644.1166255-3-danieltimlee@gmail.com> <20201118021043.zck246i2jvbboqlu@kafai-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20201118021043.zck246i2jvbboqlu@kafai-mbp.dhcp.thefacebook.com>
 From:   "Daniel T. Lee" <danieltimlee@gmail.com>
-Date:   Wed, 18 Nov 2020 18:03:14 +0900
-Message-ID: <CAEKGpzjXUhnOVbamcysTX7KOrmEZ_JEzZMah3f9sLM2h+OkXsQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/9] samples: bpf: refactor test_cgrp2_sock2
- program with libbpf
+Date:   Wed, 18 Nov 2020 18:31:19 +0900
+Message-ID: <CAEKGpzgfVfevOi4R04_0SBznHPyXWLPoh3rkXB_E9eD_JKCc+A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/9] samples: bpf: refactor hbm program with libbpf
 To:     Martin KaFai Lau <kafai@fb.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -73,37 +72,61 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 2:58 PM Martin KaFai Lau <kafai@fb.com> wrote:
+On Wed, Nov 18, 2020 at 11:10 AM Martin KaFai Lau <kafai@fb.com> wrote:
 >
-> On Tue, Nov 17, 2020 at 02:56:38PM +0000, Daniel T. Lee wrote:
+> On Tue, Nov 17, 2020 at 02:56:37PM +0000, Daniel T. Lee wrote:
 > [ ... ]
 >
-> > +     err = bpf_link__pin(link, link_pin_path);
-> > +     if (err < 0) {
-> > +             printf("err : %d\n", err);
-> > +             goto cleanup;
-> > +     }
-> > +
-> > +     ret = EXIT_SUCCESS;
 > > +
 > > +cleanup:
-> > +     if (ret != EXIT_SUCCESS)
-> > +             bpf_link__destroy(link);
-> This looks wrong.  cleanup should be done regardless.
+> > +     if (rc != 0)
+> so this test can be avoided.
 >
 
-At first, I thought destroying the link after the link__pin might unpin
-the link, but I just tested it and confirmed that it actually didn't
-and that the link kept pinned.
+Thanks for pointing me out! I will follow this approach.
 
-Thanks for pointing it out! I will stick to this method.
-
+> > +             bpf_object__close(obj);
 > > +
-> > +     bpf_object__close(obj);
-> > +     return ret;
+> > +     return rc;
 > >  }
+> >
+> > [...]
+> >       if (!outFlag)
+> > -             type = BPF_CGROUP_INET_INGRESS;
+> > -     if (bpf_prog_attach(bpfprog_fd, cg1, type, 0)) {
+> > -             printf("ERROR: bpf_prog_attach fails!\n");
+> > -             log_err("Attaching prog");
+> > +             bpf_program__set_expected_attach_type(bpf_prog, BPF_CGROUP_INET_INGRESS);
+> > +
+> > +     link = bpf_program__attach_cgroup(bpf_prog, cg1);
+> There is a difference here.
+> I think the bpf_prog will be detached when link is gone (e.g. process exit)
+> I am not sure it is what hbm is expected considering
+> cg is not clean-up on the success case.
+>
 
+I think you're right. As I did in the third patch, I will use the
+link__pin approach to prevent the link from being cleaned up when the
+process exit.
 
+> > +     if (libbpf_get_error(link)) {
+> > +             fprintf(stderr, "ERROR: bpf_program__attach_cgroup failed\n");
+> > +             link = NULL;
+> not needed.  bpf_link__destroy() can handle err ptr.
+>
+
+Thank you for the detailed advice, but in order to make it more clear
+that link is no longer used, how about keeping this approach?
+
+> >               goto err;
+> >       }
+> > [...]
+> > +
+> >       if (cg1)
+> This test looks wrong since cg1 is a fd.
+>
+
+I'll remove unnecessary fd compare.
 
 -- 
 Best,
