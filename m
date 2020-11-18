@@ -2,56 +2,57 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A09D2B7464
-	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 03:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F5642B746B
+	for <lists+xdp-newbies@lfdr.de>; Wed, 18 Nov 2020 03:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgKRCwn (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 17 Nov 2020 21:52:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44540 "EHLO
+        id S1727166AbgKRCzP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 17 Nov 2020 21:55:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgKRCwm (ORCPT
+        with ESMTP id S1727053AbgKRCzO (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 17 Nov 2020 21:52:42 -0500
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10C3BC0613D4;
-        Tue, 17 Nov 2020 18:52:41 -0800 (PST)
-Received: by mail-yb1-xb44.google.com with SMTP id x17so265112ybr.8;
-        Tue, 17 Nov 2020 18:52:41 -0800 (PST)
+        Tue, 17 Nov 2020 21:55:14 -0500
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 832A8C0613D4;
+        Tue, 17 Nov 2020 18:55:13 -0800 (PST)
+Received: by mail-oo1-xc43.google.com with SMTP id l10so54980oom.6;
+        Tue, 17 Nov 2020 18:55:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SjrGYc5Ndjj6nsLD1eKS/w+aJSqMDah243ks049chjo=;
-        b=if68CQLVqWxGxvG6RStF5PBp4I0vqJViEbSerf4+bETPhuk8pn7L1Hf/J1Yx1OFHZJ
-         pD+tIl9MN3OQCJtkcPgGTSMrlXw6tM61v4OM5fTaiGPAu02l+S7zhEr25AJvv1pKYpY/
-         HqYm8zxA+78+giGhez0RvpTLcxJxJy8A4K2GoL7df0QxzXMsd395O3ttId9ii9lCpNIB
-         hGdkk7G0zJXtMgCIy5XE7CCqjDqeqM9P/tmV3GlOz+bBttu5a2Lrtb/ygs/p0kn57H7n
-         cC/Lp0D/zySDK3+5ukGeGJbU4W6uq086vQLbc1glG6VW1U0dDRF6JAlFshLZ2vuIVo+g
-         1HSw==
+        bh=tEwnmHhIEBiF4ip6J2MWPrfZE1yNIQonDIzMaMDdDvM=;
+        b=NDKe/JPt7K5aQAIYsKRW4qi5dUaX6bMle2gk9Xr0l3CC9PCYDXVxUby5N/vQ1ES4Pd
+         oOS843e3Zhi7CH2lACr/vcn2KZ2Oo6g6BR9/1O/logjwpGfUaSz7sPqRiR21DItRH3DG
+         z52oflR7hSbVffXDnNJtLRAFHce28sX2r7lcAZTYv0ixB171H69O8rr8d7xVw3Svd/qx
+         lWwcIcIYbOAe2I+4ZzjBJKfukz7muxT33HFAOjFknju7YVHODHiIgQwsgcWhASorKjNY
+         zeejI37zQbpY38fy8yDDn00KnKEkLBhKtEa80250KZDHt9ewJdub9h8AG117DZzGpuds
+         0Bpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SjrGYc5Ndjj6nsLD1eKS/w+aJSqMDah243ks049chjo=;
-        b=HbwzOTjzVLB/httzkaHZ/U+tS6vj/1YXaT4FNpkH9ZBlhiaBgELcWdc06iENDdJV+w
-         iqUXAg62oIwEqOmtvZHX3chtFZ5XusfSJ3tkvjR5QGJXJOtoSG2AcpS9IGexcswFrz/y
-         3H/s+OFk5EBjn/OEflUnWu1L0p/fY25IofF/4vZXQF89jmou1IDWW4WdRHxjQVODFGuu
-         VkyKF2ZdgFfRbx38oX4TuKwvcVz9H7angOHnVf2MtI9/OSQrRHCmmzJjH3tSzBURNVAn
-         FWURiX6LOfMCyzX6eNhLYHS2/Rh/v+4hiKimbRgdFeXJsFJjm5mP02dMuDKPaDMzcX/5
-         PiCQ==
-X-Gm-Message-State: AOAM532RM3te25f4uoO/PLL4+xFTsOkbwv0YcH+r7LzWEskPsEy+fIM+
-        085c2r7lYc0WY2BUoNrekfQHGX+up1TEBnwzAio=
-X-Google-Smtp-Source: ABdhPJzVAU4YiipKY+4bEZIAi7gkda2dDET+ruYaSVAkdBOEOiwXereVxV8Ajzs/0oMRjAjoyM3U1mx0JDPidS2nIj4=
-X-Received: by 2002:a25:df82:: with SMTP id w124mr4010868ybg.347.1605667960351;
- Tue, 17 Nov 2020 18:52:40 -0800 (PST)
+        bh=tEwnmHhIEBiF4ip6J2MWPrfZE1yNIQonDIzMaMDdDvM=;
+        b=Un2cf/NsOfxKuwCVJAcZ2uHWCDDzLS5W+YXcbERnqx4UBeGsHwhxQcm9NUL0LNc0z0
+         aBhzLt4nir6obl1H8uKmrMwwTjw228CkTl7oQVpYhDzlgWv9SW7BHfpXOWL9EjtlM8b8
+         WMdQhVgxHm7PMtLxR6ne558w4GMr+HHXwY9YNhuq5UV7DRgDmaPvIwiVSbDPX86iqWaj
+         Wnqca8Fg9Wr0y/UzktyXYDSzg/HIwaFXbCaraJvfsQ4hfOl3IXiOnBLEXRI2Drmwizhe
+         HhyjJJ6w7LXrSQ7EvsN4FZjlh5xYqr5Z2MRUoORvQF0CL3yk5UBKGHItlnF/xmFLDTMx
+         GWbw==
+X-Gm-Message-State: AOAM531IaB3kxewuf9sgexJN8zanwgPmEnfnclR/oiJGJ4gn6vVAyquf
+        KAEM0JELZ7oQg+8gljJKy82HY0VyG9Wt/uXMYQ==
+X-Google-Smtp-Source: ABdhPJzRjuZgyhfgqXMOz7fG3Ka0cwdzRenoNOLT116CNG2LIn0CFNpWW+KaC111Or8HXNF3cx5nETwIX+56qQSDf4w=
+X-Received: by 2002:a4a:928a:: with SMTP id i10mr5092779ooh.47.1605668112908;
+ Tue, 17 Nov 2020 18:55:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20201117145644.1166255-1-danieltimlee@gmail.com> <20201117145644.1166255-6-danieltimlee@gmail.com>
-In-Reply-To: <20201117145644.1166255-6-danieltimlee@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 Nov 2020 18:52:29 -0800
-Message-ID: <CAEf4BzZBjVw4ptGZE8V9SM4htW_Nf_TjXkUKEHjF9bxgO43DQA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/9] samples: bpf: refactor ibumad program with libbpf
-To:     "Daniel T. Lee" <danieltimlee@gmail.com>
+References: <20201117145644.1166255-1-danieltimlee@gmail.com>
+ <20201117145644.1166255-2-danieltimlee@gmail.com> <CAEf4BzZ9Sr0PXvZAa74phnwm7um9AoN4ELGkNBMvyzvh7vYzRQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ9Sr0PXvZAa74phnwm7um9AoN4ELGkNBMvyzvh7vYzRQ@mail.gmail.com>
+From:   "Daniel T. Lee" <danieltimlee@gmail.com>
+Date:   Wed, 18 Nov 2020 11:54:56 +0900
+Message-ID: <CAEKGpzhCeRZct-zW_DG0Aj_PD1FvtUOzbF5c134wwoGgqgf6rA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/9] selftests: bpf: move tracing helpers to trace_helper
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>, brakmo <brakmo@fb.com>,
@@ -71,205 +72,36 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 6:57 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
+On Wed, Nov 18, 2020 at 10:58 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> This commit refactors the existing ibumad program with libbpf bpf
-> loader. Attach/detach of Tracepoint bpf programs has been managed
-> with the generic bpf_program__attach() and bpf_link__destroy() from
-> the libbpf.
+> On Tue, Nov 17, 2020 at 6:57 AM Daniel T. Lee <danieltimlee@gmail.com> wrote:
+> >
+> > Under the samples/bpf directory, similar tracing helpers are
+> > fragmented around. To keep consistent of tracing programs, this commit
+> > moves the helper and define locations to increase the reuse of each
+> > helper function.
+> >
+> > Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+> >
+> > ---
+> > [...]
+> > -static void read_trace_pipe2(void)
 >
-> Also, instead of using the previous BPF MAP definition, this commit
-> refactors ibumad MAP definition with the new BTF-defined MAP format.
+> This is used only in hbm.c, why move it into trace_helpers.c?
 >
-> To verify that this bpf program works without an infiniband device,
-> try loading ib_umad kernel module and test the program as follows:
->
->     # modprobe ib_umad
->     # ./ibumad
->
-> Moreover, TRACE_HELPERS has been removed from the Makefile since it is
-> not used on this program.
->
-> Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-> ---
->  samples/bpf/Makefile      |  2 +-
->  samples/bpf/ibumad_kern.c | 26 +++++++--------
->  samples/bpf/ibumad_user.c | 66 ++++++++++++++++++++++++++++++---------
->  3 files changed, 65 insertions(+), 29 deletions(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 36b261c7afc7..bfa595379493 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -109,7 +109,7 @@ xsk_fwd-objs := xsk_fwd.o
->  xdp_fwd-objs := xdp_fwd_user.o
->  task_fd_query-objs := task_fd_query_user.o $(TRACE_HELPERS)
->  xdp_sample_pkts-objs := xdp_sample_pkts_user.o $(TRACE_HELPERS)
-> -ibumad-objs := bpf_load.o ibumad_user.o $(TRACE_HELPERS)
-> +ibumad-objs := ibumad_user.o
->  hbm-objs := hbm.o $(CGROUP_HELPERS) $(TRACE_HELPERS)
->
->  # Tell kbuild to always build the programs
-> diff --git a/samples/bpf/ibumad_kern.c b/samples/bpf/ibumad_kern.c
-> index 3a91b4c1989a..26dcd4dde946 100644
-> --- a/samples/bpf/ibumad_kern.c
-> +++ b/samples/bpf/ibumad_kern.c
-> @@ -16,19 +16,19 @@
->  #include <bpf/bpf_helpers.h>
->
->
-> -struct bpf_map_def SEC("maps") read_count = {
-> -       .type        = BPF_MAP_TYPE_ARRAY,
-> -       .key_size    = sizeof(u32), /* class; u32 required */
-> -       .value_size  = sizeof(u64), /* count of mads read */
-> -       .max_entries = 256, /* Room for all Classes */
-> -};
-> -
-> -struct bpf_map_def SEC("maps") write_count = {
-> -       .type        = BPF_MAP_TYPE_ARRAY,
-> -       .key_size    = sizeof(u32), /* class; u32 required */
-> -       .value_size  = sizeof(u64), /* count of mads written */
-> -       .max_entries = 256, /* Room for all Classes */
-> -};
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_ARRAY);
-> +       __type(key, u32); /* class; u32 required */
-> +       __type(value, u64); /* count of mads read */
-> +       __uint(max_entries, 256); /* Room for all Classes */
-> +} read_count SEC(".maps");
-> +
-> +struct {
-> +       __uint(type, BPF_MAP_TYPE_ARRAY);
-> +       __type(key, u32); /* class; u32 required */
-> +       __type(value, u64); /* count of mads written */
-> +       __uint(max_entries, 256); /* Room for all Classes */
-> +} write_count SEC(".maps");
->
->  #undef DEBUG
->  #ifndef DEBUG
-> diff --git a/samples/bpf/ibumad_user.c b/samples/bpf/ibumad_user.c
-> index fa06eef31a84..66a06272f242 100644
-> --- a/samples/bpf/ibumad_user.c
-> +++ b/samples/bpf/ibumad_user.c
-> @@ -23,10 +23,15 @@
->  #include <getopt.h>
->  #include <net/if.h>
->
-> -#include "bpf_load.h"
-> +#include <bpf/bpf.h>
->  #include "bpf_util.h"
->  #include <bpf/libbpf.h>
->
-> +struct bpf_link *tp_links[3] = {};
-> +struct bpf_object *obj;
 
-statics and you can drop = {} part.
+I think this function can be made into a helper that can be used in
+other programs. Which is basically same as 'read_trace_pipe' and
+also writes the content of that pipe to file either. Well, it's not used
+anywhere else, but I moved this function for the potential of reuse.
 
-> +static int map_fd[2];
-> +static int tp_cnt;
-> +
->  static void dump_counts(int fd)
->  {
->         __u32 key;
-> @@ -53,6 +58,11 @@ static void dump_all_counts(void)
->  static void dump_exit(int sig)
->  {
->         dump_all_counts();
-> +       /* Detach tracepoints */
-> +       while (tp_cnt)
-> +               bpf_link__destroy(tp_links[--tp_cnt]);
-> +
-> +       bpf_object__close(obj);
->         exit(0);
->  }
->
-> @@ -73,19 +83,11 @@ static void usage(char *cmd)
->
->  int main(int argc, char **argv)
->  {
-> +       struct bpf_program *prog;
->         unsigned long delay = 5;
-> +       char filename[256];
->         int longindex = 0;
->         int opt;
-> -       char bpf_file[256];
-> -
-> -       /* Create the eBPF kernel code path name.
-> -        * This follows the pattern of all of the other bpf samples
-> -        */
-> -       snprintf(bpf_file, sizeof(bpf_file), "%s_kern.o", argv[0]);
-> -
-> -       /* Do one final dump when exiting */
-> -       signal(SIGINT, dump_exit);
-> -       signal(SIGTERM, dump_exit);
->
->         while ((opt = getopt_long(argc, argv, "hd:rSw",
->                                   long_options, &longindex)) != -1) {
-> @@ -107,10 +109,38 @@ int main(int argc, char **argv)
->                 }
->         }
->
-> -       if (load_bpf_file(bpf_file)) {
-> -               fprintf(stderr, "ERROR: failed to load eBPF from file : %s\n",
-> -                       bpf_file);
-> -               return 1;
-> +       /* Do one final dump when exiting */
-> +       signal(SIGINT, dump_exit);
-> +       signal(SIGTERM, dump_exit);
-> +
-> +       snprintf(filename, sizeof(filename), "%s_kern.o", argv[0]);
-> +       obj = bpf_object__open_file(filename, NULL);
-> +       if (libbpf_get_error(obj)) {
-> +               fprintf(stderr, "ERROR: opening BPF object file failed\n");
-> +               return 0;
+Since these 'read_trace_pipe's are helpers that are only used
+under samples directory, what do you think about moving these
+helpers to something like samples/bpf/trace_pipe.h?
 
-not really a success, no?
+Thanks for your time and effort for the review.
 
-> +       }
-> +
-> +       /* load BPF program */
-> +       if (bpf_object__load(obj)) {
-> +               fprintf(stderr, "ERROR: loading BPF object file failed\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       map_fd[0] = bpf_object__find_map_fd_by_name(obj, "read_count");
-> +       map_fd[1] = bpf_object__find_map_fd_by_name(obj, "write_count");
-> +       if (map_fd[0] < 0 || map_fd[1] < 0) {
-> +               fprintf(stderr, "ERROR: finding a map in obj file failed\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       bpf_object__for_each_program(prog, obj) {
-> +               tp_links[tp_cnt] = bpf_program__attach(prog);
-> +               if (libbpf_get_error(tp_links[tp_cnt])) {
-> +                       fprintf(stderr, "ERROR: bpf_program__attach failed\n");
-> +                       tp_links[tp_cnt] = NULL;
-> +                       goto cleanup;
-> +               }
-> +               tp_cnt++;
->         }
-
-This cries for the BPF skeleton... But one step at a time :)
-
->
->         while (1) {
-> @@ -118,5 +148,11 @@ int main(int argc, char **argv)
->                 dump_all_counts();
->         }
->
-> +cleanup:
-> +       /* Detach tracepoints */
-> +       while (tp_cnt)
-> +               bpf_link__destroy(tp_links[--tp_cnt]);
-> +
-> +       bpf_object__close(obj);
->         return 0;
-
-same, in a lot of cases it's not a success, probably need int err
-variable somewhere.
-
->  }
-> --
-> 2.25.1
->
+-- 
+Best,
+Daniel T. Lee
