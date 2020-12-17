@@ -2,145 +2,129 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF41C2DCDE0
-	for <lists+xdp-newbies@lfdr.de>; Thu, 17 Dec 2020 09:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B9E62DD1C8
+	for <lists+xdp-newbies@lfdr.de>; Thu, 17 Dec 2020 14:01:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgLQIwD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 17 Dec 2020 03:52:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51232 "EHLO
+        id S1727246AbgLQNAs (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 17 Dec 2020 08:00:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59920 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgLQIwC (ORCPT
+        by vger.kernel.org with ESMTP id S1726601AbgLQNAr (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 17 Dec 2020 03:52:02 -0500
+        Thu, 17 Dec 2020 08:00:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608195036;
+        s=mimecast20190719; t=1608209960;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=//iok/cNSbIwLGQLEibinUwlZoHqQbQ6gcRnT+3N6Gg=;
-        b=RAnB2UzP7ZAGXj+lUZU43zfEy4rdfpz4u0MEs05craohrpYq6gZ9rKv9L6VrRVM9GsvI+g
-        /cnjWTT2GTtmZsMbWldAxkB3kFssMdffGXyuWk3bMp1E99asl+N/ui0TgLbJtw7lkAdyA2
-        T7qnGH/XIperDj3DZb5XTUaHuuUqz9k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-LY0Aeku6P5qFAA3qPSjiYA-1; Thu, 17 Dec 2020 03:50:34 -0500
-X-MC-Unique: LY0Aeku6P5qFAA3qPSjiYA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 128A51005504;
-        Thu, 17 Dec 2020 08:50:33 +0000 (UTC)
-Received: from carbon (unknown [10.36.110.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07F0560C15;
-        Thu, 17 Dec 2020 08:50:28 +0000 (UTC)
-Date:   Thu, 17 Dec 2020 09:50:26 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Christian Deacon <gamemann@gflclan.com>
-Cc:     brouer@redhat.com, xdp-newbies@vger.kernel.org
-Subject: Re: XDP BPF Stack Limit Issues
-Message-ID: <20201217095016.1f38e06c@carbon>
-In-Reply-To: <ad6ea0ec-c5ce-2887-6f4c-7ed762a0f130@gflclan.com>
-References: <ad6ea0ec-c5ce-2887-6f4c-7ed762a0f130@gflclan.com>
+        bh=aiJtt9dVVWyLu0jj+zXjLg/9unnfcN+8zcBMv14XJeU=;
+        b=ghd0NBbfHgtrzyegNtvMYxT/445nccYV8ZBk2hgSPldZybXrczrWSnlPFN1sGCy+lFHHGE
+        sOO1CAnPzvtlaPEn0RlKNZzk5IA9LEGXkUdt2go1G4izbh6emU448Zhcb/aaZG7YGbrqyx
+        K35uCbTlgAKhRrwvvLMzDvX9TI7ns6c=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-452-xKqtY9UAMa6vHI69_jpKkg-1; Thu, 17 Dec 2020 07:59:18 -0500
+X-MC-Unique: xKqtY9UAMa6vHI69_jpKkg-1
+Received: by mail-wr1-f71.google.com with SMTP id r11so10946342wrs.23
+        for <xdp-newbies@vger.kernel.org>; Thu, 17 Dec 2020 04:59:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=aiJtt9dVVWyLu0jj+zXjLg/9unnfcN+8zcBMv14XJeU=;
+        b=UzTEPwgJZyFeTZGJAhmq+xfKDIcVzti4WF0kJcD+APFPKDwUZbO3MKx3N17kmr5ePZ
+         yShsXUSDbdOZkSVHh0m7O171ZEVyBbsG4Cfd7iSZP+9ojU/6DBS2+BZ4xWG4L9A24OCi
+         ppvvt6nwTPtN0fDI5bynMZWW7QHQpi8aQ/+H0YqpB1ST6CONGNFmBSc4Y5hcHPM0ciKa
+         wkM+ntICwsmtHLTGUJWo1+ZykLTWZ9YOcQELSQ+Ca5xZ1JnCLoZ6BcDE2iYNam0MSplJ
+         zKetDP5T8CRkPkk5Q5VTuBOMZui0SVWsNdqoZan6FcT4FRz5ITj0JiusijZnSun4dR7z
+         oBNQ==
+X-Gm-Message-State: AOAM5322Gg91noZm/ieYXHFreDqBHJ70O243/0CHlEQwwFHLvNtYEk62
+        eshBLgnmAD1IPyLV6zQmwcQBtcK+h+Ow84tpmy/DTFx/Oj6G+ojEds8l7yvtcbTMiSga+gvuhbx
+        cYaUu66To2eSYEbVwhQx4EE4=
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr8724344wmi.45.1608209956665;
+        Thu, 17 Dec 2020 04:59:16 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy1ZeIQPQ/ylOnYR7dZJX2ccSxVBg+TYsLiHPeN72mA0awglxRNK8I6Vkgs2ZhtD6HZ79VEBg==
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr8724301wmi.45.1608209956180;
+        Thu, 17 Dec 2020 04:59:16 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id v11sm8733786wrt.25.2020.12.17.04.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Dec 2020 04:59:15 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 2D68B1802A7; Thu, 17 Dec 2020 13:59:15 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     "Brian G. Merrell" <brian.g.merrell@gmail.com>,
+        xdp-newbies@vger.kernel.org
+Subject: Re: libxdp with bpf_stats_enabled question
+In-Reply-To: <20201216222914.ugxw3kuajficsebc@snout.localdomain>
+References: <20201216222914.ugxw3kuajficsebc@snout.localdomain>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 17 Dec 2020 13:59:15 +0100
+Message-ID: <874kkkbnbw.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, 16 Dec 2020 09:29:05 -0600
-Christian Deacon <gamemann@gflclan.com> wrote:
+"Brian G. Merrell" <brian.g.merrell@gmail.com> writes:
 
-> Hey everyone,
-> 
-> I've been trying to implement IPv6 support into an XDP Firewall which 
-> can be found below.
-> 
-> https://github.com/gamemann/XDP-Firewall
-> 
-> Unfortunately, I've been fighting with the BPF verifier and I'm 
-> exceeding the BPF stack size of 512 bytes. I linked the above in the 
-> case others want to see the headers that define things like 
-> `MAX_FILTERS` inside the XDP program. The error I am receiving is:
-> 
-> ```
-> error: <unknown>:0:0: in function xdp_prog_main i32 (%struct.xdp_md*): 
-> Looks like the BPF stack limit of 512 bytes is exceeded. Please move 
-> large on stack variables into BPF per-cpu array map.
-> ```
-> 
-> Which spams anywhere from 3 - 10 times depending on what I try to 
-> resolve the issue.
-> 
-> I ended up re-writing the entire program trying to use as little 
-> variables as possible and I got very close to getting the program to 
-> compile until I added support for the ICMPv6 protocol (once I remove 
-> this, it compiles and runs without any issues). I'm at a loss on what I 
-> can do now, though.
-> 
-> The current XDP program code is the following.
-> 
-> https://gist.github.com/gamemann/a0acd9603405c3d7b3c792b5429ced38
-> 
->  From what the error states, I could try storing variables into a 
-> per-CPU BPF map. Therefore, I tried storing the ICMP (and at one point 
-> TCP) information into a BPF map and used the data later on which can be 
-> found below.
-> 
-> https://gist.github.com/gamemann/663674924e16286b02a835637912c2a5
-> 
-> This still exceeded the BPF stack size. 
+> Hi,
+>
+> I've been playing around with the new xdp-loader to chain xdp programs
+> with kernel.bpf_stats_enabled set. This is what I see (from bpftool
+> prog):
+>
+> 22: xdp  name xdp_dispatcher  tag d51e469e988d81da  gpl run_time_ns 105086 run_cnt 24
+>         loaded_at 2020-12-15T07:52:27+0000  uid 0
+>         xlated 720B  jited 535B  memlock 4096B  map_ids 5
+>         btf_id 8
+> 24: ext  name xdp_pass  tag 3b185187f1855c4c  gpl
+>         loaded_at 2020-12-15T07:52:27+0000  uid 0
+>         xlated 16B  jited 18B  memlock 4096B
+>         btf_id 9
+> 26: ext  name xdp_drop  tag 57cd311f2e27366b  gpl
+>         loaded_at 2020-12-15T07:52:27+0000  uid 0
+>         xlated 16B  jited 18B  memlock 4096B
+>         btf_id 10
+>
+> You'll notice that the run_time_ns and run_cnt stats are only populated
+> for the xdp_dispatcher. This is basically the same behavior we see today
+> with bpf_tail_call chaining, so it's not a regression or anything. It
+> would be really nice, though, if we could see those stats for each
+> individual xdp program in the chain. Does anyone know what it would take
+> for that to happen?
 
-I have to look elsewhere[2] to see that:
- #define MAX_FILTERS 55
+The stats are computed by the bits behind the static_branch_unlikely()
+calls here:
 
-Your problem is that you create an array with 55 pointers each 8 bytes
-equal 440 bytes on the stack (max stack is 512).  Why do you need to
-lookup all 55 map elements in a loop before using them?
+https://elixir.bootlin.com/linux/latest/source/kernel/bpf/trampoline.c#L391
 
-https://gist.github.com/gamemann/663674924e16286b02a835637912c2a5#file-xdp_fw_ipv6_maps-c-L267
+The calls to __bpf_prog_enter() and __bpf_prog_exit() is emitted in the
+top-level dispatcher code that invokes a BPF program from whatever
+kernel hook it runs at. Which is why it only shows up for the
+dispatcher: From the kernel PoV that's the top-level BPF program being
+run, the other programs are patched in as substitutions for function
+calls inside the top-level BPF program.
 
- struct filter *filter[MAX_FILTERS];
- for (uint8_t i = 0; i < MAX_FILTERS; i++)
-    {
-        key = i;
-        
-        filter[i] = bpf_map_lookup_elem(&filters_map, &key);
-    }
- [...]
- for (uint8_t i = 0; i < MAX_FILTERS; i++)
-    {
-        // Check if ID is above 0 (if 0, it's an invalid rule).
-        if (!filter[i] || filter[i]->id < 1)
-  [...]
+That being said, the trampoline code that does the function-level
+patching could conceivably add the same conditional stats update code
+before and after each jump. Not sure how complicated it would be to add
+this, but it would mean that stats would automatically appear for each
+freplace program.
 
-> With that said, I'd assume 
-> performance would be heavily impacted if we stored everything inside a 
-> BPF map. To my understanding, per-CPU maps cannot be reliably read 
-> within the XDP program. Therefore, if this would have worked, I'd 
-> probably want to use a regular non per-CPU map anyways which would 
-> impact performance.
-> 
-> I also tried BPF calls without luck and was thinking about trying BPF 
-> tail calls. Though, I don't think this would help. BPF tail calls use 
-> the same BPF stack to my understanding.
-> 
-> I could try adding even more variables inside the program to a BPF map 
-> such as the PPS and BPS variables. However, I wanted to see if there 
-> were any other suggestions from the mailing list on this. I plan to 
-> write another firewall that'll have a lot more functionality than this 
-> firewall in XDP and I'm worried I'd run into similar issues there.
-> 
-> Any help would be highly appreciated and thank you for your time!
-> 
+> Would it be more feasible for xdplib to optionally report separate
+> runtime stats itself for chained programs?
 
+The dispatcher program could certainly track this by just calling
+bpf_ktime_get_ns() before and after each sub-program and sticking the
+results in a map. It wouldn't be reported by the kernel and bpftool, but
+libxdp and xdp-tools could expose it. The drawback with this approach is
+that it would be tied to a particular dispatcher instance, so either
+they would be reset whenever you load an additional program, or the
+library has to copy over the old stats, which would probably not be
+doable atomically. For stats that may not matter too much, but it's
+something to consider.
 
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+-Toke
 
