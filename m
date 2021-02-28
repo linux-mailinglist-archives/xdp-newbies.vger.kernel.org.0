@@ -2,221 +2,140 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E770322946
-	for <lists+xdp-newbies@lfdr.de>; Tue, 23 Feb 2021 12:09:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9818E32715A
+	for <lists+xdp-newbies@lfdr.de>; Sun, 28 Feb 2021 07:56:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231976AbhBWLJC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 23 Feb 2021 06:09:02 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34517 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232231AbhBWLIg (ORCPT
+        id S229770AbhB1Gz7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 28 Feb 2021 01:55:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229736AbhB1Gz7 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 23 Feb 2021 06:08:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614078429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=98wd0QG+v4RXUDxbb0NPp3Yzg92ldtQK4iygBZ4W0GE=;
-        b=JpM2L7sUJCypP8fRdHWr0L6DjKIDXs3UDyX0Lo/OaAgj1ysu9y1wW/P5z5DBIpCsVzIOyd
-        MwHX8CL3aRBwPWRksVpgDfOMQ7wqypKZ7MFUAAaOuMm4rRUtzJj0v9bhlO+S7JAV3xMPmQ
-        IhptHaelDjUAZGl+Z1+d5eXYfFvQF7Q=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-92-eob5Ri4gMce8w_g2CMFJCg-1; Tue, 23 Feb 2021 06:07:07 -0500
-X-MC-Unique: eob5Ri4gMce8w_g2CMFJCg-1
-Received: by mail-ed1-f71.google.com with SMTP id t9so8444126edd.3
-        for <xdp-newbies@vger.kernel.org>; Tue, 23 Feb 2021 03:07:07 -0800 (PST)
+        Sun, 28 Feb 2021 01:55:59 -0500
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE14C06174A
+        for <xdp-newbies@vger.kernel.org>; Sat, 27 Feb 2021 22:55:18 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id 105so13429881otd.3
+        for <xdp-newbies@vger.kernel.org>; Sat, 27 Feb 2021 22:55:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sTTX4AXanYvUOyG045wSmsxiEZwKY/VjiLqYf9UQzVU=;
+        b=Iz5FoQSx+Uu9MLoZfdz4tuBdto9tzrWv2D4NX1AeZjSc/Gk4StrbfYUEbJE1lA0vWx
+         4qodruwBoC7nKrRUzdDHxlI5Tsixh70zqJlwO1Q9O6bWXckjcow92gUHCaP7/DbMMlqH
+         Jzz1caODsmOulqzsTAr+f/82fOswWdvd1vw+lsnxlNe469tgYviMbpq/N4/rj6+xlOIW
+         w9OIitRCcsfbdF1dbhOCIkVmGfOgkPSFp+QiElOXG9TJ7xvt2JQLyfR5P401yBeuqHVn
+         Z+nRInJU2LH5oEhkJ6E7GreQ2BKO6aN/R3NqvD8ZfabB8MIoHpI/7SiZV8s0BbAFt/tC
+         8F/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=98wd0QG+v4RXUDxbb0NPp3Yzg92ldtQK4iygBZ4W0GE=;
-        b=YziFbs8KZU5uiDh5U+rVq6P2aGvDC8m0w0L1TJwdY3sEg8K0w8n66cQ+cwATa6Aby8
-         gwQztoEWrcIwxasrn0VtqtRL284hiDMO9nnmmjL/DO9DQCKmX2E5mXFvKIj0lxtt5Lpn
-         JZQjn9+UaWvUYE3AVgUM/c9P7O48IcZrxexFjXb2VoFzNZWhYKgnKwU+wIOHclGn4xXB
-         p0wY4BeZ8Mf9/gzKYJztcHwJwVWVZYOw1Sgo5s6x0C7iueewG/EbBRwj+JOk2xA/QKVv
-         dk0GXG4D4LpQXrKqfvJ+EZj7jiHrAmrL7O39TWntXraX8f8wsStFBMC/hBToaupCDPn0
-         +Oug==
-X-Gm-Message-State: AOAM533dmkr3kzzcC1fZ+C4MypsOG0vEZ9Y3zxiqk8V8my9xXhXm0ya4
-        9IoZ4NSKh5H+nGobPwd2ojMF9LV1uCTXpkjPQ8DC+fZO/b0ViyZpKeqYdO8gYUe4pflIjBcsOJZ
-        B7shztfkpzdwTnGc15HGPzhU=
-X-Received: by 2002:a17:906:1e50:: with SMTP id i16mr12692159ejj.466.1614078426256;
-        Tue, 23 Feb 2021 03:07:06 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxD6x5Jkk2AYH/zGWrp+LrGGLAvooZtS4tOPWUc9eayVWibZ7ZClOzhczyEjOuRuAIYc90vKg==
-X-Received: by 2002:a17:906:1e50:: with SMTP id i16mr12692138ejj.466.1614078425928;
-        Tue, 23 Feb 2021 03:07:05 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id h10sm14644100edk.45.2021.02.23.03.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Feb 2021 03:07:05 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id F17B8180676; Tue, 23 Feb 2021 12:07:04 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     "Brian G. Merrell" <brian.g.merrell@gmail.com>
-Cc:     xdp-newbies@vger.kernel.org,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Andrey Ignatov <rdna@fb.com>, bpf@vger.kernel.org
-Subject: Re: How to orchestrate multiple XDP programs
-In-Reply-To: <20210223085422.tv2gk6olg66zcbwe@snout.localdomain>
-References: <20210210222710.7xl56xffdohvsko4@snout.localdomain>
- <874kiirgx3.fsf@toke.dk>
- <20210212065148.ajtbx2xos6yomrzc@snout.localdomain>
- <87h7mdcxbd.fsf@toke.dk>
- <20210217012012.qfdhimcyniw6dlve@snout.localdomain>
- <87ft1un121.fsf@toke.dk>
- <20210217222714.evijmkyucbnlqh3d@snout.localdomain>
- <87pn0xl553.fsf@toke.dk>
- <20210222193459.hxvlcq65yyh3b6dr@snout.localdomain>
- <87v9ajg1yx.fsf@toke.dk>
- <20210223085422.tv2gk6olg66zcbwe@snout.localdomain>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Tue, 23 Feb 2021 12:07:04 +0100
-Message-ID: <87pn0rf3fr.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sTTX4AXanYvUOyG045wSmsxiEZwKY/VjiLqYf9UQzVU=;
+        b=LpuZlltII9ztkmSICjxKN+fdp+lSYFMevGkp+RUoNFsrmCY5aH7UENXrbs3D9qTdAE
+         AECTJk6DM39Qdw5U/ZBhXzk5o2vVQmbvmdSR1AX+pMWGTS7afMSdjriDCqScafE1QQYW
+         6MWjE7urIKqvGW6oGN0ZgxfoWlJVF+vXC3okn1bj+0kTb6auojtvoaTngxPAvi+VZ0FC
+         Dk+/MbQqw9uRgd0NdIoWa1DC4d8uZ2FeRlcYgPPWSxePX9sg3tpXc2PCzxGj92Eqfqmd
+         NOY7d7Cy1TyEgwFeLgDF+hSMLcgWQ1Fy12708DTDhZck0sa4wpwkn1rZqh0xHV9WRKIy
+         HnJw==
+X-Gm-Message-State: AOAM530bDTrjs7u/AJeRkSWtlgAXnaBbMX+AaFP27ikVpbkN4a9NFkkD
+        nMsGTuXQk9kmvwOFFiI+YnZe04YEst07/PrD2aWUZgQiK7Y=
+X-Google-Smtp-Source: ABdhPJxkRZ4m3GNfunoqsHDoyrqwap9EQA/niO48u6TpA29txkUHLvQMOGe2zKatn2GNy7bGlPMxNqpk1Ru7U0dPdU0=
+X-Received: by 2002:a9d:225:: with SMTP id 34mr8732020otb.337.1614495317905;
+ Sat, 27 Feb 2021 22:55:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <CAM-scZPPeu44FeCPGO=Qz=03CrhhfB1GdJ8FNEpPqP_G27c6mQ@mail.gmail.com>
+ <20210209102118.476f507d@carbon> <CAM-scZNLN5cgJBEdVFSSrLJi3zW-5THzbY=diESdKiiisCT9MQ@mail.gmail.com>
+ <20210209094137.GA14290@ranger.igk.intel.com> <20210218101239.GA7062@netronome.com>
+In-Reply-To: <20210218101239.GA7062@netronome.com>
+From:   Radu Stoenescu <radu.stoe@gmail.com>
+Date:   Sun, 28 Feb 2021 08:55:04 +0200
+Message-ID: <CAM-scZPjB4QFTNPfbzD0DNmrfKMKUPMnnH+gSRFRk6jH4_WswA@mail.gmail.com>
+Subject: Re: Redirect from NIC to TAP
+To:     Simon Horman <simon.horman@netronome.com>
+Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-"Brian G. Merrell" <brian.g.merrell@gmail.com> writes:
+Thanks a lot for the info.
 
-> On 21/02/22 11:41PM, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
->> "Brian G. Merrell" <brian.g.merrell@gmail.com> writes:
->> > On 21/02/18 05:20PM, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+In retrospect, was there a way I could reach this conclusion myself
+(no driver support)? I'm asking this since I'm relatively new to the
+environment and we run various NICs from various vendors, and I would
+like to know how to perform the "due diligence" myself before reaching
+out?
+
+Best
+Radu
+
+
+On Thu, Feb 18, 2021 at 12:12 PM Simon Horman
+<simon.horman@netronome.com> wrote:
 >
->> >> No, I think the main difference is that in the model you described,
->> >> you're assuming that your orchestration system would install the XDP
->> >> program on behalf of the application as well as launch the userspace
->> >> bits.
->> >
->> > Yes, that's right. This is the model we are implementing.
->> >
->> >> Whereas I'm assuming that an application that uses XDP will start
->> >> in userspace (launched by systemd, most likely), and will then load i=
-ts
->> >> own XDP program after possibly doing some initialisation first (e.g.,
->> >> pre-populating maps, that sort of thing).
->> >>=20
->> >> From what I've understood from what you explained about your setup, y=
-our
->> >> model could work with both models as well; so why are you assuming th=
-at
->> >> applications won't want to install their own XDP programs? :)
->> >
->> > I would just say that in our organizations network and administration
->> > environment, we ideally want a centralized orchestration tooling and
->> > control plane that is used for all XDP (and tc) programs running on our
->> > machines with our model described above.
->>=20
->> Right, sure, I'm not disputing this model is useful as well, I'm just
->> wondering about how you envision the details working. Say your
->> orchestration system installs an XDP program on behalf of an application
->> and then launches the userspace component (assuming one exists). How is
->> that userspace program supposed to obtain a file descriptor for the
->> map(s) used by the XDP program in order to communicate with it?
+> Hi Maciej, Hi Radu,
 >
-> OK, so this part is admittedly a little hand-wavy and a work in
-> progress. We're literally working on design and proof of concepts right
-> now, but this is basically what we're envisioning:
+> On Tue, Feb 09, 2021 at 10:41:37AM +0100, Maciej Fijalkowski wrote:
+> > On Tue, Feb 09, 2021 at 11:26:06AM +0200, Radu Stoenescu wrote:
+> > > Hello
+> > >
+> > > My physical NIC is a Netronome (I can come back with exact model type
+> > > and driver version).
+> > >
+> > > Redirect NIC to TAP doesn't work when XDP is attached in driver mode.
+> > > It works when they are both in generic mode. I haven't tried other
+> > > combinations of attachment modes (one driver, other generic etc.).
+> >
+> > Looks like Netronome driver still doesn't support XDP_REDIRECT in native
+> > mode.
+> >
+> > CC: Simon
 >
-> 1. Orchestration tool gets all its JSON config data, which includes
->    remote paths for BPF programs and any respective userspace
->    programs.
-> 2. Orchestration tool downloads BPF programs and loads them (using
->    Go libxdp when it's available). Then (and this is where I'm going to
->    start waving my hands) the orchestrator will need to gather any
->    necessary map names/ids/fds information to be send to the userspace
->    program. I'm just not exactly sure how easy/hard/possible this part
->    is.
-> 3. We start the userspace programs as separate processes and communicate
->    with them via RPC (there's a nice Go plugin system for this[1]). Each
->    userspace program implements an interface and we communicate the map
->    info (among other things) over RPC to the userspace program when it
->    starts.
+> Sorry for the delay, I was on vacation.
 >
-> I'm going to continue researching and fleshing out the details, but are
-> there any obvious problems with this approach?
+> > Simon, any plans on adding support for redirect?
+>
+> Sorry (again), there are no immediate plans to add this feature
+> to the driver.
+>
+> > > Thanks
+> > >
+> > > On Tue, Feb 9, 2021 at 11:21 AM Jesper Dangaard Brouer
+> > > <brouer@redhat.com> wrote:
+> > > >
+> > > > On Tue, 9 Feb 2021 10:31:50 +0200
+> > > > Radu Stoenescu <radu.stoe@gmail.com> wrote:
+> > > >
+> > > > > Is it possible to redirect packets from XDP program attached in driver
+> > > > > mode to a physical NIC to a TAP interface?
+> > > >
+> > > > Cc. Jason Wang as I think he implemented this, but I'm not 100% sure.
+> > > > Maybe Jason can remember?
+> > > > (or point me to the relevant code that I can check).
+> > > >
+> > > > > The same works fine if the XDP programs are attached in generic mode.
+> > > >
+> > > > So, you have tried and it doesn't work.
+> > > >
+> > > > What is your setup?
+> > > >
+> > > > --
+> > > > Best regards,
+> > > >   Jesper Dangaard Brouer
+> > > >   MSc.CS, Principal Kernel Engineer at Red Hat
+> > > >   LinkedIn: http://www.linkedin.com/in/brouer
+> > > >
+> > >
+> > >
+> > > --
+> > > Radu Stoenescu
 
-I think the basic idea can work (it's similar to systemd's socket
-activation, which also passes the socket fd to the userspace process on
-launch). However, there are a couple of things that become impossible
-for the userspace process to do in this model:
 
-- Modifying the BPF object before load: Libbpf does quite a few
-  transformations on the bytecode to handle relocations, and it's also
-  going to grow a full linker at some point. This is not a problem if
-  the userspace program just lets libbpf do the default thing, but if it
-  wants to customise the operations it becomes a problem. The obvious
-  use case for this that comes to mind is dynamically omitting parts of
-  the code for features that are not enabled (like we do in xdp-filter).
 
-- Populating maps before load: This is necessary to use customised
-  'const' global variables: The map backing these are frozen on load to
-  allow the verifier to make strong assumptions about their content, so
-  you can't modify them after the map is loaded.
-
-- Atomic map population: Say you have an XDP program that reacts to
-  traffic steering rules, and you start out with the program being
-  attached to the interface and an empty map that userspace then has to
-  populate. While the map is being populated, the XDP program will
-  process some packets with an incomplete view of the final ruleset.
-  Whereas if you can populate the map completely before attaching the
-  program you can be sure that it's consistent. Depending on the nature
-  of the application, this may lead to weird effects, or it may be
-  mostly harmless.
-
-Now, all of these could in principle be performed by the orchestrator on
-behalf of the program, but that means you'll have to make the
-orchestrator more complex, and you'll have to come up with a way to
-express these operations in your configuration language.
-
-> A backup plan is to have the userspace programs do the loading of the
-> BPF program, but it's not obvious to me how that would be easier to
-> obtain the file descriptor for the map(s) vs. having the orchestrator
-> figure it out and send it to the userspace process.
-
-Both approaches carry complexities with it, and I'm not sure there
-really is a universal right answer. What tipped the scales for me were
-the issues above. However, being in a more controlled environment, the
-trade off may well be different for you.
-
-> If it works out that the orchestrator can load the BPF programs on
-> behalf of the userspace programs, then I think the primary benefit is
-> that the developer of the userspace program doesn't need to follow
-> some boilerplate to load the appropriate way--we've done all that for
-> them. It seems nice that the orchestrator could be the one interface
-> with libxdp (for the XDP case) without every userspace program needing
-> to doing it's own adding/removing (and thus dispatcher swapping),
-> though I would guess that's not really a problem at all.
-
-Yeah, I do agree that it would be nicer if there was a clean interface
-the application could talk to without having to muck about with
-dispatchers. My hope is that by encapsulating all that in a library we
-can pretend that there is :)
-
-However, I can see how this perspective may also be different in a Go
-world: With a C library in a distro we can ship the library as a
-separate package and as long as we maintain ABI compatibility, we can
-upgrade the library independently of the applications. Whereas with Go's
-vendoring approach it becomes way harder to ensure that all applications
-use the "right" version of the library. In that sense, a C library is
-more of a "system service" whereas a Go library is more of an
-"application sub-function".
-
-> I feel like I've gone out of the scope of libxdp in this e-mail, but
-> you did ask :) And I do appreciate any feedback or raising of red
-> flags.
-
-Only slightly :)
-As outlined above all of this has gone into my thinking when designing
-libxdp, so I appreciate the chance to get your perspectives on these
-very real tradeoffs. So thanks again for taking the time to explain your
-thought process!
-
--Toke
-
+-- 
+Radu Stoenescu
