@@ -2,84 +2,139 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9615328120
-	for <lists+xdp-newbies@lfdr.de>; Mon,  1 Mar 2021 15:42:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA3DF32831A
+	for <lists+xdp-newbies@lfdr.de>; Mon,  1 Mar 2021 17:10:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236119AbhCAOmS (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 1 Mar 2021 09:42:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58362 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234639AbhCAOmR (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 1 Mar 2021 09:42:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614609651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=no/KojznK2Kk5EA2hOkhIhJE/pS1Wm+xOY/Q6SZqTgw=;
-        b=ftno1xmxogr4v2zRanJucQQM48jdw4x0+OARSdPNNIQaAFiyH+6Si4tvcepm0ZY7N6L1eM
-        DLFvaBjDiy3UzC7/JCRP05lq1L+S/N71IiN76J4WE+RAETlF5Rw6XkeJKZdVxSayh4w5bz
-        ORdUtfpQSycVfkgYds8XMQ9lfBCVqyg=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-UD4LgFgMN6qBxhOgFIXoBw-1; Mon, 01 Mar 2021 09:40:47 -0500
-X-MC-Unique: UD4LgFgMN6qBxhOgFIXoBw-1
-Received: by mail-ed1-f69.google.com with SMTP id a2so802328edx.0
-        for <xdp-newbies@vger.kernel.org>; Mon, 01 Mar 2021 06:40:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=no/KojznK2Kk5EA2hOkhIhJE/pS1Wm+xOY/Q6SZqTgw=;
-        b=Zr2utDl6SRg/EhSIfU6O5KgKqcxJ/74cgod8PR6qjBHhmMHTQ+virl/tsr1M1EOWdQ
-         YD+3gzeYDm6xoZ879N5AJESzB1VRXZNtn6ePlFH9EN+HAZ9anRJwy/Wz7ln0U/Ozqcgy
-         dv01Egyh8BUQF4pKoR5XNuUv3+t2bcF9oOqobSA4HZJeHtg3bdEWCueRd4n3EderFG/0
-         37aqvfXwoTGJICl2OOeGkolts6vMxNa0eUXugPFZKSTRjBIULLw5VPOJIpKU/oclRpNY
-         EXnYoCXXe3CRshTH0b52+OjO7jn3TCrU2a22HM/j1+XxhTyqK9eGgVIB7/MP7yC7TksL
-         5XBg==
-X-Gm-Message-State: AOAM533NMZbrixUo9a1E7c4ZX/0meJXD/zKNwp9BYGUV2Qn6pKYt3DxT
-        Oa1ktga++CgrAdJvrrWCCYj63bBNYOAjf5q+kCKH7ryZ8buJtsOijGclpnPYSFuArnEHjpAv6Gu
-        Emrhxlr+wMLFWbxFhYsT4v5E=
-X-Received: by 2002:a17:906:8614:: with SMTP id o20mr15716343ejx.386.1614609646030;
-        Mon, 01 Mar 2021 06:40:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy/v4DUfmo2EG/X1I9dp40zuUNEK4R8FDgR1BlS2OD+WDNerm67ichjQAYLB8z+2p/ObsCeMA==
-X-Received: by 2002:a17:906:8614:: with SMTP id o20mr15716323ejx.386.1614609645778;
-        Mon, 01 Mar 2021 06:40:45 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id e8sm11135568edq.77.2021.03.01.06.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Mar 2021 06:40:45 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BE0951800F1; Mon,  1 Mar 2021 15:40:44 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Shwetha Vittal <cs19resch01001@iith.ac.in>,
-        xdp-newbies@vger.kernel.org
-Subject: Re: Query on eBPF Map iterator in Kernel space
-In-Reply-To: <CADutbzUJrgLQvhyd7EGd2EQSJv13rQkCHFpfMJwJkAtYhGLtdw@mail.gmail.com>
-References: <CADutbzUJrgLQvhyd7EGd2EQSJv13rQkCHFpfMJwJkAtYhGLtdw@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 01 Mar 2021 15:40:44 +0100
-Message-ID: <87pn0jvswj.fsf@toke.dk>
+        id S237492AbhCAQIi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 1 Mar 2021 11:08:38 -0500
+Received: from dal2relay144.mxroute.com ([64.40.26.144]:46155 "EHLO
+        dal2relay144.mxroute.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237555AbhCAQGa (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 1 Mar 2021 11:06:30 -0500
+X-Greylist: delayed 344 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Mar 2021 11:06:29 EST
+Received: from filter004.mxroute.com ([149.28.56.236] filter004.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by dal2relay144.mxroute.com (ZoneMTA) with ESMTPSA id 177ee848d79000ced5.001
+ for <xdp-newbies@vger.kernel.org>
+ (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
+ Mon, 01 Mar 2021 16:00:00 +0000
+X-Zone-Loop: e016fae610c241ff7c712781fd436e6e307e85db521f
+X-Originating-IP: [149.28.56.236]
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6qnmTpRprVJMcUWm/YvyqVFwdgzdFiOMZ/bwaTFBwR0=; b=t5lTX1oHZ6j4nFNsw4UXRsg6R8
+        X8PLMRLE6sPK8D+NqPWJqhOs0bxRuITaIvRvQN0JWqAnq2q39lznjALH13k6I0PyaIXTfJt9jHmdG
+        eAyKmdHYhZL1tB3nfgxXyWpw9n3ROqmzlPxjJhqUVYq9cpNK673/oi6J/mEPEoDiFL/G5OxLw41PV
+        tzQuwO4gkaQb6qHyU+ByShXfkVNnx3FIZ4oE6+NuZuYCIR7rR0y69/F7RkTLZll0GN1+DliJGn093
+        wuJfisnp/mJorL29WsnlDK7fhi8e4x2bIIR76mbiitQzkwj+lzdezBHHrhuv7+KZCLwftAuXgpodS
+        k6YJ3lPA==;
+To:     xdp-newbies@vger.kernel.org
+From:   Christian Deacon <gamemann@gflclan.com>
+Subject: Putting Into Account Packet End (ctx->data_end)
+Message-ID: <acb3dbc2-c725-d977-8441-15e06acb27cb@gflclan.com>
+Date:   Mon, 1 Mar 2021 09:59:56 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-AuthUser: gamemann@gflclan.com
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Shwetha Vittal <cs19resch01001@iith.ac.in> writes:
+Hey everyone,
 
-> Hi,
->
-> Is there any way to iterate through eBPF Map elements in kernel space.
-> I know that there is one at user space bpf_map_get_next_key(). But it
-> doesn't work when tried in kernel space. I have a requirement to find
-> the record in the eBPF map which has the least value in kernel space
-> and pick it for further packet processing and therefore need to
-> iterate through eBF Map .
+I wasn't sure if this belonged on the BPF mailing list or XDP Newbies. 
+However, I figured I'd send it to the XDP Newbies list first since the 
+project I'm making involves XDP.
 
-There will be soon:
-https://lore.kernel.org/bpf/20210226204920.3884074-1-yhs@fb.com/
+In my project, I'm trying to create a pointer that puts in account the 
+ctx->data_end pointer. The new pointer is an unsigned 32-bit integer 
+that is suppose to represent an IPv4 address. Here's an example of the code.
 
--Toke
+```
+void *data_end = (void *)(long)ctx->data_end;
+
+//uint32_t *icmpdata = data_end - sizeof(uint32_t);
+uint32_t *icmpdata = data_end;
+icmpdata -= sizeof(uint32_t);
+
+if (icmpdata + sizeof(uint32_t) > (uint32_t *)data_end)
+{
+     return XDP_DROP;
+}
+```
+
+I'm trying to replace the last four bytes of the packet with this IPv4 
+address. When I do this, I receive the following BPF verifier error when 
+running the XDP program.
+
+```
+R7 invalid mem access 'pkt_end'
+processed 909 insns (limit 100000000) max_states_per_insn 3 total_states 
+30 peak_states 30 mark_read 25
+```
+
+To my understanding, this is due to accessing the packet end (data_end). 
+However, I'm curious why this is prohibited if we're trying to go back 
+four bytes into memory.
+
+I've also tried calculating the length of the packet and using ctx->data 
+like the following.
+
+```
+void *data = (void *)(long)ctx->data;
+
+unsigned int len = (ctx->data_end - ctx->data);
+
+uint32_t *icmpdata = data + len;
+icmpdata -= sizeof(uint32_t);
+
+if (icmpdata + sizeof(uint32_t) > (uint32_t *)data_end)
+{
+     return XDP_DROP;
+}
+```
+
+However, this states the offset is outside of the packet.
+
+```
+invalid access to packet, off=-16 size=4, R2(id=56,off=-16,r=0)
+R2 offset is outside of the packet
+processed 931 insns (limit 100000000) max_states_per_insn 3 total_states 
+29 peak_states 29 mark_read 24
+```
+
+I'm sure there is something I'm doing wrong with the check. With that 
+said, I believe I found the verifier check it's running into below.
+
+https://github.com/torvalds/linux/blob/master/kernel/bpf/verifier.c#L2882
+
+It looks like the `mem_size` argument is 0 and offset is below 0 which 
+is causing it to fail. I'm not sure why, but I'd assume it's because the 
+verifier believes `len` could be negative. Though, I tried adding checks 
+for `len` and ran into the same issue.
+
+The XDP project I'm working on is a basic layer 3/4 forwarding program 
+that does source port mapping when forwarding the packets. I have it 
+working for TCP/UDP packets. However, for ICMP, I have nothing to keep 
+track of within the headers. Therefore, I'm trying to add four bytes to 
+the packet and appending the client's IPv4 address to the end of the 
+packet before forwarding. When the packet comes back, I parse the last 
+four bytes of the packet which is suppose to indicate the client IP 
+address and remove the last four bytes of the packet. Below is the 
+source code at the moment.
+
+https://github.com/gamemann/XDP-Forwarding/blob/master/src/xdp_prog.c#L181
+
+I hope this is enough information, but if isn't, please let me know. I 
+also apologize if this is something silly I'm missing/not understanding.
+
+Thank you for your time!
 
