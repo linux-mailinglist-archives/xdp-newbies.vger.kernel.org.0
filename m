@@ -2,96 +2,85 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FCD33283D3
-	for <lists+xdp-newbies@lfdr.de>; Mon,  1 Mar 2021 17:27:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7DED32B0A3
+	for <lists+xdp-newbies@lfdr.de>; Wed,  3 Mar 2021 04:44:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232555AbhCAQZO (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 1 Mar 2021 11:25:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20299 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237562AbhCAQWU (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 1 Mar 2021 11:22:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614615653;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YM3yCG6aMG+Odvwo3hKtOettGzC4VJAxt6PYEdka1JQ=;
-        b=XX3Uh1Da+XWyOWlUBou0+nbLybxatJyblLe0YSWemwGm4qsjXr23OYBR2iQ02d0JtWA2A/
-        zJBq2vLO0zrVkQnw1+L2lNQBsLVpfU4e25PkasXQi+Xt8t7rpGc3eUDbzj3Ev31TLjA1+D
-        jOs468NrPW2+ehUSeOk2Kyo0QZhJEAQ=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-MAr_yMTwPCq3Ffkpk3B__A-1; Mon, 01 Mar 2021 11:20:43 -0500
-X-MC-Unique: MAr_yMTwPCq3Ffkpk3B__A-1
-Received: by mail-ej1-f69.google.com with SMTP id 11so316285ejz.20
-        for <xdp-newbies@vger.kernel.org>; Mon, 01 Mar 2021 08:20:43 -0800 (PST)
+        id S233975AbhCCBmL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Mar 2021 20:42:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1835901AbhCBGZv (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Mar 2021 01:25:51 -0500
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B59AC061756
+        for <xdp-newbies@vger.kernel.org>; Mon,  1 Mar 2021 22:25:11 -0800 (PST)
+Received: by mail-il1-x12b.google.com with SMTP id k2so17029934ili.4
+        for <xdp-newbies@vger.kernel.org>; Mon, 01 Mar 2021 22:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=48aP0s2PleI6Bka23100ZgXrf9naF/tWDRjIg97JlSs=;
+        b=sWSOKkOde32RngRnG/DmqN6kk0os3vw6pYxiOY1Wti0AVL5mNHggHUHPvPc2isIhB/
+         Hul5XBa4aFpyisqx0v/j0Y3bg1Sx3lhOF3hUjLjq8DiV1fcd9TeqEulrJPNK/VqN9n7W
+         Inx3IILa7BAb7iXU5aYuactHlHWJpVNIpOGBqF/1wSFI33eUMqd654vRtfmwcAuq3igh
+         iS/ma3796DK7In08chWNfcfVJK0k1l1yreSkb7sjtw/2yWK1cdORMZW1U9MuD7zw1KqF
+         mIwnsbp1mKyyoBdlpvdPCHof3SC0n3L9Slq+SciMgRGBOgQ90AyLeP79SMQwhwkzMpaq
+         NY1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=YM3yCG6aMG+Odvwo3hKtOettGzC4VJAxt6PYEdka1JQ=;
-        b=nqdtuO0RIkZfCqev0hrr0+g9iYdL0lB8oN5iB69S5VwtOgJR+TL7wVH6jRRHIuFHm6
-         AQF2PlniFdzmL5jrIjIZSVM1JGZRhiwie1kuu93mie3pMe8DjJK+cZ7KwDxyqHnobeOE
-         dJ3BbiuIEvb/eFJvgCoWVGs1/vppAR5ErXNRGPGiHdTOa77pWCraSKfN9EMGBVozhUCB
-         WUsiHDCSFC57VW8KmGSvR9svopzxtq20uQHVslJ9lEKCEgKXDc4e/cuhTycgLseXaaMb
-         cFDeWM/iwdOeHMXVYvVqWWQbQlNkGFdxXaNdOrl2H34iNWeOLsfIsRmQWfBCCHUtRVE3
-         iBRg==
-X-Gm-Message-State: AOAM533KHpavNp6raC6H2rxHpxXHMa/EGoAvPNdhmeM5R5w9HZM6rra2
-        c8Oue6vdhYrnZN3KhV6QiRnxTUV+hHKIPojGjet1dpx8bnlzlFqiQJuML3kXZROy4pF8dIBtQin
-        O7UbDFBR4Yb+9OxNevd/v/SU=
-X-Received: by 2002:a50:fd90:: with SMTP id o16mr17066581edt.292.1614615642268;
-        Mon, 01 Mar 2021 08:20:42 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwavAh+0Rvhv9AAVRTL7eicIaGmxpHDUtZ4TN++zTH7/IzdEoPCJpooVL+U7x58qaBRtaBCkg==
-X-Received: by 2002:a50:fd90:: with SMTP id o16mr17066555edt.292.1614615641935;
-        Mon, 01 Mar 2021 08:20:41 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id q18sm12514058eji.100.2021.03.01.08.20.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Mar 2021 08:20:41 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id D6D8C1800F1; Mon,  1 Mar 2021 17:20:40 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Radu Stoenescu <radu.stoe@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>
-Cc:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Re: Redirect from NIC to TAP
-In-Reply-To: <CAM-scZPjB4QFTNPfbzD0DNmrfKMKUPMnnH+gSRFRk6jH4_WswA@mail.gmail.com>
-References: <CAM-scZPPeu44FeCPGO=Qz=03CrhhfB1GdJ8FNEpPqP_G27c6mQ@mail.gmail.com>
- <20210209102118.476f507d@carbon>
- <CAM-scZNLN5cgJBEdVFSSrLJi3zW-5THzbY=diESdKiiisCT9MQ@mail.gmail.com>
- <20210209094137.GA14290@ranger.igk.intel.com>
- <20210218101239.GA7062@netronome.com>
- <CAM-scZPjB4QFTNPfbzD0DNmrfKMKUPMnnH+gSRFRk6jH4_WswA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 01 Mar 2021 17:20:40 +0100
-Message-ID: <87eegyx2uf.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=48aP0s2PleI6Bka23100ZgXrf9naF/tWDRjIg97JlSs=;
+        b=oBQ7lj1b2ROZvtiMZYkv7rILzy+9IErEP8Zxya56gvFxDJU2ZqquJ2tmeHIkHOfD2X
+         ZKJQkYv0kM8FlJ0n3EvSzgn0l17Z2UW8lqPVuyf3EY7FiIaTGv0O1nXwnE1z3RfdN8S/
+         N94I1R47/YOZ2IO29zEcwr2T0N1e5MdBn6BRtlMrxqBBqYtG2wOGwHluWZ/terwmyLbg
+         G9vmlEP3PM22SkP0mJ0ETKf9ZbvR9Evk9soTPTPg7e+hcsf94C3LmlOSV8mb4dA6G4kk
+         uQUU7bPLLrhYNnXl2tD1kiDDWnFAsUtCwi6j9y/e3B4Nl8nIek+sur4uTa4gvk/EfzFw
+         LJ3g==
+X-Gm-Message-State: AOAM53396RpPG3zN6civ36RGM/sZl8/Gc/bSJrKHWQ4FRrYPti7JACD7
+        d26WctLWxFFFuO9bifi1AKNvwC/h5wsmOuodOOc0oaun9OI=
+X-Google-Smtp-Source: ABdhPJxU4WUUcchFspsENu5jY2ikZadzvj2rUQ/2z5TiT9Xi4LpW3GCrxxedgEzyWUOK6uEZATvHuLqq1hsBg5IJ+DU=
+X-Received: by 2002:a05:6e02:1a6d:: with SMTP id w13mr17838845ilv.181.1614666310690;
+ Mon, 01 Mar 2021 22:25:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CADutbzUJrgLQvhyd7EGd2EQSJv13rQkCHFpfMJwJkAtYhGLtdw@mail.gmail.com>
+ <87pn0jvswj.fsf@toke.dk>
+In-Reply-To: <87pn0jvswj.fsf@toke.dk>
+From:   Y Song <ys114321@gmail.com>
+Date:   Mon, 1 Mar 2021 22:24:34 -0800
+Message-ID: <CAH3MdRUSKRNgRphaVGM3sXuUgPAWv2hZo_G7FBMANa58qO7G4A@mail.gmail.com>
+Subject: Re: Query on eBPF Map iterator in Kernel space
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Shwetha Vittal <cs19resch01001@iith.ac.in>,
+        Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Radu Stoenescu <radu.stoe@gmail.com> writes:
-
-> Thanks a lot for the info.
+On Mon, Mar 1, 2021 at 6:44 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redha=
+t.com> wrote:
 >
-> In retrospect, was there a way I could reach this conclusion myself
-> (no driver support)? I'm asking this since I'm relatively new to the
-> environment and we run various NICs from various vendors, and I would
-> like to know how to perform the "due diligence" myself before reaching
-> out?
+> Shwetha Vittal <cs19resch01001@iith.ac.in> writes:
+>
+> > Hi,
+> >
+> > Is there any way to iterate through eBPF Map elements in kernel space.
+> > I know that there is one at user space bpf_map_get_next_key(). But it
+> > doesn't work when tried in kernel space. I have a requirement to find
+> > the record in the eBPF map which has the least value in kernel space
+> > and pick it for further packet processing and therefore need to
+> > iterate through eBF Map .
+>
+> There will be soon:
+> https://lore.kernel.org/bpf/20210226204920.3884074-1-yhs@fb.com/
 
-Grepping the source code is one. The xdp_monitor tool from samples/bpf
-might have provided a hint as well, but only that something was wrong,
-not the cause.
+What kind of maps are you trying to iterate? The above patch set
+supports hash and array maps. Also, the above patch set has been
+merged into bpf-next repo. Feel free to experiment with it!
 
-This is a long-standing issue, and there's been some discussion around
-it, but let's just say that no consensus has emerged yet :/
-
--Toke
-
+>
+> -Toke
+>
