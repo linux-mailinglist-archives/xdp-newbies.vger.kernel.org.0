@@ -2,87 +2,86 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0060A33B2D4
-	for <lists+xdp-newbies@lfdr.de>; Mon, 15 Mar 2021 13:34:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5341833F2B5
+	for <lists+xdp-newbies@lfdr.de>; Wed, 17 Mar 2021 15:34:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbhCOMeB (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 15 Mar 2021 08:34:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32148 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229505AbhCOMdh (ORCPT
+        id S231465AbhCQOeP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 17 Mar 2021 10:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231583AbhCQOeF (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 15 Mar 2021 08:33:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615811616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ECOWahUY1cHhSCkcG/TAKcvkBpFFABhyUuh/wmecIBQ=;
-        b=FOhVYesBusDx3M4zcLrYlA4NHNe2WmaeFRu47hvBHlCvK/W3NVA2Xa9T9lgH4deOkVBYbY
-        SAyvN5J8l2s9vsdOrueVOoUYzOV8q8JtyhUhKvQrKMpZLJgFFqwVGikxfv/WL9mi7Q5h7V
-        5/JCkoo8fQD12HPBbtmH+YvtRUiKRJ4=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-9NbzRIKENcCQ7Mb75o9fOw-1; Mon, 15 Mar 2021 08:33:33 -0400
-X-MC-Unique: 9NbzRIKENcCQ7Mb75o9fOw-1
-Received: by mail-ed1-f70.google.com with SMTP id r19so15449230edv.3
-        for <xdp-newbies@vger.kernel.org>; Mon, 15 Mar 2021 05:33:33 -0700 (PDT)
+        Wed, 17 Mar 2021 10:34:05 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493CFC06174A
+        for <xdp-newbies@vger.kernel.org>; Wed, 17 Mar 2021 07:34:04 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id j6-20020a17090adc86b02900cbfe6f2c96so1467711pjv.1
+        for <xdp-newbies@vger.kernel.org>; Wed, 17 Mar 2021 07:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=739CtvzEF236/+rHcufmL0VXmZ8mT/LLIl/Q6Wyst64=;
+        b=ek9KK/2pzm0y3mFNuoL76g/LfqdjgD1+Aw9xDobDnsTHS0dFE+IjYJtD8wCLRLJ2qj
+         j0JsGK70Tsr7hCSZkVlfRQ53M46TqzoX+fNCp59zNk86dNbyOOjXOEN3cLXspykZsL6R
+         YOUn5ZkMNKGEz9ZtLiw7D94KaevR8IMI4heN/7Jucqoi6ynSD0WF59X6HfYzw7bTQ1u2
+         GZvLE/p7n/NstLKLj9RxT4o9JMSGsd54uW95iKvuLGZHGDvLu9BFBjc9l3sN0R8z5C2z
+         4L04aJp/xBIFkRmEpl7XhyrL3nkRSQ5y0o4YBCfoVedo8GuE/Qe/Id7u1+xK34Ct9TrT
+         VjQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ECOWahUY1cHhSCkcG/TAKcvkBpFFABhyUuh/wmecIBQ=;
-        b=VJRP4J+UOqFmFtbFsCLgg+kWFtmo/hiuAq9fxQD9e4p9C1HxGH8sI5Xc7lwiqDMtsB
-         WmMWvcLm+fVU/o9+LWL4Wt8xnkrgysy9394bVhFLXPnv/2LLtyNhdweT0b4sjiZhLDdi
-         lQjhRfKt/SkYuS6tXlPByoMo9qupfN5rM4tX2qoJJ8niMWt570DlJVDwBBDTncN6TInC
-         LYkIcCoVZkzZqyEa57GToPUli92yHR4cwIuAJdrReVaQVlHkGy7VFxm/dxmKPCYVtNa8
-         JO3Vc5Nd0ySkpU9xTfrBM94Q+utU/ZTpIyASRBrX/5SbOcNXLEJOAWt2meusOYpKB9R8
-         4XYA==
-X-Gm-Message-State: AOAM530bwyMOXfvlzovYi6dPUPI+g1tscGIc0PKVmG0UKXFeHWswoykf
-        Vsyy76PdVmIt+Qv8i+e1eLp4DZvt8/nR0y5jSwJH8oaW2QL2GGYB1BnIhh4AmS3EMKBzJG7X1zq
-        TITj2659nxUkMuld9zKRwxEg=
-X-Received: by 2002:a17:906:81c9:: with SMTP id e9mr23044593ejx.456.1615811611959;
-        Mon, 15 Mar 2021 05:33:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzibUira9mPxbnEbDsMeDOWBAudOJReo3MbBbwETIjJrOKLALqvcT0ta4FdG3zyLiON2AXdnw==
-X-Received: by 2002:a17:906:81c9:: with SMTP id e9mr23044581ejx.456.1615811611828;
-        Mon, 15 Mar 2021 05:33:31 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id a17sm3968647ejf.20.2021.03.15.05.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Mar 2021 05:33:31 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id B8DEB18027E; Mon, 15 Mar 2021 13:33:30 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Rohit M P <rohitmp99@gmail.com>, xdp-newbies@vger.kernel.org
-Subject: Re: Queuing disciplines with XDP_REDIRECT
-In-Reply-To: <CAFQY-shyWTWk0+uf95G-5m-9FmMzQ2kcCdjFx+heWq3ko1KhmA@mail.gmail.com>
-References: <CAFQY-shyWTWk0+uf95G-5m-9FmMzQ2kcCdjFx+heWq3ko1KhmA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 15 Mar 2021 13:33:30 +0100
-Message-ID: <874khcppet.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=739CtvzEF236/+rHcufmL0VXmZ8mT/LLIl/Q6Wyst64=;
+        b=KU8J6k8dWuRWMTVB2AK8carE+A++wltvkbgxoaMt0Qu9GBVbEITc0TSFSBH2eHZd8t
+         FEygIoKDa+yZW5W+V9w12QJwatl6lWK2K5J6pZ+i3jtuGkxdeQjBBfHDhRXrL9dxoTQS
+         PjwxG0GDnyDTQsalsyqZCR3z0uKmUmmVVEPX4z7HoZcKAuzEC20qiYhcPonR2YZtEPdZ
+         ioO04n/tWWBDC7Ej369AknK/Btzmzx1CnVT64qcwKWXmQ0azcGfvKkqMANSX5HEDFnio
+         AONmZs1hLx6RvAlW0dyFDkTt8uLJryjPwF+l5OnHi+l4RyYZdbeU+OpyvxZs+RFUCoQL
+         lKFw==
+X-Gm-Message-State: AOAM533Cw4wfOM2vsggVA2o+P8WWbyE8rpp8hWTzmdRxZXgW49zQWSVa
+        vni5RGTR8vn707AAHyZN8Z+wvTSgEe6H6b9bPKc=
+X-Google-Smtp-Source: ABdhPJy5SHff1ZesKRS5vqGpsR4tx68HD2i+/daz3QtAumdekBjjvGDaQ4h0623JVh7k2qx3pPpwJSEAPFLRTBxARbI=
+X-Received: by 2002:a17:90a:17c3:: with SMTP id q61mr4890043pja.58.1615991643476;
+ Wed, 17 Mar 2021 07:34:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAFQY-shyWTWk0+uf95G-5m-9FmMzQ2kcCdjFx+heWq3ko1KhmA@mail.gmail.com>
+ <874khcppet.fsf@toke.dk>
+In-Reply-To: <874khcppet.fsf@toke.dk>
+From:   Rohit M P <rohitmp99@gmail.com>
+Date:   Wed, 17 Mar 2021 20:03:52 +0530
+Message-ID: <CAFQY-sgriAjkyDwrjTfjt+p7PoLTiVQMTYCz1ZYLM2kytpz4BQ@mail.gmail.com>
+Subject: Re: Queuing disciplines with XDP_REDIRECT
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Rohit M P <rohitmp99@gmail.com> writes:
+Thank you for the response. Helps a lot!
 
-> Hi folks,
+On Mon, Mar 15, 2021 at 6:03 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
 >
-> I was experimenting with XDP where I'm able to route the packets using
-> XDP_REDIRECT.
-> Could anyone point me towards using kernel queuing disciplines along
-> with this if it's possible, or other possible alternatives for queuing
-> disciplines while using XDP_REDIRECT?
-
-This is not currently possible. It's on our radar, though:
-https://xdp-project.net/#Queueing-and-QoS - and we have a PhD student
-who has started looking into this.
-
-It may be a while before anything concrete materialises, though; in the
-meantime you'll have to rely on TC if you want proper queueing with
-BPF...
-
--Toke
-
+> Rohit M P <rohitmp99@gmail.com> writes:
+>
+> > Hi folks,
+> >
+> > I was experimenting with XDP where I'm able to route the packets using
+> > XDP_REDIRECT.
+> > Could anyone point me towards using kernel queuing disciplines along
+> > with this if it's possible, or other possible alternatives for queuing
+> > disciplines while using XDP_REDIRECT?
+>
+> This is not currently possible. It's on our radar, though:
+> https://xdp-project.net/#Queueing-and-QoS - and we have a PhD student
+> who has started looking into this.
+>
+> It may be a while before anything concrete materialises, though; in the
+> meantime you'll have to rely on TC if you want proper queueing with
+> BPF...
+>
+> -Toke
+>
