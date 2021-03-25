@@ -2,86 +2,72 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDAE9347538
-	for <lists+xdp-newbies@lfdr.de>; Wed, 24 Mar 2021 11:01:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6012348911
+	for <lists+xdp-newbies@lfdr.de>; Thu, 25 Mar 2021 07:25:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233232AbhCXKAd (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 24 Mar 2021 06:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
+        id S229493AbhCYGYt (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 25 Mar 2021 02:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233079AbhCXKAU (ORCPT
+        with ESMTP id S229461AbhCYGY2 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 24 Mar 2021 06:00:20 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406FAC061763
-        for <xdp-newbies@vger.kernel.org>; Wed, 24 Mar 2021 03:00:20 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id e14so7638775plj.2
-        for <xdp-newbies@vger.kernel.org>; Wed, 24 Mar 2021 03:00:20 -0700 (PDT)
+        Thu, 25 Mar 2021 02:24:28 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8EEC06174A
+        for <xdp-newbies@vger.kernel.org>; Wed, 24 Mar 2021 23:24:27 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id l4so1025516ejc.10
+        for <xdp-newbies@vger.kernel.org>; Wed, 24 Mar 2021 23:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e5/ZAO82ZiB1lLh18pWn8Q9psiQzu9d3kqKGXJDBMJk=;
-        b=V1OOtzu8sIuFTPjLKcw45yDYU76vVyh5BRCmleScaQzIZLqG99rEtE0cYrk5qHcoYC
-         S6drbnZNj5xSGHxoqershzPv/JB98hTZmy7+LFGRd9M4cYBd0ycwqAsSKeYsu1cFj7FY
-         9muW0DDfxeC7hazFTHsMI/JvTjuJrLh7Z6AzX+JNv18gACsctWe41yMTKO6g5MIPFfhW
-         ycSnvfyA7IYNQtPV41ZtTDRcU/zGZLVTdOXoUDt6tlQVdIEpMSayamalAqBfJFqSPenb
-         1e1S6XOBSsVc5R6N8vy4f+Z2qrHS38GJQOPQpGRLdlQil4wzxe0B5ZrDCjjbCIskFDcl
-         Npjw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jdyHPIz2w75nCPywWSUHCirfchvNXc2i3LY62/QCCfI=;
+        b=hurlfXuTMp131Wcqhy7rrP155qLqtmJTGbVyVZg3jSo6P06jOdbvuT5FiY4mhsN9Dh
+         78YqT/kR8yYg/2rI3yGBhbvvGAprXGQEjBKMj8IJqQfjTRVQGDomC5RMOh7X+CGFrEjS
+         dk4OPA70j40T0TuBa0HpUFGFLHiLK2OHkzvNYbYk+Zy3u7eY4Ci+2HhvTo6ddvvt4jlt
+         m0gAwhriySArg+dDAxy14HASvMJWkVSRir/dYCA+L6hL1CUWq5ZQjF0x/8x7mp8kIcmW
+         HlE51uo/YfEn33aGd7loOvU08eXgnT8UEO13uSr6Hq6pkxVSivygR/6kW335xp+UlWn1
+         F9hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e5/ZAO82ZiB1lLh18pWn8Q9psiQzu9d3kqKGXJDBMJk=;
-        b=nyBYtOPCI5flsESQGAJpAYdB6JWVkoyJd+bLWTzOcJ47K1KxHGBxrENUF1mqZqPXhq
-         nZf1HqIxsAzn60hxUzPjxH7Jy9YkC7EMdyFZO8mr/lB71sqHqAypo675g03FAcgblG81
-         KeOfDZU0Qmm3vWyZvsFIUzVQw1qhofQzq5fpZEkLTEN+5AGAzcD4gTkeaq4b7XSkN1MM
-         Wjx47vGdUUsMMeNpqPTNIsah8TgzJToOB3LXb1qQQztrEkamdwbPLt3jVimjfWuS6YxL
-         GlVMDVC3VCDkca2YQK8a/ozlGoUsrgRQJHiqkeRqxOb1y8dsYKjNuZErTcP8Wo98eTjr
-         JEpA==
-X-Gm-Message-State: AOAM532tkqefuzn+DU104Fby5SxjiIqojN5rQhfPgvSmGVT1+GvHiNlG
-        BB0WMQLiK9jPLwcphWd2CuvTPs7fgS2Ikk7igdZZ4dalCK2AIA2v
-X-Google-Smtp-Source: ABdhPJzODOmEY4qn7YPxsVRQMwsYBvZSjCkZ9QLFs1NBnsAv7ogYCVckov/sCWxFBXdjrgL37TZ8IXKmf/4//KjTFuw=
-X-Received: by 2002:a17:902:8e89:b029:e6:ef44:6a54 with SMTP id
- bg9-20020a1709028e89b02900e6ef446a54mr2955707plb.7.1616580019796; Wed, 24 Mar
- 2021 03:00:19 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jdyHPIz2w75nCPywWSUHCirfchvNXc2i3LY62/QCCfI=;
+        b=jmo6uS74A82fxd3cfG3bed9vvcjOs5OWtU4aPtrAi1VuNTX3PvYtNw6vuJbtAEMd9w
+         D5nNcD46m24Ymd/JXLypAAjGRfEoFlkwCbGtEqBu2ppZIQSpfkoyHrO+9Xf5lFOdmle5
+         osWveheIe7KMYWl7D7IiyDfPrXn5UZJ4jV5mjHDSWCsUGe7Ou0W/tjuNxKFMhlSCEF4Y
+         0sOZCw16grfkFwGjzbMz1yLibsoACehy8VeeAWqrTtOvA+6Il7X89no/i3mp/U7kA1v7
+         WFgBDkp13Iyn/bAfWdYm/kdX9F2qb91L/8gawbu/aCLD8od+O/ey8jPNZHWnezrEGbYZ
+         195A==
+X-Gm-Message-State: AOAM5318C0/oSmSTQEpkJcuCsIu2q7q540bbG9ikMRD9hJ+zkFsVgMR0
+        UOZzlJToxteZimfN8R7iKBZ5WAdCU8eEN1flc0v8FJqDVrmG8w==
+X-Google-Smtp-Source: ABdhPJwRzES40UgwJWCIBTHpC85TNzRkBeBihblVg8+6d/w79xX3q41VWiR/39pi7qhJLaW9iXVq7yG18dMgCfbesu0=
+X-Received: by 2002:a17:906:9386:: with SMTP id l6mr7503432ejx.455.1616653466324;
+ Wed, 24 Mar 2021 23:24:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <35a931df0e2cb4bf1fd23ecc15895419c7ca0e3c.camel@coverfire.com>
-In-Reply-To: <35a931df0e2cb4bf1fd23ecc15895419c7ca0e3c.camel@coverfire.com>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Wed, 24 Mar 2021 11:00:08 +0100
-Message-ID: <CAJ8uoz3n=R2KZagznZ9XK+tVwdpMoeqY8CqJxyqh1B508bqntw@mail.gmail.com>
-Subject: Re: AF_XDP (i40e) behavior change in 5.11?
-To:     Dan Siemon <dan@coverfire.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
+From:   Konstantinos Kaffes <kkaffes@gmail.com>
+Date:   Wed, 24 Mar 2021 23:24:15 -0700
+Message-ID: <CAHAzn3peP-j-oL76FxmyRgHg=QbMfeykA4rQdoDRA-0c6iQ4mg@mail.gmail.com>
+Subject: AF_XDP sockets across multiple NIC queues
+To:     xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 10:22 AM Dan Siemon <dan@coverfire.com> wrote:
->
-> ./xsk_fwd -i ens1f0 -q 2 -i ens1f1 -q 2 -c 5 -i ens1f0 -q 3 -i ens1f1 -
-> q 3 -c 6
->
-> On 5.10, the cores (2,3) assigned interrupts for the queues (2,3) are
-> idle when there is no traffic.
->
-> On 5.11, the cores immediately go to 100% system time when the program
-> starts (as viewed in htop). There is no network traffic.
->
-> Intel 710/i40e.
->
-> I tried this with xsk_fwd built from 5.10 and 5.11 trees with the same
-> result.
->
-> Is this behavior change expected?
+Hello everyone,
 
-Thanks for reporting this. No, this is not intentional. I did send up
-a fix for a bug in the i40e driver that was introduced in 5.11. It
-might be the culprit. Could you please try the patch below and see if
-it works? It is not yet in net.
+I want to write a multi-threaded AF_XDP server where all N threads can
+read from all N NIC queues. In my design, each thread creates N AF_XDP
+sockets, each associated with a different queue. I have the following
+questions:
 
-https://www.spinics.net/lists/netdev/msg729128.html
+1. Do sockets associated with the same queue need to share their UMEM
+area and fill and completion rings?
+2. Will there be a single XSKMAP holding all N^2 sockets? If yes, what
+happens if my XDP program redirects a packet to a socket that is
+associated with a different NIC queue than the one in which the packet
+arrived?
 
-/Magnus
+I must mention that I am using the XDP skb mode with copies.
+
+Thank you in advance,
+Kostis
