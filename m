@@ -2,118 +2,103 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C567E3499B3
-	for <lists+xdp-newbies@lfdr.de>; Thu, 25 Mar 2021 19:52:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE5A0349C2A
+	for <lists+xdp-newbies@lfdr.de>; Thu, 25 Mar 2021 23:18:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbhCYSvv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 25 Mar 2021 14:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
+        id S230419AbhCYWSQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 25 Mar 2021 18:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbhCYSvn (ORCPT
+        with ESMTP id S230468AbhCYWRn (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 25 Mar 2021 14:51:43 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82767C06174A
-        for <xdp-newbies@vger.kernel.org>; Thu, 25 Mar 2021 11:51:43 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id w18so3669250edc.0
-        for <xdp-newbies@vger.kernel.org>; Thu, 25 Mar 2021 11:51:43 -0700 (PDT)
+        Thu, 25 Mar 2021 18:17:43 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412C3C06174A
+        for <xdp-newbies@vger.kernel.org>; Thu, 25 Mar 2021 15:17:43 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id l13so2926501qtu.9
+        for <xdp-newbies@vger.kernel.org>; Thu, 25 Mar 2021 15:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7qL78CkXA6nZlChQLtj8YwUKdbCuChyqrry5HWW/CC8=;
-        b=Ric9xaKqE8Nh62Ex781mJ3s4mCDED1fZzvwvGMvfoafyZ7KaJrV41DLwyyjG+ZkY1D
-         usgbadvbi8SVvAyexfWawAluep9V8g60C05wUk6ki73D/DjYFYOL3XD6ip0M5xgsowYS
-         ayFQIR56LrdwSl9xx0DVt6ekAWTzDQcug62zaxNRg/3VGgr/TZsVwBUC2K7T2XOqijIu
-         bk9e9ZIskFErITXS/XlBtOgvTpv7eGbSVF5dQirup2VI6Z+QSEUVxvAGCtUvVuO42fIR
-         /Tgi9KVOGrn1KOBGzyBDDxgCdZFolEpSRQA2HHDob/4nmL+HSyZp/AmfBRw6u8ailFWC
-         pv6g==
+        d=coverfire.com; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xRxnRAbxLi/PNkirnYjeoihyfoAjO6Qd0P49C6A0FD8=;
+        b=FiQkSkFi0uaKwCwNDl1iywTnp+kVKmpM40u63HeqJbN8T8t7l3zGurQuFGbkCMJYj1
+         4LrsjjDlbN6bbOmNbVwDM7JqzXeXqhSvp0FqO0dRsyx3YGmAd+pWX/ev8xgugkKrrSVE
+         yeoy4o8bd2tdQjlVSnEyebY/Dbzfvaf2n/99JI3TbUg0raiLScaZQ034as2KHkPW2sWc
+         o6oGNilyrGKIyySuPLseqGKqU1yLTw725yzVRWD40OFJI/dq/V2mlybKN5wyuEsk9tOL
+         KOYrfZNREyuChdH78eMLP1GTzEtKvXT60AAu8m+fKTONTebRbD0bVz1df/bUApjZ3ukK
+         j6wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7qL78CkXA6nZlChQLtj8YwUKdbCuChyqrry5HWW/CC8=;
-        b=mP8hWcBY2YQl73EEx2pycQwQZx47OWJfvAtrdnhCkLLBgGF4s6olCnPg1vPFBPCgLa
-         FEOamBey0Gbas5UhDtamJPM0p0JJWbORBg0tpU5FnQvsmeQJM2P1J3FEodPRXZtcc8CK
-         DGxL1YhgVMeiz5HSjQ+hVeTiOglckdvaJp90t4rh9fLzRkp2K8yG93FFETgUhG1zCk3/
-         bk4ziD7FPSU02JzLjSm1snaV+klCrXkD5V+bL5JY1inoARFeoZFGQ6xvJPucIOu9sRnL
-         KPOVng1UpwAoXTQDtqMw0ngs5UgStnbNj286kb93QpBVPGkvQcUemmehseH7CRQnFThJ
-         27VA==
-X-Gm-Message-State: AOAM5304BUU88bvIO1fwU2pNmqcyqQKye1zYAEDTjvtg4uSsM/7NZzQl
-        Mt1dUMKcZUPVf4PHb6fHgK9bsKhF64//FjolYl0=
-X-Google-Smtp-Source: ABdhPJwkmUsNoz10J8E4eyC+7Xa9grOqAMvoNDeH3Gkc19tYAbfpGwvR8k6D6dRgdzLlhzpIvLj5GGiOPQNokNmpGyg=
-X-Received: by 2002:a05:6402:22bb:: with SMTP id cx27mr10645898edb.148.1616698302130;
- Thu, 25 Mar 2021 11:51:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHAzn3peP-j-oL76FxmyRgHg=QbMfeykA4rQdoDRA-0c6iQ4mg@mail.gmail.com>
- <CAJ8uoz1VyA7OvtPzXUqUfZRPUv18RxEs3szR03k2vgDuwq3N3w@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1VyA7OvtPzXUqUfZRPUv18RxEs3szR03k2vgDuwq3N3w@mail.gmail.com>
-From:   Konstantinos Kaffes <kkaffes@gmail.com>
-Date:   Thu, 25 Mar 2021 11:51:31 -0700
-Message-ID: <CAHAzn3rE7Xhvi3tW7EQ6+RAmRwY-Ldx4HiJbjzs7dxXoW=RcoA@mail.gmail.com>
-Subject: Re: AF_XDP sockets across multiple NIC queues
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=xRxnRAbxLi/PNkirnYjeoihyfoAjO6Qd0P49C6A0FD8=;
+        b=WbyV9MrwD8vyphfyF6zgQFm5OBiKzOPChVgMqTfsekJrIwXuVQY43k8VarJQn2pciZ
+         3j67jm8Bl5d5C/lzz+hAofFF2sLT8D/ys6skn7DaqTxXt1y6WHibUATkm4vun8haaPdq
+         cVWSAmk493O8rcIqdkioRDm21r/33369ORRE6f+PDicML5Odo+2fJxP38OyUJGLz9g13
+         tnsqwhaQgwfNOOk7ugbLJrY4CexKRm7CDhSJs50x4RW/tKHVNLN78O4Q1vIpeA2DipIk
+         K11p/fVQZRZfYZykhpw20iWXmzD3JnEtv0pPLDV0QH3geRGC2uJGOb8cY2NL4rWU3RgV
+         V7tQ==
+X-Gm-Message-State: AOAM530Ehf9k9h6kX4a5bPHI9clxKFX5jQAF8gQBBQOK3eNI4fUy10kJ
+        1TjYO//NgUdA5uZIpLw2jf4Rqw==
+X-Google-Smtp-Source: ABdhPJxi93MTHImp5mW1sU+8INdcYerBzBSdaSCu3df+DrzpbJmua/lxnvmug4hhi5YFF2hBGXQxzA==
+X-Received: by 2002:ac8:5c07:: with SMTP id i7mr9913863qti.322.1616710662558;
+        Thu, 25 Mar 2021 15:17:42 -0700 (PDT)
+Received: from ?IPv6:2607:f2c0:e56e:28c:5524:727c:ba55:9558? ([2607:f2c0:e56e:28c:5524:727c:ba55:9558])
+        by smtp.gmail.com with ESMTPSA id j26sm4536581qtp.30.2021.03.25.15.17.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Mar 2021 15:17:42 -0700 (PDT)
+Message-ID: <eb19b630c087ba6497f2a0a627c232d45a5af22f.camel@coverfire.com>
+Subject: Re: AF_XDP (i40e) behavior change in 5.11?
+From:   Dan Siemon <dan@coverfire.com>
 To:     Magnus Karlsson <magnus.karlsson@gmail.com>
 Cc:     Xdp <xdp-newbies@vger.kernel.org>
+Date:   Thu, 25 Mar 2021 18:17:40 -0400
+In-Reply-To: <CAJ8uoz3n=R2KZagznZ9XK+tVwdpMoeqY8CqJxyqh1B508bqntw@mail.gmail.com>
+References: <35a931df0e2cb4bf1fd23ecc15895419c7ca0e3c.camel@coverfire.com>
+         <CAJ8uoz3n=R2KZagznZ9XK+tVwdpMoeqY8CqJxyqh1B508bqntw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Great, thanks for the info! I will look into implementing this.
+On Wed, 2021-03-24 at 11:00 +0100, Magnus Karlsson wrote:
+> On Wed, Mar 24, 2021 at 10:22 AM Dan Siemon <dan@coverfire.com>
+> wrote:
+> > 
+> > ./xsk_fwd -i ens1f0 -q 2 -i ens1f1 -q 2 -c 5 -i ens1f0 -q 3 -i
+> > ens1f1 -
+> > q 3 -c 6
+> > 
+> > On 5.10, the cores (2,3) assigned interrupts for the queues (2,3)
+> > are
+> > idle when there is no traffic.
+> > 
+> > On 5.11, the cores immediately go to 100% system time when the
+> > program
+> > starts (as viewed in htop). There is no network traffic.
+> > 
+> > Intel 710/i40e.
+> > 
+> > I tried this with xsk_fwd built from 5.10 and 5.11 trees with the
+> > same
+> > result.
+> > 
+> > Is this behavior change expected?
+> 
+> Thanks for reporting this. No, this is not intentional. I did send up
+> a fix for a bug in the i40e driver that was introduced in 5.11. It
+> might be the culprit. Could you please try the patch below and see if
+> it works? It is not yet in net.
+> 
+> https://www.spinics.net/lists/netdev/msg729128.htm
 
-For the time being, I implemented a version of my design with N^2
-sockets. I observed that when all traffic is directed to a single NIC
-queue, the throughput is higher than when I use all N NIC queues. I am
-using spinlocks to guard concurrent access to UMEM and the
-fill/completion rings. When I use a single NIC queue, I achieve
-~1Mpps; when I use multiple ~550Kpps. Are these numbers reasonable,
-and this bad scaling behavior expected?
+Hi Magnus,
 
+It appears (quick testing) that the patch fixes the problem.
 
-On Thu, 25 Mar 2021 at 00:24, Magnus Karlsson <magnus.karlsson@gmail.com> wrote:
->
-> On Thu, Mar 25, 2021 at 7:25 AM Konstantinos Kaffes <kkaffes@gmail.com> wrote:
-> >
-> > Hello everyone,
-> >
-> > I want to write a multi-threaded AF_XDP server where all N threads can
-> > read from all N NIC queues. In my design, each thread creates N AF_XDP
-> > sockets, each associated with a different queue. I have the following
-> > questions:
-> >
-> > 1. Do sockets associated with the same queue need to share their UMEM
-> > area and fill and completion rings?
->
-> Yes. In zero-copy mode this is natural since the NIC HW will DMA the
-> packet into a umem that was decided long before the packet was even
-> received. And this is of course before we even get to pick what socket
-> it should go to. This restriction is currently carried over to
-> copy-mode, however, in theory there is nothing preventing supporting
-> multiple umems on the same netdev and queue id in copy-mode. It is
-> just that nobody has implemented support for it.
->
-> > 2. Will there be a single XSKMAP holding all N^2 sockets? If yes, what
-> > happens if my XDP program redirects a packet to a socket that is
-> > associated with a different NIC queue than the one in which the packet
-> > arrived?
->
-> You can have multiple XSKMAPs but you would in any case have to have
-> N^2 sockets in total to be able to cover all cases. Sockets are tied
-> to a specific netdev and queue id. If you try to redirect to socket
-> with a queue id or netdev that the packet was not received on, it will
-> be dropped. Again, for copy-mode, it would from a theoretical
-> perspective be perfectly fine to redirect to another queue id and/or
-> netdev since the packet is copied anyway. Maybe you want to add
-> support for it :-).
->
-> > I must mention that I am using the XDP skb mode with copies.
-> >
-> > Thank you in advance,
-> > Kostis
+Thanks.
 
-
-
--- 
-Kostis Kaffes
-PhD Student in Electrical Engineering
-Stanford University
