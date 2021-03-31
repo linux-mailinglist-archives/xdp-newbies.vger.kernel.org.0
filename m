@@ -2,76 +2,98 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B54435006E
-	for <lists+xdp-newbies@lfdr.de>; Wed, 31 Mar 2021 14:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C02E93500AE
+	for <lists+xdp-newbies@lfdr.de>; Wed, 31 Mar 2021 14:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235399AbhCaMei (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 31 Mar 2021 08:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235532AbhCaMe1 (ORCPT
+        id S235666AbhCaMwA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 31 Mar 2021 08:52:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59558 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235568AbhCaMvf (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 31 Mar 2021 08:34:27 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2303FC061574
-        for <xdp-newbies@vger.kernel.org>; Wed, 31 Mar 2021 05:34:27 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id f17so7826070plr.0
-        for <xdp-newbies@vger.kernel.org>; Wed, 31 Mar 2021 05:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Rm9LJ+tSP3AS9iz771NwVbT/dZjEkGQHhDcfR4NuamM=;
-        b=FLdD8DrV7fR34I2/kLFzwQj8ieBt0V9ho7+C68XrcWkNT/Yt2kYXeESNXeFMnbE5Hw
-         TlqICDx3mGVYAotEXx3bTunTIuQVLgTEV9LXAzfK9pcxF8ESuTF2NRQwNAYLwEF6GAt6
-         axpzSafIOADr19TllDYY6m134Q0pM9SIZS4jP2svVmeRnwd8enAbrNuDqh5PONTT+NXQ
-         c/oYf/lAHbbSEaS8HXwxnibwW1sIOUDDRyoksIOxt/nHmjL6gal5ueCuy/BCroqOcq+J
-         eziJOsoxiBQO+SwGPzvYTh/kCy/oo8yNs61rbA+uTWBetTViGdMCuunOVwihznbOC6To
-         HZ3A==
+        Wed, 31 Mar 2021 08:51:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617195094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TXxz73TYcs7uK5w5ecPd5LBBBdPlBS21CqBieT4WxJo=;
+        b=TFxnDOyi9rYeb+QSs5ke/DjaTwQvMXxIrO+wyUo+AykyxKJb8QugxGO4YmGVoT//poR6uL
+        9s9RC9bdi25quUpHOMTRaBze35bbJEEpMdtyjmde4EHDL0J4CwdtOYQvXPWs+SAPAMJBxc
+        GD1Pg3U39N/OOMvdi+PjDZZU8SsSECg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-OLYm965BOPShiG36QeX9EA-1; Wed, 31 Mar 2021 08:51:32 -0400
+X-MC-Unique: OLYm965BOPShiG36QeX9EA-1
+Received: by mail-ed1-f71.google.com with SMTP id w16so1042405edc.22
+        for <xdp-newbies@vger.kernel.org>; Wed, 31 Mar 2021 05:51:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Rm9LJ+tSP3AS9iz771NwVbT/dZjEkGQHhDcfR4NuamM=;
-        b=oFHP/SgG/zZ4WIW4sR8afNqmTB5maPVwRW8HIMjebSy8/59ufpu18trjv7cirN4NjX
-         4efbm6F5+VRlE/FT1ZI3q7o8uDyKl5FZEFBhgDTGJJCJY98xyKxAfbMA16P3PXcyyjfx
-         ux4zLjPQB839myuUfx16QzbE+so8VRuf6qhUrsUML0n9RgyHeEDECDCSS5YlO6bIlIKR
-         AllHpcq5NaHgvFMzaNEmfb6+glHaSqO5JQdSSKq2BBqhEpOm0/9iJFgxj1t+6+zFfEVf
-         FogmSPVEo3snL/2zr116cK4D1HdG9c8NLeV7fN9mp/Z0s26XKmqK1W0LqKSR9F7bUfvK
-         mMLA==
-X-Gm-Message-State: AOAM532i1yb8JRObhxv9gbeWFtMKmcqS3KdjE8cWzHTgx9XiWmg42Qzi
-        /bz+hppbW4lFXIagyEFr4+fp0thvK+LDQPQVXV77cmGNKFATwQ==
-X-Google-Smtp-Source: ABdhPJxfncs2gULUmnvfd66cMevwYRtADPOOw1uiI64V8sWElvtT0YaMTYVijn4XxUaoysCs+SeBQlDtpJ3lmLg8PIw=
-X-Received: by 2002:a17:902:7786:b029:e6:cc0f:4dff with SMTP id
- o6-20020a1709027786b02900e6cc0f4dffmr3081490pll.4.1617194066394; Wed, 31 Mar
- 2021 05:34:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=TXxz73TYcs7uK5w5ecPd5LBBBdPlBS21CqBieT4WxJo=;
+        b=YB6uhJBrom1SusL+XQ+MyMndyKm8w51ZZc978ATIWwkQyjUP5g4ytB0mld5tZjUs7N
+         V+bW22Dyoz0D1dvvqeTgn9KlHS/jgQ/aXMUHXFaYGZ7YEMU6uJMmOeSazIjttpQbBwz5
+         CBhC8vi/C+4/AJ3SEpi80DsU2qudCmHvaF5b4di/fJiceYmBqjQv3dIUn1svdIXQFj3Y
+         evdJuL2n0pv5MHp23dxBSVpx0tZfI3LTJ7GlEL6nzAvmdE+xq5Pf3hL4MTr7uAvChDYw
+         YBHawiwz77ZnNJdNfkZV4ZctvsDOk3LaIlKB+ZecntWEyXqzLoKdc3LXdMkfh4Ncr1iz
+         QqLQ==
+X-Gm-Message-State: AOAM533P02siLLPkKy7Y8feFZttmmEGW3YIpLQqC6sdNmxaIVT687FCm
+        8yYWPY1FkTw7D4xk23jzvL2MaPgk6MSOnvQcFhxvTVSYlv/FYPvClEEf3GFwsKe9GEbI5c5r0zV
+        ayNeRkq9ZR4lf2u2s/2Ox8x0=
+X-Received: by 2002:aa7:c5c4:: with SMTP id h4mr3342605eds.375.1617195091454;
+        Wed, 31 Mar 2021 05:51:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJygI6pPDvH70svjVyFnog1EKoMczeMEAXKCYZLuDWbPdkz0VbJgFMIKP2pe6LSqNOjWN/U1qA==
+X-Received: by 2002:aa7:c5c4:: with SMTP id h4mr3342586eds.375.1617195091272;
+        Wed, 31 Mar 2021 05:51:31 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id u59sm1601276edc.73.2021.03.31.05.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 Mar 2021 05:51:30 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 3441C1801A8; Wed, 31 Mar 2021 14:51:30 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Srivats P <pstavirs@gmail.com>, xdp-newbies@vger.kernel.org
+Subject: Re: AF_XDP - why setrlimit() ?
+In-Reply-To: <CANzUK5_NfMLh9+se3hdJ176Ow_At6bwPqUSUD8XOSO0yc4vYig@mail.gmail.com>
+References: <CANzUK5_NfMLh9+se3hdJ176Ow_At6bwPqUSUD8XOSO0yc4vYig@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 31 Mar 2021 14:51:30 +0200
+Message-ID: <87r1jvpju5.fsf@toke.dk>
 MIME-Version: 1.0
-From:   Srivats P <pstavirs@gmail.com>
-Date:   Wed, 31 Mar 2021 18:04:12 +0530
-Message-ID: <CANzUK5_NfMLh9+se3hdJ176Ow_At6bwPqUSUD8XOSO0yc4vYig@mail.gmail.com>
-Subject: AF_XDP - why setrlimit() ?
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi,
+Srivats P <pstavirs@gmail.com> writes:
 
-The sample xdpsock_user.c program does a setrlimit(RLIMIT_MEMLOCK) but
-subsequently doesn't do a mlock or pass MAP_LOCKED flag to mmap().
-Same with xdp-tutorial which has the following comment but I don't see
-any locking happening anywhere in the code.
+> Hi,
+>
+> The sample xdpsock_user.c program does a setrlimit(RLIMIT_MEMLOCK) but
+> subsequently doesn't do a mlock or pass MAP_LOCKED flag to mmap().
+> Same with xdp-tutorial which has the following comment but I don't see
+> any locking happening anywhere in the code.
+>
+> /* Allow unlimited locking of memory, so all memory needed for packet
+> * buffers can be locked.
+> */
+>
+> What is the purpose behind this setrlimit? Does the libbpf/xdp library
+> do a mlock internally?
+>
+> I came to know that BPF maps need the setrlimit and I assume the xsk
+> APIs create a XSK map internally - so is that the only reason?
 
-/* Allow unlimited locking of memory, so all memory needed for packet
-* buffers can be locked.
-*/
+Yes, the setrlimit() is there because all BPF objects in the kernel
+(including maps and programs) were accounted against that limit, and it
+was a global limit, making it basically impossible to predict what a
+good value was. Thankfully, this has since been fixed and maps are now
+accounted using memcgs, as of commit: 97306be45fbe ("Merge branch
+'switch to memcg-based memory accounting'") which was included in the
+5.11 kernel release. So if your kernel is new enough you don't need the
+setrlimit() anymore; but I guess no one has bothered to update the
+samples yet :)
 
-What is the purpose behind this setrlimit? Does the libbpf/xdp library
-do a mlock internally?
+-Toke
 
-I came to know that BPF maps need the setrlimit and I assume the xsk
-APIs create a XSK map internally - so is that the only reason?
-
-Didn't find any references to setrlimit in
-https://www.kernel.org/doc/html/latest/networking/af_xdp.html either.
-
-Srivats
