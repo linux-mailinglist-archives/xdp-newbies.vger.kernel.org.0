@@ -2,84 +2,85 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8845B36DD10
-	for <lists+xdp-newbies@lfdr.de>; Wed, 28 Apr 2021 18:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D53536E7F3
+	for <lists+xdp-newbies@lfdr.de>; Thu, 29 Apr 2021 11:27:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240661AbhD1QeX (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 28 Apr 2021 12:34:23 -0400
-Received: from mail-108-mta130.mxroute.com ([136.175.108.130]:40969 "EHLO
-        mail-108-mta130.mxroute.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230470AbhD1QeX (ORCPT
+        id S237363AbhD2J2Q (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 29 Apr 2021 05:28:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40844 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233046AbhD2J2P (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 28 Apr 2021 12:34:23 -0400
-X-Greylist: delayed 304 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Apr 2021 12:34:23 EDT
-Received: from filter004.mxroute.com ([149.28.56.236] filter004.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta130.mxroute.com (ZoneMTA) with ESMTPSA id 179194f82a00004964.001
- for <xdp-newbies@vger.kernel.org>
- (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256);
- Wed, 28 Apr 2021 16:28:31 +0000
-X-Zone-Loop: c53c4234381202ea6dd0d5f7861f78536563fd3d3327
-X-Originating-IP: [149.28.56.236]
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gflclan.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TJKO+yquOqchFldVFQWWwAppFKRUWW4XmHYQVKmBmEc=; b=DWO0yEIxpmQyoF2rmkEsPGhpen
-        /pZxzGsDAPG6VogrWhU2fdN6EoA/RuHxE+E3OkHcBwkFdeNWaZXHfm2Ib5MsrvG/CXBrEyeABqubc
-        0za0EKQdwspBXjAwHnVktTjsk3iyOsKUN0cRGoJo5ZfgWmdKVchISthDSveSUzxzqViUj3LbpDome
-        VfJjXE+GtTOYYkyu1TBOyRNVdb7vEOc1Pb2Cb8QkuAatI0tss796rgNAJ+HBg70Y7qZw9FsdAY1PY
-        BHjkMO9X1b9Xct2K4Dt7MymZmEVzJUPffGbONxrzhgJF8gsDk8Z4Cq6O6aNV+JAXyi3fDCdk4EgZS
-        0E+ueKVg==;
-Subject: Re: Sending A Separate Packet Out The TX Path In XDP
-To:     =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        Thu, 29 Apr 2021 05:28:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1619688448;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xf4XcdY2iBSN5n+BPAhMyCf5+oEM4bl+rsnTJXoRk04=;
+        b=Kw9Qln9Qo0P0ey6O5OTM0MJ5qIqfediior7EPS8IiU48vKJfKXux2i9QzKWnz6Pgs44xxP
+        ELOzdawNlncT+O8dJ8S9sG+Ie8w53u6Q5her11zy4UgouOZhSOqA/lK+cfHyS3EfBCplbW
+        DWMuoKYpSE0cNiuTX8fA9FLMKWl4HsY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-D3tMUhUtOUmwEjaQIP90uw-1; Thu, 29 Apr 2021 05:27:26 -0400
+X-MC-Unique: D3tMUhUtOUmwEjaQIP90uw-1
+Received: by mail-ed1-f72.google.com with SMTP id k10-20020a50cb8a0000b0290387e0173bf7so4391083edi.8
+        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 02:27:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=xf4XcdY2iBSN5n+BPAhMyCf5+oEM4bl+rsnTJXoRk04=;
+        b=i6lpFP3UCGZO+Sa06Dl3uGUzblI0di6pClZnpNu6yXE+6s94QVvAsV+QcYwiNq+eVz
+         Br8xzi/IzrSnO6DDK0M2psipOGrXI7vBRdfqtv7P+8hnJUraAdWHYxMYbzjKFg8kswiG
+         MNHxRNSHfb14Lx1UeRJtsEe9GgJi+IKBIZAbQtjsLId82tTPeFMJv0V0v10voBpbMkSo
+         pDkdM9yBkkbjEtCWgHkVRirssAsnklfs+fzoYHYn/D9jERXft9r3ij+YLUemF3Vt59IK
+         1YPuwhzV93dL71L7KYkxSfwAcSajBqqtW3i+N0neiBdwqEnauN7zaPuFUZivh5540sNm
+         6LFg==
+X-Gm-Message-State: AOAM532EpsGG5DtS3GReHQRgsd6z0rQolBYBiiwIRFfmJqL/qJP85fTC
+        zsGKjwHfArMdwUqbJ3xOBZORZu9pVn74ibgcYSBB9ikpl04tQLo4dbSU6cHf18S7yhU8fZqZvyu
+        J2VirAbmTyx0vwflCNqYCiW8=
+X-Received: by 2002:a17:906:b191:: with SMTP id w17mr34045284ejy.200.1619688445488;
+        Thu, 29 Apr 2021 02:27:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwQZjBhQoHFqAaw05LsC9HysLJuukCuvzbYk/XXbqunv3psuiczsXMwR32Cl0qI5xPuN8YSIQ==
+X-Received: by 2002:a17:906:b191:: with SMTP id w17mr34045258ejy.200.1619688445096;
+        Thu, 29 Apr 2021 02:27:25 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id d12sm1464502ejd.8.2021.04.29.02.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Apr 2021 02:27:24 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id B872D1802D6; Thu, 29 Apr 2021 11:27:23 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Christian Deacon <gamemann@gflclan.com>,
         xdp-newbies@vger.kernel.org
+Subject: Re: Sending A Separate Packet Out The TX Path In XDP
+In-Reply-To: <389750c6-6a31-fe80-7fa2-56fbec888534@gflclan.com>
 References: <d153ed73-3a46-cbf9-c9b7-947926083027@gflclan.com>
  <87wnsn8oxr.fsf@toke.dk>
-From:   Christian Deacon <gamemann@gflclan.com>
-Message-ID: <389750c6-6a31-fe80-7fa2-56fbec888534@gflclan.com>
-Date:   Wed, 28 Apr 2021 11:28:28 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ <389750c6-6a31-fe80-7fa2-56fbec888534@gflclan.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 29 Apr 2021 11:27:23 +0200
+Message-ID: <875z058mpw.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <87wnsn8oxr.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-AuthUser: gamemann@gflclan.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hey Toke,
+Christian Deacon <gamemann@gflclan.com> writes:
 
-
-That makes sense! I'm going to look into using AF_XDP sockets to achieve 
-this.
-
-
-As always, thank you for all your help!
-
-
-On 4/27/2021 3:14 PM, Toke Høiland-Jørgensen wrote:
-> Christian Deacon <gamemann@gflclan.com> writes:
+> Hey Toke,
 >
->> Hey everyone,
->>
->>
->> I had a quick question. Is it possible to send a packet separate from
->> the original out of the TX path within an XDP program? I would imagine
->> this isn't possible, but I just wanted to make sure.
-> Not from within XDP, no...
 >
->> If this isn't possible within the XDP program itself, is it possible to
->> do this with AF_XDP sockets or can AF_XDP sockets only handle packets
->> redirected via the fast-path XDP creates? I wasn't sure if I'd need to
->> make another Linux socket inside of the AF_XDP program in this case to
->> send a separate packet out.
-> ...but AF_XDP sockets can send whatever you want :)
+> That makes sense! I'm going to look into using AF_XDP sockets to achieve 
+> this.
 >
-> -Toke
 >
+> As always, thank you for all your help!
+
+You're welcome! :)
+
+-Toke
+
