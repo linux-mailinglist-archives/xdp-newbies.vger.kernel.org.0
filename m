@@ -2,129 +2,66 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4BF336ED9A
-	for <lists+xdp-newbies@lfdr.de>; Thu, 29 Apr 2021 17:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323A436F417
+	for <lists+xdp-newbies@lfdr.de>; Fri, 30 Apr 2021 04:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240776AbhD2PsP (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 29 Apr 2021 11:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
+        id S229582AbhD3Cg1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 29 Apr 2021 22:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233420AbhD2PsO (ORCPT
+        with ESMTP id S229577AbhD3Cg1 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 29 Apr 2021 11:48:14 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A19C06138B
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 08:47:27 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id md17so7428321pjb.0
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 08:47:26 -0700 (PDT)
+        Thu, 29 Apr 2021 22:36:27 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70622C06138B
+        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 19:35:39 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id u25so40611161ljg.7
+        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 19:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OnkYhkwRgYs/3nG4PJyQNiHNOfQ9XtFgDcwk8DjT0N4=;
-        b=l/nunsM9t4gG/oBKw/DtDkBxlh7/B6XtzcEpZKwjfDhN+uDx67QG9tmvpQMJ3s5Y7p
-         logYHQOl86PppmVsxg/7VpYTDIRbh3zcWma1MP44j5C7PTCveSP9kCyB0vKCs5XomNqS
-         UN+wwkghm5OIaQ/eMXmzDexvT/eyG7gNa3yATDrvNQezhi4tUdhzPWZ7/6dqYwr+jm6C
-         C2LCjy3f/XiPHRRnGqWrZM/MwSINACyNFWyzN/YpOp85Dt4tzJa9s8eq2pYcX7+iXUa+
-         GmZHAO5ZlRvn2cs0NHJKElqopJo+299L4RJ9FfUdh9oc2HzCQzAlLIy5seNzQjDYILdL
-         vidw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=9CB2kiaizy9XUjsJO2CUP1a0guMvirUzywfUfU9Ng1M=;
+        b=o3nYuCSbMLuy4OB+gO5u1LiRMcyVkNrGSTXx8+PAoaTIz9+5laMTmJuLmibGLDyDO+
+         ZWJ8W5tZBhYGlloHjhg9RPQtkPopG4bF+DHwtS3tM5wTgNvfe+2IkY4gytd9Cmb9O7YT
+         JrdjU58y8ddgCb7v0oWtajBC8+E+tT5eskR0lWAoDnDbRkk9tkX7w7sl4Qv/cJPt+1aQ
+         ndmdeVv5hmUr6angXBPQoA+kjPeS1otafJuyj85G/k+j8NKXMGAdkQUKg4t9Q7nhYcOi
+         36c2L2B3bFebj58KeaQjDTachzxnRe8rZXQdlv2P61yLfRV9tu68UIGca81pUPmGJquV
+         zhrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OnkYhkwRgYs/3nG4PJyQNiHNOfQ9XtFgDcwk8DjT0N4=;
-        b=sQoYJcd2+bJnfBRyo3jwp/ra0oJGglRJD0hYCJEVXdmvWkf1lWcOOcVRU/WNxyRB7B
-         NEKPj0vyWqdIETKPAxlvWQd3/hITRLpNt2NXkkPdeo9tojeZl3KlJatY8AQ19Q9mJri0
-         2QSMyP447uYKp007aHDXA63uyiddUJhgqjNZ5tsKrOrnrEiYntPGK+Ky/aHiRpvAv+XN
-         WjkAKYaeYJX6UUIOkhFo9vZDC8Sq09sfvDuNhz1Ta6oAkaacbdFeP8VZAi6ez4RDS/Ps
-         uO+Jwyv7r1a6TO0ENpB/sCRw76oTSIHGgpXc5Zb2wYuvzSc4/wkw5Dyd0BH7Vu2iMtjt
-         3/aA==
-X-Gm-Message-State: AOAM5301kNJhV9HbFNzJa6pbq+YtdJ70VxPJeqcQQssJdo+KeDq23SrA
-        MRlRO+g7zJ4pONCPL8PhEGkrilPnuFn9Tzav0X8=
-X-Google-Smtp-Source: ABdhPJw6B8f0E/9lQ27TQLHOB37lR7yfjvKUutwtf4MrgKpPCkWGmoIOvKR72q+QY0SrmzJe7+h7fPJ3t8smH5DLzVc=
-X-Received: by 2002:a17:902:ff09:b029:ed:3b29:ff43 with SMTP id
- f9-20020a170902ff09b02900ed3b29ff43mr301674plj.14.1619711246453; Thu, 29 Apr
- 2021 08:47:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=9CB2kiaizy9XUjsJO2CUP1a0guMvirUzywfUfU9Ng1M=;
+        b=kIRJcARO9xRIyLhLsQfGR+XaaDDAGrUrYmivrMwuMWqzIuYqskHA7EZ3fu8facnXRl
+         0KiueLsW/QbpwufDsm5Wq8xqHp8RlYnDc4BwGhIWsJdXWGOybI6djYIj3Fw+z584nGwi
+         C/046FiXolWEb/KcbKyNeLyjGm0J0/CGk0Wqcjt6RefDGuLYlim7dyuO5SarFjfE5zi2
+         UcHgWk2ETScugp+lkwehNqtofIfdgKCaFSM6s9hrthv3DLE28kSNNoCqy4OvxGl3iJut
+         tek7xod1NAnPoxwzQBwoPI1nLZqhd2JtptvC4JicZblCCkpMxz3SN61TZXOFBUxt6yor
+         aPMg==
+X-Gm-Message-State: AOAM531wsCWf9PfqUFLSonpDKSTxif7zQAg0SU/7B2C6a5OXNl6Cqk0l
+        GvjnV89VzPxdeGc+88nJE7r8E2lvVNs/9BlVH/b2jwnJMgU=
+X-Google-Smtp-Source: ABdhPJyACKQrAVVuBZWoRz8VjxcPEnztiLpaY5BmJkHd1hopfTjkJ/LRo00U89nDJUIfx2v2b6BqTF2EYB2qHIBCQxw=
+X-Received: by 2002:a05:651c:b14:: with SMTP id b20mr1969862ljr.179.1619750137635;
+ Thu, 29 Apr 2021 19:35:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANzUK58=fjW-iqBqm6drSfC679T0C+68bRj8BzxqrTYWAzDHJg@mail.gmail.com>
- <CAJ8uoz1pwuJ0A+C6wBnSG76Q4j4-BrvDKvKc3gHVCJA=71oJgw@mail.gmail.com>
-In-Reply-To: <CAJ8uoz1pwuJ0A+C6wBnSG76Q4j4-BrvDKvKc3gHVCJA=71oJgw@mail.gmail.com>
-From:   Srivats P <pstavirs@gmail.com>
-Date:   Thu, 29 Apr 2021 21:17:15 +0530
-Message-ID: <CANzUK5-SnTLZdOXvF3xf+x=qfuCvFFqKKUr51z3=s_kAi4oAbw@mail.gmail.com>
-Subject: Re: AF_XDP sendto kick returning EPERM
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
+From:   ratheesh kannoth <ratheesh.ksz@gmail.com>
+Date:   Fri, 30 Apr 2021 08:05:26 +0530
+Message-ID: <CAGZFCEFLb+sjcju_6vxCBNzPfuOR7A0cdHphWSD1nw0rtPZFpA@mail.gmail.com>
+Subject: AF_XDP acceleration
+To:     Xdp <xdp-newbies@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 12:58 PM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
->
-> On Fri, Apr 23, 2021 at 5:44 PM Srivats P <pstavirs@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > I'm using sendto() to kick tx in my AF_XDP program after I submit
-> > descriptors to the tx ring -
-> >
-> > ret = sendto(xsk_socket__fd(xsk_), NULL, 0, MSG_DONTWAIT, NULL, 0);
-> >
-> > However, I'm receiving EPERM as the return value every time. AFAIK
-> > this is not an expected return value. Since this is with i40e, I
-> > checked i40e_xsk_wakeup() - but that also doesn't return EPERM. I am
-> > running as root and I don't see any problems with creating the xsk,
-> > configuring umem etc.
-> >
-> > Also, no packets seem to go out either.
-> >
-> > # uname -a
-> > Linux Ostinato-1 5.11.15-1-default #1 SMP Fri Apr 16 16:47:34 UTC 2021
-> > (64fb5bf) x86_64 x86_64 x86_64 GNU/Linux
-> >
-> > I don't see the problem on another machine with i40e but older kernel 5.4 series
-> >
-> > Any suggestions on what to look for or how to proceed?
->
-> Weird. Have not seen this before. What is your command line for
-> xdpsock? Is it unmodified?
+Hi,
 
-This is not xdpsock, but my own AF_XDP program.
+Suppose a DPI application running on a AF_XDP socket ( zero copy ) and
+after inspecting , say 100 initial packets of the flow, decides to
+accelerate the flow in HW.
 
->
-> Using bpftrace, we can get the call stack of xsk_sendmsg. Somewhere in
-> this stack there must be an EPERM. You can run the same command on
-> your system, but use ftrace to see what a sendto call hits. Then see
-> where the code terminates.
->
-> mkarlsso@kurt:~/src/dna-linux$ sudo bpftrace -e 'kprobe:xsk_sendmsg {
-> @[kstack()] = count(); }'
-> Attaching 1 probe...
-> ^C
->
-> @[
->     xsk_sendmsg+1
->     sock_sendmsg+94
->     __sys_sendto+238
->     __x64_sys_sendto+37
->     do_syscall_64+51
->     entry_SYSCALL_64_after_hwframe+68
-> ]: 2244805
+1. Do we have use case and products/solutions in market which does the same ?
 
-Ostinato-1:~ # bpftrace -e 'kprobe:xsk_sendmsg {
-@[kstack()] = count(); }'
-Attaching 1 probe...^C@[
-    xsk_sendmsg+1
-    sock_sendmsg+94
-    __sys_sendto+238
-    __x64_sys_sendto+37
-    do_syscall_64+51
-    entry_SYSCALL_64_after_hwframe+68
-]: 1253307
+Just thinking, since packet buffer is from umem, how another entity
+(hw) can accelerate.
 
-Which doesn't seem to suggest any error - I've looked at the source
-code for all these functions, but don't see any reference to EPERM.
-
-Srivats
+Ratheesh.
