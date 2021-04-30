@@ -2,66 +2,75 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 323A436F417
-	for <lists+xdp-newbies@lfdr.de>; Fri, 30 Apr 2021 04:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 117C636FF6E
+	for <lists+xdp-newbies@lfdr.de>; Fri, 30 Apr 2021 19:24:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbhD3Cg1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 29 Apr 2021 22:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59626 "EHLO
+        id S230395AbhD3RZC (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 30 Apr 2021 13:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbhD3Cg1 (ORCPT
+        with ESMTP id S229750AbhD3RZC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 29 Apr 2021 22:36:27 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70622C06138B
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 19:35:39 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id u25so40611161ljg.7
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Apr 2021 19:35:39 -0700 (PDT)
+        Fri, 30 Apr 2021 13:25:02 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5AAC06174A
+        for <xdp-newbies@vger.kernel.org>; Fri, 30 Apr 2021 10:24:13 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id 1so52159998qtb.0
+        for <xdp-newbies@vger.kernel.org>; Fri, 30 Apr 2021 10:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=9CB2kiaizy9XUjsJO2CUP1a0guMvirUzywfUfU9Ng1M=;
-        b=o3nYuCSbMLuy4OB+gO5u1LiRMcyVkNrGSTXx8+PAoaTIz9+5laMTmJuLmibGLDyDO+
-         ZWJ8W5tZBhYGlloHjhg9RPQtkPopG4bF+DHwtS3tM5wTgNvfe+2IkY4gytd9Cmb9O7YT
-         JrdjU58y8ddgCb7v0oWtajBC8+E+tT5eskR0lWAoDnDbRkk9tkX7w7sl4Qv/cJPt+1aQ
-         ndmdeVv5hmUr6angXBPQoA+kjPeS1otafJuyj85G/k+j8NKXMGAdkQUKg4t9Q7nhYcOi
-         36c2L2B3bFebj58KeaQjDTachzxnRe8rZXQdlv2P61yLfRV9tu68UIGca81pUPmGJquV
-         zhrg==
+        d=coverfire.com; s=google;
+        h=message-id:subject:from:to:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=NbAFfKd0lzh0heXgjqlnyOrpmK+wOWghvGuT+zk5PW4=;
+        b=GKiE0c7P7n8TtajllgNO4reMqA7KHCTduXvTQD6xH5GzTgrHry5ZarX0HmrOlw7Ig9
+         y5anE3tj35pMZmoyUl1Aq+X/RQq20fSX4Y0uFFnGE1k/sRlHyqrnqfX1v3Z9utp6f3i6
+         LyFRujmi4dsQFd+7/vidC5aqDA576JQSnWq4qbu7nC9n0RkUwCBpqCMpvv79Imjsb5RR
+         iR8IOtHfcFSt4bKBgw9Sm27KBIEf0SgbstyoF6YlxS6wDIBiTAcFf7X+PZqbvB9KizwQ
+         TQEmiz1MOWCLggBL4MfyKzZgBMpMaHJEyvZRpI4BFGKSeH9XrUvOVT84vO/BVous/JyS
+         ZO9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=9CB2kiaizy9XUjsJO2CUP1a0guMvirUzywfUfU9Ng1M=;
-        b=kIRJcARO9xRIyLhLsQfGR+XaaDDAGrUrYmivrMwuMWqzIuYqskHA7EZ3fu8facnXRl
-         0KiueLsW/QbpwufDsm5Wq8xqHp8RlYnDc4BwGhIWsJdXWGOybI6djYIj3Fw+z584nGwi
-         C/046FiXolWEb/KcbKyNeLyjGm0J0/CGk0Wqcjt6RefDGuLYlim7dyuO5SarFjfE5zi2
-         UcHgWk2ETScugp+lkwehNqtofIfdgKCaFSM6s9hrthv3DLE28kSNNoCqy4OvxGl3iJut
-         tek7xod1NAnPoxwzQBwoPI1nLZqhd2JtptvC4JicZblCCkpMxz3SN61TZXOFBUxt6yor
-         aPMg==
-X-Gm-Message-State: AOAM531wsCWf9PfqUFLSonpDKSTxif7zQAg0SU/7B2C6a5OXNl6Cqk0l
-        GvjnV89VzPxdeGc+88nJE7r8E2lvVNs/9BlVH/b2jwnJMgU=
-X-Google-Smtp-Source: ABdhPJyACKQrAVVuBZWoRz8VjxcPEnztiLpaY5BmJkHd1hopfTjkJ/LRo00U89nDJUIfx2v2b6BqTF2EYB2qHIBCQxw=
-X-Received: by 2002:a05:651c:b14:: with SMTP id b20mr1969862ljr.179.1619750137635;
- Thu, 29 Apr 2021 19:35:37 -0700 (PDT)
-MIME-Version: 1.0
-From:   ratheesh kannoth <ratheesh.ksz@gmail.com>
-Date:   Fri, 30 Apr 2021 08:05:26 +0530
-Message-ID: <CAGZFCEFLb+sjcju_6vxCBNzPfuOR7A0cdHphWSD1nw0rtPZFpA@mail.gmail.com>
-Subject: AF_XDP acceleration
+        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=NbAFfKd0lzh0heXgjqlnyOrpmK+wOWghvGuT+zk5PW4=;
+        b=IWW/D4m1WIBR4bP9Zi1sJ4m/WfKpGPP+geMRuAfFSgXRe0rxqJi/eltlinTR6J92GX
+         S75//Ujs95Em++0B2bAi9RvqzZMZhEMnrNy1piTX88HPb9emrNu1FmEIFwYABBAOtYp7
+         3x77/hte0tTAO2MDVgZIsB1xgAuv6V05oALZUfK0h4LGPQWmgN3mPeP0n3AqLQNS5yc5
+         FamFNl0F5xtnlln3hqEZx/PwNsO9WxBcbVvV7LqSZtwZlzLs+H8j/eZ1wnNr/ezm3EL5
+         zE1aUAoKI5gDLq404jFWAtMy16aYqYxXswY24mlknEHLAuBZodPrveD2RdAQQDIyX/Eo
+         cMDQ==
+X-Gm-Message-State: AOAM530Lcdy/DmWv6dk/KXwgvWPMUA1r9mBIUvP5PuekH+mW+N0dBjJZ
+        Nixh1N9i1X1mrPXRGANoQrf+Zb3koCvvGA==
+X-Google-Smtp-Source: ABdhPJxmBX2lVYljVXcRvRO2qBQORDvrrwvXS8VyW0c5J59S1SWrAKq4spEvyrYNrixyhdNLMVg6gA==
+X-Received: by 2002:ac8:5546:: with SMTP id o6mr1447158qtr.212.1619803452370;
+        Fri, 30 Apr 2021 10:24:12 -0700 (PDT)
+Received: from ?IPv6:2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a? ([2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a])
+        by smtp.gmail.com with ESMTPSA id h24sm2639345qtm.19.2021.04.30.10.24.11
+        for <xdp-newbies@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Apr 2021 10:24:12 -0700 (PDT)
+Message-ID: <0b0ebcc691f6dfeb560c2faf1e329e059cbecc2d.camel@coverfire.com>
+Subject: AF_XDP Rx and overload
+From:   Dan Siemon <dan@coverfire.com>
 To:     Xdp <xdp-newbies@vger.kernel.org>
+Date:   Fri, 30 Apr 2021 13:24:11 -0400
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.0 (3.40.0-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi,
+When an AF_XDP based application is overloaded, it is preferable for
+the application to:
+* Service the Rx ring as fast as it can and drop in the application if
+required?
+* Let the Rx ring fill up and let the NIC drop?
 
-Suppose a DPI application running on a AF_XDP socket ( zero copy ) and
-after inspecting , say 100 initial packets of the flow, decides to
-accelerate the flow in HW.
+This is mostly a performance/PPS question. Obviously the application
+loses the ability to directly count the drops if the NIC drops among
+other limitations.
 
-1. Do we have use case and products/solutions in market which does the same ?
+If it makes a difference, the use case is only i40e right now.
 
-Just thinking, since packet buffer is from umem, how another entity
-(hw) can accelerate.
-
-Ratheesh.
