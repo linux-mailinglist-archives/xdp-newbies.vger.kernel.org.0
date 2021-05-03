@@ -2,81 +2,88 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FEC8370EFC
-	for <lists+xdp-newbies@lfdr.de>; Sun,  2 May 2021 22:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 721A537125F
+	for <lists+xdp-newbies@lfdr.de>; Mon,  3 May 2021 10:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232374AbhEBURO (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 2 May 2021 16:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
+        id S230186AbhECIUS (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 3 May 2021 04:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232338AbhEBURO (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Sun, 2 May 2021 16:17:14 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7979BC06174A
-        for <xdp-newbies@vger.kernel.org>; Sun,  2 May 2021 13:16:22 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id b21so1753138plz.0
-        for <xdp-newbies@vger.kernel.org>; Sun, 02 May 2021 13:16:22 -0700 (PDT)
+        with ESMTP id S229817AbhECIUR (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 3 May 2021 04:20:17 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34C5C06174A
+        for <xdp-newbies@vger.kernel.org>; Mon,  3 May 2021 01:19:24 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id t21so2409061plo.2
+        for <xdp-newbies@vger.kernel.org>; Mon, 03 May 2021 01:19:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=loHJ1AWBwS/3MyLBqJhmwL0TKEdWvHgQsva+ybfJ0Kg=;
-        b=Vg8NgZWgtrXVbSauM0ITFaIuYf/VjNlFQFnH2MZ14pSm/xmkgoSwPK5lipP6mF8oIB
-         IZZN9/halwkoknFxO0lNrx2iUvbbxp6yUrDr9eye5WEwvKYCEy5eZX+ruCOn8VN4uYQs
-         h/L0PT4Nku/JUH4uhHUXLlFdvG1I0myAhwCEYxT/kG6oPtzz+YXN9UOcmnAKPuBgyPwZ
-         qASVHHiw22eCEZbhHCjsGDP+Gi9Lm8sPeafRQ3tMxvbsnP+vbcFxesVv/bFFhJHzTeEA
-         Qjjmik8lltJWCdHrJuvX1xF02GSyf3nm0PF685JGSBY8mpjLLo7RPdyckLw3oDWWevSt
-         9ssQ==
+        bh=ZVepcQA/3eyVStsqPaQdCEdxzgsy/BaJaXYqXK4hWgo=;
+        b=di1163G0TYsqZuGaiLbrQvusvfH2q8kz1wapCe7QnRj9z5Or76w8FSTdx5qqrcIoi1
+         S1SsoO0ONshISj2s4KYJ1ddOe7Q00HUC4aFvYEBtHd0f9fN+lF4Ox2akA44yDjbl5lWa
+         v9YqeTPU3TFMa7DsERtJYIQKf5HW+6nCwUtUfw+KYTis+83KRn1fe8gye4S+VpuJt+Rf
+         w+oJpVRfRW2X4uPWJ429GH5mDCdR+f/y3Cp0N1afih/0jL/Rg6YsKs7zPJx83b7uerUD
+         A0Y3epzKp5m1O3ESgHTIkxL4Ul8gmmLSw1z/bmPXCE6mMxDyxJv5rDv9iJTx+3LAAJAE
+         eKaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=loHJ1AWBwS/3MyLBqJhmwL0TKEdWvHgQsva+ybfJ0Kg=;
-        b=rV5W5xq2Zg1QzrJKPIycV+/HqhMV4O5jHTY9sDvHybC3Fc5J146TPwOnpwItzxq2Q+
-         yoiiZXcafAacAqyYGaqFD6axd0PcpCr0aRiVlatzOh44hTdRsSvsRZj5HDLlEGEadRc4
-         YDLaXHk+6/OOGCB4NKefgy8PnD+VFCTOz/9WgabEKe85u2GXyKZiFQ2NDeDA5RQWtoBm
-         B1G6wH6/D4ro0lzZIWLCb+/cb5swW/B0cfy+gyc+2875PQI/J2miVlU81/RjAjQUJLvT
-         vukoGP467kHJ4zgJd0QAt43KmsK4DDeZg12xRLBpvBFjwpHFnVZ4IPi9ohMYNOuvXGIk
-         2d6Q==
-X-Gm-Message-State: AOAM5310nAiNDePnNR/77aG3SpFe8b8oASJJmasy4ofoweyMjNseTWTV
-        YXNx4pIrdOE49fpE8Jn/AbqBn+43LCG+je++5eEodttb0FpwSw==
-X-Google-Smtp-Source: ABdhPJxNqd0OmJxzzLpMeGq+sxwjUJrw0YbsnsNoiv+2sg4IsYLupR6q44Z5zG1XmNc7kA4SUaEt4YsiZ67GcJvTmHo=
-X-Received: by 2002:a17:90a:510d:: with SMTP id t13mr16742586pjh.97.1619986581686;
- Sun, 02 May 2021 13:16:21 -0700 (PDT)
+        bh=ZVepcQA/3eyVStsqPaQdCEdxzgsy/BaJaXYqXK4hWgo=;
+        b=n/vSWQpUd4mdKCsFBRjwd8ueFpphwyfdXFVjVjfRiUDZWtyaq4zvM47kM13IROvA7I
+         U6cUtpVKt8eQgn5Q9HgHSkxa4VXvbRrgCwhm0s8eJFuv2pcsSj+/dTvppwF9wBcQ6Qxh
+         yRE2YkOx8Nh23QQCDgBrqOqma+StqOIDS/q3lpoga0KUqapweK8sfwlPfFjFULcO2FtO
+         CRIkXkATwcMxud01kzGqKRi4tuuE/SY2NRQYcUG9Kt+U+yMYrHlEVRKdFOt7wt8ZEGPT
+         sopBqZRy+hvJqpu2/UH82djgx0K+AUEK4jRVeCN4QqmVk+8AKkpSGOta84v/1xX7TLxB
+         +dyg==
+X-Gm-Message-State: AOAM531KOxUcDbLpLvlrggEqM2ruRjKKUsRBAPC1hwl9eHt0oe6qfOr8
+        CgoQe6IngxDUmDO5eoxOCx5qDEx+NcCOw4AJof4=
+X-Google-Smtp-Source: ABdhPJwCgeffbuHxOmqZYdHmTqAGlKipODi8gF+/Ic9KLC2lkYsD6NcAki6gcAQy+iz/XsPNIGF8iEiCztAQsHjeC9g=
+X-Received: by 2002:a17:90a:6282:: with SMTP id d2mr28758266pjj.168.1620029964622;
+ Mon, 03 May 2021 01:19:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAC1LvL1NHj6n+RNYRmja2YDhkcCwREuhjaBz_k255rU1jdO8Sw@mail.gmail.com>
- <CADS2XXpjasmJKP__oHsrvv3EG8n-FjB6sqHwgQfh7QgeJ8GrrQ@mail.gmail.com> <CAC1LvL2Q=s8pmwKAh2615fsTFEETKp96jpoLJS+75=0ztwuLFQ@mail.gmail.com>
-In-Reply-To: <CAC1LvL2Q=s8pmwKAh2615fsTFEETKp96jpoLJS+75=0ztwuLFQ@mail.gmail.com>
-From:   T K Sourabh <sourabhtk37@gmail.com>
-Date:   Mon, 3 May 2021 01:46:25 +0530
-Message-ID: <CADS2XXptoyPTBObKgp3gcRZnWzoVyZrC26tDpLWhC9YrGMSefw@mail.gmail.com>
-Subject: Re: Dropped packets mapping IRQs for adjusted queue counts on i40e
-To:     Zvi Effron <zeffron@riotgames.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
+References: <CAGZFCEFQJSm2K3L-oVKddtvxJf0TiVupudSFzaL_eSCCF5-CQw@mail.gmail.com>
+In-Reply-To: <CAGZFCEFQJSm2K3L-oVKddtvxJf0TiVupudSFzaL_eSCCF5-CQw@mail.gmail.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Mon, 3 May 2021 10:19:13 +0200
+Message-ID: <CAJ8uoz0O7_8D44gZ9Vs_0bYCW1kcT-uWdPsuZci-qC7CAMueiQ@mail.gmail.com>
+Subject: Re: AF_XDP question
+To:     ratheesh kannoth <ratheesh.ksz@gmail.com>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Xdp <xdp-newbies@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sat, May 1, 2021 at 11:26 PM Zvi Effron <zeffron@riotgames.com> wrote:
+On Thu, Apr 29, 2021 at 4:34 PM ratheesh kannoth <ratheesh.ksz@gmail.com> wrote:
 >
-> On Sat, May 1, 2021 at 8:23 AM T K Sourabh <sourabhtk37@gmail.com> wrote:
-> >
-> > When we turned off irqbalance service, we would not see the issue as they were messing up the affinities.
-> >
-> > Another thing to ensure:  equal number of queues on both interfaces.
-> >
-> Thanks for the info, it does give me some areas to investigate.
+> Hi,
 >
-> We already have irqbalance turned off (uninstalled, actually), and
-> we're using the same number of queues on each device (we get the
-> number of queues by taking the number of cores divided by number of
-> interfaces).
+> Suppose a DPI application running on a AF_XDP socket ( zero copy ) and after inspecting , say 100 initial packets of the flow, decides to accelerate the flow in HW.
+
+Could you please give an example on what you mean with "accelerate the
+flow in HW". Many things could be accelerated and in many different
+ways.
+
+> 1. Do we have use case and products/solutions in market which does the same ?
 >
-> I am wondering if not having the matching queues for the ingress
-> interface and egress interface on the same cores might be a
-> contributing factor?
-I haven't tested but you could give it a try to see if packet drop happens.
+> Just thinking, since packet buffer is from umem, how another entity (hw) can accelerate.
+
+It is possible to share the umem between AF_XDP sockets using
+xsk_socket__create_shared() function in libbpf. It works between
+netdevs, i.e. separate physical cards. But need the example first to
+be able to help you in a better way.
+
+/Magnus
+
+> Ratheesh.
 >
 >
-> --Zvi
+>
+>
+>
+>
+>
