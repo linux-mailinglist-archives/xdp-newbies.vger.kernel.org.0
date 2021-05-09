@@ -2,209 +2,143 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAEF1377775
-	for <lists+xdp-newbies@lfdr.de>; Sun,  9 May 2021 17:54:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95F9A37777B
+	for <lists+xdp-newbies@lfdr.de>; Sun,  9 May 2021 18:07:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbhEIPzD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sun, 9 May 2021 11:55:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40342 "EHLO mga03.intel.com"
+        id S229669AbhEIQEA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 9 May 2021 12:04:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:32381 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229645AbhEIPzC (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
-        Sun, 9 May 2021 11:55:02 -0400
-IronPort-SDR: cyQc5OzPyYuY4ZgcmOrySxPnXxcrFaXGkzlQ92wiWYmepDxFO6XTxpz2uNQNIce6YCROyUpz55
- 1doQm5EiZcpQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9979"; a="199092377"
+        id S229645AbhEIQD7 (ORCPT <rfc822;xdp-newbies@vger.kernel.org>);
+        Sun, 9 May 2021 12:03:59 -0400
+IronPort-SDR: si5NvEiD2di93DP2zfEtOI2tvKIrI37IXIWohBA74J1oGLwZyC/nbS1K+wSgD8pb3/V8LC1nwV
+ qoZAe9324HrA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9979"; a="186489813"
 X-IronPort-AV: E=Sophos;i="5.82,286,1613462400"; 
-   d="scan'208";a="199092377"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 08:53:58 -0700
-IronPort-SDR: gobyDLyulXBRFKQ3OBbyf/RWHB7fcLEYB1KGs3u22xTDL7fo83Llw0obbsZOghnHtaEpRLspcf
- B+CKxBsraRRg==
+   d="scan'208";a="186489813"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 09:02:56 -0700
+IronPort-SDR: 4JNVOgTvcpa06LIRy1rMiVxFwO+gvDGWg19/1fEpTBI0W5D9vS/kYpIWXwc/3yAhZvUhof636H
+ dbjORZuoZ8JQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,286,1613462400"; 
-   d="scan'208";a="470508801"
+   d="scan'208";a="460897375"
 Received: from ranger.igk.intel.com ([10.102.21.164])
-  by orsmga001.jf.intel.com with ESMTP; 09 May 2021 08:53:56 -0700
-Date:   Sun, 9 May 2021 17:41:36 +0200
+  by FMSMGA003.fm.intel.com with ESMTP; 09 May 2021 09:02:52 -0700
+Date:   Sun, 9 May 2021 17:50:33 +0200
 From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To:     Srivats P <pstavirs@gmail.com>
-Cc:     Magnus Karlsson <magnus.karlsson@gmail.com>,
-        Xdp <xdp-newbies@vger.kernel.org>
-Subject: Re: AF_XDP sendto kick returning EPERM
-Message-ID: <20210509154136.GA36905@ranger.igk.intel.com>
-References: <CANzUK58=fjW-iqBqm6drSfC679T0C+68bRj8BzxqrTYWAzDHJg@mail.gmail.com>
- <CAJ8uoz1pwuJ0A+C6wBnSG76Q4j4-BrvDKvKc3gHVCJA=71oJgw@mail.gmail.com>
- <CANzUK5-SnTLZdOXvF3xf+x=qfuCvFFqKKUr51z3=s_kAi4oAbw@mail.gmail.com>
- <CAJ8uoz00gxM6j4tFgd64qA12Y-JxOGFq66qfbXMsxZAD+SUYRw@mail.gmail.com>
- <CANzUK5_K5fv6eYr+xd7ThQ_FywD2KCZ55KB+0YJr8oZ49sVKrg@mail.gmail.com>
- <CANzUK58GBOELxcKfYL5-gjrZ0WHU4LmurLgk1MwT7+05sgUrDA@mail.gmail.com>
+To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Zvi Effron <zeffron@riotgames.com>,
+        T K Sourabh <sourabhtk37@gmail.com>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        magnus.karlsson@intel.com, kuba@kernel.org
+Subject: Re: Dropped packets mapping IRQs for adjusted queue counts on i40e
+Message-ID: <20210509155033.GB36905@ranger.igk.intel.com>
+References: <CAC1LvL1NHj6n+RNYRmja2YDhkcCwREuhjaBz_k255rU1jdO8Sw@mail.gmail.com>
+ <CADS2XXpjasmJKP__oHsrvv3EG8n-FjB6sqHwgQfh7QgeJ8GrrQ@mail.gmail.com>
+ <CAC1LvL2Q=s8pmwKAh2615fsTFEETKp96jpoLJS+75=0ztwuLFQ@mail.gmail.com>
+ <CADS2XXptoyPTBObKgp3gcRZnWzoVyZrC26tDpLWhC9YrGMSefw@mail.gmail.com>
+ <CAC1LvL2zmO1ntKeAoUMkJSarJBgxNhnTva3Di4047MTKqo8rPA@mail.gmail.com>
+ <CAC1LvL1Kd-TCuPk0BEQyGvEiLzgUqkZHOKQNOUnxXSY6NjFMmw@mail.gmail.com>
+ <20210505130128.00006720@intel.com>
+ <20210505212157.GA63266@ranger.igk.intel.com>
+ <87fsz0w3xn.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CANzUK58GBOELxcKfYL5-gjrZ0WHU4LmurLgk1MwT7+05sgUrDA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87fsz0w3xn.fsf@toke.dk>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, May 07, 2021 at 08:39:04PM +0530, Srivats P wrote:
-> Here's an update -
+On Thu, May 06, 2021 at 12:29:40PM +0200, Toke Høiland-Jørgensen wrote:
+> Maciej Fijalkowski <maciej.fijalkowski@intel.com> writes:
 > 
-> On Fri, May 7, 2021 at 8:17 PM Srivats P <pstavirs@gmail.com> wrote:
+> > On Wed, May 05, 2021 at 01:01:28PM -0700, Jesse Brandeburg wrote:
+> >> Zvi Effron wrote:
+> >> 
+> >> > On Tue, May 4, 2021 at 4:07 PM Zvi Effron <zeffron@riotgames.com> wrote:
+> >> > > I'm suspecting it's something with how XDP_REDIRECT is implemented in
+> >> > > the i40e driver, but I don't know if this is a) cross driver behavior,
+> >> > > b) expected behavior, or c) a bug.
+> >> > I think I've found the issue, and it appears to be specific to i40e
+> >> > (and maybe other drivers, too, but not XDP itself).
+> >> > 
+> >> > When performing the XDP xmit, i40e uses the smp_processor_id() to
+> >> > select the tx queue (see
+> >> > https://elixir.bootlin.com/linux/v5.12.1/source/drivers/net/ethernet/intel/i40e/i40e_txrx.c#L3846).
+> >> > I'm not 100% clear on how the CPU is selected (since we don't use
+> >> > cores 0 and 1), we end up on a core whose id is higher than any
+> >> > available queue.
+> >> > 
+> >> > I'm going to try to modify our IRQ mappings to test this.
+> >> > 
+> >> > If I'm correct, this feels like a bug to me, since it requires a user
+> >> > to understand low level driver details to do IRQ remapping, which is a
+> >> > bit higher level. But if it's intended, we'll just have to figure out
+> >> > how to work around this. (Unfortunately, using split tx and rx queues
+> >> > is not possible with i40e, so that easy solution is unavailable.)
+> >> > 
+> >> > --Zvi
 > >
-> > On Mon, May 3, 2021 at 1:54 PM Magnus Karlsson
-> > <magnus.karlsson@gmail.com> wrote:
-> > >
-> > > On Thu, Apr 29, 2021 at 5:47 PM Srivats P <pstavirs@gmail.com> wrote:
-> > > >
-> > > > On Tue, Apr 27, 2021 at 12:58 PM Magnus Karlsson
-> > > > <magnus.karlsson@gmail.com> wrote:
-> > > > >
-> > > > > On Fri, Apr 23, 2021 at 5:44 PM Srivats P <pstavirs@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > I'm using sendto() to kick tx in my AF_XDP program after I submit
-> > > > > > descriptors to the tx ring -
-> > > > > >
-> > > > > > ret = sendto(xsk_socket__fd(xsk_), NULL, 0, MSG_DONTWAIT, NULL, 0);
-> > > > > >
-> > > > > > However, I'm receiving EPERM as the return value every time. AFAIK
-> > > > > > this is not an expected return value. Since this is with i40e, I
-> > > > > > checked i40e_xsk_wakeup() - but that also doesn't return EPERM. I am
-> > > > > > running as root and I don't see any problems with creating the xsk,
-> > > > > > configuring umem etc.
-> > > > > >
-> > > > > > Also, no packets seem to go out either.
-> > > > > >
-> > > > > > # uname -a
-> > > > > > Linux Ostinato-1 5.11.15-1-default #1 SMP Fri Apr 16 16:47:34 UTC 2021
-> > > > > > (64fb5bf) x86_64 x86_64 x86_64 GNU/Linux
-> > > > > >
-> > > > > > I don't see the problem on another machine with i40e but older kernel 5.4 series
-> > > > > >
-> > > > > > Any suggestions on what to look for or how to proceed?
-> > > > >
-> > > > > Weird. Have not seen this before. What is your command line for
-> > > > > xdpsock? Is it unmodified?
-> > > >
-> > > > This is not xdpsock, but my own AF_XDP program.
-> > > >
-> > > > >
-> > > > > Using bpftrace, we can get the call stack of xsk_sendmsg. Somewhere in
-> > > > > this stack there must be an EPERM. You can run the same command on
-> > > > > your system, but use ftrace to see what a sendto call hits. Then see
-> > > > > where the code terminates.
-> > > > >
-> > > > > mkarlsso@kurt:~/src/dna-linux$ sudo bpftrace -e 'kprobe:xsk_sendmsg {
-> > > > > @[kstack()] = count(); }'
-> > > > > Attaching 1 probe...
-> > > > > ^C
-> > > > >
-> > > > > @[
-> > > > >     xsk_sendmsg+1
-> > > > >     sock_sendmsg+94
-> > > > >     __sys_sendto+238
-> > > > >     __x64_sys_sendto+37
-> > > > >     do_syscall_64+51
-> > > > >     entry_SYSCALL_64_after_hwframe+68
-> > > > > ]: 2244805
-> > > >
-> > > > Ostinato-1:~ # bpftrace -e 'kprobe:xsk_sendmsg {
-> > > > @[kstack()] = count(); }'
-> > > > Attaching 1 probe...^C@[
-> > > >     xsk_sendmsg+1
-> > > >     sock_sendmsg+94
-> > > >     __sys_sendto+238
-> > > >     __x64_sys_sendto+37
-> > > >     do_syscall_64+51
-> > > >     entry_SYSCALL_64_after_hwframe+68
-> > > > ]: 1253307
-> > > >
-> > > > Which doesn't seem to suggest any error - I've looked at the source
-> > > > code for all these functions, but don't see any reference to EPERM.
-> > >
-> > > It must be in there somewhere :-). Could you plesae use ftrace
-> > > (through perf for example) and trace all functions that a sendto hits
-> > > in your case? Then we might see what it hits.
-> > >
-> > > Are you running in SKB mode or in zero-copy mode? Guess it is
-> > > zero-copy from your mail, but just want to verify. Does Rx work as
-> > > expected?
-> > >
-> > > Could you share your AF_XDP program?
-
-+1, that would help us probably :)
-
+> > Hey Zvi, sorry for the lack of assistance, there has been statutory free
+> > time in Poland and today i'm in the birthday mode, but we managed to
+> > discuss the issue with Magnus and we feel like we could have a solution
+> > for that, more below.
 > >
-> > After some experimentation and a lot of head-scratching, I found part
-> > of the problem last night. The sendto() was not returning EPERM (-1),
-> > but ENXIO (-6) - I was mistakenly printing the return value of the
-> > sento() call (which always returns -1 in case of failure), instead of
-> > errno (duh!).
+> >> 
+> >> 
+> >> It seems like for Intel drivers, igc, ixgbe, i40e, ice all have
+> >> this problem.
+> >> 
+> >> Notably, igb, fixes it like I would expect.
 > >
-> > Looking at the code, I see ENXIO is returned if the xsk is unbound.
-> > I'm still investigating this and will post an update soon. The problem
-> > is happening at a customer end and there's some delay and follow up
-> > required to get the logs.
+> > igb is correct but I think that we would like to avoid the introduction of
+> > locking for higher speed NICs in XDP data path.
+> >
+> > We talked with Magnus that for i40e and ice that have lots of HW
+> > resources, we could always create the xdp_rings array of num_online_cpus()
+> > size and use smp_processor_id() for accesses, regardless of the user's
+> > changes to queue count.
 > 
-> sendto() was returning ENXIO because the interface MTU was set to 9000
-> which I know is not supported with AF_XDP. But shouldn't
-> xsk_socket__create() fail in this case? Note the actual packet being
-> transmitted was 64 bytes.
+> What is "lots"? Systems with hundreds of CPUs exist (and I seem to
+> recall an issue with just such a system on Intel hardware(?)). Also,
+> what if num_online_cpus() changes?
 
-It depends. You said that you have your own AF_XDP app, so if you're
-setting the XSK_LIBBPF_FLAGS__INHIBIT_PROG_LOAD flag then libbpf wouldn't
-be loading the built-in AF_XDP eBPF prog on interface and that's where the
-failure should happen.
+"Lots" is 16k for ice. For i40e datasheet tells that it's only 1536 for
+whole device, so I back off from the statement that i40e has a lot of
+resources :)
 
-> 
-> Not sure if it has a role in the above sendto() failure, but before
-> xsk socket create, my call to bpf_set_link_xdp_fd() was failing
-> because of the MTU problem (the newly added error message for this
-> case was very helpful!). Once MTU was reduced to 1500 both the RX eBPF
-> program link to the interface failure and the TX sendto() returning
-> ENXIO always went away. Kernel version 5.12
-> 
-> Can someone tell me what is expected to happen for a Tx AF_XDP socket
-> in case of MTU > 4K?
-
-See the last paragraph.
+Also, s/num_online_cpus()/num_possible_cpus().
 
 > 
-> I also found a second case of sendto() returning ENXIO. In this
-> scenario, I was removing my RX eBPF program by calling
+> > This way the smp_processor_id() provides the serialization by itself as
+> > we're under napi on a given cpu, so there's no need for locking
+> > introduction - there is a per-cpu XDP ring provided. If we would stick to
+> > the approach where you adjust the size of xdp_rings down to the shrinked
+> > Rx queue count and use a smp_processor_id() % vsi->num_queue_pairs formula
+> > then we could have a resource contention. Say that you did on a 16 core
+> > system:
+> > $ ethtool -L eth0 combined 2
+> >
+> > and then mapped the q0 to cpu1 and q1 to cpu 11. Both queues will grab the
+> > xdp_rings[1], so we would have to introduce the locking.
+> >
+> > Proposed approach would just result with more Tx queues packed onto Tx
+> > ring container of queue vector.
+> >
+> > Thoughts? Any concerns? Should we have a 'fallback' mode if we would be
+> > out of queues?
 > 
->     bpf_set_link_xdp_fd(ifIndex, -1, 0)
-> 
-> while AF_XDP transmit (and associated sento() wakeup) was still going
-> on. In this case, sendto starts failing with ENETDOWN for some time
-> followed by ENXIO subsequently. This case was on Kernel version 5.4.0
+> Yes, please :)
 
-I think that we addressed the ENETDOWN Tx issue with the following set:
-https://lore.kernel.org/netdev/20200205045834.56795-1-maciej.fijalkowski@intel.com/
-
-I see that it has been merged in 5.6. But it was related to being unable
-to spawn multiple AF_XDP Tx-only instances. With what you're saying it
-feels to me that you have multiple instances of your AF_XDP progs and you
-terminate one of them? Previously, every instance would die due to the
-fact that the underlying XDP prog would be unloaded from interface, but
-right now we have bpf_link support for AF_XDP which would handle that
-properly. Note that it was developed for the built-in prog.
-
-> 
-> Does removing a XDP program cause the interface to go down (ENETDOWN)
-> leading to XDP socket unbind (ENXIO)? Should removing (or replacing)
-> an RX eBPF program, affect AF_XDP TX?
-
-Removing XDP prog causes the interface to undergo the reset or some other
-mechanism as it needs to remove the XDP Tx resources and change the Rx
-memory model. For Intel drivers, the AF_XDP Tx resources are configured
-during the load of Rx eBPF prog. We would have to develop some mechanism
-that detaches the creation of XDP Tx resources from loading Rx eBPF prog.
-There have been discussions around feature detection but I think it was
-about the opposite - don't configure Tx rings if your prog will not be
-doing XDP_TX action.
+How to have a fallback (in drivers that need it) in a way that wouldn't
+hurt the scenario where queue per cpu requirement is satisfied?
 
 > 
-> Srivats
+> -Toke
+> 
