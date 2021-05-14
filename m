@@ -2,84 +2,104 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B90C380BE8
-	for <lists+xdp-newbies@lfdr.de>; Fri, 14 May 2021 16:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0FD0380D4A
+	for <lists+xdp-newbies@lfdr.de>; Fri, 14 May 2021 17:35:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230349AbhENOfQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 14 May 2021 10:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
+        id S233733AbhENPhD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 14 May 2021 11:37:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbhENOfO (ORCPT
+        with ESMTP id S231358AbhENPhC (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 14 May 2021 10:35:14 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC114C061574
-        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 07:34:03 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id c10so12506111qtx.10
-        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 07:34:03 -0700 (PDT)
+        Fri, 14 May 2021 11:37:02 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A74C061574
+        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 08:35:51 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id p8so28378378iol.11
+        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 08:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=coverfire.com; s=google;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=IbJb/gikVoiu3eVyqyGLqOpbgfah9iSAjCqc50R5Z7M=;
-        b=b2b4MD6KMeQtMRDyJnuR6eldblk3PkunESm0ICUcsqFiytamppTzzMm32GvL0HQPFl
-         rtsButLsP10Aapo7sOMznvhdyUYanFD27o2mPfvWS4vVdl/rPPwMk6EGeLGBDmXktnHe
-         HODpEecz8f7uag2b5UNF2NVREyRfM2V02cewSGzF0oG3vdsgKAWN40QhQZ2hwdfDMahU
-         uRfd0Ev13MMGNhRqDGRYb9hpQl36efPuefN0/JVlUO1yD8zxSRdC1a5Yl5wJ/KyGKwCt
-         oRKXoSKxBWUX78rRYN+ponG27/bPV/toAxLVGt3a7fvedtO5VdICNBu1Cu7cCE0UiMEv
-         iORg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=h9yPKH6H7vDsOiFVe/XjgaoXbEbiwKsPehVM4KnxEHg=;
+        b=qRliOnEKlihnGMKV/PiFJgs8hGXM2XsrbP3ZI6Ld/oqeW2pzSnGmeqkpRQPBEceESF
+         BIBHxqzkghXeDksCt/G7sIcSyU6KsMxQ90rL4dQoFUIpzejG4w7OqgnQekfeA5++Udb9
+         o+rVIndEX6DQFW4H363GYYY5Snsd7L9Of8vQXjwIzl43Ia4ePe7Z4NRJkGPe+HralDNx
+         Rtt8GKPTkPqkKa3ibU8Lq2km8hjZObDeyNrGIqsiSpXbEyDxxl9IRIjyBvr5xOHfvhZL
+         wJzrRJ5JqNtmfoid87BLc4bnhvWQQC20rm5P29s3nV6lGrUDg6lq1kBjKxMmpGj9Dqmc
+         Swuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=IbJb/gikVoiu3eVyqyGLqOpbgfah9iSAjCqc50R5Z7M=;
-        b=YcJWIc7yPbYjEpWXVEc+ltaIYo/XR5Vn2e6lbHlDh3hKURO4Vx/dHYOrMqkVTTdNh8
-         68Rl+sMtAvpqNhmPShAx8ogPM6sSTcHGnL3qHTjuRzBqxfuRQXormO7S6T4sMaepHpGx
-         hjnW9K/d2k2kaqXL8sS3tVC90q8FTecDf2g/fcc3Yt7SVYlzBz4U8Ahx88vhleu+a81I
-         WOXsSHud5z7AoBwC8oKGOQ0drAYsRKF0RDTcEsZDAdSiR2nAitrrw2/z5h0J61VEYe2M
-         4gNsuPbpTFsi2Qna6QVF2cMo/+VfQ+ko6cZQaLu8Hgz34bouJv1rrWuDLrGxvnDjz1tS
-         4lqQ==
-X-Gm-Message-State: AOAM532aSofiVZqAs+GzlorkOkYwPq195dYvJJ8jOiiHh4KHR2CGr7Nm
-        dH95C5ndwcaiq9ffEDCUQVwMVniSZq6aQA==
-X-Google-Smtp-Source: ABdhPJwrT8/2MyC8FiipgyJSwLPMGncTTW1wUE+tqhQE5ClJJ3iEZI2zEwOck9SMeKOT2cLfmhgurw==
-X-Received: by 2002:ac8:4447:: with SMTP id m7mr24115544qtn.55.1621002842737;
-        Fri, 14 May 2021 07:34:02 -0700 (PDT)
-Received: from ?IPv6:2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a? ([2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a])
-        by smtp.gmail.com with ESMTPSA id s5sm4917854qkg.88.2021.05.14.07.34.02
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 May 2021 07:34:02 -0700 (PDT)
-Message-ID: <c276e6d316beedd47f791aed0453aa181619edaf.camel@coverfire.com>
-Subject: Umem Questions
-From:   Dan Siemon <dan@coverfire.com>
-To:     Xdp <xdp-newbies@vger.kernel.org>
-Date:   Fri, 14 May 2021 10:34:01 -0400
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=h9yPKH6H7vDsOiFVe/XjgaoXbEbiwKsPehVM4KnxEHg=;
+        b=VnEXev+8pq16k9vVFWHGJ1PZj9dEW21vxNG2djg6gPueC7kdrpWXTrI6SU5tatfnK4
+         wWME4JBawt5+9vPKxG9qUU2xrz0p+RlcuLQfEYZXBsQS0Hi6RZFvzihwH4z4R6CSutNz
+         l2YoST6kJEGJiljKbdNRX8I1kWV9gcpjaBU3JcaszllT15ZpAT64lUpKn1GFSL1wLnNf
+         wW8sBpaPZi7wY8TBwoyp0zWysZzy1pFpE+K7k+3Ea49V8ofTHui3YcWhoxFCdBAzjmYc
+         uSWK6KylMoNS7B6JqZuLGYpcJQNH7+Zgjt70JzkgltlRwl82C4EQxmYC0cUbFy5J94p5
+         dqWw==
+X-Gm-Message-State: AOAM533z//3jsI16OZ2WjLgY5h1frrauX+8kLUvcUblIKN/p2c2zwvpA
+        Esaq9BjlD45V4TU0sxFcZjWOUuBxtDY/I12OsRaEfR+q9K4=
+X-Google-Smtp-Source: ABdhPJwpUbgNT0uISqz7b8Z+XlC/5pOX/Dz8QhADD7lbXmyFUqG2Yd79QPr6hzUDpnLdaY2vhP9iSd4oK1bgoGxPysg=
+X-Received: by 2002:a02:ca0d:: with SMTP id i13mr43156897jak.98.1621006550492;
+ Fri, 14 May 2021 08:35:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From:   Alexander Petrovsky <askjuise@gmail.com>
+Date:   Fri, 14 May 2021 18:35:39 +0300
+Message-ID: <CAH57y_Q9-cDpG1GwPoXEe7W1uDYqV=uUWQi-zuxbLWgfBv11kg@mail.gmail.com>
+Subject: CPU utili incr on kernel migration 4.19 -> 5.4
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-I've been trying to work with large Umem areas and have a few questions
-. I'd appreciate any help or pointers. If it makes any difference, my
-AF_XDP testing is with i40e.
+Hello!
 
-1) I use kernel args to reserve huge pages on boot. The application
-mmap call with the huge TLB flag appears to use huge pages as I can see
-the count of used huge pages go up (/proc/meminfo). However, the number
-of pages used by the umem, as shown in ss output, looks to still be 4k
-pages. Are there plans to support huge pages in Umem? How hard would
-this be?
+Recently, we tried to migrate from the kernel 4.19.125 to 5.4.17.
+During stress tests we observe that on the same hardware (we are using
+virtual machines in our on-prem cloud on VMWare) and using the same
+XDP application, on the 4.19.125 softirq CPU utilization is 23% vs.
+the 35% on 5.4.17. Please, note, we are using the FIPS on 5.4.17
+kernel.
 
-2) It looks like there is a limit of 2GB on the maximum Umem size? I've
-tried with and without huge pages. Is this fundamental? How hard would
-it be to increase this?
+At the first glance, using linux perf I see some difference, but can't
+understand them:
 
-For both of these, I'd like to try to help make them happen. If the
-kernel side changes are deep or large, it may be beyond me but I can
-offer lab equipment and testing.
+5.4.17 perf top -a
 
-Thanks.
+   11.90%  [kernel]                                [k] lookup_nulls_elem_raw
+    8.79%  [kernel]                                [k] __do_softirq
+    4.97%  [kernel]                                [k]
+_raw_spin_unlock_irqrestore
+    3.62%  [kernel]                                [k] memcpy_orig
+    3.39%  bpf_prog_2e039a5b937c8960               [k] bpf_prog_2e039a5b937c8960
+    2.66%  [kernel]                                [k] native_write_msr
+    2.34%  [kernel]                                [k] vmxnet3_rq_rx_complete
+    1.87%  [kernel]                                [k] arch_local_irq_restore
+    1.71%  [kernel]                                [k] __htab_map_lookup_elem
+    1.33%  [kernel]                                [k] page_frag_free
+    1.31%  [kernel]                                [k] kmem_cache_free
+    1.28%  [kernel]                                [k] vmxnet3_poll_rx_only
+    1.13%  [kernel]                                [k] finish_task_switch
 
+4.19.125 perf top -a
+
+   12.90%  [kernel]                                [k] lookup_nulls_elem_raw
+    9.11%  [kernel]                                [k] __softirqentry_text_start
+    4.36%  [kernel]                                [k]
+_raw_spin_unlock_irqrestore
+    3.66%  [kernel]                                [k] memcpy_orig
+    3.03%  [kernel]                                [k] native_write_msr
+    2.69%  [kernel]                                [k] vmxnet3_rq_rx_complete
+    2.34%  [kernel]                                [k] _lock+0x800000005cc2
+    1.91%  [kernel]                                [k] arch_local_irq_restore
+    1.53%  [kernel]                                [k] __htab_map_lookup_elem
+    1.36%  [kernel]                                [k] __slab_free
+    1.31%  [kernel]                                [k] vmxnet3_poll_rx_only
+    1.24%  [kernel]                                [k] page_frag_free
+    1.14%  [kernel]                                [k] finish_task_switch
+
+Could you help me please to identify softirq CPU utilization increase?
+
+-- 
+Alexander Petrovsky
