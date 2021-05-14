@@ -2,86 +2,84 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A10E23800CD
-	for <lists+xdp-newbies@lfdr.de>; Fri, 14 May 2021 01:27:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B90C380BE8
+	for <lists+xdp-newbies@lfdr.de>; Fri, 14 May 2021 16:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231511AbhEMX2M (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 13 May 2021 19:28:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22665 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229544AbhEMX2M (ORCPT
+        id S230349AbhENOfQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 14 May 2021 10:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230141AbhENOfO (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 13 May 2021 19:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620948421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BYHCTEJ54F/rQ2S/9u2RmVIHFjr35e0hCiuaxLXv528=;
-        b=Pb+sBjr2Cm+7Io9KNhi9IKokd36WfDhlhWsblr5MQ04Ct+Uo7U2+hh68PS3L3G2hSkvwtD
-        GiEI9U0xZ74/70tPbXI5Ioa/PZMU3f1W7Fml2Zaul2oYmLqiYBkc5kjjjlyA/I2WuWnh3w
-        MT5geSzqHOVe1P3QvmTLBV5rOKrtj0o=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-595-xu2ZwpQSOXSBFZIibYxgtw-1; Thu, 13 May 2021 19:27:00 -0400
-X-MC-Unique: xu2ZwpQSOXSBFZIibYxgtw-1
-Received: by mail-ed1-f72.google.com with SMTP id w20-20020aa7dcd40000b02903886b9b0013so15456037edu.22
-        for <xdp-newbies@vger.kernel.org>; Thu, 13 May 2021 16:27:00 -0700 (PDT)
+        Fri, 14 May 2021 10:35:14 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC114C061574
+        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 07:34:03 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id c10so12506111qtx.10
+        for <xdp-newbies@vger.kernel.org>; Fri, 14 May 2021 07:34:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=coverfire.com; s=google;
+        h=message-id:subject:from:to:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=IbJb/gikVoiu3eVyqyGLqOpbgfah9iSAjCqc50R5Z7M=;
+        b=b2b4MD6KMeQtMRDyJnuR6eldblk3PkunESm0ICUcsqFiytamppTzzMm32GvL0HQPFl
+         rtsButLsP10Aapo7sOMznvhdyUYanFD27o2mPfvWS4vVdl/rPPwMk6EGeLGBDmXktnHe
+         HODpEecz8f7uag2b5UNF2NVREyRfM2V02cewSGzF0oG3vdsgKAWN40QhQZ2hwdfDMahU
+         uRfd0Ev13MMGNhRqDGRYb9hpQl36efPuefN0/JVlUO1yD8zxSRdC1a5Yl5wJ/KyGKwCt
+         oRKXoSKxBWUX78rRYN+ponG27/bPV/toAxLVGt3a7fvedtO5VdICNBu1Cu7cCE0UiMEv
+         iORg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=BYHCTEJ54F/rQ2S/9u2RmVIHFjr35e0hCiuaxLXv528=;
-        b=gjTIicPvJHmUA4SFje2eqtLDEZhN9jBuMMG8FkJlVDYrrt448PZ8wePo5HY3vppzeO
-         AS5KNS2oYP+aoWQlT9Xiu0wh5wVLK9SJ9KSUfniy7hTiSQWmLv94M5v3YLhBAd/Rd0FT
-         wD0BIAUG/2pYqfzaHnl42Yet0M1918fj1KBex28Cn4SCrg1ElTo2JPv1fhqGG3hcPNSB
-         RVkDDDn7QE0jfO+KszRRbPFmEn2oZ7d5RLB8VZK5MmNRx9bsP66hdgyYtK9G9QYYR1Zl
-         09W8KcjhRhnXJZvBEcIhjVjKbyf+pTq/FesOUlIGpaGJk71JoFrYT9qBR8Nx4Iz9nkf2
-         eKsQ==
-X-Gm-Message-State: AOAM533GaqQbS8WagW9Wxsf788I5TPmCjuyE6dUrcQZRYlNRoB1bhH8d
-        tEuPyNKwtjDnGcAyF1w9KWi6njqe1/JEN+QV51RD6/3leLEQAssprev0dv/EpqQabId68ibpchl
-        BYsPuzBXN007Sr1XQlaxHcTI=
-X-Received: by 2002:a17:906:71d8:: with SMTP id i24mr45842054ejk.444.1620948418699;
-        Thu, 13 May 2021 16:26:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx0SsbPbA+daS74txjz9HPpFhSYnV9oL4m5oQsDFCi7n5//xA6urHgaR3nKiZ1V7lpPdN4nPA==
-X-Received: by 2002:a17:906:71d8:: with SMTP id i24mr45842042ejk.444.1620948418240;
-        Thu, 13 May 2021 16:26:58 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id hz15sm2577753ejc.57.2021.05.13.16.26.57
+        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=IbJb/gikVoiu3eVyqyGLqOpbgfah9iSAjCqc50R5Z7M=;
+        b=YcJWIc7yPbYjEpWXVEc+ltaIYo/XR5Vn2e6lbHlDh3hKURO4Vx/dHYOrMqkVTTdNh8
+         68Rl+sMtAvpqNhmPShAx8ogPM6sSTcHGnL3qHTjuRzBqxfuRQXormO7S6T4sMaepHpGx
+         hjnW9K/d2k2kaqXL8sS3tVC90q8FTecDf2g/fcc3Yt7SVYlzBz4U8Ahx88vhleu+a81I
+         WOXsSHud5z7AoBwC8oKGOQ0drAYsRKF0RDTcEsZDAdSiR2nAitrrw2/z5h0J61VEYe2M
+         4gNsuPbpTFsi2Qna6QVF2cMo/+VfQ+ko6cZQaLu8Hgz34bouJv1rrWuDLrGxvnDjz1tS
+         4lqQ==
+X-Gm-Message-State: AOAM532aSofiVZqAs+GzlorkOkYwPq195dYvJJ8jOiiHh4KHR2CGr7Nm
+        dH95C5ndwcaiq9ffEDCUQVwMVniSZq6aQA==
+X-Google-Smtp-Source: ABdhPJwrT8/2MyC8FiipgyJSwLPMGncTTW1wUE+tqhQE5ClJJ3iEZI2zEwOck9SMeKOT2cLfmhgurw==
+X-Received: by 2002:ac8:4447:: with SMTP id m7mr24115544qtn.55.1621002842737;
+        Fri, 14 May 2021 07:34:02 -0700 (PDT)
+Received: from ?IPv6:2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a? ([2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a])
+        by smtp.gmail.com with ESMTPSA id s5sm4917854qkg.88.2021.05.14.07.34.02
+        for <xdp-newbies@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 May 2021 16:26:57 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 6D15F18070E; Fri, 14 May 2021 01:26:56 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Srivats P <pstavirs@gmail.com>, Xdp <xdp-newbies@vger.kernel.org>
-Subject: Re: Max MTU with XDP
-In-Reply-To: <CANzUK5-vaz4_WtFbwdYoGJOjdh0c4p+bEZhpV2Pfuni5JKghrA@mail.gmail.com>
-References: <CANzUK5-vaz4_WtFbwdYoGJOjdh0c4p+bEZhpV2Pfuni5JKghrA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 14 May 2021 01:26:56 +0200
-Message-ID: <87im3mkyf3.fsf@toke.dk>
+        Fri, 14 May 2021 07:34:02 -0700 (PDT)
+Message-ID: <c276e6d316beedd47f791aed0453aa181619edaf.camel@coverfire.com>
+Subject: Umem Questions
+From:   Dan Siemon <dan@coverfire.com>
+To:     Xdp <xdp-newbies@vger.kernel.org>
+Date:   Fri, 14 May 2021 10:34:01 -0400
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Srivats P <pstavirs@gmail.com> writes:
+I've been trying to work with large Umem areas and have a few questions
+. I'd appreciate any help or pointers. If it makes any difference, my
+AF_XDP testing is with i40e.
 
-> Hi,
->
-> I'm aware that different drivers have different max MTU that they can
-> support with XDP.
->
-> Is there a way to programmatically retrieve what is the max MTU
-> supported on a particular driver/interface with XDP/AF_XDP?
->
-> Or is setting a MTU value and trying to attach a eBPF program in a
-> binary search fashion wrt to MTU value between 1500 and 4096 is the
-> only way?
+1) I use kernel args to reserve huge pages on boot. The application
+mmap call with the huge TLB flag appears to use huge pages as I can see
+the count of used huge pages go up (/proc/meminfo). However, the number
+of pages used by the umem, as shown in ss output, looks to still be 4k
+pages. Are there plans to support huge pages in Umem? How hard would
+this be?
 
-Yup, currently it is, unfortunately. Querying this may eventually be
-possible, along with which features an interface supports etc...
+2) It looks like there is a limit of 2GB on the maximum Umem size? I've
+tried with and without huge pages. Is this fundamental? How hard would
+it be to increase this?
 
--Toke
+For both of these, I'd like to try to help make them happen. If the
+kernel side changes are deep or large, it may be beyond me but I can
+offer lab equipment and testing.
+
+Thanks.
 
