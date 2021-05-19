@@ -2,131 +2,86 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC3323826BE
-	for <lists+xdp-newbies@lfdr.de>; Mon, 17 May 2021 10:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3AD238986A
+	for <lists+xdp-newbies@lfdr.de>; Wed, 19 May 2021 23:09:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbhEQIXJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 17 May 2021 04:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41760 "EHLO
+        id S229518AbhESVKl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 19 May 2021 17:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbhEQIXJ (ORCPT
+        with ESMTP id S229437AbhESVKk (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 17 May 2021 04:23:09 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4000CC061573
-        for <xdp-newbies@vger.kernel.org>; Mon, 17 May 2021 01:21:52 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id a11so2709648plh.3
-        for <xdp-newbies@vger.kernel.org>; Mon, 17 May 2021 01:21:52 -0700 (PDT)
+        Wed, 19 May 2021 17:10:40 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA074C06175F
+        for <xdp-newbies@vger.kernel.org>; Wed, 19 May 2021 14:09:20 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id k4so3089304qkd.0
+        for <xdp-newbies@vger.kernel.org>; Wed, 19 May 2021 14:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LF/5kpHuQdIXnEKS0eVbmi0/1AmzttrfhiDq/EMjbmE=;
-        b=XGIZNjcYsWdsg2We5lMX/EGc07eyof0emh28xw0/6E3yWbpmNCMAEes6YJS0l//hOq
-         hjPM9f+okmpL2io44T4WUSW9lrNMaTVmuv+tmStCwUy8ix+0BEFUqTnYDZfOTOlUlfqI
-         hlMbUml62eiid+grNj2FshQzEw3asOeo0PAr1IRV8rDp1dXqBwCle3UCoz7q5eLAUNEM
-         9Fo1J8OOEUHgV6BPH0IpIn6GLT+9wV1nQkyXOLmuc37CzO8giwhRX1s5NDWzS3fBBAJA
-         G7iZIZhksWLf+5Jo+E5ZR419edVWXOrrpEn/jKJUuM3nDbZoaNw2pTOmp/XV0ddtWOwx
-         7DfA==
+        d=coverfire.com; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=JQep4d4+RnvDcQjIAxC0fRbJIlK4zu89KMwgGi6Symw=;
+        b=VZhcFdX+3VKGvcKbyTqLa6Ur/Fiu3fNnKY8GNGC32sLfHjZsQqQLlDg3883wQpXshk
+         YKeS2v+FlMEoSrKZ65WH15a8I1LGqwWu4OKl36ypjE2EHbR/T2RUq2LnUjt9gWPyLnUf
+         VHfh5c1lBXVcKGlnHHa6cpczgh0InF+1NHqU0RdRB3CxTS9SyyK8ZJDfjSO+8lMfTqoH
+         bgS2NmTHdzNuhaVEiDi3r8pTeYwNfQ/NI7h0MJ26boDotPOsXsgHxVqf7cYZmTPAuZBt
+         Iiid7kel2qQW3SPxmhUiAvsF33xjRZzEpnrstjLH1Lu8LjLfWrUbKW3910pbxVGBpirn
+         Q7cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LF/5kpHuQdIXnEKS0eVbmi0/1AmzttrfhiDq/EMjbmE=;
-        b=hMIjE+pG+RE+k883gXYClSzECZdgZ6+/fomTRV3as8eiIK95a6i1H1bxzT7+ciAtCT
-         4/G/FJjIqfhP9W1SxJ0IUgUXUeIR806OYwS92s2Dek+KcMd5E/tqVKad0mScuavjolnI
-         oDXFujFSvqobYfuoYmXObhWmxsmReVcprmr9kDeFS5aG3+KbTW5GgW1K/+E5WDf5/i9t
-         y0Rfgsg9ihZbPncSPUjlMwFpFkOfF3PO8+kueGxTpJa68bRkRhNNvFeGnnlaYK+ziyQ5
-         OySB2aviYKQfAPqzEWTOFwe+eFbucU7iaXR28ab8QQdl558yzEVGhkWYMO31vEEijbzI
-         H7Pg==
-X-Gm-Message-State: AOAM533gJYIZ5imbACN/9CufkMZXgoPvhLyUcIuTUGcWpcLJiIcpBkAl
-        EOYx9y/TS8dP2dXMV9Ctb+TxIRo9FMZIM2A5leM=
-X-Google-Smtp-Source: ABdhPJxW3QD0jaGGilXFeOGMel2jzuH17tnHNgi7F8iOSBVECUf2Be+GbXTKQd87JsSsQlyzwPtG3Kwy0MaCzaGX8es=
-X-Received: by 2002:a17:90a:4497:: with SMTP id t23mr24877396pjg.168.1621239711692;
- Mon, 17 May 2021 01:21:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <c276e6d316beedd47f791aed0453aa181619edaf.camel@coverfire.com>
-In-Reply-To: <c276e6d316beedd47f791aed0453aa181619edaf.camel@coverfire.com>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Mon, 17 May 2021 10:21:40 +0200
-Message-ID: <CAJ8uoz3HLFgGOMkVgKSvyiRBLSu+MoFPKUrSn0w6_s8--oVqOQ@mail.gmail.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=JQep4d4+RnvDcQjIAxC0fRbJIlK4zu89KMwgGi6Symw=;
+        b=B12UIDAYSnjE2h6DZ5vl8tuz04YZgZWBjjZwbWdD526V9+onv1xIQeyfzQobcv/lsk
+         xKeYxyxlW7tn2dInAA6j2eGyDXwUNMi2yR+S0BaCO50bGNDk5x+4VFc3H9c6+jqTuNyn
+         ig/Mey/v1QC1vYOP64RhZIHCyM4rz+RAEog45aPFUN+MJBxta727JVvY3nQL6WW7xIy+
+         z+nEKmfj1lKcpdFTT972tUmlLaAUC8TkXFqrvDBXwTzElNyEqIXB6vdpD1h3EYa2Ja+t
+         1pvrL84d0dnR8nvioMzWZK5/TkxvNVfGR6tMvmdpHH7N0CF6XvG1WXMSF+l4Z35azOtc
+         jY6A==
+X-Gm-Message-State: AOAM531E9JRVTsnHq4cZpie35bCxfR2KHK0+WEwL9733EXxN2dSCzqCE
+        0/01plhhoKu7EiG6c5tUNuqosA==
+X-Google-Smtp-Source: ABdhPJz+n8a1KGFp4LNdP7yhnjvjR77t0/JgkYy9HPj7XMik8jvaMDlVPd64w6Kci+3oegwJqqMEPg==
+X-Received: by 2002:a05:620a:13ac:: with SMTP id m12mr1516770qki.77.1621458559973;
+        Wed, 19 May 2021 14:09:19 -0700 (PDT)
+Received: from ?IPv6:2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a? ([2607:f2c0:e56e:28c:e4de:d9eb:cc0b:f46a])
+        by smtp.gmail.com with ESMTPSA id a19sm516491qtn.97.2021.05.19.14.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 14:09:19 -0700 (PDT)
+Message-ID: <da5422fe0fd031212d6e422177979354207aa609.camel@coverfire.com>
 Subject: Re: Umem Questions
-To:     Dan Siemon <dan@coverfire.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+From:   Dan Siemon <dan@coverfire.com>
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>,
+        =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
 Cc:     Xdp <xdp-newbies@vger.kernel.org>
+Date:   Wed, 19 May 2021 17:09:18 -0400
+In-Reply-To: <CAJ8uoz3HLFgGOMkVgKSvyiRBLSu+MoFPKUrSn0w6_s8--oVqOQ@mail.gmail.com>
+References: <c276e6d316beedd47f791aed0453aa181619edaf.camel@coverfire.com>
+         <CAJ8uoz3HLFgGOMkVgKSvyiRBLSu+MoFPKUrSn0w6_s8--oVqOQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, May 14, 2021 at 9:21 PM Dan Siemon <dan@coverfire.com> wrote:
->
-> I've been trying to work with large Umem areas and have a few questions
-> . I'd appreciate any help or pointers. If it makes any difference, my
-> AF_XDP testing is with i40e.
 
-These issues are driver independent, but I appreciated that you report
-this. As you are very well aware of, some things are driver dependent.
+> > 2) It looks like there is a limit of 2GB on the maximum Umem size?
+> > I've
+> > tried with and without huge pages. Is this fundamental? How hard
+> > would
+> > it be to increase this?
+> 
+> This was news to me. Do you know where in the xdp_umem_reg code it
+> complains about this? I guess it is xsk_umem__create() that fails,
+> or?
+> The only limit I see from a basic inspection of the code is that the
+> number of packet buffers cannot be larger than a u32 (4G). But you
+> are
+> not close to that limit.
 
-> 1) I use kernel args to reserve huge pages on boot. The application
-> mmap call with the huge TLB flag appears to use huge pages as I can see
-> the count of used huge pages go up (/proc/meminfo). However, the number
-> of pages used by the umem, as shown in ss output, looks to still be 4k
-> pages. Are there plans to support huge pages in Umem? How hard would
-> this be?
+Yes, the failure is in xsk_umem__create(). I don't know where
+specifically but there are a couple spots in kernel side of that which
+return ENOMEM which is the return value.
 
-Something similar has been on the todo list for two years, but sadly
-neither Bj=C3=B6rn nor I have had any time to pick this up and cannot see
-me having the time to pick it up in the foreseeable future either.
-There are at least 3 problems that would have to be addressed in this
-area:
-
-1: Using a huge page for the umem kernel mapping. As you have
-allocated this using a huge page, it will be physically consecutive.
-2: Making sure dma addresses are physically consecutive
-3: Using a huge page for the IOMMU and its DMA mappings
-
-#1 and #3 are hard problems, at least in my mind. I am no mm or iommu
-guy, but I do not believe that there is support for this in the kernel
-for use by kernel mappings. The kernel will break down huge-pages into
-4K pages for its own mappings. If I am incorrect, I hope that someone
-reading this will correct me. But we should do some mailing list
-browsing here to see what the latest thoughts are and what has been
-tried before.
-
-As for #2, Bj=C3=B6rn had some discussions with the iommu maintainer about
-this in the past [1]. There is no such interface in the iommu
-subsystem today, but components such as graphics drivers use a "hack"
-to make sure that this happens and if not fail. We do not have to
-fail, as we can always fall back to the method we have today. Today we
-have an array (dma_addr_t *dma_pages) to store all the addresses to
-the 4K DMA address regions. With this new interface in place, we could
-replace the array with just a single address pointing to the start of
-the area, improving performance. #2 is a prerequisite for #3 too.
-Christoph Hellwig submitted an interface proposal about a year ago
-[1], but nobody has taken on the challenge to implement it.
-
-[1] https://lkml.org/lkml/2020/7/8/131
-
-> 2) It looks like there is a limit of 2GB on the maximum Umem size? I've
-> tried with and without huge pages. Is this fundamental? How hard would
-> it be to increase this?
-
-This was news to me. Do you know where in the xdp_umem_reg code it
-complains about this? I guess it is xsk_umem__create() that fails, or?
-The only limit I see from a basic inspection of the code is that the
-number of packet buffers cannot be larger than a u32 (4G). But you are
-not close to that limit.
-
-Bj=C3=B6rn, do you know where this limit stems from?
-
-Thanks: Magnus
-
-
-> For both of these, I'd like to try to help make them happen. If the
-> kernel side changes are deep or large, it may be beyond me but I can
-> offer lab equipment and testing.
->
-> Thanks.
->
