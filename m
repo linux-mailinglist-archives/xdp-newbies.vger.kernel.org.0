@@ -2,73 +2,74 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F253396556
-	for <lists+xdp-newbies@lfdr.de>; Mon, 31 May 2021 18:30:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D1A396C91
+	for <lists+xdp-newbies@lfdr.de>; Tue,  1 Jun 2021 07:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233956AbhEaQb7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 31 May 2021 12:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234602AbhEaQ36 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 31 May 2021 12:29:58 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 31 May 2021 07:58:11 PDT
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [IPv6:2001:690:2100:1::15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20976C061233
-        for <xdp-newbies@vger.kernel.org>; Mon, 31 May 2021 07:58:09 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 09A8160029A9
-        for <xdp-newbies@vger.kernel.org>; Mon, 31 May 2021 15:52:19 +0100 (WEST)
-X-Virus-Scanned: by amavisd-new-2.11.0 (20160426) (Debian) at
-        tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
-        by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavisd-new, port 10025)
-        with LMTP id cBXktwV2lFeL for <xdp-newbies@vger.kernel.org>;
-        Mon, 31 May 2021 15:52:16 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-        by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 2DBA16001416
-        for <xdp-newbies@vger.kernel.org>; Mon, 31 May 2021 15:52:16 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tecnico.ulisboa.pt;
-        s=mail; t=1622472736;
-        bh=IQ3mhvYgx3lEgU44aZ9N+aOCzHP0QdVE21swBaGtroA=;
-        h=Date:From:To:Subject;
-        b=rR/bn+sou+3dKFvdNwpEeN6aQdPNMflsvwZlPH6/hRsBDte+C1POpHFImRQMXW783
-         PGfjV5IwLR3i2sG+ve4ceNuc7G9F4kpNERVs7vh4OMdNZwG9aYPkUV9n2e3Ck1kedK
-         YBj+0YYaQsj9kH45fGdfAVSYLBxNBG9QPMacdwbc=
-Received: from webmail.tecnico.ulisboa.pt (webmail4.tecnico.ulisboa.pt [IPv6:2001:690:2100:1::8a3:363d])
-        (Authenticated sender: ist426067)
-        by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 0EF72360072
-        for <xdp-newbies@vger.kernel.org>; Mon, 31 May 2021 15:52:15 +0100 (WEST)
-Received: from a79-168-76-74.cpe.netcabo.pt ([79.168.76.74])
- via vs1.ist.utl.pt ([2001:690:2100:1::33])
- by webmail.tecnico.ulisboa.pt
- with HTTP (HTTP/1.1 POST); Mon, 31 May 2021 15:52:15 +0100
+        id S232707AbhFAFBz (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 1 Jun 2021 01:01:55 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:33422 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232516AbhFAFBv (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 1 Jun 2021 01:01:51 -0400
+Received: by mail-io1-f70.google.com with SMTP id g12-20020a056602248cb029049182acfe4fso6917006ioe.0
+        for <xdp-newbies@vger.kernel.org>; Mon, 31 May 2021 22:00:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=HZoCrhifvFqebweO5oM8sTQXrnYAq0UL7ZIrots2vSc=;
+        b=Ymkf6KdC+DVSNerUUfmiMDW5evhMCK7IlhmNjHM/rDwJ4S9BkRbspdTAjXIca7DlpD
+         5Xu0jtKDUJEahsSeun38JHr5VToFWvyW1Ok1Pgq3aJAme5VfUr+oTxYHf7e5okkmRxf4
+         oaxQpapQtDrjbZxK+49AwcGdTYjuuEPvLP/9OmSvE29XmPZuQgBGhU7LX4EQ/zyLRt7+
+         obJHvhqNRcQFvmIZXbW9YHTgCkLw21fMnZ7G/e3c3UJOHgWuqGDbbIhYNi+Jm0voX1X1
+         c1G7NqXk8ujuTD9R2muKb0Ob1dNDdfdTMY97vtJQMNBOpSAr7jvbKMBtQjrKv9d4QEtO
+         A+gw==
+X-Gm-Message-State: AOAM531vWKgferMzrj/eTsQ6WgvzeZZDWYRoGQMoz6S5qUuqlw9Li+CY
+        v3BicMOU7vwMkMkiCICHgAVk7k/nEmMziFlp2ichFBUXcHFQ
+X-Google-Smtp-Source: ABdhPJyDPqVeQwFPYxvwDFNm5lVzsEmrtB9fOyxrUNzo2mPUK0UzLNL7BZ0jpoGpdR7H0zY1Wl5YoHHlpd3CmiPaYpmOLCQaOLqA
 MIME-Version: 1.0
-Date:   Mon, 31 May 2021 15:52:15 +0100
-From:   =?UTF-8?Q?Sebasti=C3=A3o_Santos_Boavida_Amaro?= 
-        <sebastiao.amaro@tecnico.ulisboa.pt>
-To:     xdp-newbies@vger.kernel.org
-Subject: XDP in virtual Ethernet devices
-Message-ID: <9a3f2989ee83a43263efc9fce02fe63b@tecnico.ulisboa.pt>
-X-Sender: sebastiao.amaro@tecnico.ulisboa.pt
-User-Agent: Roundcube Webmail/1.3.15
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:d201:: with SMTP id y1mr19795884ily.103.1622523610124;
+ Mon, 31 May 2021 22:00:10 -0700 (PDT)
+Date:   Mon, 31 May 2021 22:00:10 -0700
+In-Reply-To: <000000000000f32b3c05958ed0eb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006bd5ff05c3ad37da@google.com>
+Subject: Re: [syzbot] INFO: task hung in register_netdevice_notifier (2)
+From:   syzbot <syzbot+355f8edb2ff45d5f95fa@syzkaller.appspotmail.com>
+To:     a@unstable.cc, ast@kernel.org, b.a.t.m.a.n@lists.open-mesh.org,
+        bpf@vger.kernel.org, brouer@redhat.com, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, kafai@fb.com, kuba@kernel.org,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, mkl@pengutronix.de,
+        netdev@vger.kernel.org, socketcan@hartkopp.net,
+        songliubraving@fb.com, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com, xdp-newbies@vger.kernel.org,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello!
-I am trying to use xdp_stats[1] (this program prints packets 
-passed/dropped) on the ethernet devices created by docker 
-containers(veth). I have iperf exchanging messages between containers 
-but xdp_stats does not capture any of the packets (XDP_PASS values do 
-not change) and CPU usage goes to 100%. It works fine on my laptop's 
-network device, but I have these issues with the docker network devices 
-and I don't understand why.
+syzbot has bisected this issue to:
 
-https://github.com/xdp-project/xdp-tutorial/tree/master/basic04-pinning-maps
+commit 6bf071bf09d4b2ff3ee8783531e2ce814f0870cb
+Author: Jesper Dangaard Brouer <brouer@redhat.com>
+Date:   Tue Jun 18 13:05:27 2019 +0000
 
-Best Regards,
-Sebastião Amaro
+    xdp: page_pool related fix to cpumap
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1397c4a7d00000
+start commit:   7ac3a1c1 Merge tag 'mtd/fixes-for-5.13-rc4' of git://git.k..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1057c4a7d00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1797c4a7d00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=266cda122a0b56c
+dashboard link: https://syzkaller.appspot.com/bug?extid=355f8edb2ff45d5f95fa
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cc630fd00000
+
+Reported-by: syzbot+355f8edb2ff45d5f95fa@syzkaller.appspotmail.com
+Fixes: 6bf071bf09d4 ("xdp: page_pool related fix to cpumap")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
