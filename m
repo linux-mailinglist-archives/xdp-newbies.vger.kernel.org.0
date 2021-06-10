@@ -2,49 +2,55 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A6FF3A3265
-	for <lists+xdp-newbies@lfdr.de>; Thu, 10 Jun 2021 19:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 382113A32E7
+	for <lists+xdp-newbies@lfdr.de>; Thu, 10 Jun 2021 20:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbhFJRoJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 10 Jun 2021 13:44:09 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:33330 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230086AbhFJRoI (ORCPT
+        id S229941AbhFJSUN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 10 Jun 2021 14:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229823AbhFJSUN (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 10 Jun 2021 13:44:08 -0400
-Received: by mail-ot1-f52.google.com with SMTP id o17-20020a9d76510000b02903eabfc221a9so550138otl.0
-        for <xdp-newbies@vger.kernel.org>; Thu, 10 Jun 2021 10:42:12 -0700 (PDT)
+        Thu, 10 Jun 2021 14:20:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D64C061574
+        for <xdp-newbies@vger.kernel.org>; Thu, 10 Jun 2021 11:18:03 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n17so6212413ljg.2
+        for <xdp-newbies@vger.kernel.org>; Thu, 10 Jun 2021 11:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
         bh=PiIyGMa59aSAcai8qbJPBRBjLwrX66PMpodZF4txmWE=;
-        b=bd+qTJ/smr9jjXkcTSrU2GZWshU5BsDgGeejpAGtM6eZsy4eRFIlNBTwdvDkJPfBvI
-         T2lAzKorJZ4m3mrOq2+tG0IQZyV2DKhCQT2vy0gxWJtqpDj8WwR55ngbey5OFmz/24dD
-         Gvbzf5Z5AYIWZUrL3JVGjLvOQz525Nv6zFYuW3aiE7tk8XbmF0unxnlD7fjiKcEaeLQA
-         1nic/s1x7e+58qkobRnkAeoMcHKdJjZ/ToV/E8y+nDo0yh02sJ5dO5makIxmd4LnLsLY
-         KaUbBYbOu+TYJvQfa7reBy/+XFj9NCtPm+XihYmdr0Q783Jqz8wlC6/0xY7vuh9DlXP5
-         3jrg==
+        b=Bqni43Fw4FsGm55Gwr5ijQXtOMYF0mX7NLY5pUKFOoPach61bc/uaxKfTb+5Kr8fgV
+         uN/N7ifNBd6CsNXikahjgFUu6mFu3Dy58MvnPqI5xa60ivLhx21uiTRClwSQDjJwrdgP
+         rn6S7ozsRNrSoFYSeOJAr6l4N4/IEjQwnMh5VRHx5mzEUFk/a7pv/8iDJOS/La2IFuPc
+         F2sEul7n1s1w/BDq3sJyAJlYMEmh2aCfxbfFD6v+AG2e9gUh+aZGkoq6hCbweIB/EWgH
+         YFZqstJtSb3FZOO5W6sVS6M1Awfkxhv1qH2G/YQRibay3eNJQwv/peuQ+4yFJYdZoC0X
+         gsYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
         bh=PiIyGMa59aSAcai8qbJPBRBjLwrX66PMpodZF4txmWE=;
-        b=ryo+O6AnD37EbVW7FMtpK122Ln5+tnFzrRYm183XTQp/bG/bwTKyR8RvZ1FQTJIoBa
-         pulou8TCNCce5JkJGoCVHlXt3vT2Whczcg1CggDrLPnqT1glErbXfAeIh5+8bpB0eX4m
-         eKtkmckCVaGdVgs/lehDHMoxTmhZDm/vatD/YdcsUPgApxq4GfFbwDcO9eyVSA2iKPcn
-         fNfbwZRjhs5+3IThYMYjGY2ZgDcgPPusuOtbH6655MmApDym5dPsz7lz1afjAfaxrFlF
-         Vh+gxXSmqRLwey9yECeKUSGBMV8MRWth0pk/AeOLrn76WUre+fHP26QT+X6amllmgEld
-         s3NA==
-X-Gm-Message-State: AOAM5321GJfx/LGYJysP1n6WSyp6G13mK3YhmluR9T1Icqw4aq+Zi7MK
-        Kb6BzKcF7d1MOXawleWXWUUfW3lckimygyRGunI=
-X-Google-Smtp-Source: ABdhPJxnOIkueiDR5Im2iObPU+0SMej9RueEIx069FyVly7qLm0tqktnp9RRPGaC0zwlAdMaeeRy9L2txWradFM1BhI=
-X-Received: by 2002:a9d:3e7:: with SMTP id f94mr3423087otf.197.1623346872333;
- Thu, 10 Jun 2021 10:41:12 -0700 (PDT)
+        b=esK1/+58Sy8mGh6C/uDaAh9oEepHkPIwufcz1kbYhBsnM+jBZ5nbdgV0bjAkhU+Y9e
+         eG6DXlqtRXWxGp055yhXkyqJ1IhwGHacdEAh2erP/7prOaTx4nH20FPLy4xIuZnQ16gD
+         0pyixjnUaPAfcGuVCzvSRebYl4ZTjIshGKlr/V/4IcfDGP3Oq/PEcDFFIvuxAYgyKGiq
+         PBkYCyut8kP71ABlOj44/PEVh43339z0HGOa/JHK9eFvogRrExv8fsZGTlu+yubpLZOr
+         FBueQz0/gENzshTWEkECieVE99bqXWhddHgnPfI/RvhoMd4hqvhiWzzPg/NQ+Ppf3Xxp
+         Jyyw==
+X-Gm-Message-State: AOAM532GzygbcSMr9CZR/EtourKuES0fY3jPMDyfAM0ivqb64xTpHacg
+        EqUN/Q/pKgd7TmTbAcU6jHUF/lJHcBLQ64Vozbk=
+X-Google-Smtp-Source: ABdhPJy8I8TsdymI/wb3WdpEdjOWht6u9/xKfR9EAIFEYDaZ7rFEbjBMcJy9mOim9UYDUr+byFLTIdINRSwMGKo6gJU=
+X-Received: by 2002:a2e:9544:: with SMTP id t4mr3276989ljh.474.1623349081579;
+ Thu, 10 Jun 2021 11:18:01 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ac9:6e2:0:0:0:0:0 with HTTP; Thu, 10 Jun 2021 10:41:11 -0700 (PDT)
-From:   Nichol chan <johnford2577@gmail.com>
-Date:   Thu, 10 Jun 2021 17:41:11 +0000
-Message-ID: <CAAZZQ0Um34YnzdmBSfuU_Hzg7XLX4Xz6+J9iww4wWXgAUmURng@mail.gmail.com>
-Subject: re,info
+Received: by 2002:ab3:1e0d:0:0:0:0:0 with HTTP; Thu, 10 Jun 2021 11:18:01
+ -0700 (PDT)
+Reply-To: josephkoku8080@gmail.com
+From:   joseph koku <pricelineinvest1980@gmail.com>
+Date:   Thu, 10 Jun 2021 18:18:01 +0000
+Message-ID: <CALjfcebrfOJJwvmh8DV0qUJP0wUGQ8h65H-OSU6tWLeEtiQqSQ@mail.gmail.com>
+Subject: info
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
