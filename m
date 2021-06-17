@@ -2,111 +2,118 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 936A03A6C77
-	for <lists+xdp-newbies@lfdr.de>; Mon, 14 Jun 2021 18:52:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0325E3AB965
+	for <lists+xdp-newbies@lfdr.de>; Thu, 17 Jun 2021 18:18:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234104AbhFNQyk (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 14 Jun 2021 12:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233843AbhFNQyk (ORCPT
+        id S232117AbhFQQUo (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 17 Jun 2021 12:20:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45281 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231955AbhFQQUl (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 14 Jun 2021 12:54:40 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D772C061574
-        for <xdp-newbies@vger.kernel.org>; Mon, 14 Jun 2021 09:52:37 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id fy24-20020a17090b0218b029016c5a59021fso10489449pjb.0
-        for <xdp-newbies@vger.kernel.org>; Mon, 14 Jun 2021 09:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:subject:message-id:mime-version;
-        bh=BjsHyJh40z8lnvQJvycWkR/JAgcT7rs3GctEikPvnng=;
-        b=H8/WjQ7XxXo4keRhRpJR4XCj+jTJMPv4qBeS6cHMMGV2nTB6MefWKAhod332lo3FAG
-         6ZqGglEhuwEC+ja+FAP2SidHzOiVboLov1Q3/poADjzz5f8Da0QyLnk1rx6H81VJQNq8
-         nLWTyoJ9aRYxAm6FnTVwhmNI3FgltrkGL7H2/U84h/rVD/6sdXheirKTZ3R0HxM6QkJl
-         lIaHoC+ptmVUmAHV22H2W+F6balv3sNYq7NIm7PMwEAH1FdRYNss18cDJunU2Q+6YMXU
-         bCen3KbM2G7q4IS+uENIHpgtnX2pa98kHyuPG6zUkEd30hCk9bsPIsUd+5tLYZmRdgN7
-         wxog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version;
-        bh=BjsHyJh40z8lnvQJvycWkR/JAgcT7rs3GctEikPvnng=;
-        b=KKL3KuE2N6eBPR9724RNC7hbcKBElRazFie6q1oVBYiruAeN5aPe75SguxIInnJ/EO
-         bKKVSl8lL7jDNV1Q+Z/kqNFYnzZYYTVl3MSyITbagpssPCHaPpWTnuT5qckSI19Cg0gC
-         fuB65K6q++8hkZ9GTFfqb+iiLHURxBXI7O05K3HOp4RNKNrmccJpLba0Bsiqlvd5Y5Kr
-         xfDD4ztXeTTffVsdZprJiuBxoifnQ36Jpl1X8MQlCMsl4joJpJ5IpSe3LgvOPSMS97CV
-         q4fKIKGLqGwCpxg6ymd86TX1+jMprqiNBQ8p1lyBpozueprCaYGoS876vEwiD74XaMxo
-         xX3w==
-X-Gm-Message-State: AOAM5330GG5aUASloMWR42blTTqNLQ4NDboGoqEFU7cyLkg8/waeMDb9
-        G4ZpuF3qkYyHoUOXyVLxzKb0BVJTZmE=
-X-Google-Smtp-Source: ABdhPJzADHYYBqdRafr5mx1ETI0tI0YbDwB87H+DcMtKbjXIuU8REu2kyh9O3OmSNlcXE/lWrgsCug==
-X-Received: by 2002:a17:90a:6d82:: with SMTP id a2mr19719326pjk.150.1623689554352;
-        Mon, 14 Jun 2021 09:52:34 -0700 (PDT)
-Received: from sea-l-00029082.olympus.f5net.com (d66-183-43-174.bchsia.telus.net. [66.183.43.174])
-        by smtp.gmail.com with ESMTPSA id s16sm4740105pfc.33.2021.06.14.09.52.33
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 09:52:33 -0700 (PDT)
-From:   Vincent Li <vincent.mc.li@gmail.com>
-X-Google-Original-From: Vincent Li <vli@gmail.com>
-Date:   Mon, 14 Jun 2021 09:52:32 -0700 (PDT)
-To:     xdp-newbies@vger.kernel.org
-Subject: R6 invalid mem access 'inv'
-Message-ID: <d85bbf6-282e-b197-4cd4-7677c4c201@gmail.com>
+        Thu, 17 Jun 2021 12:20:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623946713;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=njjuG5iTIDORU8mPaVDAWWMfRk7DO0CJqh9UOosYsso=;
+        b=f72cqrzz8RFuo2wgjfFYeJr14ww2iqEL/hpixy96MgNH5ghRe+CXiDjV8PfPhso7NFlI8h
+        5Y3bpGPko9pjc/PlQXQFu90/fYDgnRobAVGO5L16XQf0D1m/L+rYqCdVBLlExPnMbPpP1K
+        BeSuG870rhEhj2c4AK3XLrIRzaKiASk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-544-D4m-uNi_PT6F_IDzsfbxsQ-1; Thu, 17 Jun 2021 12:18:29 -0400
+X-MC-Unique: D4m-uNi_PT6F_IDzsfbxsQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A246C8C69FB;
+        Thu, 17 Jun 2021 16:17:07 +0000 (UTC)
+Received: from carbon (unknown [10.36.110.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3027E1001281;
+        Thu, 17 Jun 2021 16:17:04 +0000 (UTC)
+Date:   Thu, 17 Jun 2021 18:17:03 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     "Ethy H. Brito" <ethy.brito@inexo.com.br>
+Cc:     brouer@redhat.com, Rich Brown <richb.hanover@gmail.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        Robert Chacon <robert.chacon@jackrabbitwireless.com>,
+        Yoel Caspersen <yoel@kviknet.dk>
+Subject: Re: Traffic shaping at 10~300mbps at a 10Gbps link
+Message-ID: <20210617181703.585ac78e@carbon>
+In-Reply-To: <20210617121839.39aefb12@babalu>
+References: <20210617121839.39aefb12@babalu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi,
 
-I am newbie to BPF and I have a consistent "R6 invalid mem access 'inv'" 
-error in issue https://github.com/cilium/cilium/issues/16517 when 
-attempting to rewrite the skb destination MAC address. I am guessing I 
-could be missing something basic and not nessarily related to Cilium. 
-This is xdp newbie list, but by any chance, anyone could point out where I 
-did wrong, I have tried three variant of patches there and I get same "R6 
-invalid mem access 'inv'" error at bpf load and verifier time.
+(Reply inlined below, please learn howto reply inline)
 
-one of the patch is simply to hard code the MAC as below, but still got 
-the invalid mem access error
+On Thu, 17 Jun 2021 12:20:32 -0300
+"Ethy H. Brito" <ethy.brito@inexo.com.br> wrote:
 
-diff --git a/bpf/lib/common.h b/bpf/lib/common.h
-index 3e1b11a5f..c6e980776 100644
---- a/bpf/lib/common.h
-+++ b/bpf/lib/common.h
-@@ -23,6 +23,7 @@
-  * #endif
-  */
- #define NEEDS_TIMEOUT 1
-+#define VTEP_MAC  { .addr = { 0xce, 0x72, 0xa7, 0x03, 0x88, 0x58 } }
+> Hi. mr. Brouer
+> 
+> I read your comment at lists.bufferbloat.net about my issue shaping traffic.
+
+ https://lists.bufferbloat.net/pipermail/bloat/2021-June/016441.html
  
- #ifndef AF_INET
- #define AF_INET 2
-diff --git a/bpf/lib/encap.h b/bpf/lib/encap.h
-index dfd87bd82..044579b00 100644
---- a/bpf/lib/encap.h
-+++ b/bpf/lib/encap.h
-@@ -119,6 +119,7 @@ __encap_with_nodeid(struct __ctx_buff *ctx, __u32 
-tunnel_endpoint,
-        struct bpf_tunnel_key key = {};
-        __u32 node_id;
-        int ret;
-+       union macaddr vtep_mac = VTEP_MAC;
- 
-        /* When encapsulating, a packet originating from the local host is
-         * being considered as a packet from a remote node as it is being
-@@ -137,6 +138,8 @@ __encap_with_nodeid(struct __ctx_buff *ctx, __u32 
-tunnel_endpoint,
-        ret = ctx_set_tunnel_key(ctx, &key, sizeof(key), 
-BPF_F_ZERO_CSUM_TX);
-        if (unlikely(ret < 0))
-                return DROP_WRITE_ERROR;
-+       if (eth_store_daddr(ctx, (__u8 *) &vtep_mac.addr, 0) < 0)
-+                return DROP_WRITE_ERROR;
- 
-        send_trace_notify(ctx, TRACE_TO_OVERLAY, seclabel, 0, 0, 
-ENCAP_IFINDEX,
-                          0, monitor);
- 
+> I don't know how it ended up there since I opened it at LARTC, I am
+> not a subscriber to bufferbloat list.
+
+Yes, Rich (cc) moved your email to the bufferbloat list.  I just
+pointed out that your reported issue was a classical TC root-queue
+locking issue (as someone else mis-interpreted this).
+
+I'm Cc'ing XDP-newbies list, as we should share our finding with the
+community on how this TC-lock problem can be solve with XDP.
+
+
+> About your XDP-project solution, how can I test it? 
+
+There a two solutions in XDP-project involving TC-BPF in combination
+with XDP.  The one you are talking about is:
+
+ [2] https://github.com/xdp-project/xdp-cpumap-tc
+
+
+> I read the "tc_mq_htb_setup_example.sh" script and did not understand
+> it completely.
+
+ [3] https://github.com/xdp-project/xdp-cpumap-tc/blob/master/bin/tc_mq_htb_setup_example.sh
+
+> Do you think it will sove my problem?
+
+Well, yes, *but* notice there are some "home-work" in the bottom of the
+script.  You need to code-up the redirecting to the appropriate CPUs
+yourself... it will be specific to your use-case if you can partition
+the traffic to avoid the TC root-lock.
+
+Can you explain you use-case for us?
+
+> Would you help with my doubts so I can implementing it?
+
+Let help each-other. It doesn't scale that I help on an individual
+level.  That is why I bring this to the mailing list
+(xdp-newbies@vger.kernel.org).  Also Cc'ing Yoel and Robert, that have
+related interests in this.
+
+I do acknowledge that the documentation in [2] is lacking. Perhaps a
+goal should be that we add documentation on howto use it?
+
+A longer term goal is to add contents to this almost empty repo:
+ https://github.com/xdp-project/BNG-router
+
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
