@@ -2,65 +2,151 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 301EA3B09DC
-	for <lists+xdp-newbies@lfdr.de>; Tue, 22 Jun 2021 18:03:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D40C63B0EA1
+	for <lists+xdp-newbies@lfdr.de>; Tue, 22 Jun 2021 22:22:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230031AbhFVQGJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 22 Jun 2021 12:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
+        id S230232AbhFVUYj (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 22 Jun 2021 16:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbhFVQGI (ORCPT
+        with ESMTP id S230032AbhFVUYi (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 22 Jun 2021 12:06:08 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3820C061574
-        for <xdp-newbies@vger.kernel.org>; Tue, 22 Jun 2021 09:03:51 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id y7so24199839wrh.7
-        for <xdp-newbies@vger.kernel.org>; Tue, 22 Jun 2021 09:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=J2UEOOiqRhhh21SDNU+oqP9GXhfBvYKSNyEUPQeiWvUL8jFrTHhW1mVMXKPu9dSBsN
-         9+vgwVcsAo+Ku14ZyFKC/zhciufrRP9HwqmS8PQMviZsnD5bUU7D3gc+/MzfgX1VV5Ic
-         VTSYpy6oOL0IhURF4Z6xUQnYzQx5J83zwuaQJyQHVcPDbb4D6nMy/M7DQR9sndD1I4g4
-         7yl23dDe9YzPS1OxMo/8eC1mIXJ3iFKAEKx/osPp1sd3WqYxiyKL6jSLvB1QmsSIKQfr
-         NrTbTSsp3PBAK5iYPJEcWOpyc/dnmZxmRUPXta9KsscQn8LFgz5kFwSOyDPHSn08Bf6t
-         b1AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=X8ampOLpRBzFpF18kPYm6sE3PsfFoYNoL6Ws2WPu+6PYpM6Q/JU72hbpuBlYBvFxUH
-         09o8qrT6txqRIRNTugGbONUoyLgYvV6q/J7TUxrY6fpuyrYGUsr8fNHKidpQUDgFztGz
-         rVqMrabLmdoJ3eS1m17UH8ASahV8kt5VmK6cqjRyRDstb1CR1JGT4s5Vw/EoBSK1LZbN
-         ZGMBjfSjoU0wqQNgIvvjnahkoxxIfOmQL8fqVZCapeXLP+9asmL9b6nUwOMza3YX+f8R
-         hN2hACTHvJ7nLlb95QVOBcRrYegN/TmDG488ZmSCycrLnZIkj+Ws5WFSHwWkQ2IPTcwh
-         cdvg==
-X-Gm-Message-State: AOAM530TlR2Rbm9ohdirq7OodRyet/lT1CkKLmBZhZlMTiAO+c7QApHV
-        OPc5RO+RuRoWgrvhd5Ua0wRLMZJPbLFHQw==
-X-Google-Smtp-Source: ABdhPJzxcLVrj6xSYqkkBA1yN07qNfdgURWOm2RdxU+++v9WGqDecii8Akbx3T+CxB2hCMZZpyVS2A==
-X-Received: by 2002:a5d:4a91:: with SMTP id o17mr2053329wrq.335.1624377830085;
-        Tue, 22 Jun 2021 09:03:50 -0700 (PDT)
-Received: from ?IPv6:2a01:4b00:9d54:2900:9e8:6d62:9375:e905? ([2a01:4b00:9d54:2900:9e8:6d62:9375:e905])
-        by smtp.gmail.com with ESMTPSA id y14sm15399759wrq.66.2021.06.22.09.03.49
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Jun 2021 09:03:49 -0700 (PDT)
-To:     xdp-newbies@vger.kernel.org
-From:   Alireza Sanaee <sarsanaee@gmail.com>
-Message-ID: <375049f4-f3b0-14e1-696b-f777377e8a5b@gmail.com>
-Date:   Tue, 22 Jun 2021 17:03:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Tue, 22 Jun 2021 16:24:38 -0400
+X-Greylist: delayed 68048 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Jun 2021 13:22:21 PDT
+Received: from telegrapho.inexo.com.br (unknown [IPv6:2001:12c4:f0da:5e:216:3eff:feff:56a4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1E7D0C061574
+        for <xdp-newbies@vger.kernel.org>; Tue, 22 Jun 2021 13:22:21 -0700 (PDT)
+Received: by telegrapho.inexo.com.br (Postfix, from userid 1001)
+        id 69D316690B7F; Tue, 22 Jun 2021 17:22:17 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.11.0 telegrapho.inexo.com.br 69D316690B7F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inexo.com.br;
+        s=mail; t=1624393337;
+        bh=oRUub3NDkCqZvDbSjpJhHjMUD3BWt6ENVAlHKo/xZF4=;
+        h=Date:From:To:Subject:From;
+        b=OCrRbAbTKQ1eNE9EaDEi3jS0qZG+RX1aIhueu8DHgH1PluhO08MDDQrjqoSme+gaD
+         PS78XwC5BAN51uQnBapba2wEO2l3e78mGESBdk8OjqVUdB7ajCpEw2TgKsJehyZEEw
+         TcTBPjAG9CqUvTJLnbz9TJOlMKE1XupFuXa8aGYr8YsoyJb0z3JLkG9rj+3wuGLSOO
+         2t4wEIpwOuooLhCJUd878jnX6HV25WcBrubRm7LXfkDJSrV94OuYhDQTu6+G9c30dm
+         6O8D8sW8YMPsBZ+Fsk5ozeuq35n02ohCW/ndHU2N3NSWCHnbeCm/PQGsM+0dzau6gw
+         SPCa2wv54QngA==
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        telegrapho.inexo.com.br
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=4.0 tests=ALL_TRUSTED,DKIM_INVALID,
+        DKIM_SIGNED,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.4
+Received: from babalu (unknown [187.17.36.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by telegrapho.inexo.com.br (Postfix) with ESMTPSA id 29FA76690B7B
+        for <xdp-newbies@vger.kernel.org>; Tue, 22 Jun 2021 17:22:17 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.11.0 telegrapho.inexo.com.br 29FA76690B7B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inexo.com.br;
+        s=mail; t=1624393337;
+        bh=oRUub3NDkCqZvDbSjpJhHjMUD3BWt6ENVAlHKo/xZF4=;
+        h=Date:From:To:Subject:From;
+        b=OCrRbAbTKQ1eNE9EaDEi3jS0qZG+RX1aIhueu8DHgH1PluhO08MDDQrjqoSme+gaD
+         PS78XwC5BAN51uQnBapba2wEO2l3e78mGESBdk8OjqVUdB7ajCpEw2TgKsJehyZEEw
+         TcTBPjAG9CqUvTJLnbz9TJOlMKE1XupFuXa8aGYr8YsoyJb0z3JLkG9rj+3wuGLSOO
+         2t4wEIpwOuooLhCJUd878jnX6HV25WcBrubRm7LXfkDJSrV94OuYhDQTu6+G9c30dm
+         6O8D8sW8YMPsBZ+Fsk5ozeuq35n02ohCW/ndHU2N3NSWCHnbeCm/PQGsM+0dzau6gw
+         SPCa2wv54QngA==
+Date:   Tue, 22 Jun 2021 17:22:16 -0300
+From:   "Ethy H. Brito" <ethy.brito@inexo.com.br>
+To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: xdp_iphash_to_cpu_cmdline: Error loading BTF: Invalid argument(22)
+Message-ID: <20210622172216.79c6b3f2@babalu>
+Organization: InterNexo Ltda.
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
 
+Hi
+
+Runing "# ./xdp_iphash_to_cpu --dev eth1 --all-cpus --wan" returns 2 loading errors:
+
+----------------------8<----------------------------------
+libbpf: Error loading BTF: Invalid argument(22)
+libbpf: magic: 0xeb9f
+version: 1
+flags: 0x0
+hdr_len: 24
+type_off: 0
+type_len: 492
+str_off: 492
+str_len: 1724
+btf_total_size: 2240
+[1] PTR (anon) type_id=2
+[2] STRUCT xdp_md size=20 vlen=5
+	data type_id=3 bits_offset=0
+	data_end type_id=3 bits_offset=32
+	data_meta type_id=3 bits_offset=64
+	ingress_ifindex type_id=3 bits_offset=96
+	rx_queue_index type_id=3 bits_offset=128
+[3] TYPEDEF __u32 type_id=4
+[4] INT unsigned int size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[5] FUNC_PROTO (anon) return=6 args=(1 ctx)
+[6] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[7] FUNC xdp_program type_id=5 vlen != 0
+
+libbpf: Error loading ELF section .BTF: -22. Ignored and continue.
+TC workaround for mapname: map_ifindex_type map_fd:5
+Added CPU:0 queue_size:192
+Added CPU:1 queue_size:192
+Added CPU:2 queue_size:192
+Added CPU:3 queue_size:192
+Added CPU:4 queue_size:192
+Added CPU:5 queue_size:192
+Added CPU:6 queue_size:192
+Added CPU:7 queue_size:192
+Added CPU:8 queue_size:192
+Added CPU:9 queue_size:192
+Added CPU:10 queue_size:192
+Added CPU:11 queue_size:192
+Added CPU:12 queue_size:192
+Added CPU:13 queue_size:192
+Added CPU:14 queue_size:192
+Added CPU:15 queue_size:192
+Documentation:
+ XDP: Lookup IPv4 and redirect to CPU hash
+
+This program loads the XDP eBPF program into the kernel.
+Use the cmdline tool for add/removing dest IPs to the hash
+
+ - Attached to device:eth1 (ifindex:4) prog_id:73
+----------------------------------8<-------------------------------
+
+Since the XDP program was correctly listed by "bpftool net", I continued an added just ONE ip
+
+# ./xdp_iphash_to_cpu_cmdline --add --ip 1.2.3.4 --classid 1:1234 --cpu 1
+key: 0x4030201
+WARN: Looks like map_txq_config --base-setup is missing
+WARN: Fixing, doing map_txq_config --base-setup
+iphash_modify() IP:1.2.3.4 key:0x4030201 TC-handle:0x11234
+
+listed the map
+
+# ./xdp_iphash_to_cpu_cmdline --list
+{
+"1.2.3.4" : { "cpu" : 1, "tc_maj" : "1" , "tc_min" : "1234" }}
+
+
+And right after I tried to remove the program from XDP:
+
+# ./xdp_iphash_to_cpu --dev eth1 --remove
+Removing XDP program on ifindex:4 device:eth1
+ERR: Clear ifindex type failed 
+INFO: not cleanup pinned map file:/sys/fs/bpf/tc/globals/map_ip_hash (use 'rm')
+
+All seems to be rigth despite the errors.
+Are all these errors and warnings serious problems? Should I worry? 
+
+Hints??
+
+Regards
+
+Ethy
