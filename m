@@ -2,73 +2,59 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA6FD3E2FDF
-	for <lists+xdp-newbies@lfdr.de>; Fri,  6 Aug 2021 21:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3F77401219
+	for <lists+xdp-newbies@lfdr.de>; Mon,  6 Sep 2021 01:30:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbhHFTu4 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 6 Aug 2021 15:50:56 -0400
-Received: from www62.your-server.de ([213.133.104.62]:53504 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbhHFTu4 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 6 Aug 2021 15:50:56 -0400
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mC5rZ-0004mn-Jc; Fri, 06 Aug 2021 21:50:37 +0200
-Received: from [85.5.47.65] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1mC5rZ-000Vl9-Cx; Fri, 06 Aug 2021 21:50:37 +0200
-Subject: LPC 2021 Networking and BPF Track CFP (2nd reminder)
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     xdp-newbies@vger.kernel.org, iovisor-dev@lists.iovisor.org,
-        linux-wireless@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        lwn@lwn.net
-References: <6d225920-9ecc-ef24-2bf8-848ca86c7fb0@iogearbox.net>
- <c549da28-a3c0-9478-4b91-7aa2ff124b69@iogearbox.net>
-Message-ID: <2fb02920-db19-f29f-5a18-3c4d7edb3960@iogearbox.net>
-Date:   Fri, 6 Aug 2021 21:50:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S234726AbhIEX3z (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 5 Sep 2021 19:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229666AbhIEX3y (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Sun, 5 Sep 2021 19:29:54 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15585C061575
+        for <xdp-newbies@vger.kernel.org>; Sun,  5 Sep 2021 16:28:51 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id h1so8246028ljl.9
+        for <xdp-newbies@vger.kernel.org>; Sun, 05 Sep 2021 16:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jrfernandez.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=9Uig99Z2N9q2mINEAWK9gzkqZd+ovmE/WSXb0bhnWaw=;
+        b=EAqJgbx5rmEGKpjg+1Lea8YMQBJtHvXKySKCeQaW9Snqbtu/BNOF8/2sZv6dB57Yf2
+         iFu0ubxc9xgtxFuNIWuwcP9IPNsuiS80sWHxKuKdY9kVGikYxwk21i6PIIcg5hNulyV4
+         ngt6K+R2Dgn3wXJ8ro9u/da/SXmA/1Z5NFCDw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=9Uig99Z2N9q2mINEAWK9gzkqZd+ovmE/WSXb0bhnWaw=;
+        b=QzoBVmgW2W9f0NKsGxxktjCgGknQfT1zzUTJzOo48f3IueYXxarId3StcXfuyJG5jR
+         Sarw2HzJNblLJOjIB7P8dVi1rK1lDVdrWDMNyihBeQ0aXHbqPNnyH/jNSjAdypBHqlcv
+         zUwpkMQweN9t+mONPCNgqHVTUByEMsaQRQ7+FBPeAGMrPpiIKA8/z82ur1h8ICI5LCfJ
+         lbb8YXePqht674LyMoBq+pq9rZVO5xh10VQnj3us7gbybA3iFjSXtq+dr5Cy9A2tk1kN
+         WDXGBj0a3bNeG8Pwvt96owZOhQsitXk/K3Ev2OXkLp59DMAl8em2Qnp8MXOWokhh5ygT
+         TE7g==
+X-Gm-Message-State: AOAM531Kh+ojssb2IfK9AWXEg/f0qEUiGbVABTCJobj+17R8OJWnOwAG
+        1OoRleSfCSQ5d5Xw+GVVE3xoeAAK7b1pmT53S8TH+eQClfKKS4nr
+X-Google-Smtp-Source: ABdhPJxQ4M9ilf+u2Bdxo1swsUiilDphXtlYQa+hUeHkOAjrJxjQxo/KrOAKs50LMIStrm3b8McN/vE7ls+edQR5GGQ=
+X-Received: by 2002:a2e:1514:: with SMTP id s20mr8718973ljd.34.1630884529315;
+ Sun, 05 Sep 2021 16:28:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c549da28-a3c0-9478-4b91-7aa2ff124b69@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.2/26255/Fri Aug  6 10:24:06 2021)
+From:   Jose Fernandez <me@jrfernandez.com>
+Date:   Sun, 5 Sep 2021 16:28:38 -0700
+Message-ID: <CAPwzzmsGdMqa9PnOQvtDOcwdByi8CzVEmLHpCmvdVfa4Rnkjeg@mail.gmail.com>
+Subject: Linux laptop with native XDP support
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This is a reminder for the Call for Proposals (CFP) for the Networking and
-BPF track at the 2021 edition of the Linux Plumbers Conference (LPC), which
-will be held virtually on the wider Internet, on September 20th - 24th, 2021.
+Hi folks,
 
-This year's Networking and BPF track technical committee is comprised of:
+I'm looking to purchase a laptop for Linux development and was hoping
+to find one with native XDP support. I believe the i40e driver
+supports XDP, but I'm having a hard time identifying which laptops can
+use that driver (I was first looking at Lenovo). Any advice or
+suggestions would be appreciated!
 
-   David S. Miller <davem@davemloft.net>
-   Jakub Kicinski <kuba@kernel.org>
-   Eric Dumazet <edumazet@google.com>
-   Alexei Starovoitov <ast@kernel.org>
-   Daniel Borkmann <daniel@iogearbox.net>
-   Andrii Nakryiko <andrii@kernel.org>
-
-We are seeking proposals of 40 minutes in length (including Q&A discussion),
-optionally accompanied by papers of 2 to 10 pages in length.
-
-Any kind of advanced Linux networking and/or BPF related topic will be considered.
-
-Please submit your proposals through the official LPC website at:
-
-   https://linuxplumbersconf.org/event/11/abstracts/
-
-Make sure to select "Networking & BPF Summit" in the Track pull-down menu.
-
-Proposals must be submitted by August 13th, and submitters will be notified of
-acceptance by August 16th.
-
-Final slides and papers (as PDF) are due on the first day of the conference.
+- Jose
