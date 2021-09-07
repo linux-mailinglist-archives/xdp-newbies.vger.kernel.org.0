@@ -2,87 +2,83 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8F6C402E8C
-	for <lists+xdp-newbies@lfdr.de>; Tue,  7 Sep 2021 20:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF7B2402EAE
+	for <lists+xdp-newbies@lfdr.de>; Tue,  7 Sep 2021 21:03:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbhIGSwK (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 7 Sep 2021 14:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbhIGSwK (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 7 Sep 2021 14:52:10 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647F8C061575
-        for <xdp-newbies@vger.kernel.org>; Tue,  7 Sep 2021 11:51:03 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id e21so94048ejz.12
-        for <xdp-newbies@vger.kernel.org>; Tue, 07 Sep 2021 11:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riotgames.com; s=riotgames;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o/yPAdrtt3l3NKXs+ZowP9mvGH0ssBcphQjq2yk+jYI=;
-        b=BRlqKto2BMTcty7XlD432x8yfd1CQh6XeFWOOzcYsQWCscvtvngsGmrDPlRS+M/W+y
-         araUzP5DX52VYH/B9HHuK9zKrJSsk1PpZn25gtvjJg+aZHVLy60SkG+/4V6dl0eQ19kV
-         GVvu6149+sSxZ711XRB1/8wYkG/M3l1vRAQ8A=
+        id S238531AbhIGTE3 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 7 Sep 2021 15:04:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32164 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230203AbhIGTE2 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 7 Sep 2021 15:04:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1631041401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=J4hscL2eMehRiGl0NPp7eXluTwVFpUGzg2NHngXyIl4=;
+        b=L6BKNGG1Fz4edDUHw3UWnXFB+LqGqIyu2vL4YxeWwkjpX4yYaUmX6Ek+O1Hp57fVzVKFLH
+        X0PFL5+YknYCZuEev94hgv1Cu7keQgFGLQQSwG7O5DcRaGLX5Nz3Pno0AFlaj+oLCpiche
+        pIAGpVjpW2zEur2yYeiqGZL7VqWD+WY=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-BU2ZiQwUO1e5GWuvxUHFNA-1; Tue, 07 Sep 2021 15:03:20 -0400
+X-MC-Unique: BU2ZiQwUO1e5GWuvxUHFNA-1
+Received: by mail-ej1-f70.google.com with SMTP id c25-20020a170906529900b005c56c92caa2so32367ejm.19
+        for <xdp-newbies@vger.kernel.org>; Tue, 07 Sep 2021 12:03:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o/yPAdrtt3l3NKXs+ZowP9mvGH0ssBcphQjq2yk+jYI=;
-        b=rc7/4EmxdSGuuoGw0Mp7DT6xWxoZUtpRI87ZLQNXzW+pcL346DLDI5w1iV9wyMuE4g
-         6giqFdFxN52jEdJwgWpWb+NJM7YFpUovtwLVWC6ZQV5Fl4uj7rdAXrhDVXpz8kHXG48d
-         bfVWtgGLmhvcX2x+F+X5ixm5vfXbiDC2lzhy+4/d8F9m/TLLFXbPO6OUQkkf1psTzQNp
-         bJc0J9J8B7JOr8YZt/gPFJkRTgYGf0g0w2Ts7HbGsDEQW7gEaOeerOG3AYRj1tDLafKt
-         MXIxQpIwkh7Xw1R+CK6GeMs9SzHyO3rgJiQeT6ITWMb/O7CBGf5WghnkJX0mccMs4NZL
-         QsPQ==
-X-Gm-Message-State: AOAM532XiQesAoYhjBd0paHol+QMMlreeoGKW+DuHgmDRpRCIh36TC23
-        12OzICFL+wDnNikGRodjiFDyo70uTl2c6mcvRqWqJVctAYfJrwCq
-X-Google-Smtp-Source: ABdhPJzeaBBdLDjHaXIYdkOLTWy7+ysx+/of5oUWZQpQlfJcV/TNtjcNx1DOGNrc6z4jdLlz/lInWfU93exX1i0QBaY=
-X-Received: by 2002:a17:907:924d:: with SMTP id kb13mr19925864ejb.151.1631040661950;
- Tue, 07 Sep 2021 11:51:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPwzzmsGdMqa9PnOQvtDOcwdByi8CzVEmLHpCmvdVfa4Rnkjeg@mail.gmail.com>
-In-Reply-To: <CAPwzzmsGdMqa9PnOQvtDOcwdByi8CzVEmLHpCmvdVfa4Rnkjeg@mail.gmail.com>
-From:   Zvi Effron <zeffron@riotgames.com>
-Date:   Tue, 7 Sep 2021 11:50:50 -0700
-Message-ID: <CAC1LvL1x4Y9BJPtLncy=uFyq-0LdjpM45a=hRtf8gGVQevD-qQ@mail.gmail.com>
-Subject: Re: Linux laptop with native XDP support
-To:     Jose Fernandez <me@jrfernandez.com>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=J4hscL2eMehRiGl0NPp7eXluTwVFpUGzg2NHngXyIl4=;
+        b=XOYiNAbtywHDVWX4E0WEJqbM8DdjBJo2qM7TJoCpXE5qk1i6jFaCaNvp3t5wtY2T0p
+         0llhSJ9xRHypHb80+EECORcHc6GW4eIBnMxa0Ihc/045e40nYEzh8pGVm/f3CrXJkHuO
+         ayx9MZAgZ3g+BPjlIPPGumZVDLiIPk7hmnk2ZNXZydv64ugECJaa+oN7BR+dmdBshllu
+         sXhUD0hJ2yrNP8+2f3X8kIihFYnsTSgl1wUiRREitxwjaKk+rD7XF7hV+gMRTHUdqwOk
+         NciUUYqBO7bb0cn4kinT0hUHUt3VeugoiuWI+IzyXFdfbUnIvQbMG8HEBMQLen+apwcV
+         Txkg==
+X-Gm-Message-State: AOAM533W8t2yWJqyh7VRNPLZCMftWplYM+PxwoyEk1CfLL6fOyfuvsUf
+        Z0eUj7/XBMtMBvOHP7tbFAcN0iQNj63f3RA97+PscSgZ+eS2cXcZ2Esqh1vW/oQRK9ylDlQy52U
+        bMjEBxR6W/tt4ytKVzSgTDY0=
+X-Received: by 2002:a50:ed0e:: with SMTP id j14mr1005588eds.305.1631041397541;
+        Tue, 07 Sep 2021 12:03:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxf4S8RQERZmleSk9oPJhgQocCWv6dBeFk69y34/ZPJiFyDkgtcoykytsTnkUVwNpHZNFnhoQ==
+X-Received: by 2002:a50:ed0e:: with SMTP id j14mr1005489eds.305.1631041396327;
+        Tue, 07 Sep 2021 12:03:16 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id gz22sm6018406ejb.15.2021.09.07.12.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Sep 2021 12:03:15 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 03F8618022B; Tue,  7 Sep 2021 21:03:13 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Zvi Effron <zeffron@riotgames.com>,
+        Jose Fernandez <me@jrfernandez.com>
 Cc:     Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: Linux laptop with native XDP support
+In-Reply-To: <CAC1LvL1x4Y9BJPtLncy=uFyq-0LdjpM45a=hRtf8gGVQevD-qQ@mail.gmail.com>
+References: <CAPwzzmsGdMqa9PnOQvtDOcwdByi8CzVEmLHpCmvdVfa4Rnkjeg@mail.gmail.com>
+ <CAC1LvL1x4Y9BJPtLncy=uFyq-0LdjpM45a=hRtf8gGVQevD-qQ@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Tue, 07 Sep 2021 21:03:13 +0200
+Message-ID: <87k0jsp5se.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Sun, Sep 5, 2021 at 4:29 PM Jose Fernandez <me@jrfernandez.com> wrote:
->
-> Hi folks,
->
-> I'm looking to purchase a laptop for Linux development and was hoping
-> to find one with native XDP support. I believe the i40e driver
+Zvi Effron <zeffron@riotgames.com> writes:
 
-The i40e driver is for high throughput (10+Gbps) Intel interfaces. I don't
-think you're going to find a simple laptop that has a NIC that uses it. That
-would normally be a very custom option for a laptop,
+> I think the biggest thing might be to make sure the laptop has a wired ethernet
+> port. Wireless uses different drivers, and I don't know if any of them have XDP
+> support, currently. (Maybe they do, but wired is a bit more obvious, and likely
+> more relevant to your use cases, anyway.)
 
-> supports XDP, but I'm having a hard time identifying which laptops can
-> use that driver (I was first looking at Lenovo). Any advice or
-> suggestions would be appreciated!
+Nope, no XDP support for WiFi. There was some exploratory discussion
+about that some years ago, but XDP has Ethernet as a pretty fundamental
+assumption so it's not an obvious fit to the Linux WiFi stack...
 
-The ixgbe driver also has support for XDP, I believe. (At the very least is has
-support for XDP sockets, which usually implies support for basic XDP.) I don't
-know if the XDP implementation is as complete with the latest features as i40e,
-but it might be a good place to start, and I believe any Intel Gigabit NIC in a
-new laptop should use it.
+-Toke
 
-Also, Broadcom has support for XDP (again, I'm not sure how much of the more
-recent XDP functionality, though), and there are a lot of laptops that come
-with Broadcom NICs.
-
-I think the biggest thing might be to make sure the laptop has a wired ethernet
-port. Wireless uses different drivers, and I don't know if any of them have XDP
-support, currently. (Maybe they do, but wired is a bit more obvious, and likely
-more relevant to your use cases, anyway.)
-
->
-> - Jose
