@@ -2,80 +2,117 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7B941B8E4
-	for <lists+xdp-newbies@lfdr.de>; Tue, 28 Sep 2021 23:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A514248E5
+	for <lists+xdp-newbies@lfdr.de>; Wed,  6 Oct 2021 23:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235775AbhI1VEt (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 28 Sep 2021 17:04:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242839AbhI1VEr (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 28 Sep 2021 17:04:47 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0029C06161C
-        for <xdp-newbies@vger.kernel.org>; Tue, 28 Sep 2021 14:03:07 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id h12so11246pjj.1
-        for <xdp-newbies@vger.kernel.org>; Tue, 28 Sep 2021 14:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SxhpCQ+uUlCDOUQXiRQOvKP9dFVkv9GYubxJTskvPXw=;
-        b=I4UF7i1cPA8UTRSjTyuHI9bmtvysItCMrolcc+iuhctU0O0ji6BKA9tGrzdDhpInMP
-         83J9qjK4naqExRYdcR6+4PZjYvspLVnJt51A8L75ojqZgWhWSOenarB+pFSLTM2zEWJv
-         cBusQ43BlO5vBea7Np7MPrBclSAtqWlmx0lrFUx6CCf1J98FHbXk5TTh8K5AAYXaSJ+u
-         nHt8EdA58cdKCN+g282m5VviDVggBn/1VWzfX/X4qqJIfB9QVgZXxg/sDV8oAFS9k5Jc
-         J2KH2rJmBsEcxa1r2qA/ue8Y3hBrlXYNi+jy/EYVFu2ZYlvgHdE4nrosyBbSpz/Yxvtq
-         6gGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SxhpCQ+uUlCDOUQXiRQOvKP9dFVkv9GYubxJTskvPXw=;
-        b=uLFYBgkDebnc8TZikORua6a/j92QIgMtVyO9bHf+bW11aAZtS67Z0wFCMuUJ9fmDNh
-         lkbMlhyDtghJnSX/iEolpmvqJ7Wb3/e4bBqUrhyZTpE4PsF0wX87zB4/TgtnrPXKXfl+
-         xSE39Al+Xx4YGAQD8gxqczR2Fqr+PzkDFQy9nSC97XZ0zHcKwDB8kH+LMT7Cd3VQo7Rg
-         shVAmhgMAIrscGGqmu+kRL7gyUmyQg5XKsz2R5TMmrvkdF6t3iD4EunOrOYUq+8o9YrV
-         8imqzDAWBHLaHEwOBHLPhaOAGwPYRYBra6h4rCbh7+6UU6Od3jmhp8u7hlKimmjGTsQU
-         zxiA==
-X-Gm-Message-State: AOAM532s4xxDcNpFj9U+zz4E09N/gEzI2E31RYFgjsqQ+O9a3LK1/7c+
-        5XW+l5nbhgzUBXOsHW60HDv5YKq+jry2joyURenmEfY6
-X-Google-Smtp-Source: ABdhPJztujFb1/0NJE8khtA8DGrzt8CoVhFv02SFbfhLMFTv3DaOmBl/QLADjWaeAn0bJZflGr1CMm/HGYz3XWV8ptI=
-X-Received: by 2002:a17:903:32c6:b0:13b:9cd4:908d with SMTP id
- i6-20020a17090332c600b0013b9cd4908dmr7007113plr.20.1632862987084; Tue, 28 Sep
- 2021 14:03:07 -0700 (PDT)
+        id S239632AbhJFV1t (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 6 Oct 2021 17:27:49 -0400
+Received: from telegrapho.inexo.com.br ([187.17.38.24]:51702 "EHLO
+        telegrapho.inexo.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239618AbhJFV1s (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Wed, 6 Oct 2021 17:27:48 -0400
+X-Greylist: delayed 416 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Oct 2021 17:27:48 EDT
+Received: by telegrapho.inexo.com.br (Postfix, from userid 1001)
+        id A70A87ACDEA5; Wed,  6 Oct 2021 18:18:53 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.11.0 telegrapho.inexo.com.br A70A87ACDEA5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inexo.com.br;
+        s=mail; t=1633555133;
+        bh=Gq76Gr8ETZISXYh8WUhOhkikz66GtxF90tLYd1CVXRI=;
+        h=Date:From:To:Subject:From;
+        b=bcn2XdOWJNPXIkRQ6h+SDnDZLTkhE5wrfigDuA9JWabPv45nPn3mGKy0jiFUZYbe6
+         CKpuCLUBPibfNqaX/Pnjwcw1cBLLneORbash6xSrvaPt8tGoMlLPn5o1hwDz+kOzL/
+         rPCD2nEmqkw9eQd55RiJjSUbSiKvGztEldvbuFujjKvK9Pq84ost/+sCgiro0xcPhg
+         nYz6TabcoONGGynfSJntE7HVDsw2u6aaCVe5nqH0oIDSfw2PxajZsZlRFUmuNvvUxD
+         UotSLP06uC3VQSYnT0XVER5ymBeaKjb/ROmwMdblk7i5aXwcH17YrAIo0bs3JHIWZj
+         yscGBTOBM8PqQ==
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        telegrapho.inexo.com.br
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=4.0 tests=ALL_TRUSTED,DKIM_INVALID,
+        DKIM_SIGNED autolearn=no autolearn_force=no version=3.4.4
+Received: from pulsar (unknown [187.17.38.38])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by telegrapho.inexo.com.br (Postfix) with ESMTPSA id 716987ACDEA3
+        for <xdp-newbies@vger.kernel.org>; Wed,  6 Oct 2021 18:18:50 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.11.0 telegrapho.inexo.com.br 716987ACDEA3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inexo.com.br;
+        s=mail; t=1633555130;
+        bh=Gq76Gr8ETZISXYh8WUhOhkikz66GtxF90tLYd1CVXRI=;
+        h=Date:From:To:Subject:From;
+        b=iF6ub+IJvuR2hM7GqK6b7iAqU7gyuaDgNijvRYWryFuBy4xrKh+m7zys8kTpxUi/t
+         iMolhe7x+f8E8CWGQ2K/taniM7HoX3XVIoAs2pwHz6Scgr4PswXYHuoqBdRZ4z73tC
+         OeyPtafPuG80VuGNbuTrSWQuQmHQEkcxdFo8MA4N5lqEnDahrAj2qmxJe50BnNPg9j
+         y8nraEAaQSlwnNnIo+CwewQiX7nAafrVKDvrMIERQbkHppfvyr4lba66KxEQHYZbIe
+         ee1aCK5upM4frOOLijUw/uTOXspnx/jnv96Aou0lvzeS+NC+QwXfCjvg+NZxQydR3b
+         0aMGdhKQ5sdYA==
+Date:   Wed, 6 Oct 2021 18:18:48 -0300
+From:   "Ethy H. Brito" <ethy.brito@inexo.com.br>
+To:     xdp-newbies@vger.kernel.org
+Subject: xdp-cpumap-tc multi queue schema and traffic mirroring
+Message-ID: <20211006181848.20300152@pulsar>
+Organization: InterNexo Ltda.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <CAJwr_MfAwrWu1XiSQoEVR-vRs0jbLXi9G4HBsxeRFQDJi0V6Eg@mail.gmail.com>
-In-Reply-To: <CAJwr_MfAwrWu1XiSQoEVR-vRs0jbLXi9G4HBsxeRFQDJi0V6Eg@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 28 Sep 2021 14:02:56 -0700
-Message-ID: <CAADnVQJrwCVZP65HiyCJu9t7mToMOOP5undP7EqUpONF2GwMoA@mail.gmail.com>
-Subject: Re: Issue with verifier error
-To:     Neal Shukla <nshukla@riotgames.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>,
-        Lisa Watanabe <lwatanabe@riotgames.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 12:18 AM Neal Shukla <nshukla@riotgames.com> wrote:
->
-> Hi all,
->
-> We've encountered a compiler issue which leads to issues with the
-> verifier. We compile with clang using the O2 optimization level. When we
-> have a call to bpf_ntohs(udp_header->dest) and attempt to load the debug version
-> we get a verifier error. Removing the bpf_ntohs(udp_header->dest) call and
-> loading the debug version results in no errors, as does loading the
-> non-debug version of our code.
-...
-> Any insight into the issue would be much appreciated. Thank you!
 
-It could be related to optimizations that llvm was doing.
-Could you please try the latest llvm trunk and the latest bpf-next?
-Do you still see this issue?
-If so, we will investigate. Pls provide full .c reproducer.
+Hi All
 
-Thanks!
+Before I moved to XDP cpumap bandwidth control "philosophy" I used to snoop inside the htb classes (mainly the default one) mirroring traffic to a dummy interface then run tcpdump on that like:
+
+	tc filter add dev eth0 parent 1: protocol all prio 0xffff \
+	u32 match u32 0 0 flowid 1:$shp action mirred egress mirror dev dummy0
+
+Then "tcpdump -npi dummy0" used to show me all that classid "1:$shp" was carrying.
+
+Now, with the multi queue environment XDP creates, I can't make mirroring to work.
+For instance: I need to see what is going on with HTB classid e:102, so I tried:
+	
+	tc filter add dev eth0 parent e: ... e:102 action mirred egress ...
+
+and "tcpdump -npi dummy0" prints traffic that has nothing to do with classid e:102. 
+I can confirm the traffic is pored thru the class since its bandwidth is
+controlled/limited correctly.
+
+I also tried:
+		
+	tc filter add dev eth0 parent 1: ... e:102 action mirred egress ...
+
+	tc filter add dev eth0 parent e:1 ... e:102 action mirred egress ...
+
+	tc filter add dev eth0 parent 7fff:e: ... e:102 action mirred egress ...
+	(tc complaints with error)
+
+with no results that make sense.
+
+Classes were configured as:
+
+	tc qdisc replace dev eth0 root handle 7FFF: mq
+
+	tc qdisc add dev eth0 parent 7FFF:e handle e: htb default fffd
+
+	tc class add dev eth0 parent e: classid e:1 htb \
+	rate 6gibit ceil 6gibit 
+
+	tc class add dev eth0 parent e:1 classid e:102 htb prio 2 \
+	rate 25mibit ceil 50mibit 
+
+Packets' target class was configured as:
+
+	xdp_iphash_to_cpu_cmdline --add --ip 'A.B.C.D' --classid 'e:102' --cpu 13
+
+And I can't see any packets to or from A.B.C.D in dummy0. 
+Only "garbage" form other random hosts.
+
+Do anyone of you guys know how to use "tc filter ... mirred..." in XDP multi queue environment??
+
+Regards
+
+Ethy
+
