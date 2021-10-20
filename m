@@ -2,126 +2,87 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FA54426FA9
-	for <lists+xdp-newbies@lfdr.de>; Fri,  8 Oct 2021 19:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FE58434727
+	for <lists+xdp-newbies@lfdr.de>; Wed, 20 Oct 2021 10:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231289AbhJHRiT (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 8 Oct 2021 13:38:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50692 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238284AbhJHRiT (ORCPT
+        id S229941AbhJTIpg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 20 Oct 2021 04:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229503AbhJTIpe (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 8 Oct 2021 13:38:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633714583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4V46Lo/I9nCtkNEkkniUo5wHgJJVZQFvt1dx2yNTIN4=;
-        b=cV/8DDlm0HsC15Lk+uGfSaVPV5T55f5T6v9m4ciIQYeySaSxaIXLZ+OgNQ5JgHEAun8htV
-        /KhKd8nuBOlPXr8vO5YqstcdEW1iYl1F/RcxBN8Nan9et89VEYku0jL0s4ER8LntVoQuax
-        PZ2UmSPqiFfPIyzSM8kBxfjb82m6dO0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-441-ZQKQRc32NIesKq9KXcr3RA-1; Fri, 08 Oct 2021 13:36:21 -0400
-X-MC-Unique: ZQKQRc32NIesKq9KXcr3RA-1
-Received: by mail-ed1-f69.google.com with SMTP id x5-20020a50f185000000b003db0f796903so9850041edl.18
-        for <xdp-newbies@vger.kernel.org>; Fri, 08 Oct 2021 10:36:20 -0700 (PDT)
+        Wed, 20 Oct 2021 04:45:34 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6785CC06161C
+        for <xdp-newbies@vger.kernel.org>; Wed, 20 Oct 2021 01:43:20 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id v20so15621382plo.7
+        for <xdp-newbies@vger.kernel.org>; Wed, 20 Oct 2021 01:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=takMGdb35wZ2Cy3SNYTPTWN4xv4WzqlMPO04hQHipk4=;
+        b=mftqu+1MSE/pZajR1CRRuZqH8HJl0+6LYuPPT5W1konDm/qvy9ysvG6KLww+hMm8bf
+         7Kgaz981qiRBs9x2USoUGvWZyMo3fGto8lq6gRM9ZbE97ltJ84O57Lil8tb2RORn0HiO
+         01kfslhfwwCwQBp8NYTk6+rOrWUuUbu1LXQn5n4Rsyy+KwVNBw81HcPbQ0DazcZE4nzi
+         SPA0JzqM+rXpxJDlvoDxhiciDkpl8ZWu85q036ytNl5oeuZy5jn6+4B4S51UZdOwpKV9
+         gQsgqHVG+l/55ILYCSErQ4jlZ7xUyAcRpylICaujlvdSNjoAmVTmh1wR1ftAlnjQqPg9
+         +t0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=4V46Lo/I9nCtkNEkkniUo5wHgJJVZQFvt1dx2yNTIN4=;
-        b=GaNDyWvtz6f2bQvopeY8WXUEXoU3efpMKDW30OHHIEXXron9r/CZ3j0C/12epYQoJ5
-         j5um9VPlCeLfYJsuP0gMb7V9COd10UH3ZF0HcM1bA4JXw2HyVw4SmjfFAAtVU7wJE3o1
-         767k8edj4bhA37BejhoJUwE+l1w99FVHH1Z9rd9tdiU7jrFiGh6iQxh6qSd7K59vf5Qk
-         ZLqpvn/wV/sB8yqrTwKyLdW/aA/Kg7bSV8/pu7AlT64yl6VGGGrqNf+JQ1cxMNvXUysZ
-         n3UI2uYVdnvPEYY3fcFb4dxsMuBTMk2QCu9Mz2LsR5CHdSAYK2yRPWKI9mOece9kmqRk
-         9J0A==
-X-Gm-Message-State: AOAM531JZTIMwelzLMUcyS8fS8kpsnO071ni9s98Ckib6V+F56DkDxQR
-        h5NvKjGS46PCekhgfa+oxgp+FFnb9MIqc46NbM6OOyLcuNaDl77KZu+qykcsIP+Y5cbqstOnWqb
-        RAlLyKQuFl2DfKG/o1jjXt7M=
-X-Received: by 2002:a05:6402:26d1:: with SMTP id x17mr15264995edd.367.1633714579734;
-        Fri, 08 Oct 2021 10:36:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwVoWZb6fa/AfbqT3gZ7ro0g9oJ2Fy42G46eVZJjOLKR+TnkZZsBhL4p49h3ybFcrE9AFTXeA==
-X-Received: by 2002:a05:6402:26d1:: with SMTP id x17mr15264924edd.367.1633714579329;
-        Fri, 08 Oct 2021 10:36:19 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id z8sm1180681ejd.94.2021.10.08.10.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Oct 2021 10:36:18 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id F2C3B180151; Fri,  8 Oct 2021 19:36:16 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     "Ethy H. Brito" <ethy.brito@inexo.com.br>
-Cc:     xdp-newbies@vger.kernel.org, Jesper Brouer <brouer@redhat.com>
-Subject: Re: xdp-cpumap-tc multi queue schema and traffic mirroring
-In-Reply-To: <20211008105050.5c70c225@pulsar>
-References: <20211006181848.20300152@pulsar> <875yu8n4xp.fsf@toke.dk>
- <20211008105050.5c70c225@pulsar>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 08 Oct 2021 19:36:16 +0200
-Message-ID: <87k0inl8q7.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=takMGdb35wZ2Cy3SNYTPTWN4xv4WzqlMPO04hQHipk4=;
+        b=LQGPVB4fPPMBrHxrmkNDjTme6QjIT2QDMoSWLspkjacN/i+U4qXAgs4kaysAHFxW6e
+         LhySGl69ZsXzajDTWeJmeCVVBZN8d1xL7+ht4AAIMEjNeSsJDZIkZYeQkFuYTqOKsl+v
+         l9M48tttOBIJt0OOol8FIL6BzEOCG3e2AUzzISxVSUWoz2BsWUkKwseRm7CJLTOjEP4o
+         nZceEbnWfHLY24fTjouPJsLuys0pSnxU3HwNy+BTyFF7vdlbMnoJvvsGEKJbRvaI6wuY
+         h1aR6J/wOgEDW6FpEHu26fL8UXklhpsR7u4zrEbViIQUXa257tbfUNj6nhOsC7vMixEX
+         QUDA==
+X-Gm-Message-State: AOAM530jPQ69Ec5v++J8PlcLuj05tcixYKwAXCpKF4zSE51StRIWL85E
+        fLmU31FMsqgbJVlzmtP0gyZKwTXUjgCR07KN5wSl32dn+9A=
+X-Google-Smtp-Source: ABdhPJzkTViXd+Qn3xBMpyna8obpRcMwjhbTRkjWOQfn+MWNhk159QQr6luSRTaotj8voMs0OCAJm1+aRtLASoXbdnM=
+X-Received: by 2002:a17:902:70cb:b0:13e:91f3:641a with SMTP id
+ l11-20020a17090270cb00b0013e91f3641amr37565493plt.13.1634719399584; Wed, 20
+ Oct 2021 01:43:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From:   Harold Huang <baymaxhuang@gmail.com>
+Date:   Wed, 20 Oct 2021 16:43:08 +0800
+Message-ID: <CAHJXk3b1Hj9Xp_v0gEXf6TB56-P7T=jVQ9_mzTVwhUFSKVJjOg@mail.gmail.com>
+Subject: Use shared umem in CentOS 8.2(4.18.0-193.el8.x86_64)
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-"Ethy H. Brito" <ethy.brito@inexo.com.br> writes:
+Hi, all
+   I see in libbpf 0.3 or higher version, xsk_socket__create_shared
+function is added to support shared umem. I also want to use shared
+umem in CentOS 8.2 with a native kernel 4.18.0-193.el8.x86_64.  I have
+updated libbpf to v0.4.0, but the samples/bpf/xsk_fwd is existed with
+an exception:
 
-> On Thu, 07 Oct 2021 19:02:58 +0200
-> Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> wrote:
->
->> "Ethy H. Brito" <ethy.brito@inexo.com.br> writes:
->>=20
->> > Hi All
->> >
->> > Before I moved to XDP cpumap bandwidth control "philosophy" I used to =
-snoop
->> > inside the htb classes (mainly the default one) mirroring traffic to a
->> > dummy interface then run tcpdump on that like:
->> >
->> > 	tc filter add dev eth0 parent 1: protocol all prio 0xffff \
->> > 	u32 match u32 0 0 flowid 1:$shp action mirred egress mirror dev
->> > dummy0
->> >
->> > Then "tcpdump -npi dummy0" used to show me all that classid "1:$shp" w=
-as
->> > carrying.
->> >
->> > Now, with the multi queue environment XDP creates, I can't make mirror=
-ing
->> > to work. For instance: I need to see what is going on with HTB classid
->> > e:102, so I tried:=20
->> > 	tc filter add dev eth0 parent e: ... e:102 action mirred egress ...
->> >
->> > and "tcpdump -npi dummy0" prints traffic that has nothing to do with
->> > classid e:102. I can confirm the traffic is pored thru the class since=
- its
->> > bandwidth is controlled/limited correctly.=20=20
->
->
-> Hi Toke, et All.
->
->>=20
->> The xdp-cpumap-tc utility will attach a filter to the egress interface,
->> presumably that is taking priority and short-circuit your mirred filter?
->
-> This makes sense.=20
-> But How to circumvent this??
->
-> Snooping the default class (classes, in xdp-cpumap case) is essencial
-> to catch misconfigured mappings.
+libbpf: can't get next link: Invalid argument
 
-Well, it's possible to chain multiple filters, they just need to be
-configured properly. Not sure exactly what the right incantation is, but
-it'll likely require at least changing the priority of the filter
-installed by xdp-cpumap. I'd suggest you open an issue on the github
-repository, as that is really the appropriate place to discuss this, as
-it's not really XDP-specific...
+The function is existed in bpf_obj_get_next_id where it calls sys_bpf.
+The gdb trace is showed as followed:
 
--Toke
+#0  bpf_obj_get_next_id (start_id=0, next_id=0x7fffffffddc8, cmd=31)
+at bpf.c:806
+#1  0x0000000000421b4d in bpf_link_get_next_id (start_id=0,
+next_id=0x7fffffffddc8) at bpf.c:830
+#2  0x000000000042e393 in xsk_link_lookup (ifindex=1, prog_id=0x0,
+link_fd=0x7fffffffde1c) at xsk.c:685
+#3  0x000000000042e602 in xsk_probe_bpf_link () at xsk.c:740
+#4  0x000000000042f0a9 in xsk_socket__create_shared (xsk_ptr=0x724838,
+ifname=0x7fffffffe4e0 "peer0", queue_id=0, umem=0x7242d0,
+    rx=0x724778, tx=0x7247a8, fill=0x7247d8, comp=0x724808,
+usr_config=0x650720 <port_params>) at xsk.c:1075
+#5  0x0000000000403831 in port_init (params=0x650720 <port_params>) at
+samples/bpf/xsk_fwd.c:499
+#6  0x00000000004047c0 in main (argc=11, argv=0x7fffffffe1b8) at
+samples/bpf/xsk_fwd.c:1012
 
+Is there any way to support shared umem if I only updated the libbpf
+with a native kernel version 4.18.0-193.el8.x86_64 in CentOS 8.2?
+
+Thanks
