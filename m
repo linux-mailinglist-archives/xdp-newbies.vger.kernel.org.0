@@ -2,86 +2,92 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A79D6443817
-	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Nov 2021 22:54:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71BE4443825
+	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Nov 2021 23:00:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbhKBV5G (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 2 Nov 2021 17:57:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36340 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229525AbhKBV5F (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 2 Nov 2021 17:57:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635890069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hg5IlXIOXeJO1187/xa1gkBUxwPjbWmgH/vnUofDkGQ=;
-        b=Ex7kuJHcN6m723C02dR7Z3h+UrqT8Asaz1mL4rMj8TGg65kI0OM6s0tqaRVcUUfAbPdKhk
-        Jo4G9BaeGMZw1NkjT88yROcb3Pv/INB77jBvadvOPLo0kxfzI6Ov4uSoaAZUYgG3DrZOzF
-        1pYzh8m+vkipsXi0sOV+8s2888NhEuk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-452-tQtMiuemO6-SkXF0kXCKRA-1; Tue, 02 Nov 2021 17:54:28 -0400
-X-MC-Unique: tQtMiuemO6-SkXF0kXCKRA-1
-Received: by mail-ed1-f72.google.com with SMTP id m8-20020a056402510800b003e29de5badbso643926edd.18
-        for <xdp-newbies@vger.kernel.org>; Tue, 02 Nov 2021 14:54:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=hg5IlXIOXeJO1187/xa1gkBUxwPjbWmgH/vnUofDkGQ=;
-        b=nCFo2259wfp89aRG5WxbGA/qseBoUaxrIUNb0uJ355ZvPuTT5SAvN3z27SzULW4yeK
-         TUUJdwMUyASuJBupJ0qafdEY0DAjrIYnkjtz/tOLblr2efq+SgkB+xjb/KCR7K0d67iA
-         C93KfQx6w3jw1pMc3a141EL/jYgRBXHN7Ql5YWB484us46XSwVaM9QL9VSGPf5ngAl63
-         jrK1pEP1AwsxDNp1k4IFucC7B6DfmNCaMi0xetw32XUgnhLcHpf5LFkUits8fOEiSN/g
-         61RnKnDQPXtDqcbNCvKfyjgvknAXbtXnCk0ykhC3WXRWcsmhT2fKnC7/wby1/7wyuNnQ
-         6aSg==
-X-Gm-Message-State: AOAM531PkzlGcc5LZz2xE58zdsgjqCIiUrgOO3486BgFbl1M8MyulMY0
-        9/bLKWvqdv0h6bbJv8jepuITAV/Ky64QX0VcjgaNrVX5tEB9I5e11NsONS01gOe99+CzlWlw/T4
-        zxCdhCRo57dELP6AnybP+uVU=
-X-Received: by 2002:a05:6402:40cd:: with SMTP id z13mr52705054edb.220.1635890066085;
-        Tue, 02 Nov 2021 14:54:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzoArJc5PJyFmrgP5x9ehQ8UaYai5yJ4ikd16u/rcYfqTGV7+IQpwGsj/N6mh6nOl5pALWDfQ==
-X-Received: by 2002:a05:6402:40cd:: with SMTP id z13mr52704835edb.220.1635890063645;
-        Tue, 02 Nov 2021 14:54:23 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id z2sm99880ejb.41.2021.11.02.14.54.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 14:54:23 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 626FE180249; Tue,  2 Nov 2021 22:54:21 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Re: RPM for the kernel samples?
-In-Reply-To: <875ca290-95ad-c5ed-bc4d-550a35f9bd12@intel.com>
-References: <875ca290-95ad-c5ed-bc4d-550a35f9bd12@intel.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Tue, 02 Nov 2021 22:54:21 +0100
-Message-ID: <87lf265ilu.fsf@toke.dk>
+        id S229636AbhKBWD1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Nov 2021 18:03:27 -0400
+Received: from www62.your-server.de ([213.133.104.62]:56304 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229525AbhKBWD1 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Nov 2021 18:03:27 -0400
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mi1pq-0005sv-VU; Tue, 02 Nov 2021 23:00:51 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1mi1pq-000Sgj-Rn; Tue, 02 Nov 2021 23:00:50 +0100
+Subject: Re: TC bpf_csum_diff problems post-5.6 kernel
+To:     ThomasPtacek@gmail.com, xdp-newbies@vger.kernel.org
+References: <CANDGNvaJZxXJaDYQKOF0pRZD5GWQYYZytnPyOUcZtejYE39jLg@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <c238d2db-c962-6e6b-cf2e-2eefb8d27c66@iogearbox.net>
+Date:   Tue, 2 Nov 2021 23:00:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CANDGNvaJZxXJaDYQKOF0pRZD5GWQYYZytnPyOUcZtejYE39jLg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.3/26341/Tue Nov  2 09:18:13 2021)
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Jesse Brandeburg <jesse.brandeburg@intel.com> writes:
+On 11/2/21 10:46 PM, Thomas Ptacek wrote:
+> The problem I'm dealing with is XDP-adjacent, but not itself an XDP issue, so
+> disregard if I'm too far outside the charter of the list. :)
+> 
+> We run an XDP/TC-based UDP CDN.
+> 
+> "Edge" machine XDP takes UDP packets off eno1, slaps a proxy header on
+> them and bounces them to a wg0 (WireGuard)  interface, which shuttles them
+> to "Worker" machines.
+> 
+> "Worker" TC BPF on wg0 intercepts those UDP packets, strips off the
+> proxy header, reflects values from that header back into the UDP and IP
+> headers of the skb, and fixes up the checksums.
+> 
+> All this works fine up through kernel 5.6. But we're working on a fleet update,
+> and something >= 5.8 is breaking my code (or my code was always broken
+> and relying on some pre-5.8 bug to function).
+> 
+> With a bunch of perf debugging I've narrowed the problem down: it's the
+> checksum diff that accounts for the stripped header. I do (roughly):
+> 
+>      /* not shown: parse, copy proxy header to stack */
+> 
+>      bpf_skb_adjust_room(ctx, -12, BPF_ADJ_ROOM_NET, 0)
 
-> Hi there, does anyone here know if the samples/bpf directory from the 
-> kernel is built as a part of an RPM from fedora or RHEL/Centos?
+Hmm, if you add BPF_F_ADJ_ROOM_NO_CSUM_RESET instead of 0 as flag above, would
+that work?
 
-It's certainly possible to build it from the existing kernel .spec file:
-
-https://src.fedoraproject.org/rpms/kernel/blob/rawhide/f/kernel.spec#_1046
-
-I know we have this available as an internal package for RHEL, but I
-don't think we ship it anywhere. And it seems like the flag is turned
-off for Fedora as well.
-
-What do you need it for? Opening an issue asking for it to be built for
-Fedora might be a good start; feel free to Cc me on that as well :)
-
--Toke
+>      skb_pull_data(ctx, sizeof(struct iphdr) + sizeof(struct udphdr))
+> 
+>      /* not shown: re-check packet pointers, set up pointers to headers ... */
+>      sum = ~((uint32_t)(udphdr->udp_sum))
+>      sum = bpf_csum_diff(&proxyHeader, 12, NULL, 0, sum);
+> 
+>      /* not shown: make other checksum fixups, write sum back to packet */
+> 
+> Using some perf-based printf debugging, I can see that the checksum
+> I'm getting from that bpf_csum_diff is wacky. Further: if I just leave the
+> proxy header in the UDP packet, but still change the UDP ports and
+> IP addresses, I get valid UDP checksums (albeit with a useless packet
+> that has a proxy header still in it).
+> 
+> I'm wondering if anyone can think of something that would have happened
+> post-5.6 that would have broken this (or if there's something obviously
+> abusive I'm doing with my "working" code, such that this never should have
+> worked to begin with).
+> 
+> ---
+> Thomas H. Ptacek
+> 
 
