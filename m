@@ -2,99 +2,86 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A056443803
-	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Nov 2021 22:46:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A79D6443817
+	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Nov 2021 22:54:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230478AbhKBVsv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 2 Nov 2021 17:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230457AbhKBVsu (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 2 Nov 2021 17:48:50 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEF2C061714
-        for <xdp-newbies@vger.kernel.org>; Tue,  2 Nov 2021 14:46:15 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 5so2264864edw.7
-        for <xdp-newbies@vger.kernel.org>; Tue, 02 Nov 2021 14:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=94iJRhAfc6ykKW4JaQp5t8yrlhWNPvq8XQ2glLltDMU=;
-        b=XsrB8/2NgwdJALJj0dvV1cDCI1uN7ym0c8cLmnQjQSyWaLn9qMgLh1JFzWhAAxE5yE
-         kewvA3ePM/RqJQLMZVub3uBxvIWevHjNaWlADL8rc5kAaGhSoxL3cyRvGyTH8C343oID
-         bZyBNwxdejTel6jK90kCffI2p1Wxf9qn3yNlVybsN6aA9LpFU2idZ9Xwj+hsk5zCuJMk
-         GUc4ZIjNFmHLCuiUsi3gjQ8YgVtG2COGzq3vMvjHp58pCCvjzwiCQWk9bmHIolKJ9GEi
-         f5WJB6RRcNBUMerqI1QXRlAe1zZhX/lO0P8oMo/u6oTRQz+/awfbMExgfmRSI5HdmY1X
-         ZMcA==
+        id S229725AbhKBV5G (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 2 Nov 2021 17:57:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36340 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229525AbhKBV5F (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Tue, 2 Nov 2021 17:57:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635890069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hg5IlXIOXeJO1187/xa1gkBUxwPjbWmgH/vnUofDkGQ=;
+        b=Ex7kuJHcN6m723C02dR7Z3h+UrqT8Asaz1mL4rMj8TGg65kI0OM6s0tqaRVcUUfAbPdKhk
+        Jo4G9BaeGMZw1NkjT88yROcb3Pv/INB77jBvadvOPLo0kxfzI6Ov4uSoaAZUYgG3DrZOzF
+        1pYzh8m+vkipsXi0sOV+8s2888NhEuk=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-452-tQtMiuemO6-SkXF0kXCKRA-1; Tue, 02 Nov 2021 17:54:28 -0400
+X-MC-Unique: tQtMiuemO6-SkXF0kXCKRA-1
+Received: by mail-ed1-f72.google.com with SMTP id m8-20020a056402510800b003e29de5badbso643926edd.18
+        for <xdp-newbies@vger.kernel.org>; Tue, 02 Nov 2021 14:54:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=94iJRhAfc6ykKW4JaQp5t8yrlhWNPvq8XQ2glLltDMU=;
-        b=WAv3atju5+GmSG4nFV1vPoryoxbd+vdUTh3KO2qM+v2raCPJE8M58HMeLM7NMUI80D
-         Yggm95UilqlcZrNPhn/JQTEw8C8AGcQ3pHMYDA2uPR6E1PZ3YvLCIC8ZFEDxqflD3mSt
-         +4PQVM4gBubOwlx8fHJbQ9xQWdbU4gXyKn399cIKTstk/F16ap8W+X7AjCJ9XZgjQSfT
-         6eplapEP50nPLeRQA1gp33mhkJAbIH9ky2DQ0Xh1/8N/VRur9uMW/6AaoOWmthutJ5gM
-         Jailbzx3cp+6O2AKBjeJI+PzRt4T9GzO8jyZmtLmZSmFGeIlcHcjVVJnV18/gSMEcxzx
-         sf1Q==
-X-Gm-Message-State: AOAM533dyonirdvQbiHQLvaMKe7S1KSQf/JIHVVSw7+GCIFZcJdLL2UB
-        devAIzX0J5TDC8HI12c24XKRvfjrXkd34DxqHLxoxoIRRaVKwg==
-X-Google-Smtp-Source: ABdhPJzhSXOQ9KqmktJfEEHdkj8Lf8DXLB5hpOeevvqbdH3ECUPTPaCbLkq4Bme5lpTuskA6QrTLSzKvcSFu5vbmDlU=
-X-Received: by 2002:a17:906:3699:: with SMTP id a25mr49599529ejc.452.1635889573578;
- Tue, 02 Nov 2021 14:46:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hg5IlXIOXeJO1187/xa1gkBUxwPjbWmgH/vnUofDkGQ=;
+        b=nCFo2259wfp89aRG5WxbGA/qseBoUaxrIUNb0uJ355ZvPuTT5SAvN3z27SzULW4yeK
+         TUUJdwMUyASuJBupJ0qafdEY0DAjrIYnkjtz/tOLblr2efq+SgkB+xjb/KCR7K0d67iA
+         C93KfQx6w3jw1pMc3a141EL/jYgRBXHN7Ql5YWB484us46XSwVaM9QL9VSGPf5ngAl63
+         jrK1pEP1AwsxDNp1k4IFucC7B6DfmNCaMi0xetw32XUgnhLcHpf5LFkUits8fOEiSN/g
+         61RnKnDQPXtDqcbNCvKfyjgvknAXbtXnCk0ykhC3WXRWcsmhT2fKnC7/wby1/7wyuNnQ
+         6aSg==
+X-Gm-Message-State: AOAM531PkzlGcc5LZz2xE58zdsgjqCIiUrgOO3486BgFbl1M8MyulMY0
+        9/bLKWvqdv0h6bbJv8jepuITAV/Ky64QX0VcjgaNrVX5tEB9I5e11NsONS01gOe99+CzlWlw/T4
+        zxCdhCRo57dELP6AnybP+uVU=
+X-Received: by 2002:a05:6402:40cd:: with SMTP id z13mr52705054edb.220.1635890066085;
+        Tue, 02 Nov 2021 14:54:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzoArJc5PJyFmrgP5x9ehQ8UaYai5yJ4ikd16u/rcYfqTGV7+IQpwGsj/N6mh6nOl5pALWDfQ==
+X-Received: by 2002:a05:6402:40cd:: with SMTP id z13mr52704835edb.220.1635890063645;
+        Tue, 02 Nov 2021 14:54:23 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id z2sm99880ejb.41.2021.11.02.14.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Nov 2021 14:54:23 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 626FE180249; Tue,  2 Nov 2021 22:54:21 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: Re: RPM for the kernel samples?
+In-Reply-To: <875ca290-95ad-c5ed-bc4d-550a35f9bd12@intel.com>
+References: <875ca290-95ad-c5ed-bc4d-550a35f9bd12@intel.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Tue, 02 Nov 2021 22:54:21 +0100
+Message-ID: <87lf265ilu.fsf@toke.dk>
 MIME-Version: 1.0
-Reply-To: ThomasPtacek@gmail.com
-From:   Thomas Ptacek <thomasptacek@gmail.com>
-Date:   Tue, 2 Nov 2021 16:46:02 -0500
-Message-ID: <CANDGNvaJZxXJaDYQKOF0pRZD5GWQYYZytnPyOUcZtejYE39jLg@mail.gmail.com>
-Subject: TC bpf_csum_diff problems post-5.6 kernel
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-The problem I'm dealing with is XDP-adjacent, but not itself an XDP issue, so
-disregard if I'm too far outside the charter of the list. :)
+Jesse Brandeburg <jesse.brandeburg@intel.com> writes:
 
-We run an XDP/TC-based UDP CDN.
+> Hi there, does anyone here know if the samples/bpf directory from the 
+> kernel is built as a part of an RPM from fedora or RHEL/Centos?
 
-"Edge" machine XDP takes UDP packets off eno1, slaps a proxy header on
-them and bounces them to a wg0 (WireGuard)  interface, which shuttles them
-to "Worker" machines.
+It's certainly possible to build it from the existing kernel .spec file:
 
-"Worker" TC BPF on wg0 intercepts those UDP packets, strips off the
-proxy header, reflects values from that header back into the UDP and IP
-headers of the skb, and fixes up the checksums.
+https://src.fedoraproject.org/rpms/kernel/blob/rawhide/f/kernel.spec#_1046
 
-All this works fine up through kernel 5.6. But we're working on a fleet update,
-and something >= 5.8 is breaking my code (or my code was always broken
-and relying on some pre-5.8 bug to function).
+I know we have this available as an internal package for RHEL, but I
+don't think we ship it anywhere. And it seems like the flag is turned
+off for Fedora as well.
 
-With a bunch of perf debugging I've narrowed the problem down: it's the
-checksum diff that accounts for the stripped header. I do (roughly):
+What do you need it for? Opening an issue asking for it to be built for
+Fedora might be a good start; feel free to Cc me on that as well :)
 
-    /* not shown: parse, copy proxy header to stack */
+-Toke
 
-    bpf_skb_adjust_room(ctx, -12, BPF_ADJ_ROOM_NET, 0)
-    skb_pull_data(ctx, sizeof(struct iphdr) + sizeof(struct udphdr))
-
-    /* not shown: re-check packet pointers, set up pointers to headers ... */
-    sum = ~((uint32_t)(udphdr->udp_sum))
-    sum = bpf_csum_diff(&proxyHeader, 12, NULL, 0, sum);
-
-    /* not shown: make other checksum fixups, write sum back to packet */
-
-Using some perf-based printf debugging, I can see that the checksum
-I'm getting from that bpf_csum_diff is wacky. Further: if I just leave the
-proxy header in the UDP packet, but still change the UDP ports and
-IP addresses, I get valid UDP checksums (albeit with a useless packet
-that has a proxy header still in it).
-
-I'm wondering if anyone can think of something that would have happened
-post-5.6 that would have broken this (or if there's something obviously
-abusive I'm doing with my "working" code, such that this never should have
-worked to begin with).
-
----
-Thomas H. Ptacek
