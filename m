@@ -2,82 +2,62 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 917074775E6
-	for <lists+xdp-newbies@lfdr.de>; Thu, 16 Dec 2021 16:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B9D481C07
+	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Dec 2021 13:27:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235401AbhLPP2y (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 16 Dec 2021 10:28:54 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:35568 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229868AbhLPP2y (ORCPT
+        id S239191AbhL3M1R (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 30 Dec 2021 07:27:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239239AbhL3M1Q (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:28:54 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C4BF61E3D
-        for <xdp-newbies@vger.kernel.org>; Thu, 16 Dec 2021 15:28:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6606CC36AE0;
-        Thu, 16 Dec 2021 15:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639668533;
-        bh=dlEd7e4eiO241E74kImuqcGfTnL6Zx5D9OAyOci1Ltc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u4t3qdn3jkBRR33Xtch/hloeEnzSbZwC7CbhotI7lTC8jgnwpt+Z5LleRTAiVIS8q
-         VQvJbYiCRsKO/SVd8yBocq7aLcx3KMq7cU6XQspIcBgLCkVRJdByigX/AoiNhevhWU
-         ZDGrGgYkDaeyKpinaDCNFpL7FKUcZCqrnBHt+MOBYltmTZnwEyZU8PqpqeQIkF6+u1
-         sy3oRfEnkFMibMGRI5zN8tNtHW1FNg8mM0I2Yo/hPqHInR518vQO27PJhU4mdELgex
-         Udrp1lj2gihoFhSfG9oChFSOwOk/zvBg7IJA2ivN1TlVDhbtEAU3iEyXIV3rFwF63I
-         Y4xOwAEABkWQg==
-Date:   Thu, 16 Dec 2021 07:28:52 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "Karlsson, Magnus" <magnus.karlsson@intel.com>
-Cc:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
-        =?UTF-8?B?QmrDtnJuIFQ=?= =?UTF-8?B?w7ZwZWw=?= <bjorn@kernel.org>,
-        "Brouer, Jesper" <brouer@redhat.com>,
-        Xdp <xdp-newbies@vger.kernel.org>,
-        "Ong, Boon Leong" <boon.leong.ong@intel.com>,
-        Joao Pedro Barros Silva <jopbs@vestas.com>,
-        Diogo Alexandre Da Silva Lima <dioli@vestas.com>,
-        "Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>
-Subject: Re: AF_XDP not transmitting frames immediately
-Message-ID: <20211216072852.680ef9e0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <MW3PR11MB4602206699A28A59038D21E5F7779@MW3PR11MB4602.namprd11.prod.outlook.com>
-References: <d1d29113-622c-f245-c4cd-b1bf690d2dc2@redhat.com>
-        <MW3PR11MB46022F959CBD59B5FFF1D299F7759@MW3PR11MB4602.namprd11.prod.outlook.com>
-        <9e18a444-e30f-4ae8-4e3b-af5e9393e971@redhat.com>
-        <MW3PR11MB460208C3A86CF7D4B9B2E1C3F7769@MW3PR11MB4602.namprd11.prod.outlook.com>
-        <2eeb6d48-09b6-993b-d324-d2fc14cbb12b@redhat.com>
-        <MW3PR11MB4602206699A28A59038D21E5F7779@MW3PR11MB4602.namprd11.prod.outlook.com>
+        Thu, 30 Dec 2021 07:27:16 -0500
+X-Greylist: delayed 347 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Dec 2021 04:27:15 PST
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAB8C061574
+        for <xdp-newbies@vger.kernel.org>; Thu, 30 Dec 2021 04:27:15 -0800 (PST)
+Received: from [IPv6:2001:1488:fffe:6:3401:de9e:a364:2ec3] (unknown [IPv6:2001:1488:fffe:6:3401:de9e:a364:2ec3])
+        by mail.nic.cz (Postfix) with ESMTPSA id 0778714087E
+        for <xdp-newbies@vger.kernel.org>; Thu, 30 Dec 2021 13:21:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1640866885; bh=dF93fFq+jKrJRCQNP9kY9HXAPb+Odg9DsHKtTDpI9SQ=;
+        h=To:From:Date;
+        b=uHW98Iw7fC+vfOLuyeNywzch1tBUrBDfSu/BDEZNzzPwTyLuWw5yQGUgMG9WZKx80
+         NMm82cEV2CtQ/Ac+CDhm2mG9Hc9mH7frbFndjP4E3Hg7kZRsjG9Cqcbq+rs4CEqtt5
+         Z5HsRlXW0r4FaD+kiPIzf+sLPoUxsNOOdsN15X/8=
+To:     xdp-newbies@vger.kernel.org
+From:   Daniel Salzman <daniel.salzman@nic.cz>
+Subject: NIC rx/tx ring size vs XSK rx/tx ring size
+Message-ID: <e33c8463-ed31-a2b7-f8d6-5275da05b777@nic.cz>
+Date:   Thu, 30 Dec 2021 13:21:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-100.0 required=5.9 tests=SHORTCIRCUIT,
+        USER_IN_WELCOMELIST,USER_IN_WHITELIST shortcircuit=ham
+        autolearn=disabled version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, 16 Dec 2021 08:34:23 +0000 Karlsson, Magnus wrote:
-> > "Time" will tell if it is good enough (pun intended).
-> > Meaning I will implement and measure it.
-> > The busy-poll mode does sound like a way forward.
-> > 
-> > Looking at kernel code, I can see that drivers TX NAPI usually does DMA-TX
-> > completion *before* transmitting new frames.  This usually makes sense,
-> > but for our use-case of hitting a narrow time-slot, I worry about the jitter this
-> > introduces.  I would like to see a mode/flag that would allow transmitting
-> > new frames (and afterwards invoking/scheduling TX-completion, e.g. via
-> > raising the softirq/NAPI).
-> > Well this is future work, first I will measure current implementation.  
-> 
-> Maciej has been experimenting with the ice driver to do sending
-> first. Completions are only done lazily when needed to make sure that
-> there are always a number of descriptors available for sending. This
-> yields much better throughput and is the style that DPDK uses for its
-> drivers. Hopefully, this will also improve latency, though we have
-> not measured that. Could be adopted for the igc driver too if that is
-> the case.
+Hello,
 
-I think this came up before, there was a concern that some applications
-may forgo retransmiting data until they see a completions (like
-skb_still_in_host_queue()).  Make sure you call out that it's a change
-in behavior in the commit message and/or docs.
+Please what is the relation between NIC ring sizes and XDP socket ring sizes?
+If my app sets XDP_RX_RING and XDP_TX_RING, what are the optimal values for ethtool -G rx/tx?
+
+Also I don't understand why changing TX ring size changes some XDP ring size for the ice driver (Kernel 5.13):
+[  424.542118] ice 0000:41:00.0 enp65s0f0: Changing Tx descriptor count from 256 to 2048
+[  424.542176] ice 0000:41:00.0 enp65s0f0: Changing XDP descriptor count from 256 to 2048   <- What is that?
+
+In the case of the i40e driver, there is no XDP ring logged:
+[847243.925269] i40e 0000:81:00.0 enp129s0f0: Changing Tx descriptor count from 256 to 2048.
+
+Thank you,
+Daniel
+
