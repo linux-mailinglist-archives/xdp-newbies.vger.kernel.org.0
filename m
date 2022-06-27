@@ -2,46 +2,46 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A3355D741
-	for <lists+xdp-newbies@lfdr.de>; Tue, 28 Jun 2022 15:18:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA82355DD55
+	for <lists+xdp-newbies@lfdr.de>; Tue, 28 Jun 2022 15:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234158AbiF0Kik (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 27 Jun 2022 06:38:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
+        id S234290AbiF0Kv1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 27 Jun 2022 06:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbiF0Kij (ORCPT
+        with ESMTP id S232814AbiF0Kv0 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 27 Jun 2022 06:38:39 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CEA6262
-        for <xdp-newbies@vger.kernel.org>; Mon, 27 Jun 2022 03:38:37 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id z21so15791164lfb.12
-        for <xdp-newbies@vger.kernel.org>; Mon, 27 Jun 2022 03:38:37 -0700 (PDT)
+        Mon, 27 Jun 2022 06:51:26 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955A06446
+        for <xdp-newbies@vger.kernel.org>; Mon, 27 Jun 2022 03:51:25 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id w20so15867440lfa.11
+        for <xdp-newbies@vger.kernel.org>; Mon, 27 Jun 2022 03:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dectris.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Go6kImGLpx/WA5n39YfQqk30YtBjSyhlROEBPwGh7AM=;
-        b=TvDnMnkmHFBb6/l5L0ykYNVop4RTfOIAKVHCfSKYcFULrG/RgrEbp5PnuSt88DK2NG
-         0HlwJg+kPnIAyha+elr4ErMwwt/NGvgMQsy80CpA2pTDMYpV4xoe2weREM5b15TtrmAb
-         7z2hG5eIjTK3hV6tVBfaJMLk0iD7xTgKwsgx4=
+        bh=AHqvCEHWoRiv6l8pWkxK4Jy7oot4KU3OcIArvMk37a0=;
+        b=nOb17W00hdIk2/9ykK2B3J8hhW6eHtoDbVvx4idaNfyazaLc9mz88tUDSFgA5h7vm6
+         Id6amuM571M8/8C4vnwoNdN+uU8nTRKzIEwBvnpvZA+JwBbN4xByIeFA+uwoBd11h+DZ
+         CxTLvOgp6R6fbbWz04Kw6XtrbtrC7i8XzMlJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Go6kImGLpx/WA5n39YfQqk30YtBjSyhlROEBPwGh7AM=;
-        b=TKfj7G1RhdULCijegKJ4alS5xDNkQPF8+Sssk3gF/Ols/OAsM5egOkU78EayqGbN7M
-         m4VfukxSNKiOFsk/a8SArntLKx4m13IQzl74k62pGfjy0ei9zoixVz2td1ydiCO6KbsT
-         WbNr6quuvqlp1kLaO6NcDzPPBlGbebp2nXJqwI/u98QuNyfriX0b1h8h0WlcFL+lcxaI
-         gq3Y/REbRhtLlz2n+N3ZZabfVPJNt51xnsDxgCW2f0Hg/1uEGuIxzzHKuQrfTiMGTQvy
-         K+Aw9Am2GZo/eX7lTdZaT3qKLarukusSGyB7ntjlf3J7Rw8GcQeUQbWpunju4Fx+IfEa
-         NJjw==
-X-Gm-Message-State: AJIora+kcaQgVQNKn0BqQ+ojsyPyd1K7iZwgmavgJNeWi2Qq4HUgzQGJ
-        w+lXLNXayo2EtSB34/opZzYtcukWg+3UMieL7l/8Hg==
-X-Google-Smtp-Source: AGRyM1vQDOb6SNaEseReG16n3eDQhqPfOdzJGT9DzitzCtWYFIcsYX28lVNmPTYTRe0ULgCNFrMPAPzy2K1ctJhPi0g=
+        bh=AHqvCEHWoRiv6l8pWkxK4Jy7oot4KU3OcIArvMk37a0=;
+        b=RJC2MZW1dWGD7fBS1RCgVgcIvmT6dby9SfpKmRDUv4+A8IJrxAxRvtS9BjfZJ/LZqG
+         kiAm60Eb3+FDIdmGNWFrZeIeFlhGY9IAzFYnZ90cQdTOP3XYL+TR+OzylttJh1omAG//
+         +z1EqeCIpRpkqsJ7oy29ve20Ek6yTBcck5DqiV25aH2/Eo3kbkPQudstBt0WLUXIqTHG
+         8tLINubuvqRjPffxiMZHQMtvEtvQYG5DffTgmlDvwb4GP/gt5qTmCB1mFbLBJ8jMykIs
+         jtgThkCVJw23T/zup9FhKyg2rF20fJDuHklWJlI3TqPxuZRQXsqq13xruMbQI99hlz3N
+         uc9w==
+X-Gm-Message-State: AJIora8N67p6jaoqXy19DyO5qJUBaz8KD+P+Mc5pbvWjKroJBSkl5eyf
+        Q85VY52ZQtUTrK53rFmTOOPFr4Lm8q5xbpL73MhsWQ==
+X-Google-Smtp-Source: AGRyM1uwfWVqCyDwCPIpVJW0JWEQ0qPjqioxt6U+Ov5dHnBn1OUv27iyorXeOeEipcdgV95thVPR6XNmR73I8Q1p9nM=
 X-Received: by 2002:a05:6512:2806:b0:47f:af40:a44e with SMTP id
- cf6-20020a056512280600b0047faf40a44emr8237350lfb.80.1656326315733; Mon, 27
- Jun 2022 03:38:35 -0700 (PDT)
+ cf6-20020a056512280600b0047faf40a44emr8270637lfb.80.1656327083945; Mon, 27
+ Jun 2022 03:51:23 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAHApi-mGEA61pL6Ff_qQK0rUkLXqAr=TppS4sWQPPZCC67z8tg@mail.gmail.com>
  <CAHApi-mY5V6k4c5YkD+38Vs1FWwWq3fvGgMhDoELjXjAUrdL1w@mail.gmail.com>
@@ -51,8 +51,8 @@ References: <CAHApi-mGEA61pL6Ff_qQK0rUkLXqAr=TppS4sWQPPZCC67z8tg@mail.gmail.com>
  <CAHApi-nTBXLUB+3jt27A2Qiewfam_YjfFXZs0mKu2qarPXAguQ@mail.gmail.com> <CY4PR1101MB2360C2F07AEC4EAB9043A64B90B99@CY4PR1101MB2360.namprd11.prod.outlook.com>
 In-Reply-To: <CY4PR1101MB2360C2F07AEC4EAB9043A64B90B99@CY4PR1101MB2360.namprd11.prod.outlook.com>
 From:   Kal Cutter Conley <kal.conley@dectris.com>
-Date:   Mon, 27 Jun 2022 12:38:24 +0200
-Message-ID: <CAHApi-nafBSiNMLX6c_=+ago_CY2oKnz_k4dB4Tkzxu3HSuE_Q@mail.gmail.com>
+Date:   Mon, 27 Jun 2022 12:51:13 +0200
+Message-ID: <CAHApi-na1Oq9gvho92gAMtLJT5OKE9z7nNbopZ4Br7uCZom9ug@mail.gmail.com>
 Subject: Re: XDP multi-buffer and AF_XDP
 To:     "Sarkar, Tirthendu" <tirthendu.sarkar@intel.com>
 Cc:     "Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>,
@@ -73,9 +73,10 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi Tirtha,
-We are mainly working with mlx5 NICs (although I also have a i40e NIC
-to test with). Do your AF_XDP patches work with zero-copy?
+What about using huge pages for the UMEM and the unaligned chunk flag
+to receive jumbo frames with AF_XDP? Last time I checked this wasn't
+supported. Is this something that works today without XDP
+multi-buffer?
 
 Kal
 
