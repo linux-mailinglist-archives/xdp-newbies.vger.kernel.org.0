@@ -2,180 +2,224 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA3A25733F7
-	for <lists+xdp-newbies@lfdr.de>; Wed, 13 Jul 2022 12:17:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83ACC5739E0
+	for <lists+xdp-newbies@lfdr.de>; Wed, 13 Jul 2022 17:18:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbiGMKRQ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 13 Jul 2022 06:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42198 "EHLO
+        id S230093AbiGMPSa (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 13 Jul 2022 11:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230472AbiGMKRP (ORCPT
+        with ESMTP id S236746AbiGMPS2 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 13 Jul 2022 06:17:15 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B66F54E2
-        for <xdp-newbies@vger.kernel.org>; Wed, 13 Jul 2022 03:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657707435; x=1689243435;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=zkuMpTW6HoWiWH570IPWhUEQalqXYmY/y3t74Aj48AY=;
-  b=HwtwynJvAd0e7BtWexK30iajQHZ6LHbGLkNRPgaXEdm8g8s696k2S9KS
-   4QwqNTBoLTAVbcRYmEXnCZdGh7eUhA0YfSwRN5qpNh3evsWJ+uBn6n1Ue
-   vw0d7w3hv++YlXqxuF6rOYDfWCHYfPL4EI6qhvEoWtr7G+HYPdrjrtDDt
-   Ewo63cA5rnWcOWuhvD1en3FyHAnQRjo+0CiddUUly8BkwLBSOu0AjVKao
-   ZxsBtDJP1V9LSKeOej54vpdxb8p7UkefHG57gaUFxo0NxVYaUs4ghEW8r
-   Bf/jwIrS/0QKcrIXzhPaWbNFjdi1FWN9Rf3leSblByfHevjcaH9fdO5XX
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10406"; a="283926184"
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="283926184"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 03:16:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="592945876"
-Received: from boxer.igk.intel.com (HELO boxer) ([10.102.20.173])
-  by orsmga007.jf.intel.com with ESMTP; 13 Jul 2022 03:16:50 -0700
-Date:   Wed, 13 Jul 2022 12:16:44 +0200
-From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Cc:     Adam Smith <hrotsvit@gmail.com>, xdp-newbies@vger.kernel.org
-Subject: Re: XDP redirect throughput with multi-CPU i40e
-Message-ID: <Ys6bjHVRVJLkBSxU@boxer>
-References: <CADx6jH6nFOGjM1Q3Yj65Bh4fcT_qjf-k-d31vpGsxHbD-2=g=w@mail.gmail.com>
- <87o7xuowq8.fsf@toke.dk>
+        Wed, 13 Jul 2022 11:18:28 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB47C45063
+        for <xdp-newbies@vger.kernel.org>; Wed, 13 Jul 2022 08:18:24 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id bp17so11752829lfb.3
+        for <xdp-newbies@vger.kernel.org>; Wed, 13 Jul 2022 08:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MpuFBVfsrzciBDtDyj0/Ip6wKTYcf0ckZSn2qSh10Uw=;
+        b=M6oJcczWeZ3sLrWm0MxTblUQ9OiRI9Il96h/cbmB4DLwzhidObjEc679/d/R+8iw+i
+         ZpsRbf7hJv9jnWV2Lb91zjANcnD/jkY1AvGE6Wir0AAJdp7WDMIIwG1S05FF0s1yV3yY
+         LWz5A2EVV9+2IqKuZ4tsWT/ykZ4LWOgOVwP2Kn/xOch3fusYqUOz8eXuTO+/ES3uRcY3
+         uNHG/QGhKUvgnbyZFNIHug2DIX85EEiqerbko83AYuAoyV003Cf5ss1bpH4ANl4jmID4
+         R9zRxRIxCqpQXi4huS+JYeO02BJgsj7Xs0auL9Zm4BWbGGHaZPo0L8pWX4LKwKagd6zJ
+         A1Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MpuFBVfsrzciBDtDyj0/Ip6wKTYcf0ckZSn2qSh10Uw=;
+        b=7GUAbhmqZASCv08PyFmaiAJcixJ4KMmItq468CHW8/Tl3Mvpuiv+YaiO3ZVf7cOxE2
+         MU75sZZWi6LSUoeC13UzlloIB8kutGT/HFbIOVz4M1tJM8219/mdJe6j6i+UVXR7t0Dp
+         wua3fQx+NE0uwrTIHGZ/QWeo44HpYvIGKrxIJM3/OHiu46OhwHJG6cguxYRdCBi1UCrM
+         5WZGnGDKiytuhiFKUCfuYO2RIoRCS45YSqgzKvukoMDnG6itLi32gm/a7yT7F2gc07Yf
+         JsAd6fVLl48CldqikcKKMOiSL4RiFuaqN53uokkjXGYZAS+/1CXgN7VEIBv6IC2823iR
+         3mIA==
+X-Gm-Message-State: AJIora9IiNJgpo63p4ivkRug1ljUNF96C6wzim4kRnJoVQ/4kmqR5a72
+        YqqjIKwFSrTnydlNnzy14x1SdDwmt1Lu1i5jcJYfoE/7
+X-Google-Smtp-Source: AGRyM1viq3nEj+AWeFEUzDYCwuc28Y8dX2NIFd6EvkS436aLfoIQNfgt2uyhTnpbyPAezBrzbcl3Mv2cX0SHN3gTL5E=
+X-Received: by 2002:a05:6512:2282:b0:489:fdb3:2351 with SMTP id
+ f2-20020a056512228200b00489fdb32351mr2248791lfu.209.1657725503090; Wed, 13
+ Jul 2022 08:18:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87o7xuowq8.fsf@toke.dk>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CADx6jH6nFOGjM1Q3Yj65Bh4fcT_qjf-k-d31vpGsxHbD-2=g=w@mail.gmail.com>
+ <87o7xuowq8.fsf@toke.dk> <Ys6bjHVRVJLkBSxU@boxer>
+In-Reply-To: <Ys6bjHVRVJLkBSxU@boxer>
+From:   Adam Smith <hrotsvit@gmail.com>
+Date:   Wed, 13 Jul 2022 10:18:14 -0500
+Message-ID: <CADx6jH6rXbicw=FX-TYUJ+9S1dY7_d6n=vuVxZKNv9e38ZORNg@mail.gmail.com>
+Subject: Re: XDP redirect throughput with multi-CPU i40e
+To:     Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 11:19:11PM +0200, Toke Høiland-Jørgensen wrote:
-> Adam Smith <hrotsvit@gmail.com> writes:
-> 
-> > Hello,
-> >
-> > I have a question regarding bpf_redirect/bpf_redirect_map and latency
-> > that we are seeing in a test. The environment is as follows:
-> >
-> > - Debian Bullseye, running 5.18.0-0.bpo.1-amd64 kernel from
-> > Bullseye-backports (Also tested on 5.16)
-> > - Intel Xeon X3430 @ 2.40GHz. 4 cores, no HT
-> > - Intel X710-DA2 using i40e driver included with the kernel.
-> > - Both interfaces (enp1s0f0 and enps0f1) in a simple netfilter bridge.
-> > - Ring parameters for rx/tx are both set to the max of 4096, with no
-> > other nic-specific parameters changed.
-> >
-> > Each interface has 4 combined IRQs, pinned per set_irq_affinity.
-> > `irqbalanced` is not installed.
-> >
-> > Traffic is generated by another directly attached machine via iperf3
-> > 3.9 (`iperf3 -c -t 0 192.168.1.3 --bidir`) to a directly attached
-> > server on the other side.
-> >
-> > The server in question does nothing more than forward packets as a
-> > transparent bridge.
-> >
-> > An XDP program is installed on f0 to redirect to f1, and f1 to
-> > redirect to f0. I have tried programs that simply call
-> > `bpf_redirect()`, as well as programs that share a device map and call
-> > `bpf_redirect_map()`, with idententical results.
-> >
-> > When channel parameters for each interface are reduced to a single IRQ
-> > via `ethtool -L enp1s0f0 combined 1`, and both interface IRQs are
-> > bound to the same CPU core via smp_affinity, XDP produces improved
-> > bitrate with reduced CPU utilization over non-XDP tests:
-> > - Stock netfilter bridge: 9.11 Gbps in both directions at 98%
-> > utilization of pinned core.
-> > - XDP: Approximately 9.18 Gbps in both directions at 50% utilization
-> > of pinned core.
-> >
-> > However, when multiple cores are engaged (combined 4, with
-> > set_irq_affinity), XDP processes markedly fewer packets per second
-> > (950,000 vs approximately 1.6 million). iperf3 also shows a large
-> > number of retransmissions in its output regardless of CPU engagement
-> > (approximately 6,500 with XDP over 2 minutes vs 850 with single core
-> > tests).
-> >
-> > This is a sample taken from linux/samples xdp_monitor showing
-> > redirection and transmission of packets with XDP engaged:
-> >
-> > Summary                              944,508 redir/s            0
-> > err,drop/s    944,506 xmit/s
-> >   kthread                                           0 pkt/s
-> >    0 drop/s                   0 sched
-> >   redirect total                        944,508 redir/s
-> >       cpu:0                               470,148 redir/s
-> >       cpu:2                                 15,078 redir/s
-> >       cpu:3                               459,282 redir/s
-> >   redirect_err                                    0 error/s
-> >   xdp_exception                                0 hit/s
-> >   devmap_xmit total               944,506 xmit/s               0
-> > drop/s         0 drv_err/s
-> >      cpu:0                                 470,148 xmit/s
-> >  0 drop/s         0 drv_err/s
-> >      cpu:2                                   15,078 xmit/s
-> >   0 drop/s         0 drv_err/s
-> >      cpu:3                                 459,280 xmit/s
-> >  0 drop/s         0 drv_err/s
-> >   xmit enp1s0f0->enp1s0f1    485,249 xmit/s                0 drop/s
-> >      0 drv_err/s
-> >      cpu:0                                 470,172 xmit/s
-> >   0 drop/s         0 drv_err/s
-> >      cpu:2                                   15,078 xmit/s
-> >    0 drop/s         0 drv_err/s
-> >   xmit enp1s0f1->enp1s0f0    459,263 xmit/s                0 drop/s
-> >      0 drv_err/s
-> >      cpu:3                                 459,263 xmit/s
-> >   0 drop/s         0 drv_err/s
-> >
-> > Our current hypothesis is that this is a CPU affinity issue. We
-> > believe a different core is being used for transmission. In efforts to
-> > prove this, how can we successfully measure if bpf_redirect() is
-> > causing packets to be transmitted by a different core than they were
-> > received by? We are still trying to understand how bpf_redirect()
-> > selects which core/IRQ to transmit on and would appreciate any insight
-> > or followup material to research.
-> 
-> There is no mechanism in bpf_redirect() to switch CPUs (outside of
-> cpumap). When you call XDP_REDIRECT, the frame will be added to a
-> per-device per-CPU flush list, which will be flushed (on that same CPU).
-> The i40e allocates separate rings for XDP, though, and not sure how it
-> does that, so maybe those are what's missing. You should be able to see
-> drops in the output if that's what's going on; and the packets should
-> still be processed by XDP.
-> 
-> So sounds more like the hardware configuration is causing packet loss
-> before it even hits XDP. Do you see anything in the ethtool stats that
-> might explain where packets are being dropped?
+Hi,
 
-I don't know how irqs are exactly bound to which cpus but most probably
-this is driver issue as Toke is saying.
+Maciej - in this particular situation, `combined 4` was selected
+because the CPU being used only has 4 cores, and 4 is what the driver
+auto-selects upon boot as well.
 
-i40e_xdp_xmit() uses smp_processor_id() as an index to xdp rings array, so
-if you limit queue count to 4 and bound irq to say cpu 10, you'll return
-with -ENXIO as queue_index will be >= than vsi->num_queue_pairs.
+Toke - we are seeing drops from `port.rx_dropped` on both interfaces:
 
-I believe that such issues were addressed on ice driver. In there, xdp
-rings array is sized to num_possible_cpus() regardless of user's queue
-count setting and smp_processor_id() can be safely used.
+1 IRQ, same CPU, no XDP -- port.rx_dropped: 0 pps / interface
+1 IRQ, same CPU, XDP_REDIRECT -- port.rx_dropped: appx. 50-75 pps / interfa=
+ce
+4 IRQ, no XDP -- port.rx_dropped: appx. 25-50 pps / interface
+4 IRQ, XDP_REDIRECT -- port.rx_dropped: appx. 2000 pps / interface
 
-Adam, could you skip the `ethtool -L $IFACE combined 4` and work with your
-4 flows to see if there is any difference?
+`rx_dropped` remains 0 in all cases.
 
-Maciej
+Of note, when XDP is not used in a 4 IRQ setup, CPU load is shown on 2
+cores, related to the IRQs handling the 2 primary traffic flows
+generated by bidirectional iperf3 (a byproduct of RSS). When XDP is
+used, the load on those two cores drops significantly, but we see an
+increased load on a 3rd core.
 
-> 
-> -Toke
-> 
+Thanks!
+Adam
+
+On Wed, Jul 13, 2022 at 5:17 AM Maciej Fijalkowski
+<maciej.fijalkowski@intel.com> wrote:
+>
+> On Tue, Jul 12, 2022 at 11:19:11PM +0200, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:
+> > Adam Smith <hrotsvit@gmail.com> writes:
+> >
+> > > Hello,
+> > >
+> > > I have a question regarding bpf_redirect/bpf_redirect_map and latency
+> > > that we are seeing in a test. The environment is as follows:
+> > >
+> > > - Debian Bullseye, running 5.18.0-0.bpo.1-amd64 kernel from
+> > > Bullseye-backports (Also tested on 5.16)
+> > > - Intel Xeon X3430 @ 2.40GHz. 4 cores, no HT
+> > > - Intel X710-DA2 using i40e driver included with the kernel.
+> > > - Both interfaces (enp1s0f0 and enps0f1) in a simple netfilter bridge=
+.
+> > > - Ring parameters for rx/tx are both set to the max of 4096, with no
+> > > other nic-specific parameters changed.
+> > >
+> > > Each interface has 4 combined IRQs, pinned per set_irq_affinity.
+> > > `irqbalanced` is not installed.
+> > >
+> > > Traffic is generated by another directly attached machine via iperf3
+> > > 3.9 (`iperf3 -c -t 0 192.168.1.3 --bidir`) to a directly attached
+> > > server on the other side.
+> > >
+> > > The server in question does nothing more than forward packets as a
+> > > transparent bridge.
+> > >
+> > > An XDP program is installed on f0 to redirect to f1, and f1 to
+> > > redirect to f0. I have tried programs that simply call
+> > > `bpf_redirect()`, as well as programs that share a device map and cal=
+l
+> > > `bpf_redirect_map()`, with idententical results.
+> > >
+> > > When channel parameters for each interface are reduced to a single IR=
+Q
+> > > via `ethtool -L enp1s0f0 combined 1`, and both interface IRQs are
+> > > bound to the same CPU core via smp_affinity, XDP produces improved
+> > > bitrate with reduced CPU utilization over non-XDP tests:
+> > > - Stock netfilter bridge: 9.11 Gbps in both directions at 98%
+> > > utilization of pinned core.
+> > > - XDP: Approximately 9.18 Gbps in both directions at 50% utilization
+> > > of pinned core.
+> > >
+> > > However, when multiple cores are engaged (combined 4, with
+> > > set_irq_affinity), XDP processes markedly fewer packets per second
+> > > (950,000 vs approximately 1.6 million). iperf3 also shows a large
+> > > number of retransmissions in its output regardless of CPU engagement
+> > > (approximately 6,500 with XDP over 2 minutes vs 850 with single core
+> > > tests).
+> > >
+> > > This is a sample taken from linux/samples xdp_monitor showing
+> > > redirection and transmission of packets with XDP engaged:
+> > >
+> > > Summary                              944,508 redir/s            0
+> > > err,drop/s    944,506 xmit/s
+> > >   kthread                                           0 pkt/s
+> > >    0 drop/s                   0 sched
+> > >   redirect total                        944,508 redir/s
+> > >       cpu:0                               470,148 redir/s
+> > >       cpu:2                                 15,078 redir/s
+> > >       cpu:3                               459,282 redir/s
+> > >   redirect_err                                    0 error/s
+> > >   xdp_exception                                0 hit/s
+> > >   devmap_xmit total               944,506 xmit/s               0
+> > > drop/s         0 drv_err/s
+> > >      cpu:0                                 470,148 xmit/s
+> > >  0 drop/s         0 drv_err/s
+> > >      cpu:2                                   15,078 xmit/s
+> > >   0 drop/s         0 drv_err/s
+> > >      cpu:3                                 459,280 xmit/s
+> > >  0 drop/s         0 drv_err/s
+> > >   xmit enp1s0f0->enp1s0f1    485,249 xmit/s                0 drop/s
+> > >      0 drv_err/s
+> > >      cpu:0                                 470,172 xmit/s
+> > >   0 drop/s         0 drv_err/s
+> > >      cpu:2                                   15,078 xmit/s
+> > >    0 drop/s         0 drv_err/s
+> > >   xmit enp1s0f1->enp1s0f0    459,263 xmit/s                0 drop/s
+> > >      0 drv_err/s
+> > >      cpu:3                                 459,263 xmit/s
+> > >   0 drop/s         0 drv_err/s
+> > >
+> > > Our current hypothesis is that this is a CPU affinity issue. We
+> > > believe a different core is being used for transmission. In efforts t=
+o
+> > > prove this, how can we successfully measure if bpf_redirect() is
+> > > causing packets to be transmitted by a different core than they were
+> > > received by? We are still trying to understand how bpf_redirect()
+> > > selects which core/IRQ to transmit on and would appreciate any insigh=
+t
+> > > or followup material to research.
+> >
+> > There is no mechanism in bpf_redirect() to switch CPUs (outside of
+> > cpumap). When you call XDP_REDIRECT, the frame will be added to a
+> > per-device per-CPU flush list, which will be flushed (on that same CPU)=
+.
+> > The i40e allocates separate rings for XDP, though, and not sure how it
+> > does that, so maybe those are what's missing. You should be able to see
+> > drops in the output if that's what's going on; and the packets should
+> > still be processed by XDP.
+> >
+> > So sounds more like the hardware configuration is causing packet loss
+> > before it even hits XDP. Do you see anything in the ethtool stats that
+> > might explain where packets are being dropped?
+>
+> I don't know how irqs are exactly bound to which cpus but most probably
+> this is driver issue as Toke is saying.
+>
+> i40e_xdp_xmit() uses smp_processor_id() as an index to xdp rings array, s=
+o
+> if you limit queue count to 4 and bound irq to say cpu 10, you'll return
+> with -ENXIO as queue_index will be >=3D than vsi->num_queue_pairs.
+>
+> I believe that such issues were addressed on ice driver. In there, xdp
+> rings array is sized to num_possible_cpus() regardless of user's queue
+> count setting and smp_processor_id() can be safely used.
+>
+> Adam, could you skip the `ethtool -L $IFACE combined 4` and work with you=
+r
+> 4 flows to see if there is any difference?
+>
+> Maciej
+>
+> >
+> > -Toke
+> >
