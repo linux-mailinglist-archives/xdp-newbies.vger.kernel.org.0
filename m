@@ -2,87 +2,142 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46FC6589F87
-	for <lists+xdp-newbies@lfdr.de>; Thu,  4 Aug 2022 18:52:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1949858C490
+	for <lists+xdp-newbies@lfdr.de>; Mon,  8 Aug 2022 10:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbiHDQwp (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 4 Aug 2022 12:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
+        id S237058AbiHHIEN (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 8 Aug 2022 04:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbiHDQwp (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 Aug 2022 12:52:45 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22822252B4;
-        Thu,  4 Aug 2022 09:52:44 -0700 (PDT)
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1oJe5Q-0000fd-HW; Thu, 04 Aug 2022 18:52:40 +0200
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1oJe5Q-000XjY-AK; Thu, 04 Aug 2022 18:52:40 +0200
-Subject: LPC 2022 Networking and BPF Track CFP (Final Reminder)
-References: <fa09a9f1-7d99-cafb-3c10-7a3e474d8da6@iogearbox.net>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     xdp-newbies@vger.kernel.org, iovisor-dev@lists.iovisor.org,
-        linux-wireless@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        lwn@lwn.net
-From:   Daniel Borkmann <daniel@iogearbox.net>
-X-Forwarded-Message-Id: <fa09a9f1-7d99-cafb-3c10-7a3e474d8da6@iogearbox.net>
-Message-ID: <e710903a-c436-08f5-12a4-1b7292372aed@iogearbox.net>
-Date:   Thu, 4 Aug 2022 18:52:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        with ESMTP id S231496AbiHHIEN (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Mon, 8 Aug 2022 04:04:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 70BCE13D42
+        for <xdp-newbies@vger.kernel.org>; Mon,  8 Aug 2022 01:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659945851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=afO3wT68oBP+5UDnjLFF+85Pe+M1pf6dmmkw9memUI8=;
+        b=DZq49aXR6FTRdzmjLX36oO0kmtqnlNSJP1MpsGjx4CVXUEz/fFJGgKZyjJg/wkfYHErDeq
+        I47E5Ipe7kZ5CBvRRuMPRcm4GZ5ohbjTajnCkNcMloESlCEgFXgPNpr/tq5adoTjs10XhU
+        ZMxJRhLW2QW0vHWihxwUy/A/nCITUzE=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-29-0Xctgf4JO9qPMILmkwkKeA-1; Mon, 08 Aug 2022 04:04:05 -0400
+X-MC-Unique: 0Xctgf4JO9qPMILmkwkKeA-1
+Received: by mail-lf1-f69.google.com with SMTP id n17-20020ac242d1000000b0048af11cb0f4so1968306lfl.19
+        for <xdp-newbies@vger.kernel.org>; Mon, 08 Aug 2022 01:04:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:to
+         :content-language:subject:cc:user-agent:mime-version:date:message-id
+         :from:x-gm-message-state:from:to:cc;
+        bh=afO3wT68oBP+5UDnjLFF+85Pe+M1pf6dmmkw9memUI8=;
+        b=AwJ8GRx8AuOL82GVIoPAadzW+HNtCQ0OY0SjpXiNhrKNtW8SIY7xrRt5ABvfZag1N9
+         dYmxJcSK4Kgwm6AqiBG6mZKS7YU/9tzGUwyqHalpDYIOCsT0enmbXwfoaemiUbohxfDO
+         dO2uThWlKguabVWTzCGYogdv6wz685LrqyAZcoBGw5n/xbCoroS0NcbxIbgQDhyLnSjP
+         4nwd/hPsWxjZvNJkS1B/MW+Nunn6IpJj+ImcCYUomsEATFNYcTby0f7eKk4aHXCRq+0g
+         7tMb3Ha/ihsULNc5rQyD0InkjheRE3VMKjfD0ByD5QExivcq+zkM3nxEMVJhxdENchfx
+         zQ4w==
+X-Gm-Message-State: ACgBeo1+SIy8DzbICQAIZTW3CpHgfvWN/8sHGUgv8/h5qNi21LTcnb9y
+        0pVJQjte/nYDjuzObBjKKJ2mG0ThsVq4Hi8WWnoOpDRrqBDDEl5fla0BdxpT27LMxWmCYzo2Wfy
+        n2fA+Ir2B84QrOoFhrBSFTRs=
+X-Received: by 2002:a2e:a37b:0:b0:25e:7267:4ab9 with SMTP id i27-20020a2ea37b000000b0025e72674ab9mr5123456ljn.29.1659945843993;
+        Mon, 08 Aug 2022 01:04:03 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR41W+Ry6SZWF39xKZPL3qMCUk1YyJ9D3yZvkU9h+LJIRuOsFU5yUAe6mq+FO5Q7bSX9ATXRNQ==
+X-Received: by 2002:a2e:a37b:0:b0:25e:7267:4ab9 with SMTP id i27-20020a2ea37b000000b0025e72674ab9mr5123451ljn.29.1659945843758;
+        Mon, 08 Aug 2022 01:04:03 -0700 (PDT)
+Received: from [192.168.41.81] (83-90-141-187-cable.dk.customer.tdc.net. [83.90.141.187])
+        by smtp.gmail.com with ESMTPSA id c23-20020a2e9d97000000b0025e4e7c016dsm1282094ljj.16.2022.08.08.01.04.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Aug 2022 01:04:03 -0700 (PDT)
+From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
+X-Google-Original-From: Jesper Dangaard Brouer <brouer@redhat.com>
+Message-ID: <ab2802b3-6de5-1ae7-cdcb-1204e2fac8e7@redhat.com>
+Date:   Mon, 8 Aug 2022 10:04:01 +0200
 MIME-Version: 1.0
-In-Reply-To: <fa09a9f1-7d99-cafb-3c10-7a3e474d8da6@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Cc:     brouer@redhat.com
+Subject: Re: How to benchmark packet throughput for submitting patches?
 Content-Language: en-US
+To:     Zvi Effron <zeffron@riotgames.com>,
+        Xdp <xdp-newbies@vger.kernel.org>
+References: <CAC1LvL1E9wC8GS=x+yoAmA02iAgWRvRFu14pqHwLDzxod5RLJg@mail.gmail.com>
+In-Reply-To: <CAC1LvL1E9wC8GS=x+yoAmA02iAgWRvRFu14pqHwLDzxod5RLJg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.6/26617/Thu Aug  4 09:54:12 2022)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This is the final reminder for the Call for Proposals (CFP) for the Networking
-and BPF track at the 2022 edition of the Linux Plumbers Conference (LPC), which
-is planned to be held in Dublin, Ireland, on September 12th - 14th, 2022.
 
-Note that the conference is planned to be both in person and remote (hybrid).
-CFP submitters should ideally be able to give their presentation in person to
-minimize technical issues if circumstances permit, although presenting remotely
-will also be possible.
+On 01/08/2022 23.11, Zvi Effron wrote:
+> I see that many XDP patchset submissions to the bpf mailing list
+> include benchmark numbers for packet throughput to show how much the
+> change improves (or worsens) performance. 
 
-This year's Networking and BPF track technical committee is comprised of:
+It is very important to show the *change* in performance.
+Meaning baseline numbers for comparison is more important than the
+absolute performance numbers.
 
-    David S. Miller <davem@davemloft.net>
-    Jakub Kicinski <kuba@kernel.org>
-    Paolo Abeni <pabeni@redhat.com>
-    Eric Dumazet <edumazet@google.com>
-    Alexei Starovoitov <ast@kernel.org>
-    Daniel Borkmann <daniel@iogearbox.net>
-    Andrii Nakryiko <andrii@kernel.org>
+> They frequently show numbers for a single core test.
+> 
 
-We are seeking proposals of 40 minutes in length (including Q&A discussion).
+The single core or actually single RX-queue test is important to XDP.
+For reasons that might surprise you(?).
 
-Any kind of advanced Linux networking and/or BPF related topic will be considered.
+The intuitive reason is that it's easier to reason about and do
+calculations on as we know the CPU is kept 100% busy.
 
-Please submit your proposals through the official LPC website at:
+The non-intuitive reason is that when scaling up with more CPUs, then
+XDP is so fast that hardware becomes the bottleneck and CPUs will start
+to have idle cycles.  This is MUCH harder to reason about and
+understand, and is often misinterpreted.  The xdp-paper benchmarks[2]
+doc examples where the HW is the bottleneck and how we identify counter
+via ethtool_stats.pl [3].
 
-    https://lpc.events/event/16/abstracts/
 
-Make sure to select "eBPF & Networking" in the track pull-down menu.
 
-Proposals must be submitted by August 10th, and submitters will be notified of
-acceptance by August 12th.
+> I was wondering what methodology people are using to generate these
+> benchmark results?
 
-Final slides (as PDF) are due on the first day of the conference.
+On the packet *generator*, I usually use the kernels pktgen via the 
+scripts in kernel tree under samples/pktgen/[1]
 
-We are very much looking forward to a great conference and seeing you all!
+  [1] https://github.com/torvalds/linux/tree/master/samples/pktgen
+
+  Example command:
+   $ ./samples/pktgen/pktgen_sample03_burst_single_flow.sh -vi mlx5p2 -d 
+10.40.40.2 -m 3c:fd:fe:b3:31:49 -t 12
+
+As the script name "pktgen_sample03_burst_single_flow" indicate this is
+generating a single flow, which will cause the RSS-hash in the NIC hit a
+single RX-queue.  The '-t 12' means 12 CPU cores will be generating this
+traffic.
+
+Our xdp-paper have detailed records of the benchmarking we did:
+  [2] https://github.com/xdp-project/xdp-paper/tree/master/benchmarks
+
+
+On the Device Under Test (DUT) I usually run sample "xdp_rxq_info", that
+report stats on a RX-queue + CPU basis.
+
+
+I'm interested in hearing what other do?
+
+--Jesper
+
+[3] 
+https://github.com/netoptimizer/network-testing/blob/master/bin/ethtool_stats.pl
+
