@@ -2,212 +2,189 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE8B58DA41
-	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Aug 2022 16:25:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B0F58DA79
+	for <lists+xdp-newbies@lfdr.de>; Tue,  9 Aug 2022 16:43:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233487AbiHIOZw (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 9 Aug 2022 10:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
+        id S233248AbiHIOno (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Tue, 9 Aug 2022 10:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233401AbiHIOZv (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Aug 2022 10:25:51 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-oln040092075011.outbound.protection.outlook.com [40.92.75.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E106C1158
-        for <xdp-newbies@vger.kernel.org>; Tue,  9 Aug 2022 07:25:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a5izZ6qZqTjOaoXpuRUy9rn+QfKnNTUxXo1lq5eEayqG3BFJFVHYuNNFruS11UYDxx1T15qkrvRcOnGiTN8Dpp2Q2TvommSlIR59XHGLJ0/3TX+Ooua4+7nJt53EcZyQzLa9DHB80O59QwpoPRApFKad+7NHuQTFMqHJTPWI/zZ6blTzyJxYLBVvfDNO57fqHpR8OmxdQ0ZsG74fGAYKHo458WavfqhrPrcju/PBzmY+x4896ERqhyzcd9HQkjk7NRjzlg7huDWV1gY8OcrFzRxqtqnmxlUXCE7rZBMJ7oH3QeCECNeXZ+0WQtq8oennmO6p5osOSGzuY0DHMb1T0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o/Vw56xq2fTb+VRttdv3qrTZy6lnt3iUFl/OV+5JSVo=;
- b=ab/jFNttLT1gr+3S2pI7L/YY/nbINHqww3jtD38exVDWsKdsMBB2ZAx2xrU1mjAsWfjZyCsjYkNJg7DsBKRV0a2ZCBgCRxNTNF17odiEI8Zt2ff90VdKjhJ+7UthZn5X0YQmzaerDyLwyyUVrRyj+48ZWqaAVhyYl/6y9Rhv/nFlWOf4Hu6qJcvlyi8Im/euW/2yeo9cxXCW8+K8ajhFutt3ca2Ov0bMzcJBQnvLFbOYF35p/0863Rx+9WZcP1ofvQggdbMRjI4n6ln0ctWUZkLW4J4X0arfSINHyeDKodXO147CLDWOD5FgoV7dXRClDFCiI/Is4ZSVhxT1zPuqaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o/Vw56xq2fTb+VRttdv3qrTZy6lnt3iUFl/OV+5JSVo=;
- b=U/VcsAKAHz+E5EUyez5D3L/ayQCf573n+vVY4KUa9XIsho7uxKgt7qP6aJpBS5Lf12vE5SAX5sbakJnkeEizMSN8k2yLmGWur3lsZQuUkHzuE9VHPwRq5wshmFafJT6ihEYjDLfbsia5iR7y7Bpq+O7Uo4+zsEGCgVExjZnzaxSewl64FVnTgkSrLo/cSrv/ivBS81jU2GoJ5jk593w+ZDx7tNtNM+9XevTJGx0s4/HjYFo4/Sp7BMVWqdPQfKAhQOlmqO1Pp2WJ9AzKRihjcv6MQjZzeu7f+DDnyQVaRElowfUVCBMY2jCQaTKjOqmx+o53Rue655ZV0ft8xJeFFQ==
-Received: from AM8PR06MB7684.eurprd06.prod.outlook.com (2603:10a6:20b:361::18)
- by DB7PR06MB4652.eurprd06.prod.outlook.com (2603:10a6:10:63::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.17; Tue, 9 Aug
- 2022 14:25:47 +0000
-Received: from AM8PR06MB7684.eurprd06.prod.outlook.com
- ([fe80::e8ae:4899:d804:1972]) by AM8PR06MB7684.eurprd06.prod.outlook.com
- ([fe80::e8ae:4899:d804:1972%9]) with mapi id 15.20.5504.021; Tue, 9 Aug 2022
- 14:25:47 +0000
-From:   Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
-To:     Xdp <xdp-newbies@vger.kernel.org>
-Subject: XSK + ZC, shared UMEM and multiple Fill/Completion queues - broken?
-Thread-Topic: XSK + ZC, shared UMEM and multiple Fill/Completion queues -
- broken?
-Thread-Index: AQHYq/vq5oOGrySKBE6+rTz40sTxWA==
-Date:   Tue, 9 Aug 2022 14:25:47 +0000
-Message-ID: <6205E10C-292E-4995-9D10-409649354226@outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [T77zf2S9CLEQQWXH1BrpLHzCMKtR/8E/]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ef554a86-a592-4b90-16a8-08da7a130d7a
-x-ms-traffictypediagnostic: DB7PR06MB4652:EE_
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jglDfyvuP2uyJRPkUHhtV653MgA8EhV62V+fhzJIyNigOyQrffxadxdZTg/SiFqHSog8VM+t5Fw6E15psypEb9/Rh8HhLkE7XZxuKzSEyN9wCu7HUbU3a6q8NwnpmYmtzFGzBqP/VdHmr0RqDAkN4e2qBgQPfA6zTt5nCooBwSqcJN5QB5ugsRi6ivb8ki7bB6Y5mDdP2QKL3T61qBDW82HbxR1Vg3iEOcfirR8FBgCRZ86huEXnce1OzC98VN9YjgAs3sll08K69ShVi3fb7WC8NLg4hmuSgruQrgPvlwxUwcnoSPhGHGqrl1djWH85B5g9/tuxelRJst5Y59ofOdAayf2+2bBSc9KldjqXYsKotVg7I2lN5l5FluOXoHdqeEjnMO7VH1pkWew4jmac90hqSEnayC/A05W7EHMs4G5bORfFikZqIy8WfcU5fbAygZhcgTDbhTmxsyfUHD1ZJwXe5DAgLvasq5+jhS7pcEwhh1BhUlKVBD3uQ5x6lDq21CpOwON64AfIndsTdqsQux2vXyTxou2zsB20ucpOHLsz7Eef6yYmP5IgbqlSrxx6PDhlhwao7Wq72wxWkqH4wJ6AIb7VxFJv2oHofjbwPceRZZdKDpxW6LvrnADAKztf
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q3JITVhscFNFVE9HaHEvb3E4czRCSWhKSDQrQ3JMOUN0SlZVVDNqWUdSSjY4?=
- =?utf-8?B?cklIRXh4MzJVcFF1OXZkaW5xNGRmbE9laTZjMUJ4b05heXlpMTc1VHo1bS9l?=
- =?utf-8?B?bHVHbDBpa0dRWWk1eG1iVkNNYzVCY0crMHVNL1NpaXUzaFlJMDhpRGZsVzUz?=
- =?utf-8?B?bmgzK1VXVTE3RklYa2tqMkw0WlN5VVd5QWZWN1ZXMHlkSGlHOVFobmRZVnZO?=
- =?utf-8?B?YmVHZmJYRTdWRDN6aVNFaWZiY3FuekdtcHFYeHRTazB3bGhCSUFZZllyRkhz?=
- =?utf-8?B?ekJPU3pDTUhXcWJWYXh0eFQ1M2d3NXRBWC9MRDdYTTFqUHREWWVtSEpvT29l?=
- =?utf-8?B?ODFiaUFRMmg4MGpORWphNXI0TWJvTkRKbXBLSCt4Wm5YeU00cndFUDAwdTBV?=
- =?utf-8?B?ZEY4amVIK2wxSTVhVFVmRWlxWm1xNy84VmkyanVZSCtmY3BKZVBZU3Vsaks2?=
- =?utf-8?B?bWN2OEUwcUtQWEViRVJ2T3dXNG1GT3lFVEhpM2Z0dE1XdlNPTUpHOThHai8x?=
- =?utf-8?B?QTduNG90MmdqQjlqR243RWhpcElQNUJ5a3dYSXEwYnFSUG5HY1BTOE1zSzZD?=
- =?utf-8?B?TjNwQW9EMno1NWhUejdOa2FMOVBLdUJKQisyNWpDaUZrNDY0TEJLaHRJQkRp?=
- =?utf-8?B?dlpSa056NG1WNjZVc21scFJvdFltRXBndGdzdjRMR0RKV3dCZWNMTWFva1Yz?=
- =?utf-8?B?MFZaTEIzcUxKbm1vWWhhM1VtdUtkUkdVQTJXQkFWaVU4ZENGNmFPMGNNMkxL?=
- =?utf-8?B?OXB3dXJCREpZUitWVHZkU3lvdmFJdTZxL0JaV090MnVYYmhDL29YWnVWR1Nq?=
- =?utf-8?B?RGtkb1lGQm9ua3pVNFZ3azBkZ3dxTEc3NmUzVndWWVVHNzgwc1pyYnRJU1Ri?=
- =?utf-8?B?MlF5eVdYeTgxTGpZUTVhbXRQNlRjd1JzblBWenI0RlB4TUtFS1FoWk82UHNu?=
- =?utf-8?B?VjlzbGJydmlYQjZVNHZrOUxIK0d5ZS8vakpDZ0lKanY4elhmMzc0WjMzQWJC?=
- =?utf-8?B?SllKQi9zbjJzTWhqbmdqdHVnQjFvb1N2ek0rRG1BWFV5c2JLZWNtZ1FrRjY0?=
- =?utf-8?B?SHYyangrdEM5RmJrUi9uTzBhTmhSODBGbUlKWHJOSEkrSi9yYlV5SWljeno4?=
- =?utf-8?B?MlBCVzdNUldIRDJySDA0Sm1MU2JHVDhQbGRidVVXeS8wekpkTURUNytNQ0Rw?=
- =?utf-8?B?dGNhczRWdmZhVzlLMUwrRWYzYy90YXQvSlNhTE43cWhCdHJpbTZFcC84b3pr?=
- =?utf-8?B?Tmw0ekdsSVBScCtUZXpudUJLSnNBQTViRm5pTHZNZXlLSGlxV0ZWQ3loOXhG?=
- =?utf-8?B?Y0ZBdTl3aWZJbnh6V0g2ckUrbUo4YTRINjNvNEZWc3RIS1pnK0JBWFpYdVY3?=
- =?utf-8?B?MDlVWmgvU1ZCYUVZdWgrVmRjYXU4cTRDWG5OakJPeHVOc05nZ3VRd1R0Ym5K?=
- =?utf-8?B?aXZNU0VjVmQvMmlib2ZWYWdQOXBHSjRnTFFTbDNIeWo3WUpneERhYVd5WVpO?=
- =?utf-8?B?VWVJN2sxby9PZk5BMi9Vc2JrK1QwUHJWSGQ2a0lKK3A0ZmVrYk9veFd5RnFk?=
- =?utf-8?B?SjBCbUJNYzN3MUdFdlJYM3FpK08wckZ5VW9xNnpkTHpycUo2YktoSG9DUWJ5?=
- =?utf-8?B?RkJ4a3lNRW0rRSttUjR5QjRkdzUyK2lVK29idWN4K0FXdHdtemhKRWM5Umt0?=
- =?utf-8?B?VkZtOXBZVjNPYU1ZWHJWQ04ydHB0NUVPbUtCcmV0ekp2RG5WRG5wMkVkQWdh?=
- =?utf-8?Q?nqEUgM1cQ7unHPE/FNf2rctJiGQk1ocqG6d51Iw?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <872D63921E5D9542800D33225EDA7C97@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S230380AbiHIOnn (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Tue, 9 Aug 2022 10:43:43 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDB31B7AD
+        for <xdp-newbies@vger.kernel.org>; Tue,  9 Aug 2022 07:43:42 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id h21-20020a17090aa89500b001f31a61b91dso17856157pjq.4
+        for <xdp-newbies@vger.kernel.org>; Tue, 09 Aug 2022 07:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=arK4yPCZoreM+VS8EK6ZW9fv+q2MURJlOv92MXAL12k=;
+        b=BVE1MaoFUGT1FdSC/G/KRg6zm7veFX8W0/33VXwFTLGo3oSxJvKUI4OqZIksVbeIK2
+         MpwMuFLmBmKPpvGIup7m3g1lXQTShs76yFhVSjiFz6XuvBX7B4Pt+ZjmDxyAawwl/6Bs
+         hGq4Snuu15vml9WHzQIn7B87OLP17ChmIH6tNK2kaj0esHLnDpUirGaQJKXEaFZSMI/U
+         9Bpe2L9x3N38wwO3d0p5hgWPCWERMT09ofxkyMo5vlEP+u7WzL/KCzuf51qeVbsYeP9X
+         ia8pBrvUV+H+vygj+y5bPtjeYFdvIa+CgfERM9ILLyKdSyP0Ka+E418ajT2MzzoczWaD
+         BD7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=arK4yPCZoreM+VS8EK6ZW9fv+q2MURJlOv92MXAL12k=;
+        b=adLcVzwl9kG2B4OTMBsg3PSwGMyhTTBpdfa6kGtM9esaOFBICTLZK8/lqQO8DM1u2y
+         QSP0rdEo3HFC25lGwpgIBd2UyTqOZW0nGN5tMp2dg3TW7xKAmItUBFgxKS4AUs7ECpWW
+         XZ6eFpfSV8b73m2Vh7sGhfcC9K5XZ3h2KCQ/Cu2D2V3sjnieEMgRN5Y9gO2CjrLXAPW6
+         B2LCkBlXv6903cCiq6DRaZPrHJ91U9DOgNjezq76x2AyaPLz9AUF/J9a92X1LYZlcFmW
+         HEcgPpmGk5V/kzsYl0xKsfdYnt0rTLAv2ig6xbQqeao9fxnKfKVi9ro4EG+zEorzKeTy
+         O+Pw==
+X-Gm-Message-State: ACgBeo35F9/xSKjb5dRR69shkZ2+quZc8IrMLFXmcUZ1GIdxrLEDcBEo
+        2Gba0NKekO5BUxyOoPmaTtMDWBtkj+pmuOqO3/4=
+X-Google-Smtp-Source: AA6agR63tNPMh0nP1BB2VfceDaSFfhbUd00Ebee/jLS2y/Rude1KjyCCoN7ZShfUCH8k9yn/U80ckw/5Utqc4NGF57E=
+X-Received: by 2002:a17:90b:4c52:b0:1f6:3a26:9f08 with SMTP id
+ np18-20020a17090b4c5200b001f63a269f08mr20133818pjb.206.1660056222037; Tue, 09
+ Aug 2022 07:43:42 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR06MB7684.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef554a86-a592-4b90-16a8-08da7a130d7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2022 14:25:47.4950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR06MB4652
+References: <6205E10C-292E-4995-9D10-409649354226@outlook.com>
+In-Reply-To: <6205E10C-292E-4995-9D10-409649354226@outlook.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Tue, 9 Aug 2022 16:43:31 +0200
+Message-ID: <CAJ8uoz0a_q8T99=rHny2L+wVUgCd0jNYQd1f=LLd-2WncrAiuw@mail.gmail.com>
+Subject: Re: XSK + ZC, shared UMEM and multiple Fill/Completion queues - broken?
+To:     Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
+Cc:     Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-SGkgbGlzdC4gVGhpcyBpcyBteSBmaXJzdCBwb3N0IHNvIGJlIGdlbnRsZS4gOi0pDQoNCknigJlt
-IGRldmVsb3BpbmcgYSBwaWVjZSBvZiBzb2Z0d2FyZSB0aGF0IHVzZXMgWFNLIGluIHplcm8gY29w
-eSBtb2RlIHNvIHdlIGNhbiBwaWNrIHVwIHBhY2tldHMgZmFzdCwgZG8gc29tZSB3b3JrIG9uIHRo
-ZW0sIHRoZW4gZWl0aGVyIHRyYW5zbWl0IHRoZW0gYmFjayB0byBhIG5ldHdvcmsgb3IgZHJvcCB0
-aGVtLiBGb3IgdGhlIHNha2Ugb2YgdGhpcyBtYWlsLCB3ZSBjYW4gc2F5IHRoaXMgaW52b2x2ZXMg
-cHVsbGluZyBhbGwgdHJhZmZpYyB1cCBpbnRvIHVzZXItc3BhY2UgdmlhIFhTSy4NCg0KVGhlIHNv
-ZnR3YXJlIHNpdHMgZGlyZWN0bHkgb24gdG9wIG9mIGxpYmJwZi9saWJ4ZHAsIGl0IGRvZXMgbm90
-IHVzZSBoaWdoZXIgbGV2ZWwgYWJzdHJhY3Rpb25zLg0KDQpPdXIgY3VycmVudCBzZXR1cCB1c2Vz
-IGEgbXVsdGktdGhyZWFkZWQgdXNlci1zcGFjZSBwcm9jZXNzLiBUaGUgcHJvY2VzcyBxdWVyaWVz
-IHRoZSBzeXN0ZW0gZm9yIHRoZSBudW1iZXIgb2YgY2hhbm5lbHMgb24gYSBOSUMgKG51bV9jaGFu
-bmVscykgYW5kIGFsbG9jYXRlcyBlbm91Z2ggVU1FTSB0byBhY2NvbW1vZGF0ZSAobnVtX2NoYW5u
-ZWxzICogbnVtX2ZyYW1lcyAqIGZyYW1lX3NpemUpLiBUaGUgdW1lbSBpcyBkaXZpZGVkIGludG8g
-YSBudW1iZXIgb2YgYnVja2V0cyBiZWZvcmUgaXQgbG9hZHMgaXRzIGVCUEYgcHJvZ3JhbSBpbnRv
-IHRoZSBrZXJuZWwgYW5kIGNyZWF0ZXMgaXRzIHdvcmtlciB0aHJlYWRzLg0KDQpUaGVyZSBhcmUg
-YW4gZXF1YWwgbnVtYmVyIG9mIHRocmVhZHMgdG8gY2hhbm5lbHMsIGFuZCBlYWNoIHRocmVhZCBy
-ZWNlaXZlcyBhIG51bWJlciBvZiB1bWVtIGJ1Y2tldHMgYXMgd2VsbCBhcyBpdHMgb3duIEFGX1hE
-UCBzb2NrZXQgdG8gd29yayBvbi4gU3RydWN0dXJhbGx5LCBlYWNoIFhTSyBoYXMgaXRzIG93biB1
-bWVtIEZRL0NRIGFzIHdlbGwgYXMgVFhRL1JYUSBieSB2aXJ0dWUgb2YgdGhlIHhza19zb2NrZXRf
-X2NyZWF0ZV9zaGFyZWQoKSBBUEksIGFuZCBSU1MgZmFjaWxpdGF0ZXMgYSBuaWNlIGRpc3RyaWJ1
-dGlvbiBvZiBwYWNrZXRzIG92ZXIgZWFjaCBOSUMgY2hhbm5lbCBhbmQgd29ya2VyIHRocmVhZC4N
-Cg0KV2XigJl2ZSBoYWQgYSBsb3Qgb2Ygc3VjY2VzcyBzY2FsaW5nIGFjcm9zcyBtdWx0aS1jb3Jl
-IHNlcnZlcnMgd2l0aCBJbnRlbCBFODAwIGNhcmRzLCB3aXRoIHN5bnRoZXRpYyB0ZXN0cyBnZXR0
-aW5nIHVwIHRvIDIwLTMwTXBwcyBkYXRhIHJhdGVzLiBPdmVyIHRoZSBsYXN0IGZldyBtb250aHMg
-d2XigJl2ZSBhbHNvIGluc2VydGVkIHRoZSBzb2Z0d2FyZSBpbnRvIGEgcHJvZHVjdGlvbiBuZXR3
-b3JrIGZvciB0ZXN0IHJ1bnMgd2l0aCBjdXN0b21lciB3b3JrbG9hZHMsIHdoZXJlYnkgdGhlIHNv
-ZnR3YXJlIGlzIGZvcndhcmRpbmcgZ2lnYWJpdHMgb2YgbGVnaXRpbWF0ZSB0cmFmZmljIGFjcm9z
-cyBhbiBhcnJheSBvZiBkaWZmZXJlbnQgd29ya2xvYWRzLCB3aXRoIG5vIGltcGFjdCB0byB0aGUg
-VS9YIG9mIGN1c3RvbWVyIHRyYWZmaWMgZmxvd3MuIFVsdGltYXRlbHksIHRvIGRhdGUsIHdlJ3Zl
-IGJlZW4gcXVpdGUgY29uZmlkZW50IGFzIHRvIHRoZSBtZWNoYW5pY3Mgb2YgdGhlIHBhY2tldCBm
-b3J3YXJkaW5nIHBpcGVsaW5lIGltcGxlbWVudGVkIHdpdGggWFNLLg0KDQpCdXQgd2XigJl2ZSBo
-aXQgYSBzbmFnLiBFdmVyeXRoaW5n4oCZcyB3b3JrZWQgZ3JlYXQgdXAgdG8gTGludXggNS4xNSwg
-YW5kIGZyb20gNS4xNiBvbndhcmRzLCBpdOKAmXMgcXVpdGUgYnJva2VuLiBJZiBJIGNvdWxkIHN1
-bW1hcmlzZSB0aGUgYmVoYXZpb3VyIG9mIHRoaXMgb24ga2VybmVsIDUuMTYgb253YXJkcywgSSB3
-b3VsZCBzYXkgdGhlIG1haW4gaXNzdWVzIGFyZToNCg0KKiBDaGFubmVsIDAgcmVjZWl2ZXMgdHJh
-ZmZpYyBidXQgY2hhbm5lbCAxKyBtYXkgbm90LiAoSW4gdGhpcyBjYXNlLCBjaGFubmVsIDAgdGVu
-ZHMgdG8gcmVjZWl2ZSB0aGUgcmlnaHQgYW1vdW50IG9mIHRyYWZmaWMsIGUuZy4gNCBjaGFubmVs
-cyB3aXRoIFJTUyBtZWFucyBjaGFubmVsIDAgc2VlcyAxLzR0aCB0aGUgdG90YWwgaW5ncmVzcyku
-DQoNCiogQ2hhbm5lbHMgY2FuIHN0YWxsLiBTdXBlcmZpY2lhbGx5IGl0IGxvb2tzIGxpa2UgdGhl
-eSBvbmx5IHByb2Nlc3MgZnJhbWVzIHVwIHRvIHRoZSBudW1iZXIgb2YgZGVzY3JpcHRvcnMgaW5p
-dGlhbGx5IHB1c2hlZCBvbnRvIHRoZSBGUSwgYW5kIHRoZW4gc3RvcHMuDQoNCiogZUJQRiBwcm9n
-cmFtcyBydW5uaW5nIGZvciBmcmFtZXMgdmlhIGNoYW5uZWwgMCB3b3JrIGFzIGV4cGVjdGVkLiBU
-aGF0IGlzLCBpZiBvbmUgaXMgcGFyc2luZyBsYXllciAzIGFuZCA0IGhlYWRlcnMgdG8gaWRlbnRp
-ZnkgY2VydGFpbiB0cmFmZmljIHR5cGVzLCBoZWFkZXJzIGFyZSB3aGVyZSB5b3Ugd291bGQgZXhw
-ZWN0IHRoZW0gdG8gYmUgaW4gbWVtb3J5LiBIb3dldmVyLCB0aGlzIGlzbuKAmXQgdHJ1ZSBmb3Ig
-ZnJhbWVzIHZpYSBjaGFubmVsIDErOyBoZWFkZXJzIGRvbuKAmXQgc2VlbSB0byBiZSBhdCB0aGUg
-cmlnaHQgcG9zaXRpb24gcmVsYXRpdmUgdG8gdGhlIGRhdGEgcG9pbnRlciBpbiB0aGUgZUJQRiBw
-cm9ncmFtLiBJdCBjb3VsZCBiZSB0aGVyZeKAmXMgYWN0dWFsbHkgbm90aGluZyBpbiB0aGUgZGVz
-Y3JpcHRvciwgYnV0IHRoaXMgaXMgZXhwZXJpZW5jZWQgYnkgdGhlIHNvZnR3YXJlIGFzIHBhcnNl
-ciBlcnJvcnMsIGJlY2F1c2Ugd2UgY2Fu4oCZdCBkZWNvZGUgdGhlIElQIGZyYW1lcyBwcm9wZXJs
-eS4NCg0KV2XigJl2ZSBiZWVuIGRlYnVnZ2luZyB0aGlzIGZvciBzb21lIHRpbWUgYW5kIGNvbmNs
-dWRlZCB0aGUgYmVzdCB3YXkgd2FzIHRvIHRha2Ugb3VyIHNvZnR3YXJlIG91dCB0aGUgZXF1YXRp
-b24sIGFuZCB1c2UgeGRwc29jayBmcm9tIHRoZSBrZXJuZWwgdHJlZS4gSW4gZG9pbmcgc28sIHdl
-IHJlYWxpc2VkIHRoYXQgd2hpbGUgeGRwc29jayBkb2VzIHRlc3Qgc2hhcmVkIHVtZW0sIGl04oCZ
-cyBzdGlsbCBhIHNpbmdsZSB0aHJlYWQsIGFuZCBtYWludGFpbnMgYSBzaW5nbGUgRlEvQ1EgZGVz
-cGl0ZSBvcGVuaW5nIDh4IFhTSyBzb2NrZXRzLg0KDQpUbyBtb3ZlIGZvcndhcmQgYW5kIHZhbGlk
-YXRlIHdpdGggbXVsdGlwbGUgRlEvQ1EgdmlhIHRoZSB4c2tfc29ja2V0X19jcmVhdGVfc2hhcmVk
-KCkgQVBJLCB3ZeKAmXZlIHR3ZWFrZWQgdGhlIHhkcHNvY2sgYXBwIHRvIHNjYWxlIG91dCB1bWVt
-IGFsbG9jYXRpb24gYnkgbnVtX2NoYW5uZWxzLCB0aGVuIHNwbGl0IGl0IGludG8gbnVtX2NoYW5u
-ZWxzIHJlZ2lvbnMgKGJ5IHZpcnR1ZSBvZiBhbiBvZmZzZXQpLCBvcGVuIG11bHRpcGxlIFhTSyBz
-b2NrZXRzIGJvdW5kIHRvIG51bV9jaGFubmVscyBOSUMgY2hhbm5lbHMsIGluc2VydCB0aGUgWFNL
-IEZE4oCZcyBpbnRvIGFuIFhTSyBtYXAgaW5kZXhlZCBieSBjaGFubmVsIG51bWJlciwgYW5kIHR3
-ZWFrIHhkcHNvY2tfa2VybiB0byBsb29rdXAgcnhfY2hhbm5lbCBmb3IgcmVkaXJlY3QsIHZzLiB0
-aGUgUlIgYXBwcm9hY2ggaW4gdGhlIG9yaWdpbmFsIHNhbXBsZS4gQW5kLCBvbiB0aGUgd2hvbGUs
-IHN1cnByaXNpbmdseSwgd2UgKnRoaW5rKiB3ZSBjYW4gcmVwcm9kdWNlIHRoZSBpc3N1ZXMuDQoN
-CldlIG5lZWQgdG8gYmUgYSBiaXQgbW9yZSBzY2llbnRpZmljIGFib3V0IG91ciB0ZXN0aW5nIGJ1
-dCBJIHdhbnRlZCB0byBrbm93IGlmIGFueW9uZSBlbHNlIGhhcyBoYWQgb2RkIGJlaGF2aW91ci9l
-eHBlcmllbmNlcyB3aXRoIFhTSyB1c2luZyBzaGFyZWQgdW1lbSwgd2l0aCBtdWx0aXBsZSBmaWxs
-L2NvbXBsZXRpb24gcXVldWVzLCBvbiBrZXJuZWwgNS4xNiBhbmQgYWJvdmU/DQoNCldlIHdlcmUg
-dW5kZXIgdGhlIGltcHJlc3Npb24gdGhhdCBtdWx0aS1GUS9DUSBpcyBhIHN1cHBvcnRlZCBjb25m
-aWd1cmF0aW9uIC0gaXQgd29ya2VkIHBlcmZlY3RseSBpbiA1LjE1LiBJcyB0aGlzIHNvbWV0aGlu
-ZyB0aGF0IGlzIGFjdHVhbGx5IGdvaW5nIGF3YXksIGFuZCB3ZSBuZWVkIHRvIHJlLXRoaW5rIG91
-ciBhcHByb2FjaD8NCg0KSW4gYWxsIHRlc3QgY2FzZXMgd2XigJl2ZSBiZWVuIG9uIHg4Nl82NCAo
-WGVvbiBFNeKAmXMgb3IgWGVvbiBQbGF0aW51bSksIG9uIEU4MTAgb3IgTUxYIENvbm5lY3QtWCA0
-IGNhcmRzLiBUZXN0ZWQgb24gYSByYW5nZSBvZiBkaWZmZXJlbnQga2VybmVscywgdXAgdG8gNS4x
-OS1yYzQuIEluIGFsbCBjYXNlcyB3ZeKAmXJlIHVzaW5nIGFsaWduZWQgbWVtb3J5IG1vZGUgYW5k
-IHRoZSBMMmZ3ZCBiZWhhdmlvdXIgb2YgeGRwc29jay4NCg0KSW4gdHJhY2luZyBiYWNrIGtlcm5l
-bCBjb21taXRzIHdlIGhhdmUgYWN0dWFsbHkgZm91bmQgd2hlcmUgdGhlIHByb2JsZW1zIHN0YXJ0
-IHRvIG9jY3VyLiBJQ0UgYnJlYWtzIGZyb20gY29tbWl0IDU3ZjdmOGI2YmMwYmM4MGQ5NDQ0M2Y5
-NGZlNWYyMWYyNjY0OTlhMmIgKCJpY2U6IFVzZSB4ZHBfYnVmIGluc3RlYWQgb2YgcnhfYnVmIGZv
-ciB4c2sgemVyby1jb3B54oCdKSBbMV0sIGFuZCB0ZXN0aW5nIHN1Z2dlc3RzIE1MWDUgaXMgYnJv
-a2VuIGZyb20gY29tbWl0IDk0MDMzY2Q4ZTczYjg2MzJiYWI3YzhiN2JiNTRjYWE0ZjU2MTZkYjcg
-KCJ4c2s6IE9wdGltaXplIGZvciBhbGlnbmVkIGNhc2XigJ0pIFsyXS4gSSBhcHByZWNpYXRlIE1M
-WDUgZG9u4oCZdCBzdXBwb3J0IFhTSyBaL0MgKyBSU1MsIGJ1dCB0aGVyZSBhcmUgd2F5cyB3ZSBj
-YW4gdGVzdCBtdWx0aXBsZSBxdWV1ZXMgd2l0aCBzb21lIGZsb3cgc3RlZXJpbmcsIGFuZCB3ZSBz
-ZWUgdGhlIHNhbWUgYmVoYXZpb3VyLg0KDQpXZeKAmXZlIGFjdHVhbGx5IGp1c3QgcHVibGlzaGVk
-IG91ciBtb2RpZmllZCB4ZHBzb2NrIGNvZGUgYXQgb3VyIG9wZW4gc291cmNlIHJlcG9zaXRvcnkg
-WzNdIGJlY2F1c2Ugd2Ugbm90aWNlZCB0aGUgeGRwc29jayBjb2RlIGdvdCByZW1vdmVkIGZyb20g
-dGhlIHRyZWUgYSB3aGlsZSBhZ28uIE91ciBtb2RpZmljYXRpb25zIGFyZSBjb21waWxlLXRpbWUg
-ZW5hYmxlZC9kaXNhYmxlZCBiZWNhdXNlIHdlIHdhbnRlZCB0byBiZSBleHBsaWNpdCBpbiB3aGVy
-ZSB3ZeKAmXZlIGNoYW5nZWQgbG9naWMgaW4geGRwc29jay4gQnV0IHRoZSByZXBvIGlzIGF2YWls
-YWJsZSBmb3IgcGVlciByZXZpZXcgdG8gc2VlIGlmIHRoZXJl4oCZcyBpc3N1ZXMgaW4gaG93IHdl
-4oCZdmUgYXBwcm9hY2hlZCB0ZXN0aW5nIHRoZSBsb2dpYy4NCg0KQW55IGFuZCBhbGwgZmVlZGJh
-Y2sgd2VsY29tZWQvYXBwcmVjaWF0ZWQgLSB3ZeKAmXJlIGEgYml0IHN0dW1wZWQhDQoNClRoYW5r
-cw0KQWxhc2RhaXINCg0KWzFdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
-ZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTU3ZjdmOGI2YmMwYmM4MGQ5
-NDQ0M2Y5NGZlNWYyMWYyNjY0OTlhMmINCg0KWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHVi
-L3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTk0MDMz
-Y2Q4ZTczYjg2MzJiYWI3YzhiN2JiNTRjYWE0ZjU2MTZkYjcNCg0KWzNdIGh0dHBzOi8vZ2l0aHVi
-LmNvbS9PcGVuU291cmNlLVRIRy94ZHBzb2NrLXNhbXBsZQ0KDQo=
+On Tue, Aug 9, 2022 at 4:27 PM Alasdair McWilliam
+<alasdair.mcwilliam@outlook.com> wrote:
+>
+> Hi list. This is my first post so be gentle. :-)
+>
+> I=E2=80=99m developing a piece of software that uses XSK in zero copy mod=
+e so we can pick up packets fast, do some work on them, then either transmi=
+t them back to a network or drop them. For the sake of this mail, we can sa=
+y this involves pulling all traffic up into user-space via XSK.
+>
+> The software sits directly on top of libbpf/libxdp, it does not use highe=
+r level abstractions.
+>
+> Our current setup uses a multi-threaded user-space process. The process q=
+ueries the system for the number of channels on a NIC (num_channels) and al=
+locates enough UMEM to accommodate (num_channels * num_frames * frame_size)=
+. The umem is divided into a number of buckets before it loads its eBPF pro=
+gram into the kernel and creates its worker threads.
+>
+> There are an equal number of threads to channels, and each thread receive=
+s a number of umem buckets as well as its own AF_XDP socket to work on. Str=
+ucturally, each XSK has its own umem FQ/CQ as well as TXQ/RXQ by virtue of =
+the xsk_socket__create_shared() API, and RSS facilitates a nice distributio=
+n of packets over each NIC channel and worker thread.
+>
+> We=E2=80=99ve had a lot of success scaling across multi-core servers with=
+ Intel E800 cards, with synthetic tests getting up to 20-30Mpps data rates.=
+ Over the last few months we=E2=80=99ve also inserted the software into a p=
+roduction network for test runs with customer workloads, whereby the softwa=
+re is forwarding gigabits of legitimate traffic across an array of differen=
+t workloads, with no impact to the U/X of customer traffic flows. Ultimatel=
+y, to date, we've been quite confident as to the mechanics of the packet fo=
+rwarding pipeline implemented with XSK.
+>
+> But we=E2=80=99ve hit a snag. Everything=E2=80=99s worked great up to Lin=
+ux 5.15, and from 5.16 onwards, it=E2=80=99s quite broken. If I could summa=
+rise the behaviour of this on kernel 5.16 onwards, I would say the main iss=
+ues are:
+>
+> * Channel 0 receives traffic but channel 1+ may not. (In this case, chann=
+el 0 tends to receive the right amount of traffic, e.g. 4 channels with RSS=
+ means channel 0 sees 1/4th the total ingress).
+>
+> * Channels can stall. Superficially it looks like they only process frame=
+s up to the number of descriptors initially pushed onto the FQ, and then st=
+ops.
+>
+> * eBPF programs running for frames via channel 0 work as expected. That i=
+s, if one is parsing layer 3 and 4 headers to identify certain traffic type=
+s, headers are where you would expect them to be in memory. However, this i=
+sn=E2=80=99t true for frames via channel 1+; headers don=E2=80=99t seem to =
+be at the right position relative to the data pointer in the eBPF program. =
+It could be there=E2=80=99s actually nothing in the descriptor, but this is=
+ experienced by the software as parser errors, because we can=E2=80=99t dec=
+ode the IP frames properly.
+>
+> We=E2=80=99ve been debugging this for some time and concluded the best wa=
+y was to take our software out the equation, and use xdpsock from the kerne=
+l tree. In doing so, we realised that while xdpsock does test shared umem, =
+it=E2=80=99s still a single thread, and maintains a single FQ/CQ despite op=
+ening 8x XSK sockets.
+>
+> To move forward and validate with multiple FQ/CQ via the xsk_socket__crea=
+te_shared() API, we=E2=80=99ve tweaked the xdpsock app to scale out umem al=
+location by num_channels, then split it into num_channels regions (by virtu=
+e of an offset), open multiple XSK sockets bound to num_channels NIC channe=
+ls, insert the XSK FD=E2=80=99s into an XSK map indexed by channel number, =
+and tweak xdpsock_kern to lookup rx_channel for redirect, vs. the RR approa=
+ch in the original sample. And, on the whole, surprisingly, we *think* we c=
+an reproduce the issues.
+>
+> We need to be a bit more scientific about our testing but I wanted to kno=
+w if anyone else has had odd behaviour/experiences with XSK using shared um=
+em, with multiple fill/completion queues, on kernel 5.16 and above?
+>
+> We were under the impression that multi-FQ/CQ is a supported configuratio=
+n - it worked perfectly in 5.15. Is this something that is actually going a=
+way, and we need to re-think our approach?
+
+It is not supposed to go away ever, so this is most likely a bug.
+Thank you for reporting it and posting a program I can use to
+reproduce it. I will get back when I have reproduced it, or failed to.
+But let us hope it is the former.
+
+BTW, there is one more person/company that has reported a similar
+issue as you are stating, so it is likely real. But in that case, we
+were not able to reproduce it on our end.
+
+/Magnus
+
+> In all test cases we=E2=80=99ve been on x86_64 (Xeon E5=E2=80=99s or Xeon=
+ Platinum), on E810 or MLX Connect-X 4 cards. Tested on a range of differen=
+t kernels, up to 5.19-rc4. In all cases we=E2=80=99re using aligned memory =
+mode and the L2fwd behaviour of xdpsock.
+>
+> In tracing back kernel commits we have actually found where the problems =
+start to occur. ICE breaks from commit 57f7f8b6bc0bc80d94443f94fe5f21f26649=
+9a2b ("ice: Use xdp_buf instead of rx_buf for xsk zero-copy=E2=80=9D) [1], =
+and testing suggests MLX5 is broken from commit 94033cd8e73b8632bab7c8b7bb5=
+4caa4f5616db7 ("xsk: Optimize for aligned case=E2=80=9D) [2]. I appreciate =
+MLX5 don=E2=80=99t support XSK Z/C + RSS, but there are ways we can test mu=
+ltiple queues with some flow steering, and we see the same behaviour.
+>
+> We=E2=80=99ve actually just published our modified xdpsock code at our op=
+en source repository [3] because we noticed the xdpsock code got removed fr=
+om the tree a while ago. Our modifications are compile-time enabled/disable=
+d because we wanted to be explicit in where we=E2=80=99ve changed logic in =
+xdpsock. But the repo is available for peer review to see if there=E2=80=99=
+s issues in how we=E2=80=99ve approached testing the logic.
+>
+> Any and all feedback welcomed/appreciated - we=E2=80=99re a bit stumped!
+>
+> Thanks
+> Alasdair
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D57f7f8b6bc0bc80d94443f94fe5f21f266499a2b
+>
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D94033cd8e73b8632bab7c8b7bb54caa4f5616db7
+>
+> [3] https://github.com/OpenSource-THG/xdpsock-sample
+>
