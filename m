@@ -2,135 +2,118 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4754B5B6A54
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Sep 2022 11:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C05395BD5EB
+	for <lists+xdp-newbies@lfdr.de>; Mon, 19 Sep 2022 22:55:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbiIMJJi (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 13 Sep 2022 05:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
+        id S229582AbiISUzZ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 19 Sep 2022 16:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbiIMJJh (ORCPT
+        with ESMTP id S229492AbiISUzZ (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 13 Sep 2022 05:09:37 -0400
-Received: from GBR01-LO2-obe.outbound.protection.outlook.com (mail-lo2gbr01on2137.outbound.protection.outlook.com [40.107.10.137])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9FB6272
-        for <xdp-newbies@vger.kernel.org>; Tue, 13 Sep 2022 02:09:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=imroJeJO5ieK92+1TYkXOBa8W64oVfwXChDQVJZ470wls776UJa1zFfufFwaKnORE9+8/YDia5oEOQQOEqNjftjJvrik+Ct0L5XFgCYe/8ZRUCwjHPHoTAg/DR28oT74OzA6WX3ukdOjBsloaN/IbRDWgb4EXfGKJdAFOGYNMxu7hI6iNbjzW0eXC8/P4QWiLo0u2nEhRuVjYl7KXsTHKaTu9NjqX+wPVpxPEhbDe86U/JLEXMylcD2ylVN8HNjbKUpPxFlX8DHjXcyXY7blo+iMdZG7VPfYjdy6gri0+FIlyBHeKW9oNlRvdBoQ7JLpXuoWMQ8pAeCBnNG4mdikbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3BOL6Ncrlsg8R6WC2ge9w7IktUxUxHIvDZo69bpYi08=;
- b=EWrQLN8ECqkGGWlc/39YvxRJVBoN+FM2rJgv9plDeSsyQ1R77Pj8emE0sWdBVUFrAJGLMHILN0dJLnIUy5jX8ZJKUJSJp+1y56n4GWmb7RzaUyu1jyPYiy8JjeAgW87YRA9f7Dg4XJSHK5FnZ05cGu2/IwAVMU60kfIp7e5cbLi4GrPBIpon7FhfYOk+ucfJMFzSeGpzLCw1+g8qh2miRwFxlaFV49YHOVrUT8t/18uRUI2J9I6L+NfdLuWQui1tFPemcZ2/FwIY6HB8QKS+XBL6wXHgaApXiHQEW4CrpsG5VWe0IVl3cIvextDHAkgAxlU3nReJtKjFK27Gy5aIeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synamedia.com; dmarc=pass action=none
- header.from=synamedia.com; dkim=pass header.d=synamedia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synamedia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3BOL6Ncrlsg8R6WC2ge9w7IktUxUxHIvDZo69bpYi08=;
- b=Wlwbxv2NC0LXqr8L823S3Lw146fgiE03TpakWLPifYsegirnnMY7GTiVsL4rD3tZwhmn8Xm0/RqVRmLREtL7sbX/+C7uR5ztCSPh9Us6FNvmZcfeLEtin7aTgUteQFOuQmyWM6GzNF+3qm1MLv+GIvz6WJjAhFtzSoYP+P7+Jk7ohDMVsTZ0n0It4FJTZKNn3mlYL7QdENSyPlcaWByOv6tEqAvoG+P0nr0m8oZtrG8f0EGDjNDV8z3kRlzp53PnL7StYPTn+m4vbe476JtlBpJf/FdT6tTm7t1RypfoZ1yN0uvozKgl8G6zFZWeSobx3I+SJ+sCKqiz87PFh5Mr8A==
-Received: from CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1be::9)
- by LO0P265MB5000.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:22b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19; Tue, 13 Sep
- 2022 09:09:32 +0000
-Received: from CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1022:3adc:5ae6:937f]) by CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1022:3adc:5ae6:937f%5]) with mapi id 15.20.5612.022; Tue, 13 Sep 2022
- 09:09:32 +0000
-From:   Dries De Winter <ddewinter@synamedia.com>
-To:     Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
-CC:     "siska@cesnet.cz" <siska@cesnet.cz>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: RE: XDP-ZC RSS - Mellanox
-Thread-Topic: XDP-ZC RSS - Mellanox
-Thread-Index: AQHYx03calzSU20370uN55cbs0IH2q3dEUcg
-Date:   Tue, 13 Sep 2022 09:09:31 +0000
-Message-ID: <CWXP265MB53456430EB25687FD9F96ED2A2479@CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM>
-References: <CWXP265MB53457318D33BCCEC3289ECDCA2449@CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM>
- <139B4E3F-DF5D-44E2-A751-1A1C9AFDB932@outlook.com>
-In-Reply-To: <139B4E3F-DF5D-44E2-A751-1A1C9AFDB932@outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_ActionId=e8f5cd3e-d137-4d92-93b6-0bb9eecbcb6e;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_ContentBits=0;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_Enabled=true;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_Method=Standard;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_Name=e305dca8-daac-40b2-85cb-c39a1eaa36df;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_SetDate=2022-09-13T09:05:17Z;MSIP_Label_e305dca8-daac-40b2-85cb-c39a1eaa36df_SiteId=ecdd899a-33be-4c33-91e4-1f1144fc2f56;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=synamedia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CWXP265MB5345:EE_|LO0P265MB5000:EE_
-x-ms-office365-filtering-correlation-id: 8792dbc3-f070-4dd5-41e9-08da9567abaf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vpGvM4XIw8SKCwn1HNP28sKe2DxxlOgKgqtUhF5Q2zq3JallUlVEpFW8SrNXFIVC48/JhOKlZFkmNf+LbSg+PD4TvXQAIdNZRMJJzAYJm0WprSlplUAPmRZwpIKxhTN41UzobxKwZqzAQI5tcY/+1pfzA3PYkj6P9qjk7UVF9OlOG5X/dw8cxIQfhh3m0EikQfpRL0CY2yfUjqJ2Dy4W0y0P9Z1lBJWLzKsjzNMS9xULodXfyqFDR9Bzta67p54z3Vf7x94MzELW54L9yAfDkgWVtnEBTAL2qKAED+m8By0CPOFN2718l5NVCf0PjDQU1qIGDpP2V9fTJEXLVpFdvDFpOpTsyDyCmr5MlDBl6cV76cIkuq/0FeSDRylwtEPMmENSK11fgNRJanE1iowqPqlcsmS2CGOTQOrfsbweXfX+I4m3XZX9Tfy0pogDr+71OJwACOaO9hwX1KnLp++MHgDHl3KCN17ln6z5S0lij1IZdREva5ztzmhVI2QM72TpqNT/T2z1Tvw2P1a116R6dXi28pMoUeMoToZzSMC0ewSqmLlRaSMMo8uv80iddW+k8OXPYMxmfn+QgGYEEJ//7HX3L0g+0vZaN71W1tt3mTDEWXJ+JUZ14Nm1xPbpZoNnO9GVf+GyrR+8v8yEqz+m+cz4mQHkfdl6h3hDJgSHF/pB4duxpeV1HSSvzI89SQ30SwW6sZXloD12g1RtnUY/dx1PqshygchEriSrjpDD8jfqxDlKMbO1x/tZiV4bXPRu5UJZDjRUHyzhgCbRglb1Uw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(366004)(136003)(396003)(376002)(39860400002)(451199015)(8676002)(66476007)(38070700005)(2906002)(55016003)(86362001)(9686003)(41300700001)(316002)(4744005)(186003)(6506007)(26005)(66946007)(5660300002)(122000001)(54906003)(8936002)(478600001)(71200400001)(64756008)(33656002)(7696005)(4326008)(66556008)(76116006)(66446008)(38100700002)(6916009)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Yk4wK3ordFFxcTg4TUU4NzRrYlNuQWpqL09jMUp0elRPTGFBTm0xT2ZYMGFM?=
- =?utf-8?B?OHJhRTgxeU53QlBpZkY2VWxXTnVGd25Ga3NNQWQrN0g4RHlUWFdXSE5NQ1Mx?=
- =?utf-8?B?V3NGZEhZcStMVTJPc2M5WXVBNzE2c0swRHIrb3ZrOUo5YmVzNE9OS2I2ZDA0?=
- =?utf-8?B?bEdGS1NPS2o3ZUw5VmVxWnRHbXBkcDVqMFAvWUhpOGwxdExBMWgwYkFFbTlm?=
- =?utf-8?B?NjlhVmtxT2lNSVM5TlFBMVJkTlpTR2wxekxDY21XNktNOEVBOWpZZmZGOEFP?=
- =?utf-8?B?SFFIU0JvV2RqYVF2aTNFTzRKVW16SEJ0TlBZVHlaMGxVZFJ0Z3dhR21TMjNo?=
- =?utf-8?B?MmJQdE9ZMW9LbVVWLzVsN3hyaFFuSWxMRmZGMndMakpXUVRtMW44SitEb1lt?=
- =?utf-8?B?RlZYdjVHVWc5dWg5aisvZW1TQWNSeFlVdEdzSitsU2JCNWFkc04zUmtkbVZk?=
- =?utf-8?B?OWZ6Z0dZUU1MeGlxSnQvVXlCbWxyYk5yMjlhWG9zcTRLTERzUEp5ZkJmbDUw?=
- =?utf-8?B?QTB4Lytsck9JTUpWU1ZnTm5rVlVxWUtUSGlaTHVJcys0bTF5Q3gyOHhWUzhy?=
- =?utf-8?B?U2dRd1ljQlpWTk9UVlZQK0FlWmtZU2NxVUkreEk3TzdJOU4wWWxwZ1Ardith?=
- =?utf-8?B?d1RhVHdaK1I5cWxaT0ZGL3dsUStPNlVPamlsQ3FSRlVzalNCcjVTRnQ2S05W?=
- =?utf-8?B?OWxyMmhSdFA0NkFjanNzRmN5dWxCRTE2SnpqU3ZITVBCK2NNN0t1WFpCU3dY?=
- =?utf-8?B?eXBpeGp1MS96bU45MXRPZVNqZUlHMU5VSXBlRkVaRlRLS2E0OGZyMStOZUZ5?=
- =?utf-8?B?bU8ydFEram1lNUZ3WFpFZE5XMWswOWVyczRvN1YxWWtWREdoN0EydHRNbHVt?=
- =?utf-8?B?ZlBJc1BXemx1TUZRaGR3TUZ5N1RIalQ3QUY4WVJNM3M4RkpuM2FpanRSWVJF?=
- =?utf-8?B?Nmhqdi8rbGQrYXJlMHNMMisrQTlkSXZBblRrZ1RSMDAzUkN3RG5zZ3JEbmRF?=
- =?utf-8?B?Uno0ZSszRGtSWUQrN0RmdG1kU0FPNGN2emdoVFdlVlVWdjhNL1VOL3BVbnJB?=
- =?utf-8?B?aGQ0azBUUjFMMXZiTXpQeTR1RHpDOXRURUtUbi9nejVpYlZlcCtZL3ppMnNy?=
- =?utf-8?B?TjVWdGZQMnRuSEhOeXNOc1kvTG40UitRVDJqMERzM3N3dkdRVGo0MFljcWQx?=
- =?utf-8?B?eXNxR2ZYM1BQOEl3UkV4aFBLR1o5b2JRb1BwaER3dFBza3ZoKzFVN1FrbkxH?=
- =?utf-8?B?OE9aTktOOElrNDZHb2dSTDRiUzk5S1FkeHFydTh1bldLaXMycVk0RW4vd0Zl?=
- =?utf-8?B?Wml5YVhuVHdpQ2JUQndUdmRqWFJTcENUREgwcUJ0d0JFU2ZOdXJmMkxhYjl3?=
- =?utf-8?B?dmdVKzBGNDgrVm1LQjZ0NXc1L0dlbnJIQk82d3BLVFRqaWZ5cE0xZVVVazl4?=
- =?utf-8?B?b3IzcW5SSkZveGNNMUJyeDltU3pjR2l6MzBiZUZ4NjlxZ0wyKzVHYVlBK3Rt?=
- =?utf-8?B?aVlodERkL001U1dtOUd1bWRiM0h1VlJ5L0lTMWdoWGszU3FkcjAwNHlNcXE5?=
- =?utf-8?B?eW9rdkVOcWZ1SFo4bHpIUjN1VG5MYm9ZdGRIMkkwenV6amVJNFRXZEo4eUZV?=
- =?utf-8?B?aWFnZ0x3V08xaUZJTmUwNWpaaHc5T2FXK2ZXcVp3MENNZVFQQ3ZyNWpwQTRx?=
- =?utf-8?B?Smg4YStkN3BGdlVseE9LLzVlR01mYThCYmk4czNlalNGeUZTUTFBTmo1OWZ4?=
- =?utf-8?B?TEM2VzE2K1h2VVEzOUN1MU1qNVRFM1FuNTVlcGllQ0FnU0RkYVY5M2xtMjZB?=
- =?utf-8?B?TGpNUjRwK2dkUnFtMXhsM3d5UlVab3NvMktxM2NmRlhuYlJJemtaREVJMTVE?=
- =?utf-8?B?Tm1mMVBpaWhyNmY1VXN4ZE04SDVwcFdBMkFxYTRmUllRU08vSFJwbVc0eWJN?=
- =?utf-8?B?OXAxNk40cCtqeGdwMVl5cWJvWC9uY01RRlNCQS80b3A1RkU3VENmQ0ZZUUp6?=
- =?utf-8?B?NW1vMEluR25lN3JDY0dnVHZkbEh0STdKUGdpUE81RmV2UjM2L2xaZmhOSElK?=
- =?utf-8?B?d3hRaEtYM05ud3ZjTTZpazgrRTEremVCWVNqcTJJZWJwNWJwUi9HMEtOOThE?=
- =?utf-8?Q?klKdbAGmb71bGxW0I4TfhQWma?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 19 Sep 2022 16:55:25 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1892449B7F
+        for <xdp-newbies@vger.kernel.org>; Mon, 19 Sep 2022 13:55:24 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id s6so488328lfo.7
+        for <xdp-newbies@vger.kernel.org>; Mon, 19 Sep 2022 13:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date;
+        bh=oRNwx0LyenjJWa/3QlAGfIReUKEXMAs1vDx50HVwa14=;
+        b=Xsafw/VhVjF136Wvs3d3bUYZwKppS5eR19G46c7ur1ZK9FC3Kfgv0KkFpgfvk3hfDS
+         IkVba/Fu9FGqPrmJO+HZtIhng3FsyN4xWBiF3O5FubiEwZizhZVEaZfyAhhhJb4jM56b
+         dgrOsTXNSyZ+Bkk2b5KuiK/6CkQU/dJGY97GYV4L73wMWXNONUXnO+Exr/hYkuTzS1Hc
+         vd17ROLn5l0GDu7cTmsgqEBXMqkEuBqPVcydPPMtvs2aeg7WwjoxBwJyz9Y9Cvr5llLi
+         x2+xv6EyqkJ5KeYkDFUnxTSYnNeUCkuewReqsBjDnIIM0knhN2IQeXlEAy7UEDtupjck
+         oqaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=oRNwx0LyenjJWa/3QlAGfIReUKEXMAs1vDx50HVwa14=;
+        b=2KqyrwS1XP+Jnh3rtbjYIbSQtzg63c+Jphdz2wXbf61nqLN9wb+7ze9eJNqC/Zd3+L
+         g91Y0Sbk1+x8xKeWSYQx+4PJ34VZ9WvxI2e9wqG6LqlUf9/zsqxG5L/D7rW1App87d06
+         NeCY77QNdztIzfv5FzKDcs01XMm/+S7Fr0eznIGExspn3a3VTVioS1fZHpdxOIzR7FPK
+         iIIfBjaEOwyzXWpqlcN9bMhaIE5lyr0tcWaAAQGj5JCP4uIFWrz1k0Kb67K76IXNllHA
+         cqT8LuAWILbMY2g9VhPrYbGWE80E+V/BvUcJyuPxyvjXQijNWELoIN9/mfsuW7BVGpkU
+         jcAw==
+X-Gm-Message-State: ACrzQf2iHWKLpNbQ5qG55qrtrVIcwd3B7mMjCyjjlf/N0zCqXuQezWVy
+        L+/tgwhb9I57bHQb4OJrQiplVaQq3DIZzg/XPw66Hi24QDxHsw==
+X-Google-Smtp-Source: AMsMyM6lwSQ1MeqDkTkAmLNytKUZIGgwcWbYBlNavh6QW1yOGPVZ0YoTeuXoqh6vPLWJNwkjS1Fm89ekEzynnIaE7kY=
+X-Received: by 2002:ac2:4a61:0:b0:497:ae0c:4f66 with SMTP id
+ q1-20020ac24a61000000b00497ae0c4f66mr6571527lfp.660.1663620921231; Mon, 19
+ Sep 2022 13:55:21 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synamedia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CWXP265MB5345.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8792dbc3-f070-4dd5-41e9-08da9567abaf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2022 09:09:32.0281
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: ecdd899a-33be-4c33-91e4-1f1144fc2f56
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yQyrT7r3FnnMpxjiWFtvk3uOsmDgslsBuU+0Bpa+bkmL71ARPvWJFTMrxtwD5+aU5jytTP09I1IwTSQDjB35uA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB5000
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+From:   Adam Smith <hrotsvit@gmail.com>
+Date:   Mon, 19 Sep 2022 15:55:08 -0500
+Message-ID: <CADx6jH51gFXRvp2H76eePrz2oTw5-Av6nV4-N+CVVcgDKAuL2A@mail.gmail.com>
+Subject: Questions about IRQ utilization and throughput with XDP_REDIRECT on
+ Intel i40e
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-PiBXZeKAmXZlIHRyaWVkIHRvIGtub2NrIHVwIGEgcGF0Y2ggZm9yIHRoaXMgaW4gdGhlIHBhc3Qg
-YXMgd2VsbC4gTG9va3MgbGlrZSB3ZQ0KPiBlbmRlZCB1cCBhdCBhIHNpbWlsYXIgcGxhY2UsIGJ1
-dCBvdXIgYXR0ZW1wdHMgd2VyZSB1bnN1Y2Nlc3NmdWwgLSBwYWNrZXQNCj4gZm9yd2FyZGluZyBm
-YWlsZWQgLSBzbyB3ZSBhYmFuZG9uZWQgaXQuIE1heSBJIGFzayB3aGF0IGtlcm5lbCB2ZXJzaW9u
-cyB5b3XigJl2ZQ0KPiBoYWQgc3VjY2VzcyB3aXRoPw0KVGhlIHBhdGNoIHdhcyB0ZXN0ZWQgb24g
-T3JhY2xlIExpbnV4IDggd2l0aCBVRUtSNyBpbnN0YWxsZWQNCig1LjE1LjAtMS40My40LjIuZWw4
-dWVrLng4Nl82NCkuDQoNCg==
+Hello,
+
+In trying to understand the differences in IRQ utilization and
+throughput when performing XDP_REDIRECT in a simple netfilter bridge
+on the Intel i40e, we have encountered behavior we are unable to
+explain and we would like advice on where to investigate next.
+
+The two questions we are seeking guidance for are:
+1) Why does XDP in the i40e driver handle interrupts on multiple IRQs,
+while the same flows are serviced by a single IRQ without XDP
+(netfilter bridge)?
+
+2) Why does the i40e driver with XDP under load seemingly get faster
+when tracing is attached to functions inside the driver=E2=80=99s napi_poll
+loop?
+
+Our working theory is that the i40e driver is not as efficient in
+interrupt handling when XDP is enabled. Something in napi_poll is
+looping too aggressively, and, when artificially slowed by attaching
+to various kprobes and tracepoints, the slightly delayed code becomes
+more efficient.
+
+Testing setup:
+
+Without XDP, our iperf3 test utilizes almost 100% CPU on a single core
+to achieve approximately 9.42 Gbits/sec. Total hard IRQs over 10
+seconds is as follows:
+i40e-enp1s0f1-TxRx-1            127k
+Iperf3 retransmissions are roughly 0.
+
+With simple XDP_REDIRECT programs installed on both interfaces, CPU
+usage drops to ~43% on two different cores (one significantly higher
+than the other), and hard IRQs over 10 seconds is as follows:
+i40e-enp1s0f0-TxRx-1            169k
+i40e-enp1s0f0-TxRx-2              82k
+i40e-enp1s0f1-TxRx-1            147k
+i40e-enp1s0f1-TxRx-2            235k
+Throughput in this case is only ~8.75 Gbits/sec, and iperf3
+retransmissions number between 1k and 3k consistently.
+
+When we use bpftrace to attach multiple BPF programs to i40e functions
+involved in XDP (e.g., `bpftrace -e =E2=80=98tracepoint:i40e:i40e_clean_rx_=
+irq
+{} kprobe:i40e_xmit_xdp_ring {}=E2=80=99), retransmissions drop to 0,
+throughput increases to 9.4 Gbits/sec, and CPU utilization on the
+busier CPU increases to ~73%. Hard IRQs are similar to the
+XDP_REDIRECT IRQs above.
+
+Attaching traces should not logically result in a throughput increase.
+
+Any insight or guidance would be greatly appreciated!
+
+Adam Smith
