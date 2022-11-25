@@ -2,222 +2,237 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BEE1637D06
-	for <lists+xdp-newbies@lfdr.de>; Thu, 24 Nov 2022 16:30:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C2763850D
+	for <lists+xdp-newbies@lfdr.de>; Fri, 25 Nov 2022 09:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbiKXPaK (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 24 Nov 2022 10:30:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S229515AbiKYIQg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 25 Nov 2022 03:16:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbiKXPaH (ORCPT
+        with ESMTP id S229729AbiKYIQd (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 24 Nov 2022 10:30:07 -0500
-X-Greylist: delayed 303 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 24 Nov 2022 07:30:05 PST
-Received: from eu-smtp-delivery-183.mimecast.com (eu-smtp-delivery-183.mimecast.com [185.58.85.183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DDB113FEC
-        for <xdp-newbies@vger.kernel.org>; Thu, 24 Nov 2022 07:30:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thehutgroup.com;
-        s=THEHUTGROUPDKIM; t=1669303803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4CPhCfD0WvMrJuoF9Z5oy5ijzkL1WYauNpCMsbQ6Dzs=;
-        b=KmTBdCBYhl3HrOtkpfB9rWqjY7YXVV1eyox+AWAdewbBSEt3xBFRzJB6fBsYzcLC3tJCQJ
-        yuhdc53T7TH7VvQdSCT7RsHm+UI2F6UMyfxL0oU39QODKCr/te7DhgZ864U+e5W40cO7H8
-        OmPHuXcy5dEroZbBeDLrDTXz/iX8tGE=
-Received: from GBR01-CWL-obe.outbound.protection.outlook.com
- (mail-cwlgbr01lp2055.outbound.protection.outlook.com [104.47.20.55]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- uk-mta-97--b-PNeWaNwil7Yw9G5qB4Q-1; Thu, 24 Nov 2022 15:23:53 +0000
-X-MC-Unique: -b-PNeWaNwil7Yw9G5qB4Q-1
-Received: from LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:1cc::11)
- by LO2P265MB5062.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:22e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.19; Thu, 24 Nov
- 2022 15:23:52 +0000
-Received: from LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
- ([fe80::af45:dd6a:43fb:ccb2]) by LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
- ([fe80::af45:dd6a:43fb:ccb2%7]) with mapi id 15.20.5857.019; Thu, 24 Nov 2022
- 15:23:52 +0000
-From:   Robin Cowley <Robin.Cowley@thehutgroup.com>
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: ICE driver bug using XDP_TX with multi FCQs
-Thread-Topic: ICE driver bug using XDP_TX with multi FCQs
-Thread-Index: AQHY//68J6gtFnkh50yQaY8O0RR4RQ==
-Date:   Thu, 24 Nov 2022 15:23:52 +0000
-Message-ID: <LO4P265MB37586C972D240B09A515D6D7870F9@LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LO4P265MB3758:EE_|LO2P265MB5062:EE_
-x-ms-office365-filtering-correlation-id: 4802ecc8-a425-40de-b45e-08dace2fe4fc
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: D0S3jAyHx/G0pnFhF3dLN+HV0IZCDzICnu2mt4IB+C1SfVp0oYAuaonGCahHRqnHBJWP+GOdlZBWso2rNCR3cKDh/pOJXiS9PpdztG+uP9E8Vd2SUkN3WOORXzmqzner3kVCpkzNYrR9jzqda0CxBcsKM/8ow8C/ga5hDrWnQDnfvxaBTEnfbQdUXqwrLf9pJcve0o6tQNizaST9YFd1tPp7nT4UJa1FLry9SP8LNOiHHbM+npR/4J57fdN4ILPZqTyRFykE6i+fkyPuu3QJiAPMYeUeibxWRO1OFlyB8s8HwQuGeGAHH5v7RkKAahaFh87DKajWAMbI1kp1cJMo6J4pZWqcBnNzCYqILmMjXFXpFKSIlVRRGQcCAOLJHFmUDtiuf+AZwxU4aIVuBqSKhO6VbzYv/VY4x9szUMwdLteVRvRUpnC7Eg+pEYdch6rjnLahaOxlVM4gLwpJOAesACvTePXT+If8h5DwuZyd6xjFfoDNQ3ELvAkHGZiCj47u6PUSsJJbrAxgZz2FuDVC9ufTyab4HGX23CEZI17G9aCwfBXjF38qOGjnYskCmPdxYffzSTvKXnSf6YOEyT2CGQbvMk8PJQmIOPBsMrmHfuyl+bLFQCLgpYiQORldNlp8nfKExLcLKBcMwq4as6l0UMzF/HJdx/mlwarxtI5reXfpyCF5JCgQH9BE88mQI7UQp4elrrkLw7NqgYlPXXaspDkRIODWCZeo/0Vys1YOUT8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(451199015)(316002)(71200400001)(45080400002)(966005)(6916009)(38070700005)(83380400001)(66574015)(478600001)(6506007)(7696005)(9686003)(26005)(86362001)(55236004)(33656002)(122000001)(38100700002)(186003)(5660300002)(55016003)(52536014)(66899015)(41300700001)(8936002)(2906002)(66946007)(76116006)(64756008)(8676002)(66556008)(66446008)(66476007);DIR:OUT;SFP:1101
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dXhOWS9zUEdkazRkTkhkRE5JMzVNcUljdkNENnJFR0dvUll4L2t2OW0rK1Rx?=
- =?utf-8?B?bGhEekNpWmxkM3U5SWUybHA0QVJQQ3U5UEp6VHd1a1RVQzV5ei9CTkdRMUFh?=
- =?utf-8?B?ZHVyajR3bUhGQVlFc08wVVlaWjJnTVZYclJZQVJPZVBrdXZnZ0xqMG5xNytB?=
- =?utf-8?B?aFBKVXVPeTFINFJPYUpYTWU1ZkhGYkJFbHNsODh1YVg0MEQwR1RVTkpEc3JY?=
- =?utf-8?B?bkVLRW8yRlU0amd5SGs1YmVvU3p5Sk5yaGhWd2laN295TGd5cTYybEhrb1BW?=
- =?utf-8?B?ZjhMR0E5eEFnQUxmd3RseU9lSjhIN01xcEg3ajdJZUtKNGFkaVl0bndITngr?=
- =?utf-8?B?Um9VWHI4ZHVnZGJ6ekJSQVpabGtma2F0VGhCQ2VUcDJzWit4WkpyeUxyU3hi?=
- =?utf-8?B?NmJqTG9nYkVKUDJKZEZKTWZ6NnorTFhoVmZocjdCaWpRNFk0TDFTb1lZUUZ3?=
- =?utf-8?B?MytjZzkzT3lNZHBKZ1I2aHZ1dktyRlJCN1pneE1vQm5EMndMUGZ2VGg5RWtQ?=
- =?utf-8?B?VFVmTE5OaUVmeWFvWXNKbTc5MDNNSlg4VWFNUU1DM0lmTjM4MXJLQ3RHVlJj?=
- =?utf-8?B?djhIVmgyaWpiUHdqajd4NUVJb2kyZFdDR1dBczEzVS84NXNHcktRY2pvSFZN?=
- =?utf-8?B?ZndQVUpaN3AzMDhOTGpkTmpBcUNaZGtWREhjVDNsWEYyTGVFSG9GZkdVWjhs?=
- =?utf-8?B?WVNtcE12MHcrRG1pbk8zVmptL0xJd2pnTjBNOEgwaE04RUdXQTdCcGhITUtw?=
- =?utf-8?B?T3FVbDZ5clNUOXNQTnp1MjJDTHluVGR1R003YVc5V1pkdndUZy9DZncvbkhI?=
- =?utf-8?B?WW9JK2Nsc3k1c0R5VG5sVFlHSHltTXpJY3FId1pOb09lTmQwSmtSRFVRVkdF?=
- =?utf-8?B?dXBIM1lFVk1rS0ExVE14MGt6SzdNYmw3ZVg1VEY5SnJzNUcxdDFwL0lEK0lE?=
- =?utf-8?B?RWU5R25NVkZ2OFBXNHdxaGt0dnFLZHJzZk41anFSVStvQ1VrOG5SWkxyOSto?=
- =?utf-8?B?R1B6cWtmT0R3Q2o1VUZ2ZCtUZS9odVhNejlaS1hNRFd1SDJPdjZjcXZmK0Er?=
- =?utf-8?B?NFIwY2xlRlU5SFBRSGUxeHhHMVR0Ty9JeVhaejJQTTIyMFozMENMUW15bnNN?=
- =?utf-8?B?WkVkSGZYVTVITkNON0gxTmYyWDRTUXYvaXp5UWN5ZjRKVS9USU91azg2dWg0?=
- =?utf-8?B?OFQvQzhnbkIrRUlkOHUrUnRQTUtVYlRPZ3FXMkxodDArdVMvbWZZQkJEV3Bq?=
- =?utf-8?B?ZTI2MHFTRFIrNjVjNG41UDZqWnpKcVVjb05OZUFJdHNaaVVQdkFsWmlOZVZF?=
- =?utf-8?B?MjVtUTNPYlY3eitabWVFeTlCenlnekwyKzVQc0lYVFloYVk3ek9hZW5rTUdZ?=
- =?utf-8?B?YnFOdUQyVWl6UDhOSHVGZ0s1T2dBYlRCM0dkdXlrMytkQ0U5QUJ3OThJbkY5?=
- =?utf-8?B?dkQ5UG0yLzE5bkJ6bEVSOWNIUGJzTGlocDhvNTRCNVJ2cFRGRUVSTTQvZG9j?=
- =?utf-8?B?Y3ZvbU9VMlAwMFRTZldFVXVsVzlZWGlUczZxOGFhRHdTQlF2R0RQQmdWS2lw?=
- =?utf-8?B?NHJlZW56OGtyV2dCUXlBSUdXU09jR095QnRPcitTVnpOSkpmUTBTeithZThI?=
- =?utf-8?B?dkpoazhNU3l4YWpoTVVSSFJLbllZK01XS2tXMndNZGVaUjlmcnVpY040TGhH?=
- =?utf-8?B?WnZlQ1JFSVJGSkxDVnBvbzhGSlRVTHp4K2tKalpJU1pMNHVYRk1FWlZDNXpr?=
- =?utf-8?B?NFU4T2szQk1GWi9GWXIxSklhM2tsNjM3NDhOSVB5bWw5Y05QTG1HSFJ2aSs0?=
- =?utf-8?B?SHFkSGZ2OVprbGpUUXo2bmVCNTE5VWF6alZMQjhEb0ZKcXo1QUp1NnRhQ3pn?=
- =?utf-8?B?RnhmWXFKdUw3MWFra3RrV1EvWHlJbjJKZVNmd0JxZE5CaURVbU9pbXE1SWRV?=
- =?utf-8?B?L0x0c3psTHEra20ydmI4L041S0M1TUVGaHVIN1E2TWlwaHRIa0h2VHhsOWVC?=
- =?utf-8?B?aWFRUlhkOVlNUkxSdGtHcVF5SGdBSUNXOXJhMFJVUVdzb1B1KzhBY28rZXZZ?=
- =?utf-8?B?TmRjdk40bG1QQkxxbmhDczRNZnM0MDBMemEyODhuaHZ0THlVb1B0cVdNVjJl?=
- =?utf-8?Q?SONMkRJ03Av1Ui8jgNp9ekrS5?=
+        Fri, 25 Nov 2022 03:16:33 -0500
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11FE303D5
+        for <xdp-newbies@vger.kernel.org>; Fri, 25 Nov 2022 00:16:30 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id q7so4314210ljp.9
+        for <xdp-newbies@vger.kernel.org>; Fri, 25 Nov 2022 00:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4KniLokbouaO3b0PHHA3MUBtE3BsQfzUaJMuK47ZVEo=;
+        b=SlIIydnxbK/F3yk8JLowJ1uRRrBC2YmknmDCDGMxhv2qw+GS6R43QedE4XNDEo+i7c
+         ZerXekQWFoIzkIWSfUFCMZR5LTjtoxCfZctGaJL3qUZ+NmP0C7JMIY62x1NkuQ6K+Rc+
+         Ux+LcEr+1COobnbbi6czbP+IqeYiPmgCecuguVX63OKd75e5decdLIHhW9BEv9p/s0Xx
+         gP61qq0TQ5Hgm7KkDStSjVUYSmiTw4YbHgKFYHbVFpinQs8DF2FrOHiOET6YF+wc5H4h
+         XSTXr+3/7BKb46+YizprkfPBDjtrXd82ti0/uhySyYMUXONS3IPIJaPIYkh5H5n36gqr
+         oecg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4KniLokbouaO3b0PHHA3MUBtE3BsQfzUaJMuK47ZVEo=;
+        b=nauHNE2WGgOYu7K7FVHQdWqUbxTwT8z0uZA1l+xwp79BlundAxS0AksfBNd/NOx7k6
+         MSfbBf1k/J9F3e9e6JA1dIuVLpD2d9wdK5XmJfpYrZowAqburQ4FJpKLAAZy/F05ii28
+         ywj0aQr5DYfEzNzmUTruG6pUV+tkVPQBaq8FLR1Tjy2ZfihPntN7BkFEP6CQpHmmtaeO
+         9OlnsjzU32OSD6HKfYfeoWSekJ3D6edAQgwxUjLYhgn5MIDLYWDLWXG3XUVuzGbQ4Bgj
+         ju+3BEyHNB58RbgDoKdOhEcY5CXrTQNqb1of+jad6UJ4qQebreKcor11EKEMS36ueSDN
+         MSfQ==
+X-Gm-Message-State: ANoB5pnAv3odLMoEJULDy6/8VLyUvJM0GeoRbmKRV0pVdg7BZ5XbLuGf
+        /5xPPNjT/03kmd8D2CX77sqQhhvlBNTufF9kKdq9D8u+/DgYqQ==
+X-Google-Smtp-Source: AA0mqf59LmuAzp7BSattgKkq93prAylVMFFNouWVrrimh6dUTKDcNgxuBs4vhdo+aWzw1omk/NV5kJgaBl6KjzYyrQM=
+X-Received: by 2002:a05:651c:1987:b0:277:a6f:9733 with SMTP id
+ bx7-20020a05651c198700b002770a6f9733mr5167109ljb.384.1669364188984; Fri, 25
+ Nov 2022 00:16:28 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: thehutgroup.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4802ecc8-a425-40de-b45e-08dace2fe4fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Nov 2022 15:23:52.6428
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 233b013b-d83e-4f7a-86ff-f2e4e7e6946b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F19hLAhaWStBbzFNBMzEYYfmID8FZzPn541itCF3PPPODM4Riu+zwHhSr6njYcfTsCyJxunasqugdrD6lHrKAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB5062
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: thehutgroup.com
-Content-Language: en-GB
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <LO4P265MB37586C972D240B09A515D6D7870F9@LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM>
+In-Reply-To: <LO4P265MB37586C972D240B09A515D6D7870F9@LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Fri, 25 Nov 2022 09:16:17 +0100
+Message-ID: <CAJ8uoz0OCtzKOcW0vm7YH9D4Vp3rzoi5S8nW5PtEfsmP0HcXdQ@mail.gmail.com>
+Subject: Re: ICE driver bug using XDP_TX with multi FCQs
+To:     Robin Cowley <Robin.Cowley@thehutgroup.com>,
+        "Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>
+Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-SGkgdGhlcmUsDQoNCldlJ3JlIGxvb2tpbmcgYXQgZGV2ZWxvcGluZyBzb21lIHNvZnR3YXJlIHRo
-YXQgdXNlcyBYU0sgaW4gemVybyBjb3B5IG1vZGUsIHdoZXJlIHdlIGVpdGhlciByZWRpcmVjdCBw
-YWNrZXRzIHRvIHVzZXJzcGFjZSB1c2luZyBBRl9YRFAsIG9yIHRyYW5zbWl0IHBhY2tldHMgc3Ry
-YWlnaHQgZnJvbSB0aGUgWERQIGtlcm5lbCBwcm9ncmFtIHVzaW5nIFhEUF9UWC4NCg0KT3VyIHBy
-b2dyYW0gaXMgdGhlIHNhbWUgb25lIGFzIGRlc2NyaWJlZCBoZXJlOg0KaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcveGRwLW5ld2JpZXMvNjIwNUUxMEMtMjkyRS00OTk1LTlEMTAtNDA5NjQ5MzU0MjI2
-QG91dGxvb2suY29tLw0KDQpSZWNlbnRseSB3ZSd2ZSBiZWVuIHRlc3Rpbmcgc29tZSBmdW5jdGlv
-bmFsaXR5IHRoYXQgdHJhbnNtaXRzIHBhY2tldHMgZGlyZWN0bHkgZnJvbSB0aGUgZGF0YSBwbGFu
-ZSAvIFhEUCBjb2RlIHVzaW5nIFhEUF9UWC4gVGhpcyBmdW5jdGlvbmFsaXR5IHdvcmtzIG9uIGEg
-bWVsbGFub3ggTVQyNzcxMCBDb25uZWN0WC00IEx4IE5JQyB1c2luZyBtbHg1X2NvcmUgZHJpdmVy
-LiBIb3dldmVyLCB1c2luZyBhbiBJbnRlbCBOSUMgd2l0aCB0aGUgaWNlIGRyaXZlciwgd2UgaGF2
-ZSBzb21lIHByb2JsZW1zLiBUaGlzIHdhcyB0ZXN0ZWQgb24gdGhlIDUuMTUga2VybmVsIGFuZCBv
-biB0aGUgbmV3ZXIgNi4xIGtlcm5lbCBhbmQgdGhleSBib3RoIHJlc3VsdCBpbiB0aGUgc2FtZSBi
-ZWhhdmlvdXIuDQoNCkV2ZXJ5dGhpbmcgYmVsb3cgd2FzIHNlZW4gdXNpbmcgdGhlIGludGVsIE5J
-QyB3aXRoIHRoZXNlIGNvbmZpZ3M6DQoNCiMgZXRodG9vbCAtaSBpY2UwDQpkcml2ZXI6IGljZQ0K
-dmVyc2lvbjogNi4xLjAtMC5yYzUuZWw4LmVscmVwby54ODZfNjQNCmZpcm13YXJlLXZlcnNpb246
-IDIuNTAgMHg4MDAwNzdhOCAxLjI5NjAuMA0KZXhwYW5zaW9uLXJvbS12ZXJzaW9uOg0KYnVzLWlu
-Zm86IDAwMDA6MDM6MDAuMA0Kc3VwcG9ydHMtc3RhdGlzdGljczogeWVzDQpzdXBwb3J0cy10ZXN0
-OiB5ZXMNCnN1cHBvcnRzLWVlcHJvbS1hY2Nlc3M6IHllcw0Kc3VwcG9ydHMtcmVnaXN0ZXItZHVt
-cDogeWVzDQpzdXBwb3J0cy1wcml2LWZsYWdzOiB5ZXMNCg0KIyBsc3BjaSAtcyAwMzowMC4wDQow
-MzowMC4wIEV0aGVybmV0IGNvbnRyb2xsZXI6IEludGVsIENvcnBvcmF0aW9uIEV0aGVybmV0IENv
-bnRyb2xsZXIgRTgxMC1YWFYgZm9yIFNGUCAocmV2IDAyKQ0KDQojIGV0aHRvb2wgLWcgaWNlMA0K
-UmluZyBwYXJhbWV0ZXJzIGZvciBpY2UwOg0KUHJlLXNldCBtYXhpbXVtczoNClJYOuKAguKAguKA
-guKAguKAguKAguKAguKAguKAgjgxNjANClJYIE1pbmk64oCC4oCC4oCC4oCCbi9hDQpSWCBKdW1i
-bzrigILigILigIJuL2ENClRYOuKAguKAguKAguKAguKAguKAguKAguKAguKAgjgxNjANCkN1cnJl
-bnQgaGFyZHdhcmUgc2V0dGluZ3M6DQpSWDrigILigILigILigILigILigILigILigILigII0MDk2
-DQpSWCBNaW5pOuKAguKAguKAguKAgm4vYQ0KUlggSnVtYm864oCC4oCC4oCCbi9hDQpUWDrigILi
-gILigILigILigILigILigILigILigII0MDk2DQoNCiMgZXRodG9vbCAtbCBpY2UwDQpDaGFubmVs
-IHBhcmFtZXRlcnMgZm9yIGljZTA6DQpQcmUtc2V0IG1heGltdW1zOg0KUlg64oCC4oCC4oCC4oCC
-4oCC4oCC4oCC4oCC4oCCMTYNClRYOuKAguKAguKAguKAguKAguKAguKAguKAguKAgjE2DQpPdGhl
-cjrigILigILigILigILigILigIIgMQ0KQ29tYmluZWQ64oCC4oCCIDE2DQpDdXJyZW50IGhhcmR3
-YXJlIHNldHRpbmdzOg0KUlg6ICAgICAgICAgICAgICAgIDANClRYOuKAguKAguKAguKAguKAguKA
-guKAguKAguKAgjANCk90aGVyOiAgICAgICAgICAgIDENCkNvbWJpbmVkOuKAguKAgiA0DQoNCg0K
-V2hlbiByZWRpcmVjdGluZyB0cmFmZmljIGZyb20gdGhlIGRhdGEgcGxhbmUgaW50byB1c2VyLXNw
-YWNlIHZpYSBYU0ssIGV2ZXJ5dGhpbmcgd29ya3MgYXMgZXhwZWN0ZWQuDQoNCldoZW4gdHJhbnNt
-aXR0aW5nIHBhY2tldHMgZnJvbSB0aGUgZGF0YSBwbGFuZSBkaXJlY3RseSBvdXQgdGhlIE5JQyB2
-aWEgWERQX1RYLCB3ZSBjYW4gc2VlIG91ciBrZXJuZWwgbG9ncyBnZXR0aW5nIGhpdCB0aHJvdWdo
-IHRoZSBzeXN0ZW1kLWpvdXJuYWwgcHJvY2Vzcy4gSXQgc2VlbXMgdG8gYmUgZm9yIGV2ZXJ5IHBh
-Y2tldCBzZW50IHRocm91Z2ggWERQX1RYLCBpdCdzIGdlbmVyYXRpbmcgYSBrZXJuZWwgd2Fybmlu
-Zy4NCg0KDQpBbiBleGFtcGxlIHdhcm5pbmcgYW5kIGNhbGwgdHJhY2UgaXM6DQoNCkluY29ycmVj
-dCBYRFAgbWVtb3J5IHR5cGUgKDE3ODUyNTU5MzYpIHVzYWdlDQpXQVJOSU5HOiBDUFU6IDcgUElE
-OiAwIGF0IG5ldC9jb3JlL3hkcC5jOjQwMyBfX3hkcF9yZXR1cm4rMHgzMy8weDFmMA0KDQouLi4N
-Cg0KQ2FsbCBUcmFjZToNCjxJUlE+DQppY2VfeG1pdF96YysweDI1MS8weDMxMCBbaWNlXQ0KaWNl
-X25hcGlfcG9sbCsweDU0LzB4NjQwIFtpY2VdDQpfX25hcGlfcG9sbCsweDJiLzB4MTkwDQpuZXRf
-cnhfYWN0aW9uKzB4MmIyLzB4MzEwDQpfX2RvX3NvZnRpcnErMHhiZS8weDJiNg0KaXJxX2V4aXRf
-cmN1KzB4YWQvMHhkMA0KY29tbW9uX2ludGVycnVwdCsweDgyLzB4YTANCjwvSVJRPg0KDQoNClRo
-ZSBtZW1vcnkgdHlwZSB2YWx1ZSBzZWVuIGFib3ZlIGNoYW5nZXMgZWFjaCBlcnJvciwgc3VnZ2Vz
-dGluZyB0aGF0IHRoZSB2YWx1ZSBpcyB1bmluaXRpYWxpemVkIG9yIHRoZSBwb2ludGVyIGlzIGNv
-cnJ1cHRlZC4NCg0KV2UgaGF2ZSBiZWVuIGFibGUgdG8gcmVjcmVhdGUgdGhlIGlzc3VlIHVzaW5n
-IGEgcHJvZ3JhbSBiYXNlZCBvbiB0aGUgeGRwc29jayBzYW1wbGUgcHJvZ3JhbXMgZnJvbSB0aGUg
-a2VybmVsIHRyZWUgdG8gdmFsaWRhdGUgaXTigJlzIG5vdCBzcGVjaWZpYyB0byBvdXIgc29mdHdh
-cmUuDQoNCg0KV2UgaGF2ZSBiZWVuIHRlc3RpbmcgYSBzaW1wbGUgQlBGIHByb2dyYW0gdGhhdCBz
-d2FwcyB0aGUgTUFDIGFkZHJlc3NlcyBhcm91bmQgYW5kIHRyYW5zbWl0cyB0aGUgcGFja2V0IGJh
-Y2sgb3V0IG9mIHRoZSBzYW1lIE5JQy4gVGhpcyBjYW4gYmUgc2VlbiBoZXJlOiBodHRwczovL2dp
-dGh1Yi5jb20vT3BlblNvdXJjZS1USEcveGRwc29jay1zYW1wbGUvdHJlZS90ZXN0X3plcm9fY29w
-eV90eCBvbiB0aGUgdGVzdF96ZXJvX2NvcHlfdHggYnJhbmNoLCB3aGljaCBoYXMgdGhlIHZlcnkg
-YmFzaWMgQlBGIHByb2dyYW0uIFRoZSBpc3N1ZSBvbmx5IG9jY3VycyB3aGVuIHRlc3RpbmcgdGhl
-IG11bHRpIEZDUSwgaXQgc2VlbXMgdG8gd29yayBmaW5lIG9uIGEgc2luZ2xlIEZDUS4gVGhlIGlz
-c3VlIGFsc28gaGFwcGVucyBpbiBjb3B5IG1vZGUgYW5kIHplcm8gY29weSBtb2RlLg0KDQpUaGUg
-Y29tbWFuZCB1c2VkIHdhczoNCg0KLi94ZHBzb2NrX211bHRpIC0tZXh0cmEtc3RhdHMgLS1sMmZ3
-ZCAtLXplcm8tY29weSAtLWludGVyZmFjZSBpY2UwIC0tY2hhbm5lbHM9MiAtLWJ1c3ktcG9sbA0K
-DQoNCkl0IGlzIG15IGJlbGllZiB0aGF0IHRoaXMgaXMgYSBzdXBwb3J0ZWQgc2NlbmFyaW8sIGJ1
-dCBJ4oCZbSBzZWVraW5nIHNvbWUgZ3VpZGFuY2UgdG8gdmFsaWRhdGUgbXkgdGhvdWdodHMsIGFu
-ZCB1bHRpbWF0ZWx5IHdoZXRoZXIgdGhpcyBpcyBhIGxlZ2l0aW1hdGUgYnVnLg0KDQpJIGhvcGUg
-dGhpcyBnaXZlcyBlbm91Z2ggYmFja2dyb3VuZCBhbmQgaW5mb3JtYXRpb24gZm9yIGEgcmVwcm9k
-dWNpYmxlIGlzc3VlLiBBbnkgZmVlZGJhY2sgaXMgd2VsY29tZSBhbmQgd2UgbG9vayBmb3J3YXJk
-IHRvIGhlYXJpbmcgYSByZXNwb25zZS4gOikNClJvYmluIENvd2xleQ0KU29mdHdhcmUgRW5naW5l
-ZXINClRoZSBIdXQgR3JvdXA8aHR0cDovL3d3dy50aGVodXRncm91cC5jb20vPg0KDQpUZWw6DQpF
-bWFpbDogUm9iaW4uQ293bGV5QHRoZWh1dGdyb3VwLmNvbTxtYWlsdG86Um9iaW4uQ293bGV5QHRo
-ZWh1dGdyb3VwLmNvbT4NCg0KRm9yIHRoZSBwdXJwb3NlcyBvZiB0aGlzIGVtYWlsLCB0aGUgImNv
-bXBhbnkiIG1lYW5zIFRoZSBIdXQgR3JvdXAgTGltaXRlZCwgYSBjb21wYW55IHJlZ2lzdGVyZWQg
-aW4gRW5nbGFuZCBhbmQgV2FsZXMgKGNvbXBhbnkgbnVtYmVyIDY1Mzk0OTYpIHdob3NlIHJlZ2lz
-dGVyZWQgb2ZmaWNlIGlzIGF0IEZpZnRoIEZsb29yLCBWb3lhZ2VyIEhvdXNlLCBDaGljYWdvIEF2
-ZW51ZSwgTWFuY2hlc3RlciBBaXJwb3J0LCBNOTAgM0RRIGFuZC9vciBhbnkgb2YgaXRzIHJlc3Bl
-Y3RpdmUgc3Vic2lkaWFyaWVzLg0KDQpDb25maWRlbnRpYWxpdHkgTm90aWNlDQpUaGlzIGUtbWFp
-bCBpcyBjb25maWRlbnRpYWwgYW5kIGludGVuZGVkIGZvciB0aGUgdXNlIG9mIHRoZSBuYW1lZCBy
-ZWNpcGllbnQgb25seS4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBwbGVh
-c2Ugbm90aWZ5IHVzIGJ5IHRlbGVwaG9uZSBpbW1lZGlhdGVseSBvbiArNDQoMCkxNjA2IDgxMTg4
-OCBvciByZXR1cm4gaXQgdG8gdXMgYnkgZS1tYWlsLiBQbGVhc2UgdGhlbiBkZWxldGUgaXQgZnJv
-bSB5b3VyIHN5c3RlbSBhbmQgbm90ZSB0aGF0IGFueSB1c2UsIGRpc3NlbWluYXRpb24sIGZvcndh
-cmRpbmcsIHByaW50aW5nIG9yIGNvcHlpbmcgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gQW55IHZp
-ZXdzIG9yIG9waW5pb25zIGFyZSBzb2xlbHkgdGhvc2Ugb2YgdGhlIGF1dGhvciBhbmQgZG8gbm90
-IG5lY2Vzc2FyaWx5IHJlcHJlc2VudCB0aG9zZSBvZiB0aGUgY29tcGFueS4NCg0KRW5jcnlwdGlv
-bnMgYW5kIFZpcnVzZXMNClBsZWFzZSBub3RlIHRoYXQgdGhpcyBlLW1haWwgYW5kIGFueSBhdHRh
-Y2htZW50cyBoYXZlIG5vdCBiZWVuIGVuY3J5cHRlZC4gVGhleSBtYXkgdGhlcmVmb3JlIGJlIGxp
-YWJsZSB0byBiZSBjb21wcm9taXNlZC4gUGxlYXNlIGFsc28gbm90ZSB0aGF0IGl0IGlzIHlvdXIg
-cmVzcG9uc2liaWxpdHkgdG8gc2NhbiB0aGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGZv
-ciB2aXJ1c2VzLiBXZSBkbyBub3QsIHRvIHRoZSBleHRlbnQgcGVybWl0dGVkIGJ5IGxhdywgYWNj
-ZXB0IGFueSBsaWFiaWxpdHkgKHdoZXRoZXIgaW4gY29udHJhY3QsIG5lZ2xpZ2VuY2Ugb3Igb3Ro
-ZXJ3aXNlKSBmb3IgYW55IHZpcnVzIGluZmVjdGlvbiBhbmQvb3IgZXh0ZXJuYWwgY29tcHJvbWlz
-ZSBvZiBzZWN1cml0eSBhbmQvb3IgY29uZmlkZW50aWFsaXR5IGluIHJlbGF0aW9uIHRvIHRyYW5z
-bWlzc2lvbnMgc2VudCBieSBlLW1haWwuDQoNCk1vbml0b3JpbmcNCkFjdGl2aXR5IGFuZCB1c2Ug
-b2YgdGhlIGNvbXBhbnkncyBzeXN0ZW1zIGlzIG1vbml0b3JlZCB0byBzZWN1cmUgaXRzIGVmZmVj
-dGl2ZSB1c2UgYW5kIG9wZXJhdGlvbiBhbmQgZm9yIG90aGVyIGxhd2Z1bCBidXNpbmVzcyBwdXJw
-b3Nlcy4gQ29tbXVuaWNhdGlvbnMgdXNpbmcgdGhlc2Ugc3lzdGVtcyB3aWxsIGFsc28gYmUgbW9u
-aXRvcmVkIGFuZCBtYXkgYmUgcmVjb3JkZWQgdG8gc2VjdXJlIGVmZmVjdGl2ZSB1c2UgYW5kIG9w
-ZXJhdGlvbiBhbmQgZm9yIG90aGVyIGxhd2Z1bCBidXNpbmVzcyBwdXJwb3Nlcy4NCg0KaGd2eWp1
-dg0K
+On Thu, Nov 24, 2022 at 4:40 PM Robin Cowley
+<Robin.Cowley@thehutgroup.com> wrote:
+>
+> Hi there,
+>
+> We're looking at developing some software that uses XSK in zero copy mode=
+, where we either redirect packets to userspace using AF_XDP, or transmit p=
+ackets straight from the XDP kernel program using XDP_TX.
+>
+> Our program is the same one as described here:
+> https://lore.kernel.org/xdp-newbies/6205E10C-292E-4995-9D10-409649354226@=
+outlook.com/
+>
+> Recently we've been testing some functionality that transmits packets dir=
+ectly from the data plane / XDP code using XDP_TX. This functionality works=
+ on a mellanox MT27710 ConnectX-4 Lx NIC using mlx5_core driver. However, u=
+sing an Intel NIC with the ice driver, we have some problems. This was test=
+ed on the 5.15 kernel and on the newer 6.1 kernel and they both result in t=
+he same behaviour.
+>
+> Everything below was seen using the intel NIC with these configs:
+>
+> # ethtool -i ice0
+> driver: ice
+> version: 6.1.0-0.rc5.el8.elrepo.x86_64
+> firmware-version: 2.50 0x800077a8 1.2960.0
+> expansion-rom-version:
+> bus-info: 0000:03:00.0
+> supports-statistics: yes
+> supports-test: yes
+> supports-eeprom-access: yes
+> supports-register-dump: yes
+> supports-priv-flags: yes
+>
+> # lspci -s 03:00.0
+> 03:00.0 Ethernet controller: Intel Corporation Ethernet Controller E810-X=
+XV for SFP (rev 02)
+>
+> # ethtool -g ice0
+> Ring parameters for ice0:
+> Pre-set maximums:
+> RX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=828160
+> RX Mini:=E2=80=82=E2=80=82=E2=80=82=E2=80=82n/a
+> RX Jumbo:=E2=80=82=E2=80=82=E2=80=82n/a
+> TX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=828160
+> Current hardware settings:
+> RX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=824096
+> RX Mini:=E2=80=82=E2=80=82=E2=80=82=E2=80=82n/a
+> RX Jumbo:=E2=80=82=E2=80=82=E2=80=82n/a
+> TX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=824096
+>
+> # ethtool -l ice0
+> Channel parameters for ice0:
+> Pre-set maximums:
+> RX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=8216
+> TX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=8216
+> Other:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82 1
+> Combined:=E2=80=82=E2=80=82 16
+> Current hardware settings:
+> RX:                0
+> TX:=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=82=E2=80=
+=82=E2=80=820
+> Other:            1
+> Combined:=E2=80=82=E2=80=82 4
+>
+>
+> When redirecting traffic from the data plane into user-space via XSK, eve=
+rything works as expected.
+>
+> When transmitting packets from the data plane directly out the NIC via XD=
+P_TX, we can see our kernel logs getting hit through the systemd-journal pr=
+ocess. It seems to be for every packet sent through XDP_TX, it's generating=
+ a kernel warning.
+>
+>
+> An example warning and call trace is:
+>
+> Incorrect XDP memory type (1785255936) usage
+> WARNING: CPU: 7 PID: 0 at net/core/xdp.c:403 __xdp_return+0x33/0x1f0
+>
+> ...
+>
+> Call Trace:
+> <IRQ>
+> ice_xmit_zc+0x251/0x310 [ice]
+> ice_napi_poll+0x54/0x640 [ice]
+> __napi_poll+0x2b/0x190
+> net_rx_action+0x2b2/0x310
+> __do_softirq+0xbe/0x2b6
+> irq_exit_rcu+0xad/0xd0
+> common_interrupt+0x82/0xa0
+> </IRQ>
+>
+>
+> The memory type value seen above changes each error, suggesting that the =
+value is uninitialized or the pointer is corrupted.
+>
+> We have been able to recreate the issue using a program based on the xdps=
+ock sample programs from the kernel tree to validate it=E2=80=99s not speci=
+fic to our software.
+>
+>
+> We have been testing a simple BPF program that swaps the MAC addresses ar=
+ound and transmits the packet back out of the same NIC. This can be seen he=
+re: https://github.com/OpenSource-THG/xdpsock-sample/tree/test_zero_copy_tx=
+ on the test_zero_copy_tx branch, which has the very basic BPF program. The=
+ issue only occurs when testing the multi FCQ, it seems to work fine on a s=
+ingle FCQ. The issue also happens in copy mode and zero copy mode.
+>
+> The command used was:
+>
+> ./xdpsock_multi --extra-stats --l2fwd --zero-copy --interface ice0 --chan=
+nels=3D2 --busy-poll
+>
+>
+> It is my belief that this is a supported scenario, but I=E2=80=99m seekin=
+g some guidance to validate my thoughts, and ultimately whether this is a l=
+egitimate bug.
 
+Thank you so much for the detailed bug report Robin. We will try to
+reproduce it on our end, root cause it and get back to you.
+
+> I hope this gives enough background and information for a reproducible is=
+sue. Any feedback is welcome and we look forward to hearing a response. :)
+> Robin Cowley
+> Software Engineer
+> The Hut Group<http://www.thehutgroup.com/>
+>
+> Tel:
+> Email: Robin.Cowley@thehutgroup.com<mailto:Robin.Cowley@thehutgroup.com>
+>
+> For the purposes of this email, the "company" means The Hut Group Limited=
+, a company registered in England and Wales (company number 6539496) whose =
+registered office is at Fifth Floor, Voyager House, Chicago Avenue, Manches=
+ter Airport, M90 3DQ and/or any of its respective subsidiaries.
+>
+> Confidentiality Notice
+> This e-mail is confidential and intended for the use of the named recipie=
+nt only. If you are not the intended recipient please notify us by telephon=
+e immediately on +44(0)1606 811888 or return it to us by e-mail. Please the=
+n delete it from your system and note that any use, dissemination, forwardi=
+ng, printing or copying is strictly prohibited. Any views or opinions are s=
+olely those of the author and do not necessarily represent those of the com=
+pany.
+>
+> Encryptions and Viruses
+> Please note that this e-mail and any attachments have not been encrypted.=
+ They may therefore be liable to be compromised. Please also note that it i=
+s your responsibility to scan this e-mail and any attachments for viruses. =
+We do not, to the extent permitted by law, accept any liability (whether in=
+ contract, negligence or otherwise) for any virus infection and/or external=
+ compromise of security and/or confidentiality in relation to transmissions=
+ sent by e-mail.
+>
+> Monitoring
+> Activity and use of the company's systems is monitored to secure its effe=
+ctive use and operation and for other lawful business purposes. Communicati=
+ons using these systems will also be monitored and may be recorded to secur=
+e effective use and operation and for other lawful business purposes.
+>
+> hgvyjuv
