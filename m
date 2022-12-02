@@ -2,229 +2,127 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DEB3640A18
-	for <lists+xdp-newbies@lfdr.de>; Fri,  2 Dec 2022 17:04:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A5F640B46
+	for <lists+xdp-newbies@lfdr.de>; Fri,  2 Dec 2022 17:54:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233495AbiLBQES (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 2 Dec 2022 11:04:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
+        id S234017AbiLBQyA (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 2 Dec 2022 11:54:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232723AbiLBQD4 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 2 Dec 2022 11:03:56 -0500
-Received: from eu-smtp-delivery-183.mimecast.com (eu-smtp-delivery-183.mimecast.com [185.58.85.183])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3650AE79
-        for <xdp-newbies@vger.kernel.org>; Fri,  2 Dec 2022 08:02:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thehutgroup.com;
-        s=THEHUTGROUPDKIM; t=1669996955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=pUMuh4S88oEdJacpHTkymGrLb5OgnneixnSv/QGL64s=;
-        b=X+GS4KWiyzG/M3xeQIRTygGVA7w1Q9DtkRbJPvEMqbUWCr5aHMNMfto1u8rgl5vnks/Z7r
-        n8sbBcKyp7xsImXkTmxrL/argiIB2lLUJ8RMiJxgggL2RSQ/hgcCCIdQP+U+AV5ojVV8Hr
-        9bS3OSIK20YEipRayZxZTIEkN9Ea8vA=
-Received: from GBR01-CWL-obe.outbound.protection.outlook.com
- (mail-cwlgbr01lp2057.outbound.protection.outlook.com [104.47.20.57]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- uk-mta-103-ugZVSJGTOjaSUBaQ1LN7mw-1; Fri, 02 Dec 2022 16:01:26 +0000
-X-MC-Unique: ugZVSJGTOjaSUBaQ1LN7mw-1
-Received: from LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:1cc::11)
- by CWLP265MB6418.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1e2::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.10; Fri, 2 Dec
- 2022 16:01:24 +0000
-Received: from LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
- ([fe80::af45:dd6a:43fb:ccb2]) by LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
- ([fe80::af45:dd6a:43fb:ccb2%6]) with mapi id 15.20.5880.010; Fri, 2 Dec 2022
- 16:01:24 +0000
-From:   Robin Cowley <Robin.Cowley@thehutgroup.com>
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Potential ICE driver bug when returning XDP_TX with multiple channels
-Thread-Topic: Potential ICE driver bug when returning XDP_TX with multiple
- channels
-Thread-Index: AQHZBmPdJaKwFBdE+E+oJTLMKCbz+A==
-Date:   Fri, 2 Dec 2022 16:01:24 +0000
-Message-ID: <LO4P265MB3758A4D43FB2F5EC0508231487179@LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LO4P265MB3758:EE_|CWLP265MB6418:EE_
-x-ms-office365-filtering-correlation-id: 1547aa2e-9655-4067-bc93-08dad47e76a9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: oHL1csGLdWCYQfYL/fiS+8fx3zd8Aj3xZopQ2JDulaKqpCufCYK1JwOOloZUbl6Lvk8ZVrOWGw5gKuX3T0uzOuyK1A/A4qYaUxlz2URkqzp1wxmQEnUadgs95w00SleXmJ6h2rwTpGDLhxK0H8l6bEBVm0uqfGBTLvhxUiBRgRDvRBFX2VoJ0hlFjKuNJbKbqZmHKbb2BohGzRFOgtYyHY2/m0OfI/V9SYeL4oGfCivTyYHRSIERHKcFTnsM0aeAhVSHfixOaX2IpRGfFRXBlTkdzJ6ZZ1344s0t/AGHPkmAgQYz1qYgnN6nTS4VY5wNSDJaZTh6dQl7C1SnJr7qiErR3zBy11j9bA+9OgbNKnd3qP1HnQa2ryaeLzGyfuyR2UP9T1Kj1T99f8yZC6dNOIUKfSdY2GgN40jSzytH37optnnwhXEN+UuFuDIkQ0OTgzpyvmbcmbnO2uDSusedTHm5WaAlxKJjU09yu4b151V5NTk4VRE6/Q2/Dcxqv+m1mi+XQjPj5ydbZF5gl0jiAiZTMm/QN7s6WJOcLI6SqUQ27a2z84UF9UlBbTCtPCUaThv/+Y8I7omwSEmBYdeAAhXP4SK4+L05WOGSCzDUAbp1IG6uW8Dz6aHpflYlgI7/9ZyQYpRCSbiXw5ncO1O+9d990dr3Hf5Clf2U45lX6X1E0H3Tigi93rU/cytREfS/xOcO/Thrdu9q5TmhyNSOXRZnAfuTu/SnVJdoCW6rIw8=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(451199015)(55236004)(6506007)(7696005)(966005)(26005)(186003)(478600001)(316002)(6916009)(9686003)(64756008)(76116006)(66476007)(66556008)(66446008)(8676002)(71200400001)(66946007)(83380400001)(5660300002)(66574015)(8936002)(52536014)(2906002)(41300700001)(38100700002)(122000001)(38070700005)(86362001)(33656002)(55016003);DIR:OUT;SFP:1101
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ejIzZ2ZVVzVCVkJxOW1EV3VsamxpU2NwL291eXNhTmk5akdwUmUrQ0RhYlE4?=
- =?utf-8?B?WHVpZzRuUjA5Q1FwZEZsMk9xd3NpM0JScFAwMm04NWtraW9OVnMrQlJTaE1p?=
- =?utf-8?B?dThVb2gxQmpmL01xQWxESzJlNVUvT3BIbm8yU1YraUllemE3dnRBdjViV04y?=
- =?utf-8?B?WW1NcGdHTlNjQVFFNktNdUY4azIzMi93OVpkS3FMczVIQ2VTdStXVkhvVVFI?=
- =?utf-8?B?NTBrMkM4eWdIa0J5SlphRVhWUkMwSVJaWm9vM3FocS9MZmhzZDNaZnA4bHE0?=
- =?utf-8?B?azg5ZEVJVEpQOU85QnpzQ2FoNWpvWHI3MjR0RXE3ZW1xTXY5ZklwNmw0bXRL?=
- =?utf-8?B?S1BwVXUxOHZKV3kzbFZacldMcGNSQS9rOWZDV2VMZ1V6QTdaTTNrZ3pjcjRD?=
- =?utf-8?B?aTY3K0JmZUkxU1VxN3QxVWluZUpxMXRnQzFVd1BxZFhRWXplZExUMDVUQUR3?=
- =?utf-8?B?eWp0eVhQUUpkTlVrNlkzU2NTaTZmQ3FRZHVxdlpCUTRhQTZ3aGNsc2x4NHFs?=
- =?utf-8?B?QWxKdFhTMG84dUl1NHlsSFJ0VVU3emhDenIrNXhNa1Yzb0V0UFpjUUhWT1h6?=
- =?utf-8?B?UEpNNlhob2dEc29Vamw0Q01UUnZqdmo1Z0tueldpMGdGczk4aFYvUTZubFhC?=
- =?utf-8?B?eDQ4T0Z3UUdxQU5hSW1nQmdmRHpoeUNmOVVCZWh6SjkzaStGZnduVlk5YTRy?=
- =?utf-8?B?TmtXVGZReCtTM2pxVWxUZWgrOEswcHFMaDhEaWVzYklYR3gxWDFpUUFZVmhs?=
- =?utf-8?B?R2J2eTBMWHY2WUFFSWNEYTV4T3ltM1JKSy9heWZQNnVOaXgxbE1RTGZOVHlY?=
- =?utf-8?B?aHRINEhBbVpYRTA0VFB3RTJlWmxQelV0c0w2YXhxU0QrYzBSdU9lK2t0UFRo?=
- =?utf-8?B?SVRiOC9jdEVYcDdrM0ZNTFVwOUw1VlFadFgzeGxKNG44cVRxTnFseGs3dEw2?=
- =?utf-8?B?Q1d3T2tCUzVrUENLV1lGaUYrT1I4WEY1RlNodThwcFBCYmVyY1VqYXp1VHZq?=
- =?utf-8?B?Y1VoY21PempjQnpicUdQN2M2MitSb3lsTTNFNWl4TEpuRThnWVdpb1RMdEVV?=
- =?utf-8?B?Ymo4aUkyM1dDWkxzblNuZmxTNDlhU1hvVERuZCtOTmtocG5FUEJxWFFnUERS?=
- =?utf-8?B?U0RLMWZ6c1NPemFESmZsV0l6aDd1ZmthMWFtcDQvS2FpNXJtek9QN2Nhb09H?=
- =?utf-8?B?TE9hN3lQSm9hbEJHNUZSd2tPZXJuODhBMVVFdStmclhOOUZFMVkzU2l6Z1dn?=
- =?utf-8?B?RkV5ZCszcEd3c2xzWjAzUmZwbzBYZlR6eXpZdlVVcjV3S0xyZjRXaXBQRzhi?=
- =?utf-8?B?TjNMOE9QdFBPWHZvbS8xcWlpaC9SK2JSUW1ERjFjTTNHaVpibFhlZ01yRnBP?=
- =?utf-8?B?Q0pLcFM4dGtyT1VOQWRTRUhSZ1RFZGl2VUpNYkozVVI0azN1UWtKcHJXcHFR?=
- =?utf-8?B?dzE1elljR2ZWWnJZT1gwUVVORU1DMFplTS9IeDVyRVpDVUZZSnl2WVVIWFVt?=
- =?utf-8?B?bGJJN0lFVU1jQWMzNmZSTWpOb3RnU0h2WGpPSEp3VnJXakZoQ2F3dGJTbXd5?=
- =?utf-8?B?eDBNVWVUQm50TTNQWGJvR1NkMzFmMEZGdHFwV3pqN3BrZGpwMUJteWhQS3VJ?=
- =?utf-8?B?ZUZhVU5vSnFnZHFuakp6UjYrdmhJYkloUWhSd2pXQWVHclhySVo2blFwbFNy?=
- =?utf-8?B?eEpxZFNZSFhHREloaXVKcmxVMC8zMG10bTd2RS9PUnM0aitsNWZXTHY3ZlFH?=
- =?utf-8?B?ZWl2ZVdBZkZjYlJKU2VoNnhOaFFBdGlsTjhneWw4MDNZTjJHYlZ5MC95VGto?=
- =?utf-8?B?eHh5MzY5YmhQd1ZrZWJaOWt1WWVnZ0hyRWlOMURmSlBpQlpsbG5tTFJZdzU5?=
- =?utf-8?B?V0U3L2VIN0FlRzBZL3ZacFhRQTNSRjU0bmFYY2h1L04zS3RnSnNLUTdMUVJI?=
- =?utf-8?B?WkxMeS83RzdudUswUDMyUkE1czFVMzZXNm12bUhISjl5bHRwZ3RzZVVEbzl0?=
- =?utf-8?B?Rk83V0FmTDNqVisvdVJuUDRMUG9TSWhteHVrSHo5NkZPVUhiMGxVLzUvYUxi?=
- =?utf-8?B?am80eG8rV0JWY1FFQXB0L0lXYkF0RnUyVTg4WmF6UlF1L0dER0hyUmlZSU5M?=
- =?utf-8?Q?s/sizC4i3tIyvBRjrHUYjZ6kY?=
+        with ESMTP id S234053AbiLBQx7 (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 2 Dec 2022 11:53:59 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E123BD159F;
+        Fri,  2 Dec 2022 08:53:57 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id h4-20020a1c2104000000b003d0760654d3so5490685wmh.4;
+        Fri, 02 Dec 2022 08:53:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4eDYB7izO2+mU8VAsQMFHb79zLnx9fUUMl79PfQKaVk=;
+        b=HhrLyVX9SC0+SYfsKCTbyr7/lmb4mZGh6sjt7DqEcwRmTZOj89xYrdW46+q4I3UCgt
+         L3JmHJUA8nEhTVteMFqfyOOMmjptbKmKSwjGA9tDtRrx8eFtWOPGdK4FIgeD9kzXuuEW
+         vveB68FNbvrBk5BkiLYj1V9K4RwDSkToXCl3ZUtwT7Thg6GkX0vn9hW0jlw27v0yKj3f
+         5bFsfMrAM8Ahzxyow1d9X2eWJNK2CPKfat2cjZzwn41WgxidBXGXGxh66erLxtrWhu0m
+         e1UjKJ7uDYjmwmXm9HvsDbkRERixSKZrGZueDbD1tXmU22Uwd02JCcIEdRClzIeTju8V
+         6TAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4eDYB7izO2+mU8VAsQMFHb79zLnx9fUUMl79PfQKaVk=;
+        b=EUWGu80nyQTxCmbQi+OjnkfwHJJv92aGPilVEGMGgiKXW64aLBzrMVLVjsXK9L8V35
+         MDefUcBYJ7337BKD55BMCWyQLzHzVqaZ6uw62ZhxG6IkTvp4WjgS5eWrD5DhfXbmGLpM
+         foWqu38cz2LkRqZaOc8NhSYfo/ira8yXMZbfgubFusaK2fXS82C6XfcRpRVgYqN/AxZp
+         LQ97nEioFt6c5SOrYBOSUeIjZCxwOFcoFwoJSujU4hfFXJHPeHB7D4iay8TR5dyoYvkd
+         T4+pdot1oNGclWyZMWOfqY5336JmXmVtoEKMXbM7WsAZFw0EJNMHnAtwjgI91SqGR6VP
+         JwfQ==
+X-Gm-Message-State: ANoB5pnUXwa76Gt/s6+PNwOV3KzokpTEAvwZBFFVUC1p6VqeaQDSvYtz
+        P2uMR2U8JQlmCSkJ8zElSolm4HDt63EzbdxkGIlOR6tQuY1LSQ==
+X-Google-Smtp-Source: AA0mqf4UQ6oK7uRWtkwhBGChCWoTYJIad/Ihm1x7NfkVxPZgGtcbMBwnUZSt+XLdWrdZqzWG2xb8xJCTGXkgvYrEecQ=
+X-Received: by 2002:a05:600c:4e46:b0:3d0:57ea:3188 with SMTP id
+ e6-20020a05600c4e4600b003d057ea3188mr18818929wmq.28.1670000035865; Fri, 02
+ Dec 2022 08:53:55 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: thehutgroup.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LO4P265MB3758.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1547aa2e-9655-4067-bc93-08dad47e76a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2022 16:01:24.7525
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 233b013b-d83e-4f7a-86ff-f2e4e7e6946b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nXnBvnbyXgdADU5j6C1J0z8X1Qy4bMvSCWdjNQRT6Cz9dGeSM3pWhvbz9kQhgqJl5wgWBLf3rmy3p6lxbUW8/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP265MB6418
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: thehutgroup.com
-Content-Language: en-GB
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Dave Taht <dave.taht@gmail.com>
+Date:   Fri, 2 Dec 2022 08:53:43 -0800
+Message-ID: <CAA93jw6oECeUdqJTVZ3eVCAo5bPbHgAyNPBesRGwDHQ+qCtgcA@mail.gmail.com>
+Subject: questions: LPM -> irq or queue mapping on the card for cake?
+To:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, xdp-newbies@vger.kernel.org
+Cc:     libreqos <libreqos@lists.bufferbloat.net>,
+        Cake List <cake@lists.bufferbloat.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-SGkgdGhlcmUsDQoNCldlIGhhdmUgYmVlbiB0ZXN0aW5nIGFuIFhEUCBwcm9ncmFtIHdpdGggSW50
-ZWwgRTgxMCAvIElDRSBkcml2ZXIuIFRoZSBwcm9ncmFtIHVzZXMgQUZfWERQIGluIFplcm8gQ29w
-eSBtb2RlLiBJbiBzb21lIGNvbmRpdGlvbnMsIHRoZSBwcm9ncmFtIGxvZ2ljIGRlY2lkZXMgdG8g
-cmV0dXJuIFhEUF9UWCBhY3Rpb24gcmF0aGVyIHRoYW4gWERQX1JFRElSRUNULCBzbyBwYWNrZXRz
-IGFyZSB0cmFuc21pdHRlZCBiYWNrIG91dCB0aGUgaW50ZXJmYWNlIHRoZXkgYXJyaXZlZCBvbi4g
-KEluIHRoaXMgY29uZGl0aW9uIHdlIGFsc28gc3dhcCB0aGUgTUFDIGFkZHJlc3NlcyBpbiBFdGhl
-cm5ldCBoZWFkZXIgd2l0aGluIHRoZSBCUEYgcHJvZ3JhbSkuDQoNCldlIHJlY2VudGx5IGlkZW50
-aWZpZWQgYW5kIHN1Ym1pdHRlZCBhIGJ1ZyByZXBvcnQgb250byBYRFAtbmV3YmllcywgYXMgd2Ug
-d2VyZSBzZWVpbmcgbWVtb3J5IHR5cGUgZXJyb3JzLiBbMV0gVGhlIHBhdGNoIHN1cHBsaWVkIGJ5
-IE1hY2llaiBmaXhlZCBvdXIgaW5pdGlhbCBwcm9ibGVtIG9mIGFuIGluY29ycmVjdCBYRFAgbWVt
-b3J5IHR5cGUuIEhvd2V2ZXIsIHVwb24gZnVydGhlciB0ZXN0aW5nIG9uIEtlcm5lbCA2LjEtcmM3
-IHdpdGggTWFjaWVq4oCZcyBwYXRjaCBhcHBsaWVkIHdlIGhhdmUgbm90aWNlZCBzb21lIGZ1cnRo
-ZXIgc3RyYW5nZSBiZWhhdmlvdXIgd2l0aCBsYXJnZXIgcGFja2V0IHJhdGVzIGFuZCBtb3JlIGNo
-YW5uZWxzLg0KDQpJdCBzZWVtcyB0aGF0IHdoZW4gd2UgdXNlIG11bHRpcGxlIGNoYW5uZWxzIHdp
-dGggZGVkaWNhdGVkIEYvQyBxdWV1ZXMsIHNvbWUgb2YgdGhlIGNoYW5uZWxzIHN0YWxsIGFuZCBk
-byBub3QgdHJhbnNtaXQgYW55IG9mIHRoZSBwYWNrZXRzIGJhY2sgb3V0IG9mIHRoZSBpbnRlcmZh
-Y2UuDQoNCldlIGhhdmUgYmVlbiBydW5uaW5nIGEgc2xpZ2h0bHkgbW9kaWZpZWQgeGRwc29jayBi
-YXNlZCBwcm9ncmFtIGFzIGEgdGVzdCBoYXJuZXNzIG9uIHRoZSB0ZXN0X3plcm9fY29weV90eCBi
-cmFuY2ggWzJdIGFzIHBlciB0aGUgcHJldmlvdXMgcmVwb3J0cy4gKEFnYWluLCB3ZeKAmXZlIHRl
-c3RlZCB3aXRoIHRoZSB2ZXJzaW9uIG9mIHRoZSBwcm9ncmFtIHRoYXQgZW5hYmxlcyBtdWx0aXBs
-ZSBGL0MgcXVldWVzIHBlciBYU0spLg0KDQpUaGlzIFhEUCBwcm9ncmFtIG5vdyBoYXMgc29tZSBw
-ZXJjcHUgc3RhdHMgYWRkZWQgaW50byBpdCwgc28gd2UgY2FuIGhhdmUgdmlzaWJpbGl0eSBvbiB3
-aGF0IGFjdGlvbnMgd2UgYXJlIHJldHVybmluZyBmcm9tIHRoZSBYRFAgcHJvZy4gV2Ugb2JzZXJ2
-ZSB0aGF0IHdoaWxlIHRoZSBCUEYgcHJvZ3JhbSBkb2VzIHJlY2VpdmUgZXZlcnkgcGFja2V0IGFu
-ZCByZXR1cm4gWERQX1RYIHByb3Blcmx5LCBzb21lIG9mIHRoZSBjaGFubmVscyBleHBlcmllbmNl
-IGEgVFggZmFpbHVyZSwgbGVhZGluZyB0byBwYWNrZXQgbG9zcy4NCg0KVGhpcyBsZWQgdXMgdG8g
-ZG8gYSBsaXR0bGUgYml0IG9mIGRpZ2dpbmcgYW5kIHdlIG5vdGljZWQgdGhhdCBhdCBhIGNlcnRh
-aW4gcG9pbnQsIHdoZW4gYSBjaGFubmVsIHN0b3BwZWQgdHJhbnNtaXR0aW5nIHBhY2tldHMgYmFj
-ayBvdXQgdGhlIE5JQywgdGhlIHR4X2J1c3kgY291bnRlciBpcyBiZWluZyBpbmNyZW1lbnRlZC4g
-V2UgbG9va2VkIGludG8gdGhlIElDRSBkcml2ZXIgY29kZSBhbmQgd2UgYmVsaWV2ZSB0aGlzIGlz
-IG9yaWdpbmF0aW5nIGZyb20gaWNlX3htaXRfeGRwX3JpbmcoKSBhdCBpY2VfdHhyeF9saWIuYzoy
-ODguDQoNCldlIHByb2dyZXNzZWQgdG8gZW5hYmxlIHRyYWNpbmcgb24gWERQIGV2ZW50czsgd2Ug
-Y2FuIHNlZSBhbiB4ZHBfZXhjZXB0aW9uIHRyYWNlIGZvciBldmVyeSBmYWlsZWQgdHJhbnNtaXQg
-b3BlcmF0aW9uLiBXZSBhZGRlZCB0d28gYWRkaXRpb25hbCB0cmFjZXBvaW50cyBpbiB0aGUgWERQ
-X1RYIGNvZGUgcGF0aCB3aXRoaW4gdGhlIGljZV9ydW5feGRwX3pjKCkgZnVuY3Rpb24gb2YgaWNl
-X3hzay5jIGZpbGUg4oCTIG9uZSBvbiBzdWNjZXNzZnVsIFRYLCBvbmUgb24gZmFpbGVkIFRYIOKA
-kyB3aXRoIGJvdGggaGlnaGxpZ2h0aW5nIHhkcF9yaW5nLT5xX2luZGV4IGFuZCByeF9yaW5nLT5x
-X2luZGV4IHZhbHVlcy4gT3VyIHJhdGlvbmFsZSB3YXMgdG8gdHJ5IGFuZCBpZGVudGlmeSBpZiB0
-aGVyZSB3YXMgYSBwYXR0ZXJuIHRvIHdoaWNoIGNoYW5uZWxzIHdlcmUgZmFpbGluZy4NCg0KV2Ug
-d2VyZSBhYmxlIHRvIGVzdGFibGlzaCB3aXRoIHJlYXNvbmFibGUgZGVncmVlIG9mIGNlcnRhaW50
-eToNCg0KQSkgVHJhY2Vwb2ludHMgZm9sbG93aW5nIFhEUF9UWCBmYWlsdXJlIGFsd2F5cyBoYWQg
-YSBUWC9YRFAgcmluZyBxX2luZGV4IG9mIDE1IG9yIGxlc3MuDQpCKSBUcmFjZXBvaW50cyBmb2xs
-b3dpbmcgWERQX1RYIHN1Y2Nlc3MgYWx3YXlzIGhhZCBhIFRYL1hEUCByaW5nIHFfaW5kZXggb2Yg
-MTYgb3IgYWJvdmUuDQpDKSBCb3RoIHBvaW50cyBhYm92ZSBhcmUgdHJ1ZSBpcnJlc3BlY3RpdmUg
-b2YgdGhlIG51bWJlciBvZiBjaGFubmVscyB3ZSBoYWQgY29uZmlndXJlZCAoMSwgMiwgNCwgOCkN
-CkQpIFR4L1J4IHJpbmcgc2l6ZXMgZGlkIG5vdCBzZWVtIHRvIGFsdGVyIGJlaGF2aW91ciDigJMg
-d2UgdGVzdGVkIHdpdGggdHgvcnggcmluZ3Mgb2YgMTAyNCwgMjA0OCwgNDA5Ni4NCg0KV2UgdGhp
-bmsgdGhpcyBtaWdodCBiZSBhIGJ1ZyB3aXRoaW4gdGhlIElDRSBkcml2ZXIsIGJ1dCB3ZeKAmXZl
-IG9ubHkgcGlja2VkIGl0IHVwIGZvbGxvd2luZyByZXNvbHV0aW9uIG9mIHRoZSBwcmV2aW91cyBp
-c3N1ZSBbMV0uDQoNCk91ciB0ZXN0IHJpZyBoYXBwZW5zIHRvIGJlIGEgMTYgY29yZSAoZHVhbCBz
-b2NrZXQpIHNvIHdlIHRoaW5rIHRoYXQgbWlnaHQgaGF2ZSBzb21lIGJlYXJpbmcgb24gdGhlIGFi
-b3ZlLiBEdWUgdG8gdGhlIHRlc3QgbWFjaGluZSBiZWluZyBOVU1BIHdlIGhhdmUgYXZvaWRlZCB0
-ZXN0aW5nIHdpdGggY2hhbm5lbCBxdWFudGl0aWVzIGFib3ZlIDgsIGJ1dCB3ZeKAmWQgYmUgaGFw
-cHkgdG8gaWYgaXQgd291bGQgYWRkIHZhbHVlLg0KDQpXZSB3ZXJlIHRlc3RpbmcgdGhpcyBvbiB0
-aGUga2VybmVsIHZlcnNpb24gNi4xLjAtcmM3KyB3aXRoIHRoZSBwYXRjaCBzdXBwbGllZCBwcmV2
-aW91c2x5IGJ5IE1hY2llai4NCg0KRXZlcnl0aGluZyBhYm92ZSB3YXMgc2VlbiB1c2luZyBJbnRl
-bCBFODEw4oCZcyB3aXRoIHRoZSBwYXJhbWV0ZXJzIFszXSBiZWxvdy4NCg0KQW55IGd1aWRhbmNl
-IHdvdWxkIGJlIGFwcHJlY2lhdGVkLg0KDQpUaGFua3MNClJvYmluDQoNClsxXSBodHRwczovL21h
-cmMuaW5mby8/bD14ZHAtbmV3YmllcyZtPTE2Njk3MzA3NDcwOTg1MCZ3PTINCg0KWzJdIGh0dHBz
-Oi8vZ2l0aHViLmNvbS9PcGVuU291cmNlLVRIRy94ZHBzb2NrLXNhbXBsZS90cmVlL3Rlc3RfemVy
-b19jb3B5X3R4DQoNClszXSBFdGh0b29sIFBhcmFtZXRlcnM6DQoNCg0KIyBldGh0b29sIC1pIGlj
-ZTANCmRyaXZlcjogaWNlDQp2ZXJzaW9uOiA2LjEuMC1yYzcrDQpmaXJtd2FyZS12ZXJzaW9uOiAy
-LjUwIDB4ODAwMDc3YTggMS4yOTYwLjANCmV4cGFuc2lvbi1yb20tdmVyc2lvbjoNCmJ1cy1pbmZv
-OiAwMDAwOjAzOjAwLjANCnN1cHBvcnRzLXN0YXRpc3RpY3M6IHllcw0Kc3VwcG9ydHMtdGVzdDog
-eWVzDQpzdXBwb3J0cy1lZXByb20tYWNjZXNzOiB5ZXMNCnN1cHBvcnRzLXJlZ2lzdGVyLWR1bXA6
-IHllcw0Kc3VwcG9ydHMtcHJpdi1mbGFnczogeWVzDQoNCg0KIyBsc3BjaSAtcyAwMzowMC4wDQow
-MzowMC4wIEV0aGVybmV0IGNvbnRyb2xsZXI6IEludGVsIENvcnBvcmF0aW9uIEV0aGVybmV0IENv
-bnRyb2xsZXIgRTgxMC1YWFYgZm9yIFNGUCAocmV2IDAyKQ0KDQojIGV0aHRvb2wgLWcgaWNlMA0K
-UmluZyBwYXJhbWV0ZXJzIGZvciBpY2UwOg0KUHJlLXNldCBtYXhpbXVtczoNClJYOuKAgjgxNjAN
-ClJYIE1pbmk64oCCbi9hDQpSWCBKdW1ibzrigIJuL2ENClRYOuKAgjgxNjANCkN1cnJlbnQgaGFy
-ZHdhcmUgc2V0dGluZ3M6DQpSWDrigII0MDk2DQpSWCBNaW5pOuKAgm4vYQ0KUlggSnVtYm864oCC
-bi9hDQpUWDrigII0MDk2DQoNCiMgZXRodG9vbCAtbCBpY2UwDQpDaGFubmVsIHBhcmFtZXRlcnMg
-Zm9yIGljZTA6DQpQcmUtc2V0IG1heGltdW1zOg0KUlg64oCCMTYNClRYOuKAgjE2DQpPdGhlcjog
-MQ0KQ29tYmluZWQ6IDE2DQpDdXJyZW50IGhhcmR3YXJlIHNldHRpbmdzOg0KUlg6IDANClRYOuKA
-gjANCk90aGVyOiAxDQpDb21iaW5lZDrigII0DQpSb2JpbiBDb3dsZXkNClNvZnR3YXJlIEVuZ2lu
-ZWVyDQpUaGUgSHV0IEdyb3VwPGh0dHA6Ly93d3cudGhlaHV0Z3JvdXAuY29tLz4NCg0KVGVsOg0K
-RW1haWw6IFJvYmluLkNvd2xleUB0aGVodXRncm91cC5jb208bWFpbHRvOlJvYmluLkNvd2xleUB0
-aGVodXRncm91cC5jb20+DQoNCkZvciB0aGUgcHVycG9zZXMgb2YgdGhpcyBlbWFpbCwgdGhlICJj
-b21wYW55IiBtZWFucyBUaGUgSHV0IEdyb3VwIExpbWl0ZWQsIGEgY29tcGFueSByZWdpc3RlcmVk
-IGluIEVuZ2xhbmQgYW5kIFdhbGVzIChjb21wYW55IG51bWJlciA2NTM5NDk2KSB3aG9zZSByZWdp
-c3RlcmVkIG9mZmljZSBpcyBhdCBGaWZ0aCBGbG9vciwgVm95YWdlciBIb3VzZSwgQ2hpY2FnbyBB
-dmVudWUsIE1hbmNoZXN0ZXIgQWlycG9ydCwgTTkwIDNEUSBhbmQvb3IgYW55IG9mIGl0cyByZXNw
-ZWN0aXZlIHN1YnNpZGlhcmllcy4NCg0KQ29uZmlkZW50aWFsaXR5IE5vdGljZQ0KVGhpcyBlLW1h
-aWwgaXMgY29uZmlkZW50aWFsIGFuZCBpbnRlbmRlZCBmb3IgdGhlIHVzZSBvZiB0aGUgbmFtZWQg
-cmVjaXBpZW50IG9ubHkuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQgcGxl
-YXNlIG5vdGlmeSB1cyBieSB0ZWxlcGhvbmUgaW1tZWRpYXRlbHkgb24gKzQ0KDApMTYwNiA4MTE4
-ODggb3IgcmV0dXJuIGl0IHRvIHVzIGJ5IGUtbWFpbC4gUGxlYXNlIHRoZW4gZGVsZXRlIGl0IGZy
-b20geW91ciBzeXN0ZW0gYW5kIG5vdGUgdGhhdCBhbnkgdXNlLCBkaXNzZW1pbmF0aW9uLCBmb3J3
-YXJkaW5nLCBwcmludGluZyBvciBjb3B5aW5nIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIEFueSB2
-aWV3cyBvciBvcGluaW9ucyBhcmUgc29sZWx5IHRob3NlIG9mIHRoZSBhdXRob3IgYW5kIGRvIG5v
-dCBuZWNlc3NhcmlseSByZXByZXNlbnQgdGhvc2Ugb2YgdGhlIGNvbXBhbnkuDQoNCkVuY3J5cHRp
-b25zIGFuZCBWaXJ1c2VzDQpQbGVhc2Ugbm90ZSB0aGF0IHRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0
-YWNobWVudHMgaGF2ZSBub3QgYmVlbiBlbmNyeXB0ZWQuIFRoZXkgbWF5IHRoZXJlZm9yZSBiZSBs
-aWFibGUgdG8gYmUgY29tcHJvbWlzZWQuIFBsZWFzZSBhbHNvIG5vdGUgdGhhdCBpdCBpcyB5b3Vy
-IHJlc3BvbnNpYmlsaXR5IHRvIHNjYW4gdGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBm
-b3IgdmlydXNlcy4gV2UgZG8gbm90LCB0byB0aGUgZXh0ZW50IHBlcm1pdHRlZCBieSBsYXcsIGFj
-Y2VwdCBhbnkgbGlhYmlsaXR5ICh3aGV0aGVyIGluIGNvbnRyYWN0LCBuZWdsaWdlbmNlIG9yIG90
-aGVyd2lzZSkgZm9yIGFueSB2aXJ1cyBpbmZlY3Rpb24gYW5kL29yIGV4dGVybmFsIGNvbXByb21p
-c2Ugb2Ygc2VjdXJpdHkgYW5kL29yIGNvbmZpZGVudGlhbGl0eSBpbiByZWxhdGlvbiB0byB0cmFu
-c21pc3Npb25zIHNlbnQgYnkgZS1tYWlsLg0KDQpNb25pdG9yaW5nDQpBY3Rpdml0eSBhbmQgdXNl
-IG9mIHRoZSBjb21wYW55J3Mgc3lzdGVtcyBpcyBtb25pdG9yZWQgdG8gc2VjdXJlIGl0cyBlZmZl
-Y3RpdmUgdXNlIGFuZCBvcGVyYXRpb24gYW5kIGZvciBvdGhlciBsYXdmdWwgYnVzaW5lc3MgcHVy
-cG9zZXMuIENvbW11bmljYXRpb25zIHVzaW5nIHRoZXNlIHN5c3RlbXMgd2lsbCBhbHNvIGJlIG1v
-bml0b3JlZCBhbmQgbWF5IGJlIHJlY29yZGVkIHRvIHNlY3VyZSBlZmZlY3RpdmUgdXNlIGFuZCBv
-cGVyYXRpb24gYW5kIGZvciBvdGhlciBsYXdmdWwgYnVzaW5lc3MgcHVycG9zZXMuDQoNCmhndnlq
-dXYNCg==
+all:
 
+After a pretty long layoff from kernel development of any sort of
+mine... we're pushing the limits again trying to get cake to support
+10s of thousands of ISP subscribers, leveraging xdp for reads, and
+ebpf "pping" for inline monitoring of TCP rtts, then a ton of htb bins
++ cake for each subscriber.
+
+shameless plugs:
+
+https://github.com/thebracket/cpumap-pping#cpumap-pping # everybody
+needs kathie nichols and simon 's pping!!!
+https://github.com/LibreQoE
+
+(even more shameless plug - ask your isp to try libreqos.io out -
+presently at 10k users, pushing 11gbit/sec, 24% of 16 cores! I'm
+really, really amazed by all this, I remember struggling to get cake
+to crack 50Mbits on a 600mhz mips box a decade back. Way to go
+everyone! - love, rip van winkle)
+
+Anyway... after adopting xdp fully over the past couple months... most
+of the CPU time is now spent in htb, and while I see htb has been
+successfully offloaded by the mlx5, it's not clear if that can pull
+from from cake as an underlying qdisc (?), or only a pfifo, nor how
+much buffering offloads like this introduce. ? Are there other cards
+with an htb offload now?
+
+Secondly -
+
+The xdp path is marvelous, but in trying to drive this transparent
+bridge to 100Gbit, I find myself wanting something old fashioned, and
+in my mind, simpler than a match pattern - is there any ethernet card
+that lets you do a TCAM mapping of a large (say, 128 thousand) set of
+IP addresses to an irq or queue ?
+
+1.2.3.4/29 -> irq 8 (or hw queue 8)
+1.2.4.1/32 -> irq 9 (or hw queue 9)
+a:b:c:d::/56 -> irq 8 (etc * 10s of thousands of other ip addresses, 1
+or more LPM matches per subscriber)
+
+Needn't be big enough to fill a bgp table...
+
+This is different from RPS in that we don't want a rxhash to spread
+the load "evenly", but to always direct a set of IP addresses to a
+particular core, on a particular queue - which is setup to do all that
+htb-ing (32k unique bins per core, e.g. 1.9m bins on 64 cores) and
+cake-ing.
+
+Other ideas for steppingstones on the march to 100gbit forwarding
+through tons of cake gladly considered. We're going to be fiddling
+with the metadata stuff in xdp as well - 3 hw hashes for cake, a rx
+timestamp for codel will probably help there too.
+
+
+
+--=20
+This song goes out to all the folk that thought Stadia would work:
+https://www.linkedin.com/posts/dtaht_the-mushroom-song-activity-69813666656=
+07352320-FXtz
+Dave T=C3=A4ht CEO, TekLibre, LLC
