@@ -2,72 +2,136 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C72C658B9F
-	for <lists+xdp-newbies@lfdr.de>; Thu, 29 Dec 2022 11:23:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DC43659C81
+	for <lists+xdp-newbies@lfdr.de>; Fri, 30 Dec 2022 22:32:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233310AbiL2KXv (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 29 Dec 2022 05:23:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        id S230128AbiL3VcG (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 30 Dec 2022 16:32:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbiL2KXV (ORCPT
+        with ESMTP id S229519AbiL3VcF (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 29 Dec 2022 05:23:21 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B0AC13F91
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Dec 2022 02:18:41 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id g1so11915540edj.8
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Dec 2022 02:18:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gxp/WZUYDf4HyiYo7WBwVlYg/GurAYIqzL0DOunWIRk=;
-        b=FQAtEfm/jqSMMbLncbJaU70adBuqTR89ZB6LwlS83wF1WdUL7asIZY4mFhhexsM/4Z
-         h3Uy/cEeUNf4HpNM22b/tmJI0mBsGYLytOJF1ecig73Kgmvm2Ufi/p3OyE2zAnOXEB8r
-         SOVPFo6hqQEOO8N3Ty6ob8yKAHXZ8xhOKYJHj6/tJEP8TWxUwmoNkLapukqD2Fz+rJAf
-         MH41ycwnRSVG23+mS+XJxohnVtIDSITr4rvjOLbjN6WTo+zYTtNcdaux1oIrgE1vjNtQ
-         BAbKfmeTcC0H7uH9p+qr58fK+Aj1hKnlQrT/Dy9JlpLoBsTq7LLjoXiqsJRhaS8G9Rh+
-         T2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gxp/WZUYDf4HyiYo7WBwVlYg/GurAYIqzL0DOunWIRk=;
-        b=Gi5yZfFhDl1iPvNmTa0DqWCRg7/TjcftT4WPyju6XaAvYabrFIV3nFzFCm1eEOIW4K
-         wydg+aJYKHaYZGXq71l1gvTtFqSU1c6H+CivElD+Dkc+9iY3NHBZY8yCgz1tcWDkYHG4
-         qD/B2Wv/DjvXfqp0hOT8P/5ZzmKJhA17+PpuaG+G0Vgl1SiCy6HMDp/r/WzEp0+11Jt0
-         LlKmEnh9h4SRCuRE1PPsPhhU4Zk1mBv4GGeggJ94zrWx+/5ypwbFaqfDma9CqFJTV/Bg
-         KA0y5cwa/JgFn92SvqeNjke7E58/8xDgBDz6jmWCJ6ESyXM/acf6KEgDMWWdVQo7BFrl
-         6pJA==
-X-Gm-Message-State: AFqh2kosiD5BAV6X8FJrQE0Q/p08tTXMuRtDZljKcY0ukEsoUo1KvKHD
-        ZMqbPIzFeVR5/oJGs+5xc+OLNHLuExphgPBRGuydeqFnTe8TDQ==
-X-Google-Smtp-Source: AMrXdXvRG2Up0/PmYMv9IrUr88oyyOZ0cBjTrqj/wvamQUaBUeuP8ljZJJx8c+zbxvXjqm3bpwDf8PmBWZ+U432qtw4=
-X-Received: by 2002:aa7:d7c8:0:b0:46c:d007:8642 with SMTP id
- e8-20020aa7d7c8000000b0046cd0078642mr2722017eds.348.1672309119806; Thu, 29
- Dec 2022 02:18:39 -0800 (PST)
-MIME-Version: 1.0
+        Fri, 30 Dec 2022 16:32:05 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2106.outbound.protection.outlook.com [40.107.95.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B2613D05
+        for <xdp-newbies@vger.kernel.org>; Fri, 30 Dec 2022 13:32:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LYcYz7+uqvj31CTCdlEQGEtoLTJoDpLZynarnFsY24WlCk+obQngVpZLUwgPCs6TGUkRmkWu4cAoQeFhaVTXPCoxPXLT7/0Z4flnfL2eUbyH8r6Tf+11nkiYTDSZhyCbqeX5YIOnOwCsC1g66+ztjWRER4VaCwrrBv3mldy93k5YV6qxvcitZ9kPAVovj7mnUwalvoWumY57KvLnwPJk7F8PQmiyuZrt9Ctz5xFpZwTO7sPW0CYKAiR/oF93+nYiYzHK1g26e7wjTVheEeR4FfLSWZQfyviGp5dZjyGipwGY3qv3Sou5XoQzL8V6HZT31uqGJxYXdcR9p+iswvANaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=neiqc5W7MC7nRBn7kisvS3LZFmxXhaf0N/zHdNx1DuE=;
+ b=MlxKdUXUCLzqFiBSKw3XezBBiuc3HScl9PjNR1Df6F/k3NXUnHP+AEyKndV7Dero80cmHbmGGSCahnUjRKwK2Ej/XT07vpEJ2UdKpWjrQnodLJNibsgtrlaBFKCYVeYZzlcTdhQ3G2krbPQ1vhj8LChntCURWT8zuCmLumVIh/msys5UiFr4QCWL9FklB2nBm8ddAb2+76KYWBMsXKd5m/3Zb+DrsnXpeC4/eZI9p1ziarKxHYMIF7/2aYbhRp1Ui9OsDLNdJaOTHSFji1E5uDXxVVeys5gj29XSaKSqgGN4CX0yRJFoo2jQgPCogCAvNwIML0agwXCw/P0u1k/+7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=futurewei.com; dmarc=pass action=none
+ header.from=futurewei.com; dkim=pass header.d=futurewei.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Futurewei.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=neiqc5W7MC7nRBn7kisvS3LZFmxXhaf0N/zHdNx1DuE=;
+ b=hdQBsUtkYGqJrEuzl659RO4+e1Th4awGSI2uDA6R0clpjvRtoat23yG3Sc4wI6jxf/EzXP88LNNPqhjBAO67VWt+AVbf86tkoi944FXoKlkyu8IBT5J2isAQ/tw97SIARI6jEm7HeR2aGvZKs0/L2NFW24bgm8Xb5CJVEzrBkQA=
+Received: from MW3PR13MB3914.namprd13.prod.outlook.com (2603:10b6:303:58::23)
+ by MW4PR13MB5838.namprd13.prod.outlook.com (2603:10b6:303:1a6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.16; Fri, 30 Dec
+ 2022 21:32:00 +0000
+Received: from MW3PR13MB3914.namprd13.prod.outlook.com
+ ([fe80::dc0f:af7c:d16d:66a8]) by MW3PR13MB3914.namprd13.prod.outlook.com
+ ([fe80::dc0f:af7c:d16d:66a8%8]) with mapi id 15.20.5944.016; Fri, 30 Dec 2022
+ 21:32:00 +0000
+From:   Zhaoxi Zhu <zzhu@futurewei.com>
+To:     Magnus Karlsson <magnus.karlsson@gmail.com>
+CC:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: Re: Is It Possible to RX/Process/TX packets concurrently with AF_XDP?
+Thread-Topic: Is It Possible to RX/Process/TX packets concurrently with
+ AF_XDP?
+Thread-Index: AQHZCoZZl6N+066Kg0uWAZSukMncCa5jA4GK//99gACAAVDfgIAB1ACAgAGSq4CAAuX3gIABku2AgAAA6QCAAVa7gIALfsMAgAE1SACACeuVgIABIAcAgAHIaIA=
+Date:   Fri, 30 Dec 2022 21:31:59 +0000
+Message-ID: <BF61942C-D793-44F4-A995-55D291DEC4A5@futurewei.com>
 References: <MW3PR13MB3914293EBC3BB94EB7863C02D61A9@MW3PR13MB3914.namprd13.prod.outlook.com>
  <MW3PR13MB3914DAF2E660702C2EF52058D61A9@MW3PR13MB3914.namprd13.prod.outlook.com>
- <662AEFE7-B907-406F-8DB3-47E6157217DB@futurewei.com> <CAJ8uoz3F_NEfFW+zDc60AgL1SDfD9BE0qvkEHhr9yzqusSpEwg@mail.gmail.com>
- <00931ED6-D940-491F-B6DA-BEE71F61A6F7@futurewei.com> <CAJ8uoz0f5dDAsPMwgKWQSPZuGYnSfU9Xz2jZVmdCeeWBZeiMfA@mail.gmail.com>
- <075DA44A-891D-415E-9F97-005F2D87967A@futurewei.com> <F570C31F-1C80-4238-B40D-BDEB4970F4D2@futurewei.com>
- <5827E9AF-0DCE-490A-A6F8-F099E7446758@futurewei.com> <CAJ8uoz1p4N8bh0xWcFHxsaCjLu=DFq--Uc2XpPt2_EV2WquBUw@mail.gmail.com>
- <214B309B-E42A-4738-965F-840702B188A6@futurewei.com> <CAJ8uoz0B1gsCUV-3tjw2M52u3XH4UbXLVaxWTYri44shVKqBwQ@mail.gmail.com>
+ <662AEFE7-B907-406F-8DB3-47E6157217DB@futurewei.com>
+ <CAJ8uoz3F_NEfFW+zDc60AgL1SDfD9BE0qvkEHhr9yzqusSpEwg@mail.gmail.com>
+ <00931ED6-D940-491F-B6DA-BEE71F61A6F7@futurewei.com>
+ <CAJ8uoz0f5dDAsPMwgKWQSPZuGYnSfU9Xz2jZVmdCeeWBZeiMfA@mail.gmail.com>
+ <075DA44A-891D-415E-9F97-005F2D87967A@futurewei.com>
+ <F570C31F-1C80-4238-B40D-BDEB4970F4D2@futurewei.com>
+ <5827E9AF-0DCE-490A-A6F8-F099E7446758@futurewei.com>
+ <CAJ8uoz1p4N8bh0xWcFHxsaCjLu=DFq--Uc2XpPt2_EV2WquBUw@mail.gmail.com>
+ <214B309B-E42A-4738-965F-840702B188A6@futurewei.com>
+ <CAJ8uoz0B1gsCUV-3tjw2M52u3XH4UbXLVaxWTYri44shVKqBwQ@mail.gmail.com>
  <291F9412-8559-407D-91E1-CEAA69A2BDFC@futurewei.com>
-In-Reply-To: <291F9412-8559-407D-91E1-CEAA69A2BDFC@futurewei.com>
-From:   Magnus Karlsson <magnus.karlsson@gmail.com>
-Date:   Thu, 29 Dec 2022 11:18:26 +0100
-Message-ID: <CAJ8uoz0Yzt6FyH4X2nuNtdDd6N8Rs0C6QYWY=mmPFHrHDRyG9g@mail.gmail.com>
-Subject: Re: Is It Possible to RX/Process/TX packets concurrently with AF_XDP?
-To:     Zhaoxi Zhu <zzhu@futurewei.com>
-Cc:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAJ8uoz0Yzt6FyH4X2nuNtdDd6N8Rs0C6QYWY=mmPFHrHDRyG9g@mail.gmail.com>
+In-Reply-To: <CAJ8uoz0Yzt6FyH4X2nuNtdDd6N8Rs0C6QYWY=mmPFHrHDRyG9g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=futurewei.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW3PR13MB3914:EE_|MW4PR13MB5838:EE_
+x-ms-office365-filtering-correlation-id: aa864899-7675-4bef-df0f-08daeaad4902
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +fT96QAN3XOQNHf4GuAtHkiytX4MZL+AiM/0dXrTI/09ASroMFe7norCEGp1TwhxfNIkqrnyoAV1JEt5eHc9GApMOTXG37nHnL8fSDaW2xC6h21vEQW2iORxJI5YtoUFZKcyIfPxcc/RN8dlnGRaScbWntk0xHwXfd4+uwESfwG+2rCU3u5auorugB8GpgLPitjMYvx62gWwFK/IS9H+bAuBe/FMGkNXPOjOGRsV7SzE6MnIEKuQCLpvvEJYY+H63WseFlnIfkXMH7woC3IKZ/Fmznun6Ul+5yB1EvgI4sCrQ+X0z+iwZ62214+02P6nTxXoTxHm3A77EQxaMfgG+uO0MvOAR71U0GFsyqw9/CKQCKn7OwEPHBcZYVZL5kafdO5WtWAEZAbFzmH6BidkrG82vlt/kcMUmAIcM5trEMagDf4/HmeUcAco1AIaebQQGSv6j+iS2c9zdnVhNf0yvS+NMs+I5loc7CpJjMOLgfNz35DaVogWdiwCSVse9UAd9/H12RHmmo/INXY0spTOrjrxiWg6YJIBwfNFbtsMfZdyRnKN9G25NOmpsI6MC2pEXX7z9GSsVa1RlLxyCWoe9kvfwEBoETAxAOVj1JJERz6f04jyeynprEIR25b6oGTUugcHODv5NgeGIzE3VXTsANgUbE64xgxY0cljSvQD6W8uTc1mFxnwqN/SuTJyLutbNh7FrT02545KhdVCzhrJlOLL4JEq1k/Ztclt18wrFzA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR13MB3914.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(346002)(376002)(136003)(396003)(39840400004)(451199015)(33656002)(36756003)(122000001)(41300700001)(8936002)(5660300002)(2906002)(83380400001)(86362001)(38100700002)(66446008)(66946007)(66476007)(64756008)(6916009)(66556008)(71200400001)(76116006)(38070700005)(6506007)(53546011)(316002)(6486002)(4326008)(8676002)(478600001)(26005)(91956017)(186003)(6512007)(2616005)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bGgzakFDaDBkU0FZcTNPQTVjaVJVTjRCb09lQW1ldXVmUkw5WCsrU1F1VDN2?=
+ =?utf-8?B?c2NqTitONnF5V2Q2czRhV2FqMzV1Wk9qYThwbW5xdlB1dTJ4QlBPK2NrT1Vz?=
+ =?utf-8?B?WHlBSUQ3TjFhNlZESWxrREg0RCtFSFU5U2JqZ3k5N0k4aUJlazVSci85Yk43?=
+ =?utf-8?B?c2d2V1JQOTBvWlFqM1JJOWRkbjVrNzFPNWpBd2JqU0FmaUVZTVVYYnQ0RFN1?=
+ =?utf-8?B?M1piTDZLMDVDenlJUEJqVVFpQU4xazhYZFFHQ1RFVVk0VkRGOUZEOURLMEF4?=
+ =?utf-8?B?Tk8zUVBYY2lNYlpEeUpWdFp5d2l6Q2NXUytJUHprTXJMcjBiSUk3YnJlUEts?=
+ =?utf-8?B?UFJiczdCQVZNdHBwbmw3RnBhVW9OdWQ5eHo5dE0vMS9HcGhraXJWZjBJRWZO?=
+ =?utf-8?B?K1pFcXlicENXamt3djdYTS9xQ3pCM2NDVHdFYWZkZStLaFM1R21maVdFcytl?=
+ =?utf-8?B?aTlGYW0wdWpRb1hCOTUvOVp4SFFRSGdLd2c5eVBJRFc0UitNZmIzdXZ2NjBK?=
+ =?utf-8?B?RzZhc1dZSHNSTHVwendUbHZwMm82RVFFODlUNHIzMjFmV0k4UDZSY1g3L3NU?=
+ =?utf-8?B?Ty9oZXRreUZmQU9NUVBUOVBIZFpsVW53QmcwZnZzY1NzcDJXNDBlZlBwemRw?=
+ =?utf-8?B?SVpueWJSZndkWEhPZnBDWWFURGowdENFYUxQS054THloSWJpZCtEU1YyKzFx?=
+ =?utf-8?B?dTBXeWRkYURETll0YmpwNHRScFY1UXhGSUUyUHRnenJrTGIrZHNqWWdZQ1Rn?=
+ =?utf-8?B?UWp1THVvRmJvTW1qVkVhbVVRcUdESTRKNjFqbXFjYkdveGlML2ZFL2VvTEly?=
+ =?utf-8?B?Y2s3bTY4SGt5TUozZ1A4ck93U2pGNXkxazh0eFFiSHdwTXpGYVpUaFkxUUhO?=
+ =?utf-8?B?OXpjUEozT1NUS2taUnRsSFQvV1BnVlFOVjFxWlRmTUtweTREaERBK0FRMEJW?=
+ =?utf-8?B?bTNmQWZoc0pRVVdQRmZsdWpqejZYYnVHb0p3eHZCd3hZeXRWN1cxNmpQb1dC?=
+ =?utf-8?B?VkJTZ2g0OUxRZHBYdzcyb1lSdVlzSkEvbDVlNTlMVlZ3RmY3N0pvWEhMMjZi?=
+ =?utf-8?B?NnNZbnRiVlRKdmhEZ1h6aHpLMzZjOTdkeTNxWTBKQmVjajRHN2VCWjdkOFpp?=
+ =?utf-8?B?bDVEY1FpKzBJMlFNeU1HRG84ZTlCUXR0bkJyZ2lGOU1OQUtrWnVuU1NkbmVE?=
+ =?utf-8?B?cUMzcDVMU0VHSzEzWDhkSGlSTXZ1dllLZEIyVW9QaDBBcUw1ZUpzbUpwNXBN?=
+ =?utf-8?B?Z3BlT25KNFE4M3N0c3FvYzN0ZXI3TFBUelY1QVk2UXFaZkVhS2x6VWdlWHYx?=
+ =?utf-8?B?SDV4TXYxUEpRNm4zN1lWRE1LWUdtR2RNSjJiTEhnbTltK3BxYzFwcU9DemdO?=
+ =?utf-8?B?MmZxUEYza0hHSEpGZWxGejVWUEUvdW1veHlHeTlUREduZ1RGVTRjR3ZhdlZz?=
+ =?utf-8?B?SWN5M3JnNGd4T0JnRFUyS1ZBS2oxK0IyUGxCSm1rK2VKREc1ODJBc1V2a1BZ?=
+ =?utf-8?B?NEM5bWdPOXUzc2l4YkkvNjd6UUxsekpyUEpZbEMrZlBQMmpQYldrWGMzMmRV?=
+ =?utf-8?B?UDV1cmZkalErRzBwdm11Ni9hc3A5Ynl0R3JDU3QwMURnTTZDSjFzL1V0RkNH?=
+ =?utf-8?B?S3pGMW1DdWNTVG42YVNraG9UNFJKcmFBQVRSUDRSRzVsWThjaWx3ckdzRmhq?=
+ =?utf-8?B?dm1yeE9zNnhTYjVKQUxxZUJVRUhyTDFVaUdaSU16VzJpNFBlUVMvUk9BZHJQ?=
+ =?utf-8?B?ZFZ3eWJ2NnhSSU1TNUd1RjBMS2dSQzJTbXVMQjdVYzBkZ1hhMGxETXNyMmtu?=
+ =?utf-8?B?WlZ3TlIxbm9Ob0hKc0NRVUR1bDFGZk5xUzVXemdtV2FGTVM1Z1RuNnRVK0hw?=
+ =?utf-8?B?UWNDem5XdWVuNDM3REhDQkVEUXJpYldseTJPQmV0aWN5NTZua2tuZE9POGZ2?=
+ =?utf-8?B?UC9FM3ZCRDdObTJZZlFTZExJOTUwNGNJZ0N1azNPTm5VdksvQ3ZKa3pXNERu?=
+ =?utf-8?B?QkxjM3BOM2NaeWRQV1pCTWVlOWk5bWdsd2QyUStYM1NOU3VxQ0dmNG1yUGx2?=
+ =?utf-8?B?ajdQamp1RlVHS20rRXZTcDk0QmNSYTBFaVF3bTNYdEJraTAvTUJNRTEyK2or?=
+ =?utf-8?Q?iFdHamef8++AnOaQxjE81CY5h?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CF1A46161A26324ABF05902D9B13D6E5@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Futurewei.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR13MB3914.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa864899-7675-4bef-df0f-08daeaad4902
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Dec 2022 21:32:00.1200
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0fee8ff2-a3b2-4018-9c75-3a1d5591fedc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Fgxdtf/0kIAL5g1c2e7m8x6rpld6Axt4RSLR8XlTsquZyRLp17lHtaZOqZFhILvSFJ/oktoJSA7O+s3u7xWpvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5838
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,188 +139,181 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 2:07 AM Zhaoxi Zhu <zzhu@futurewei.com> wrote:
->
->
->
-> =EF=BB=BF>> On 12/22/22, 1:38 AM, "Magnus Karlsson" <magnus.karlsson@gmai=
-l.com> wrote:
-> >>
-> >>   On Thu, Dec 22, 2022 at 12:11 AM Zhaoxi Zhu <zzhu@futurewei.com> wro=
-te:
-> >>   >
-> >>    >
-> >>    > >    On Tue, Dec 13, 2022 at 8:11 PM Zhaoxi Zhu <zzhu@futurewei.c=
-om> wrote:
-> >>    > >    >
-> >>    > >    > It looks like that I didn=E2=80=99t include the mailing li=
-st in my previous replies. I hope this one does.
-> >>    > >    >
-> >>    > >   > Also, for the AF_XDP-forwarding example, is it able to hand=
-le multiple AF_XDP sockets on the same NIC?
-> >>    > >
-> >>    > >    Yes.
-> >>    > >
-> >>    > >    > Such as:
-> >>    > >    >
-> >>    > >    > ```
-> >>    > >    > ./xdp_fwd -i IFA -q Q1 -i IFA -q Q2 -i IFA -q Q3 -i IFA -q=
- Q4 -c CX -c CY
-> >>    > >    >
-> >>    > >    > ```
-> >>    > >    >
-> >>    > >    > If the above is doable, maybe I can have multiple queues, =
-rather than having one, on the same NIC, create one AF_XDP socket per queue=
-, and then use this xdp_fwd example to achieve multi-threading?
-> >>    > >
-> >>    > >   That is the best way to do multithreading without having to r=
-esort to
-> >>    > >    expensive locking. One queue and socket per thread is the wa=
-y to go.
-> >>    > >
-> >>    >
-> >>    > Thank you so much for your reply and suggestions. I made changes =
-following your suggestions and it partly worked!
-> >>    >
-> >>    > At the beginning, I copied the round robin logic of the xdpsock_k=
-ern.c and put it in my XDP code, in the user space, I have the number_of_re=
-ceving_queues of threads, which equals to the number of cores of my machine=
-(24), each have an AF_XDP socket for that queue, but none of them are recei=
-ving packets. I added some logs to the rx_burst and found out that they wer=
-e all busy polling and the n_packets are always 0. I later changed the numb=
-er of queues and threads to 4, and the results are the same. What could be =
-the reason that the round robin doesn't work?
-> >>    >
-> >>    > Then, I set the number of receiving queues to. 8, removed the rou=
-nd robin logic in the XDP code, simply forward the packet to the ctx->rx_ue=
-ue_index of the xsks_map; and used 8 threads in the userspace for the 8 que=
-ues, and it is now able to receive packets. However, when I tried to increa=
-se the number of queue and threads to 16, none of the AF_XDP socket can rec=
-eive packets again. Do you know what might be cause this? Is it because the=
- number of queues and threads are too many?
-> >>
-> >>    There is not upper limit to the amount of queues and threads suppor=
-ted
-> >>    in the AF_XDP code. Your NIC will likely have a limit on the amount=
- of
-> >>    queues though.
-> >>
->
-> Thank you very much for your tips. After some debugging, I found out that=
- it is because of some bugs initiating the bcache, which results in ports' =
-pcache trading new slabs from the bpool.
-
-Please submit this fix to the bpf-examples repo so other people can
-benefit from it too.
-
-> I fixed that and continued testing, my test is to run some iperfs to gene=
-rate traffic that goes through these AF_XDP sockets.
->
-> There is one interesting behavior: the iperf traffic runs fine at the beg=
-inning. However, after some time, maybe 30 seconds or 1 minute, the traffic=
- stopped and I didn't see any sockets rx/tx packets(I added some logs there=
- for debugging).
->
-> The program didn't crash, it is as if there's no new traffic coming to th=
-e sockets. However, if I stop the iperfs and give the sockets a break, say =
-1 or 2 minutes, and restart the iperfs, the sockets are usually able to rx/=
-tx traffic again, until it doesn't.
->
-> I wonder have you seen anything like this before? It feels like that I'm =
-very close to having a fully running program, but I'm stuck at this step an=
-d I can't figure out why.
-
-Have not seen anything like this. TCP is sensitive to packet loss. Are
-packets dropped in your test run?
-
-> Thanks again for your help.
->
-> >>    > Another questions is, since I'm not using round robin in my XDP c=
-ode, the traffic isn't distributed evenly among my queues, it seems to me t=
-hat 2 queues are always getting most of the traffic and the others are gett=
-ing very little:
-> >>    >
-> >>    > +------+--------------+---------------+--------------+-----------=
-----+
-> >>    > | Port |   RX packets | RX rate (pps) |   TX packets | TX_rate (p=
-ps) |
-> >>    > +------+--------------+---------------+--------------+-----------=
-----+
-> >>    > |    0 |         2113 |             1 |         2113 |           =
-  1 |
-> >>    > |    1 |            0 |             0 |            0 |           =
-  0 |
-> >>    > |    2 |            0 |             0 |            0 |           =
-  0 |
-> >>    > |    3 |          568 |             0 |          568 |           =
-  0 |
-> >>    > |    4 |         2590 |             1 |         2590 |           =
-  1 |
-> >>    > |    5 |            0 |             0 |            0 |           =
-  0 |
-> >>    > |    6 |            0 |             0 |            0 |           =
-  0 |
-> >>    > |    7 |           85 |             0 |           85 |           =
-  0 |
-> >>    > +------+--------------+---------------+--------------+-----------=
-----+
-> >>    >
-> >>    > I understand this is mainly because I don't have round robin in m=
-y XDP code, but I wonder what decides which queue gets the traffic? Also, i=
-f round robin works, does it mean that when a packet arrives in the XDP in =
-queue x, and then be forwarded to an AF_XDP socket with queue y, the packet=
- will be copied, and zero-copy won't work in this case?
-> >>
-> >>    Your packet distribution among queues is decided by your NIC and th=
-e
-> >>    traffic it receives. It probably has RSS enabled by default. You ca=
-n
-> >>    program the NIC flow steering rules using ethtool. If you want
-> >>    something perfectly spread among the cores, you probably want to ha=
-ve
-> >>    a synthetic workload and enable explicit flow steering rules to
-> >>    achieve perfect control. Google some examples and experiment withou=
-t
-> >>    using XDP, is my tip.
-> >>
-> >>    You cannot direct packets coming in on queue X to a socket bound to
-> >>    queue Y, this regardless if it is zero-copy mode or not. You are
-> >>    correct that this could be supported in copy-mode, but it is not.
-> >>
-> >>    > Again, thank you very much for reading this and your help.
-> >>    >
-> >>    > Rio
-> >>    >
-> >>    > >    > Thank you very much for your help and time.
-> >>    > >    > Rio
-> >>    > >    >
-> >>    > >    >
-> >>    > >    > From: Zhaoxi Zhu <zzhu@futurewei.com>
-> >>    > >    > Date: Monday, December 12, 2022 at 11:06 AM
-> >>    > >   > To: Magnus Karlsson <magnus.karlsson@gmail.com>
-> >>    > >    > Subject: Re: Is It Possible to RX/Process/TX packets concu=
-rrently with AF_XDP?
-> >>    > >    >
-> >>    > >    > Got it, thank you very much for your clarification.
-> >>    > >    >
-> >>    > >    > I have one more question, if I may: If one AF_XDP should b=
-e handled by one thread, in order to avoid mutexes and to achieve better pe=
-rformance, then, can I have more than one AF_XDP socket on the same physica=
-l NIC, and use one thread per AF_XDP socket, in order to make process packe=
-ts coming into this NIC concurrently?
-> >>    > >    >
-> >>    > >   > Currently, the way we are testing AF_XDP with is to have on=
-ly 1 queue:
-> >>    > >    >
-> >>    > >    > ```
-> >>    > >    > sudo ethtool -L <interface> combined 1
-> >>    > >    > ```
-> >>    > >    >
-> >>    > >    > Can I change the number of queues to something like 4, and=
- the user space program,  have one AF_XDP socket per queue and one thread p=
-er AF_XDP socket, in order to have four threads processing traffic coming i=
-nto the same NIC?
-> >>    > >    >
-> >>    > >    > Thank you very much for your help and time.
-> >>    > >    > Rio
->
+Pk9uIDEyLzI5LzIyLCAyOjE4IEFNLCAiTWFnbnVzIEthcmxzc29uIiA8bWFnbnVzLmthcmxzc29u
+QGdtYWlsLmNvbT4gd3JvdGU6DQo+DQo+ICAgIE9uIFRodSwgRGVjIDI5LCAyMDIyIGF0IDI6MDcg
+QU0gWmhhb3hpIFpodSA8enpodUBmdXR1cmV3ZWkuY29tPiB3cm90ZToNCj4gICAgPg0KPiAgICA+
+DQo+ICAgID4NCj4gICAgPiA+PiBPbiAxMi8yMi8yMiwgMTozOCBBTSwgIk1hZ251cyBLYXJsc3Nv
+biIgPG1hZ251cy5rYXJsc3NvbkBnbWFpbC5jb20+IHdyb3RlOg0KPiAgICA+ID4+DQo+ICAgID4g
+Pj4gICBPbiBUaHUsIERlYyAyMiwgMjAyMiBhdCAxMjoxMSBBTSBaaGFveGkgWmh1IDx6emh1QGZ1
+dHVyZXdlaS5jb20+IHdyb3RlOg0KPiAgICA+ID4+ICAgPg0KPiAgICA+ID4+ICAgID4NCj4gICAg
+PiA+PiAgICA+ID4gICAgT24gVHVlLCBEZWMgMTMsIDIwMjIgYXQgODoxMSBQTSBaaGFveGkgWmh1
+IDx6emh1QGZ1dHVyZXdlaS5jb20+IHdyb3RlOg0KPiAgICA+ID4+ICAgID4gPiAgICA+DQo+ICAg
+ID4gPj4gICAgPiA+ICAgID4gSXQgbG9va3MgbGlrZSB0aGF0IEkgZGlkbuKAmXQgaW5jbHVkZSB0
+aGUgbWFpbGluZyBsaXN0IGluIG15IHByZXZpb3VzIHJlcGxpZXMuIEkgaG9wZSB0aGlzIG9uZSBk
+b2VzLg0KPiAgICA+ID4+ICAgID4gPiAgICA+DQo+ICAgID4gPj4gICAgPiA+ICAgPiBBbHNvLCBm
+b3IgdGhlIEFGX1hEUC1mb3J3YXJkaW5nIGV4YW1wbGUsIGlzIGl0IGFibGUgdG8gaGFuZGxlIG11
+bHRpcGxlIEFGX1hEUCBzb2NrZXRzIG9uIHRoZSBzYW1lIE5JQz8NCj4gICAgPiA+PiAgICA+ID4N
+Cj4gICAgPiA+PiAgICA+ID4gICAgWWVzLg0KPiAgICA+ID4+ICAgID4gPg0KPiAgICA+ID4+ICAg
+ID4gPiAgICA+IFN1Y2ggYXM6DQo+ICAgID4gPj4gICAgPiA+ICAgID4NCj4gICAgPiA+PiAgICA+
+ID4gICAgPiBgYGANCj4gICAgPiA+PiAgICA+ID4gICAgPiAuL3hkcF9md2QgLWkgSUZBIC1xIFEx
+IC1pIElGQSAtcSBRMiAtaSBJRkEgLXEgUTMgLWkgSUZBIC1xIFE0IC1jIENYIC1jIENZDQo+ICAg
+ID4gPj4gICAgPiA+ICAgID4NCj4gICAgPiA+PiAgICA+ID4gICAgPiBgYGANCj4gICAgPiA+PiAg
+ICA+ID4gICAgPg0KPiAgICA+ID4+ICAgID4gPiAgICA+IElmIHRoZSBhYm92ZSBpcyBkb2FibGUs
+IG1heWJlIEkgY2FuIGhhdmUgbXVsdGlwbGUgcXVldWVzLCByYXRoZXIgdGhhbiBoYXZpbmcgb25l
+LCBvbiB0aGUgc2FtZSBOSUMsIGNyZWF0ZSBvbmUgQUZfWERQIHNvY2tldCBwZXIgcXVldWUsIGFu
+ZCB0aGVuIHVzZSB0aGlzIHhkcF9md2QgZXhhbXBsZSB0byBhY2hpZXZlIG11bHRpLXRocmVhZGlu
+Zz8NCj4gICAgPiA+PiAgICA+ID4NCj4gICAgPiA+PiAgICA+ID4gICBUaGF0IGlzIHRoZSBiZXN0
+IHdheSB0byBkbyBtdWx0aXRocmVhZGluZyB3aXRob3V0IGhhdmluZyB0byByZXNvcnQgdG8NCj4g
+ICAgPiA+PiAgICA+ID4gICAgZXhwZW5zaXZlIGxvY2tpbmcuIE9uZSBxdWV1ZSBhbmQgc29ja2V0
+IHBlciB0aHJlYWQgaXMgdGhlIHdheSB0byBnby4NCj4gICAgPiA+PiAgICA+ID4NCj4gICAgPiA+
+PiAgICA+DQo+ICAgID4gPj4gICAgPiBUaGFuayB5b3Ugc28gbXVjaCBmb3IgeW91ciByZXBseSBh
+bmQgc3VnZ2VzdGlvbnMuIEkgbWFkZSBjaGFuZ2VzIGZvbGxvd2luZyB5b3VyIHN1Z2dlc3Rpb25z
+IGFuZCBpdCBwYXJ0bHkgd29ya2VkIQ0KPiAgICA+ID4+ICAgID4NCj4gICAgPiA+PiAgICA+IEF0
+IHRoZSBiZWdpbm5pbmcsIEkgY29waWVkIHRoZSByb3VuZCByb2JpbiBsb2dpYyBvZiB0aGUgeGRw
+c29ja19rZXJuLmMgYW5kIHB1dCBpdCBpbiBteSBYRFAgY29kZSwgaW4gdGhlIHVzZXIgc3BhY2Us
+IEkgaGF2ZSB0aGUgbnVtYmVyX29mX3JlY2V2aW5nX3F1ZXVlcyBvZiB0aHJlYWRzLCB3aGljaCBl
+cXVhbHMgdG8gdGhlIG51bWJlciBvZiBjb3JlcyBvZiBteSBtYWNoaW5lKDI0KSwgZWFjaCBoYXZl
+IGFuIEFGX1hEUCBzb2NrZXQgZm9yIHRoYXQgcXVldWUsIGJ1dCBub25lIG9mIHRoZW0gYXJlIHJl
+Y2VpdmluZyBwYWNrZXRzLiBJIGFkZGVkIHNvbWUgbG9ncyB0byB0aGUgcnhfYnVyc3QgYW5kIGZv
+dW5kIG91dCB0aGF0IHRoZXkgd2VyZSBhbGwgYnVzeSBwb2xsaW5nIGFuZCB0aGUgbl9wYWNrZXRz
+IGFyZSBhbHdheXMgMC4gSSBsYXRlciBjaGFuZ2VkIHRoZSBudW1iZXIgb2YgcXVldWVzIGFuZCB0
+aHJlYWRzIHRvIDQsIGFuZCB0aGUgcmVzdWx0cyBhcmUgdGhlIHNhbWUuIFdoYXQgY291bGQgYmUg
+dGhlIHJlYXNvbiB0aGF0IHRoZSByb3VuZCByb2JpbiBkb2Vzbid0IHdvcms/DQo+ICAgID4gPj4g
+ICAgPg0KPiAgICA+ID4+ICAgID4gVGhlbiwgSSBzZXQgdGhlIG51bWJlciBvZiByZWNlaXZpbmcg
+cXVldWVzIHRvLiA4LCByZW1vdmVkIHRoZSByb3VuZCByb2JpbiBsb2dpYyBpbiB0aGUgWERQIGNv
+ZGUsIHNpbXBseSBmb3J3YXJkIHRoZSBwYWNrZXQgdG8gdGhlIGN0eC0+cnhfdWV1ZV9pbmRleCBv
+ZiB0aGUgeHNrc19tYXA7IGFuZCB1c2VkIDggdGhyZWFkcyBpbiB0aGUgdXNlcnNwYWNlIGZvciB0
+aGUgOCBxdWV1ZXMsIGFuZCBpdCBpcyBub3cgYWJsZSB0byByZWNlaXZlIHBhY2tldHMuIEhvd2V2
+ZXIsIHdoZW4gSSB0cmllZCB0byBpbmNyZWFzZSB0aGUgbnVtYmVyIG9mIHF1ZXVlIGFuZCB0aHJl
+YWRzIHRvIDE2LCBub25lIG9mIHRoZSBBRl9YRFAgc29ja2V0IGNhbiByZWNlaXZlIHBhY2tldHMg
+YWdhaW4uIERvIHlvdSBrbm93IHdoYXQgbWlnaHQgYmUgY2F1c2UgdGhpcz8gSXMgaXQgYmVjYXVz
+ZSB0aGUgbnVtYmVyIG9mIHF1ZXVlcyBhbmQgdGhyZWFkcyBhcmUgdG9vIG1hbnk/DQo+ICAgID4g
+Pj4NCj4gICAgPiA+PiAgICBUaGVyZSBpcyBub3QgdXBwZXIgbGltaXQgdG8gdGhlIGFtb3VudCBv
+ZiBxdWV1ZXMgYW5kIHRocmVhZHMgc3VwcG9ydGVkDQo+ICAgID4gPj4gICAgaW4gdGhlIEFGX1hE
+UCBjb2RlLiBZb3VyIE5JQyB3aWxsIGxpa2VseSBoYXZlIGEgbGltaXQgb24gdGhlIGFtb3VudCBv
+Zg0KPiAgICA+ID4+ICAgIHF1ZXVlcyB0aG91Z2guDQo+ICAgID4gPj4NCj4gICAgPg0KPiAgICA+
+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHlvdXIgdGlwcy4gQWZ0ZXIgc29tZSBkZWJ1Z2dpbmcs
+IEkgZm91bmQgb3V0IHRoYXQgaXQgaXMgYmVjYXVzZSBvZiBzb21lIGJ1Z3MgaW5pdGlhdGluZyB0
+aGUgYmNhY2hlLCB3aGljaCByZXN1bHRzIGluIHBvcnRzJyBwY2FjaGUgdHJhZGluZyBuZXcgc2xh
+YnMgZnJvbSB0aGUgYnBvb2wuDQo+DQo+ICAgIFBsZWFzZSBzdWJtaXQgdGhpcyBmaXggdG8gdGhl
+IGJwZi1leGFtcGxlcyByZXBvIHNvIG90aGVyIHBlb3BsZSBjYW4NCiAgICBiZW5lZml0IGZyb20g
+aXQgdG9vLg0KDQpTdXJlLCBsZXQgbWUgdmVyaWZ5IGl0IHRoaXMgYWxzbyBoYXBwZW5zIGZvciB0
+aGUgb3JpZ2luYWwgeHNrX2Z3ZCBwcm9ncmFtIGFzIHdlbGwsIGlmIHRoYXQncyBhbHNvIHRoZSBj
+YXNlLCBJIHdvdWxkIGNyZWF0ZSBhbiBpc3N1ZSBhbmQgc3VibWl0IGEgUFIgZm9yIGl0Lg0KPg0K
+PiAgICA+IEkgZml4ZWQgdGhhdCBhbmQgY29udGludWVkIHRlc3RpbmcsIG15IHRlc3QgaXMgdG8g
+cnVuIHNvbWUgaXBlcmZzIHRvIGdlbmVyYXRlIHRyYWZmaWMgdGhhdCBnb2VzIHRocm91Z2ggdGhl
+c2UgQUZfWERQIHNvY2tldHMuDQo+ICAgID4NCj4gICAgPiBUaGVyZSBpcyBvbmUgaW50ZXJlc3Rp
+bmcgYmVoYXZpb3I6IHRoZSBpcGVyZiB0cmFmZmljIHJ1bnMgZmluZSBhdCB0aGUgYmVnaW5uaW5n
+LiBIb3dldmVyLCBhZnRlciBzb21lIHRpbWUsIG1heWJlIDMwIHNlY29uZHMgb3IgMSBtaW51dGUs
+IHRoZSB0cmFmZmljIHN0b3BwZWQgYW5kIEkgZGlkbid0IHNlZSBhbnkgc29ja2V0cyByeC90eCBw
+YWNrZXRzKEkgYWRkZWQgc29tZSBsb2dzIHRoZXJlIGZvciBkZWJ1Z2dpbmcpLg0KPiAgICA+DQo+
+ICAgID4gVGhlIHByb2dyYW0gZGlkbid0IGNyYXNoLCBpdCBpcyBhcyBpZiB0aGVyZSdzIG5vIG5l
+dyB0cmFmZmljIGNvbWluZyB0byB0aGUgc29ja2V0cy4gSG93ZXZlciwgaWYgSSBzdG9wIHRoZSBp
+cGVyZnMgYW5kIGdpdmUgdGhlIHNvY2tldHMgYSBicmVhaywgc2F5IDEgb3IgMiBtaW51dGVzLCBh
+bmQgcmVzdGFydCB0aGUgaXBlcmZzLCB0aGUgc29ja2V0cyBhcmUgdXN1YWxseSBhYmxlIHRvIHJ4
+L3R4IHRyYWZmaWMgYWdhaW4sIHVudGlsIGl0IGRvZXNuJ3QuDQo+ICAgID4NCj4gICAgPiBJIHdv
+bmRlciBoYXZlIHlvdSBzZWVuIGFueXRoaW5nIGxpa2UgdGhpcyBiZWZvcmU/IEl0IGZlZWxzIGxp
+a2UgdGhhdCBJJ20gdmVyeSBjbG9zZSB0byBoYXZpbmcgYSBmdWxseSBydW5uaW5nIHByb2dyYW0s
+IGJ1dCBJJ20gc3R1Y2sgYXQgdGhpcyBzdGVwIGFuZCBJIGNhbid0IGZpZ3VyZSBvdXQgd2h5Lg0K
+Pg0KPiAgICBIYXZlIG5vdCBzZWVuIGFueXRoaW5nIGxpa2UgdGhpcy4gVENQIGlzIHNlbnNpdGl2
+ZSB0byBwYWNrZXQgbG9zcy4gQXJlDQo+ICAgIHBhY2tldHMgZHJvcHBlZCBpbiB5b3VyIHRlc3Qg
+cnVuPw0KPg0KDQpJJ20gbm90IHN1cmUgaWYgdGhhdCdzIHRoZSBjYXNlLCBpcyB0aGVyZSBhIHdh
+eSB0byBmaW5kIG91dD8gQWxzbywgd2hlbiB0aGUgdHJhZmZpYyBzdG9wcGVkLCBpdCB3YXNuJ3Qg
+b25seSBzdG9wcGVkIGZvciBUQ1AgdHJhZmZpYywgaXQgc2VlbXMgdG8gc3RvcCBmb3Igb3RoZXIg
+dHJhZmZpY3MsIHN1Y2ggYXMgcGluZy4gSG93ZXZlciwgYWZ0ZXIgYSB3aGlsZSwgaXQgd291bGQg
+cmVjb3ZlciBhbmQgSSB3b3VsZCBiZSBhYmxlIHRvIGRvIGlwZXJmL3BpbmcgYWdhaW4uDQoNCk9u
+ZSB0aGluZyBJIGZpbmQgaW50ZXJlc3RpbmcgaXMgdGhhdCwgd2hlbiB0aGVyZSdzIG9ubHkgMSBv
+ciAyIGlwZXJmcyBydW5uaW5nIGF0IHRoZSBzYW1lIHRpbWUsIGFuZCBlYWNoIG9mIHRoZW0gYXJl
+IGdldHRpbmcgfjMgdG8gNCBHYml0cy9zZWMgc3BlZWRzLCB0aGUgQUZfWERQIHNvY2tldHMgdGVu
+ZCB0byBzdG9wIHdvcmtpbmcgYXQgc29tZSBwb2ludC4gSG93ZXZlciwgaWYgSSBoYXZlIGEgbGFy
+Z2VyIG51bWJlciBvZiBpcGVyZnMgcnVubmluZywgc2F5IDEwLCBhbmQgZWFjaCBnZXR0aW5nIGxl
+c3Mgc3BlZWQoYSBsaXR0bGUgbGVzcyB0aGFuIDEgR2JpdHMvc2VjKSwgdGhlIEFGX1hEUCBzb2Nr
+ZXRzIHdvcmtzIHdpdGhvdXQgc3RvcHBpbmcuIFRoaXMgYmVoYXZpb3Igc3VycHJpc2VzIG1lLCBh
+cyB0aGUgY29tYmluZWQgdHJhZmZpYyB0aGF0IHRoZSBzb2NrZXRzIG5lZWRzIHRvIGhhbmRsZSBp
+cyBtb3JlICg5LlggR2JpdHMvc2Vjb25kIHYucyA3LnggR2JpdHMvc2Vjb25kKSwgIGJ1dCB0aGVy
+ZSdzIEFGX1hEUCBzb2NrZXRzIHdvcmtzIGZpbmUgaW4gbXkgZmV3IHRlc3RzLiBJIGd1ZXNzIEkg
+bmVlZCB0byBpbnZlc3RpZ2F0ZSBtb3JlIG9uIHRoaXMgaXNzdWUuDQoNCkFub3RoZXIgcXVlc3Rp
+b24gSSBoYXZlIGlzOiBJbiB0aGUgeHNrX2Z3ZC5jIGNvZGUsIGlzIHRoZXJlIGFueSByZWFzb24g
+d2h5IHRoZSBwb3J0X3BhcmFtc19kZWZhdWx0IGhhcyB0aGUgWERQX1VTRV9ORUVEX1dBS0VVUCwg
+YnV0IHRoZSBzYW1lIGZsYWcgaXNuJ3Qgc2V0IGZvciB0aGUgdW1lbV9jZmdfZGVmYXVsdD8gSSB3
+YXMgZGVidWdnaW5nIHRoZSB0cmFmZmljIHN0b3BwaW5nIGlzc3VlLCBhbmQgSSByZWFsaXplZCB0
+aGF0IHRoZSB1bWVtIGZpbGwgcXVldWUgZG9lc24ndCBuZWVkIHRvIHdha2UgdXAsIGFuZCB0aGUg
+dHggcXVldWUgZG9lcy4gSSB0cmllZCB0byBhZGQgdGhpcyBYRFBfVVNFX05FRURfV0FLRVVQIHRv
+IHRoZSB1bWVtX2NmZ19kZWZhdWx0IGJ1dCBpdCBjYXVzZXMgZmFpbHVyZSBmb3IgY3JlYXRpbmcg
+dW1lbS4gSXMgdGhlcmUgYW55IHdheSB0byB1c2UgdGhpcyBmbGFnIGZvciB0aGUgdW1lbSBxdWV1
+ZXMsIGRvZXMgaXQgYnJpbmcgYW55IHBlcmZvcm1hbmNlIGJlbmVmaXRzPw0KDQpUaGFuayB5b3Ug
+dmVyeSBtdWNoIGFuZCBoYXBweSBuZXcgeWVhciB0byB0aGUgY29tbXVuaXR5Lg0KUmlvDQoNCj4g
+ICAgPiBUaGFua3MgYWdhaW4gZm9yIHlvdXIgaGVscC4NCj4gICAgPg0KPiAgICA+ID4+ICAgID4g
+QW5vdGhlciBxdWVzdGlvbnMgaXMsIHNpbmNlIEknbSBub3QgdXNpbmcgcm91bmQgcm9iaW4gaW4g
+bXkgWERQIGNvZGUsIHRoZSB0cmFmZmljIGlzbid0IGRpc3RyaWJ1dGVkIGV2ZW5seSBhbW9uZyBt
+eSBxdWV1ZXMsIGl0IHNlZW1zIHRvIG1lIHRoYXQgMiBxdWV1ZXMgYXJlIGFsd2F5cyBnZXR0aW5n
+IG1vc3Qgb2YgdGhlIHRyYWZmaWMgYW5kIHRoZSBvdGhlcnMgYXJlIGdldHRpbmcgdmVyeSBsaXR0
+bGU6DQo+ICAgID4gPj4gICAgPg0KPiAgICA+ID4+ICAgID4gKy0tLS0tLSstLS0tLS0tLS0tLS0t
+LSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiAgICA+
+ID4+ICAgID4gfCBQb3J0IHwgICBSWCBwYWNrZXRzIHwgUlggcmF0ZSAocHBzKSB8ICAgVFggcGFj
+a2V0cyB8IFRYX3JhdGUgKHBwcykgfA0KPiAgICA+ID4+ICAgID4gKy0tLS0tLSstLS0tLS0tLS0t
+LS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiAg
+ICA+ID4+ICAgID4gfCAgICAwIHwgICAgICAgICAyMTEzIHwgICAgICAgICAgICAgMSB8ICAgICAg
+ICAgMjExMyB8ICAgICAgICAgICAgIDEgfA0KPiAgICA+ID4+ICAgID4gfCAgICAxIHwgICAgICAg
+ICAgICAwIHwgICAgICAgICAgICAgMCB8ICAgICAgICAgICAgMCB8ICAgICAgICAgICAgIDAgfA0K
+PiAgICA+ID4+ICAgID4gfCAgICAyIHwgICAgICAgICAgICAwIHwgICAgICAgICAgICAgMCB8ICAg
+ICAgICAgICAgMCB8ICAgICAgICAgICAgIDAgfA0KPiAgICA+ID4+ICAgID4gfCAgICAzIHwgICAg
+ICAgICAgNTY4IHwgICAgICAgICAgICAgMCB8ICAgICAgICAgIDU2OCB8ICAgICAgICAgICAgIDAg
+fA0KPiAgICA+ID4+ICAgID4gfCAgICA0IHwgICAgICAgICAyNTkwIHwgICAgICAgICAgICAgMSB8
+ICAgICAgICAgMjU5MCB8ICAgICAgICAgICAgIDEgfA0KPiAgICA+ID4+ICAgID4gfCAgICA1IHwg
+ICAgICAgICAgICAwIHwgICAgICAgICAgICAgMCB8ICAgICAgICAgICAgMCB8ICAgICAgICAgICAg
+IDAgfA0KPiAgICA+ID4+ICAgID4gfCAgICA2IHwgICAgICAgICAgICAwIHwgICAgICAgICAgICAg
+MCB8ICAgICAgICAgICAgMCB8ICAgICAgICAgICAgIDAgfA0KPiAgICA+ID4+ICAgID4gfCAgICA3
+IHwgICAgICAgICAgIDg1IHwgICAgICAgICAgICAgMCB8ICAgICAgICAgICA4NSB8ICAgICAgICAg
+ICAgIDAgfA0KPiAgICA+ID4+ICAgID4gKy0tLS0tLSstLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
+LS0tLS0rLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiAgICA+ID4+ICAgID4NCj4g
+ICAgPiA+PiAgICA+IEkgdW5kZXJzdGFuZCB0aGlzIGlzIG1haW5seSBiZWNhdXNlIEkgZG9uJ3Qg
+aGF2ZSByb3VuZCByb2JpbiBpbiBteSBYRFAgY29kZSwgYnV0IEkgd29uZGVyIHdoYXQgZGVjaWRl
+cyB3aGljaCBxdWV1ZSBnZXRzIHRoZSB0cmFmZmljPyBBbHNvLCBpZiByb3VuZCByb2JpbiB3b3Jr
+cywgZG9lcyBpdCBtZWFuIHRoYXQgd2hlbiBhIHBhY2tldCBhcnJpdmVzIGluIHRoZSBYRFAgaW4g
+cXVldWUgeCwgYW5kIHRoZW4gYmUgZm9yd2FyZGVkIHRvIGFuIEFGX1hEUCBzb2NrZXQgd2l0aCBx
+dWV1ZSB5LCB0aGUgcGFja2V0IHdpbGwgYmUgY29waWVkLCBhbmQgemVyby1jb3B5IHdvbid0IHdv
+cmsgaW4gdGhpcyBjYXNlPw0KPiAgICA+ID4+DQo+ICAgID4gPj4gICAgWW91ciBwYWNrZXQgZGlz
+dHJpYnV0aW9uIGFtb25nIHF1ZXVlcyBpcyBkZWNpZGVkIGJ5IHlvdXIgTklDIGFuZCB0aGUNCj4g
+ICAgPiA+PiAgICB0cmFmZmljIGl0IHJlY2VpdmVzLiBJdCBwcm9iYWJseSBoYXMgUlNTIGVuYWJs
+ZWQgYnkgZGVmYXVsdC4gWW91IGNhbg0KPiAgICA+ID4+ICAgIHByb2dyYW0gdGhlIE5JQyBmbG93
+IHN0ZWVyaW5nIHJ1bGVzIHVzaW5nIGV0aHRvb2wuIElmIHlvdSB3YW50DQo+ICAgID4gPj4gICAg
+c29tZXRoaW5nIHBlcmZlY3RseSBzcHJlYWQgYW1vbmcgdGhlIGNvcmVzLCB5b3UgcHJvYmFibHkg
+d2FudCB0byBoYXZlDQo+ICAgID4gPj4gICAgYSBzeW50aGV0aWMgd29ya2xvYWQgYW5kIGVuYWJs
+ZSBleHBsaWNpdCBmbG93IHN0ZWVyaW5nIHJ1bGVzIHRvDQo+ICAgID4gPj4gICAgYWNoaWV2ZSBw
+ZXJmZWN0IGNvbnRyb2wuIEdvb2dsZSBzb21lIGV4YW1wbGVzIGFuZCBleHBlcmltZW50IHdpdGhv
+dXQNCj4gICAgPiA+PiAgICB1c2luZyBYRFAsIGlzIG15IHRpcC4NCj4gICAgPiA+Pg0KPiAgICA+
+ID4+ICAgIFlvdSBjYW5ub3QgZGlyZWN0IHBhY2tldHMgY29taW5nIGluIG9uIHF1ZXVlIFggdG8g
+YSBzb2NrZXQgYm91bmQgdG8NCj4gICAgPiA+PiAgICBxdWV1ZSBZLCB0aGlzIHJlZ2FyZGxlc3Mg
+aWYgaXQgaXMgemVyby1jb3B5IG1vZGUgb3Igbm90LiBZb3UgYXJlDQo+ICAgID4gPj4gICAgY29y
+cmVjdCB0aGF0IHRoaXMgY291bGQgYmUgc3VwcG9ydGVkIGluIGNvcHktbW9kZSwgYnV0IGl0IGlz
+IG5vdC4NCj4gICAgPiA+Pg0KPiAgICA+ID4+ICAgID4gQWdhaW4sIHRoYW5rIHlvdSB2ZXJ5IG11
+Y2ggZm9yIHJlYWRpbmcgdGhpcyBhbmQgeW91ciBoZWxwLg0KPiAgICA+ID4+ICAgID4NCj4gICAg
+PiA+PiAgICA+IFJpbw0KPiAgICA+ID4+ICAgID4NCj4gICAgPiA+PiAgICA+ID4gICAgPiBUaGFu
+ayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIGhlbHAgYW5kIHRpbWUuDQo+ICAgID4gPj4gICAgPiA+
+ICAgID4gUmlvDQo+ICAgID4gPj4gICAgPiA+ICAgID4NCj4gICAgPiA+PiAgICA+ID4gICAgPg0K
+PiAgICA+ID4+ICAgID4gPiAgICA+IEZyb206IFpoYW94aSBaaHUgPHp6aHVAZnV0dXJld2VpLmNv
+bT4NCj4gICAgPiA+PiAgICA+ID4gICAgPiBEYXRlOiBNb25kYXksIERlY2VtYmVyIDEyLCAyMDIy
+IGF0IDExOjA2IEFNDQo+ICAgID4gPj4gICAgPiA+ICAgPiBUbzogTWFnbnVzIEthcmxzc29uIDxt
+YWdudXMua2FybHNzb25AZ21haWwuY29tPg0KPiAgICA+ID4+ICAgID4gPiAgICA+IFN1YmplY3Q6
+IFJlOiBJcyBJdCBQb3NzaWJsZSB0byBSWC9Qcm9jZXNzL1RYIHBhY2tldHMgY29uY3VycmVudGx5
+IHdpdGggQUZfWERQPw0KPiAgICA+ID4+ICAgID4gPiAgICA+DQo+ICAgID4gPj4gICAgPiA+ICAg
+ID4gR290IGl0LCB0aGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIGNsYXJpZmljYXRpb24uDQo+
+ICAgID4gPj4gICAgPiA+ICAgID4NCj4gICAgPiA+PiAgICA+ID4gICAgPiBJIGhhdmUgb25lIG1v
+cmUgcXVlc3Rpb24sIGlmIEkgbWF5OiBJZiBvbmUgQUZfWERQIHNob3VsZCBiZSBoYW5kbGVkIGJ5
+IG9uZSB0aHJlYWQsIGluIG9yZGVyIHRvIGF2b2lkIG11dGV4ZXMgYW5kIHRvIGFjaGlldmUgYmV0
+dGVyIHBlcmZvcm1hbmNlLCB0aGVuLCBjYW4gSSBoYXZlIG1vcmUgdGhhbiBvbmUgQUZfWERQIHNv
+Y2tldCBvbiB0aGUgc2FtZSBwaHlzaWNhbCBOSUMsIGFuZCB1c2Ugb25lIHRocmVhZCBwZXIgQUZf
+WERQIHNvY2tldCwgaW4gb3JkZXIgdG8gbWFrZSBwcm9jZXNzIHBhY2tldHMgY29taW5nIGludG8g
+dGhpcyBOSUMgY29uY3VycmVudGx5Pw0KPiAgICA+ID4+ICAgID4gPiAgICA+DQo+ICAgID4gPj4g
+ICAgPiA+ICAgPiBDdXJyZW50bHksIHRoZSB3YXkgd2UgYXJlIHRlc3RpbmcgQUZfWERQIHdpdGgg
+aXMgdG8gaGF2ZSBvbmx5IDEgcXVldWU6DQo+ICAgID4gPj4gICAgPiA+ICAgID4NCj4gICAgPiA+
+PiAgICA+ID4gICAgPiBgYGANCj4gICAgPiA+PiAgICA+ID4gICAgPiBzdWRvIGV0aHRvb2wgLUwg
+PGludGVyZmFjZT4gY29tYmluZWQgMQ0KPiAgICA+ID4+ICAgID4gPiAgICA+IGBgYA0KPiAgICA+
+ID4+ICAgID4gPiAgICA+DQo+ICAgID4gPj4gICAgPiA+ICAgID4gQ2FuIEkgY2hhbmdlIHRoZSBu
+dW1iZXIgb2YgcXVldWVzIHRvIHNvbWV0aGluZyBsaWtlIDQsIGFuZCB0aGUgdXNlciBzcGFjZSBw
+cm9ncmFtLCAgaGF2ZSBvbmUgQUZfWERQIHNvY2tldCBwZXIgcXVldWUgYW5kIG9uZSB0aHJlYWQg
+cGVyIEFGX1hEUCBzb2NrZXQsIGluIG9yZGVyIHRvIGhhdmUgZm91ciB0aHJlYWRzIHByb2Nlc3Np
+bmcgdHJhZmZpYyBjb21pbmcgaW50byB0aGUgc2FtZSBOSUM/DQo+ICAgID4gPj4gICAgPiA+ICAg
+ID4NCj4gICAgPiA+PiAgICA+ID4gICAgPiBUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB5b3VyIGhl
+bHAgYW5kIHRpbWUuDQo+ICAgID4gPj4gICAgPiA+ICAgID4gUmlvDQo+ICAgID4NCg0K
