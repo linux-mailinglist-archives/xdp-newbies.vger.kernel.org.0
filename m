@@ -2,58 +2,72 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA66765F9DE
-	for <lists+xdp-newbies@lfdr.de>; Fri,  6 Jan 2023 04:02:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABC726600E5
+	for <lists+xdp-newbies@lfdr.de>; Fri,  6 Jan 2023 14:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231777AbjAFDB7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 5 Jan 2023 22:01:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        id S234646AbjAFNBg (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 6 Jan 2023 08:01:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231719AbjAFDBQ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 5 Jan 2023 22:01:16 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3741B9C2
-        for <xdp-newbies@vger.kernel.org>; Thu,  5 Jan 2023 19:00:57 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id f20so320850lja.4
-        for <xdp-newbies@vger.kernel.org>; Thu, 05 Jan 2023 19:00:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=e2J7DLVF2+bonPg5Z9tTgHFzcTk0M84FeJpMJsh7c3A=;
-        b=fdhbGW1+XFlHK9BfqDC3jW0kGTuXBI1JkfQNRbhKq403V9/22K23+KDejp/cWD8X72
-         lgLrruzfx8PuP7B5bBB4KCdTl8Fj4W/aNg6+II/mz+rtaHCo2MZPeU5uTAlMGfNfm+ip
-         kg/cb/ufkwGGsZpngksumY479PDguRWaiqgUqm3ulWaennZo6VZXPHypaOKIXcUojX/q
-         ekRlO4zqzC2g7ldegeeLkGNPHkOaGk8zatXaRO8LhCuVKCJSXHBf3db8WHE5m0BLSlTD
-         aajJD53EW27M2r1BrRvoFDL69bCgxhSTCyoBQvUWefaGX/CeFNBOZr9l4h2feaTa9wjf
-         i3fg==
+        with ESMTP id S234704AbjAFNBT (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Fri, 6 Jan 2023 08:01:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307986F958
+        for <xdp-newbies@vger.kernel.org>; Fri,  6 Jan 2023 05:00:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673010037;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=I/nqiQg1O3VEjIezoapTkEfZWICI8ZrsoB9Bb7JM6rM=;
+        b=IPn/DqyBwGx6Ah2OzbxOqAKFOiWBdD69o/GaXvRIk+6AJ8tAauJyxPLXPql9okAiY6hIID
+        go5mYr45JvT6fMBj6/hoF0r1nsBgd5O4IGjTQRTNMJqRVq6Z7t8YIZGE2t3vdUnFFZYACQ
+        Msfkjl8xuUgTIm0u2p8Fa0RhIJsDLic=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-440-vXQzVav_NcW4zZJMv2UDxQ-1; Fri, 06 Jan 2023 08:00:36 -0500
+X-MC-Unique: vXQzVav_NcW4zZJMv2UDxQ-1
+Received: by mail-ed1-f69.google.com with SMTP id s13-20020a056402520d00b0046c78433b54so1177987edd.16
+        for <xdp-newbies@vger.kernel.org>; Fri, 06 Jan 2023 05:00:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e2J7DLVF2+bonPg5Z9tTgHFzcTk0M84FeJpMJsh7c3A=;
-        b=MoS4mf1nHfk8aL4v6C94Mpt3APd7RIhS/bmnBu4yLTXj+3mJEUGrA1l1hoUe4UFwNM
-         3G8Wr4C548ulSzYe9cd/kEdsVSTAs/SpqZbYlRMTJJsVxVgE4ppnK86aAi79DwkWoyQE
-         cX9en5bxnTmw3iGR+tSg/d/CJrh402oSi4SI6G3Vus+o1fxXGE4iFfTSdgxOBXranI2d
-         M0VI6lDyD7KQb4IeEfPuOm5/Y8/+R3+Dr0D/1wYcM9nfe52MILpd25xwaWZdARdG5Tha
-         DU+NIdfmnCE+MI32219JFEGjY4VrrlJEMqfKKEBuTvDyOW2A2p8BX5cQCKWFZNcTtktr
-         qUCA==
-X-Gm-Message-State: AFqh2kpSokKnPswYTJhu8h8KYCDpOFOzQ6MF2C0KS7cwry3CTXl9D6lp
-        OmffctZhe6bn+V46sETmTkprBBelmTg1YQKpkZ3ytYFA
-X-Google-Smtp-Source: AMrXdXt4IiNT2myqw1bHsfhnorpPYgm/uyST01L6uqkwvi9/Tsik0LLd5qpLaSK8TSzsEVC/LKaiUjAW5/7nSHHW5PI=
-X-Received: by 2002:a2e:9805:0:b0:27f:c51a:a069 with SMTP id
- a5-20020a2e9805000000b0027fc51aa069mr2323599ljj.487.1672974056101; Thu, 05
- Jan 2023 19:00:56 -0800 (PST)
+        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I/nqiQg1O3VEjIezoapTkEfZWICI8ZrsoB9Bb7JM6rM=;
+        b=j3+Fni6Topf/VgWcCJYOJMYj0M/F1hdhZefpRvAHX16PW+wSKcdFgBtHWRxpX8FvaK
+         yHsRIbpmAcRx00C8ccsaRzTLGztMeK/awxKKr/1WPzZ2uyVf304jtV2kMfLUsqXStTKY
+         +SbdoGiqnRrRLpCMlP9Zep5B2VxgeAHPpIDwJcF83Cy2K6SIrOEesjtZ5QLFZOVjbuJx
+         IBLPCuCSmq+HUpS+TF9ql4jht4JeCH+s3jeoASGsC4HJTuIl7MvdEp395fq1IX7Koxqi
+         h09bBkpKb7BVW5k+SUqwvv2i9o3dxTFijXmpr6jra7mLpFTx1KoILAL+2xBV+19ulqPl
+         vh/w==
+X-Gm-Message-State: AFqh2koy2y1Rj3lf1iTnz6N+5c0PSwoIJrWMAjtanDeFuIXcZmW1OuvU
+        esifPrHF8RvgBBvi97wTvq4yGJjc2uLVoLImTbeJapQLDVAYgyb3YDI1vjM5PwL1Pj6FKq95Z2W
+        Mo3JR/ttDtlzm/AvCxx3WAJE=
+X-Received: by 2002:a05:6402:3706:b0:472:9af1:163f with SMTP id ek6-20020a056402370600b004729af1163fmr48924176edb.37.1673010034476;
+        Fri, 06 Jan 2023 05:00:34 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXvZHTzT+ZKzd13sug/2sfOC8boZIwhMJmPFtu2hAVjhjaDvG1j9kVazPlM9GyuhQ96rukTRpg==
+X-Received: by 2002:a05:6402:3706:b0:472:9af1:163f with SMTP id ek6-20020a056402370600b004729af1163fmr48924162edb.37.1673010034083;
+        Fri, 06 Jan 2023 05:00:34 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id bc25-20020a056402205900b0046b00a9eeb5sm481210edb.49.2023.01.06.05.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jan 2023 05:00:33 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id CDF778DA0AF; Fri,  6 Jan 2023 14:00:32 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     team lnx <teamlnxi8@gmail.com>, xdp-newbies@vger.kernel.org
+Subject: Re: Pause and unpause queue
+In-Reply-To: <CAOLRUnCA-D-P4FQiHTGXypXRv+O+rRg2Pe4z=0Zz6hCDZkG=vw@mail.gmail.com>
+References: <CAOLRUnCA-D-P4FQiHTGXypXRv+O+rRg2Pe4z=0Zz6hCDZkG=vw@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 06 Jan 2023 14:00:32 +0100
+Message-ID: <87sfgnzukv.fsf@toke.dk>
 MIME-Version: 1.0
-From:   team lnx <teamlnxi8@gmail.com>
-Date:   Thu, 5 Jan 2023 19:00:44 -0800
-Message-ID: <CAOLRUnCA-D-P4FQiHTGXypXRv+O+rRg2Pe4z=0Zz6hCDZkG=vw@mail.gmail.com>
-Subject: Pause and unpause queue
-To:     xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,10 +75,21 @@ Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello everyone,
+team lnx <teamlnxi8@gmail.com> writes:
 
-1. Is there a way to pause/unpause queue ?
-2.  Is QoS (work in progress for XDP) ? Can we use work in progress
-series if  there exists any ?
+> Hello everyone,
+>
+> 1. Is there a way to pause/unpause queue ?
+> 2.  Is QoS (work in progress for XDP) ? Can we use work in progress
+> series if  there exists any ?
 
-Thanks !
+XDP has no pushback from the driver at all, nor any way to queue
+packets. I am planning to add this, see this presentation at LPC last
+year:
+
+https://lpc.events/event/16/contributions/1351/
+
+Could you elaborate a bit on what your use case is, specifically? :)
+
+-Toke
+
