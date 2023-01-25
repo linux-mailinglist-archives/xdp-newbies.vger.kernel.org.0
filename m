@@ -2,34 +2,33 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EBF666BB13
-	for <lists+xdp-newbies@lfdr.de>; Mon, 16 Jan 2023 11:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D390B67ACCC
+	for <lists+xdp-newbies@lfdr.de>; Wed, 25 Jan 2023 09:49:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjAPKA2 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 16 Jan 2023 05:00:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49038 "EHLO
+        id S235027AbjAYIt1 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 25 Jan 2023 03:49:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjAPKAY (ORCPT
+        with ESMTP id S235456AbjAYItP (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 16 Jan 2023 05:00:24 -0500
-X-Greylist: delayed 363 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 16 Jan 2023 02:00:22 PST
+        Wed, 25 Jan 2023 03:49:15 -0500
 Received: from mail.celldrum.pl (mail.celldrum.pl [192.71.213.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4918317CD3
-        for <xdp-newbies@vger.kernel.org>; Mon, 16 Jan 2023 02:00:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B1F54207
+        for <xdp-newbies@vger.kernel.org>; Wed, 25 Jan 2023 00:47:42 -0800 (PST)
 Received: by mail.celldrum.pl (Postfix, from userid 1001)
-        id BA9B241DCB; Mon, 16 Jan 2023 10:53:36 +0100 (CET)
+        id 4BE1C41ECE; Wed, 25 Jan 2023 09:47:28 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=celldrum.pl; s=mail;
-        t=1673862856; bh=L9MaVcgJQNU45xvlWi+RdqvfUk7sPEb4wFjeNQOGJzM=;
+        t=1674636457; bh=L9MaVcgJQNU45xvlWi+RdqvfUk7sPEb4wFjeNQOGJzM=;
         h=Date:From:To:Subject:From;
-        b=kWbceJoaBVCZ1ClSjrLtHrvmi5QkpGbmnIg8IEiRXtd9jJ37vDQgO7wSY4B2AzPQK
-         AEjp6iWaBnAWUE9xJa3j1uxgxez+/ignEwLAIcMnaMTQ72fvRMtCcK/s47jNtRUpkR
-         oOGlBT9l3l+77ePkxgbbjePfU6bD3G5pGyexv9XjAkvJ1Z9AFvmr2FTjSuB8gsSpAO
-         nMKczJ/6DEz+3RrlLK21V2HX9US4WEpTEqP+W+27qdcfeZ/eraBioGbB1bVuEIloxt
-         LIJ/uAoGRnPUaPSNR9RE06GkjZqCKIDoweagBikdTr6LkMji4obiuBLPF2RH+z+4zi
-         5KnZkuP5RIFUQ==
-Received: by mail.celldrum.pl for <xdp-newbies@vger.kernel.org>; Mon, 16 Jan 2023 09:52:15 GMT
-Message-ID: <20230116105158-0.1.5m.7h1h.0.ups9c07f6d@celldrum.pl>
-Date:   Mon, 16 Jan 2023 09:52:15 GMT
+        b=nDmNUUSNgGs7iBtGe5W0rh9PfjzAAr08FeZZIc1MHYtw1srZQ61cDI3CW/U1Wv/ZK
+         nazHD3GN5h115i4g7ZEquOmlCQB9kOFBVo97ZeXhFHupj3pCewrxVl2zqSYV2NkCAB
+         ANb4dLizEJ14YCsLG+9aJDhXZt69gt/dYBtgbadwD1kN7//5eqN4i0ZaHK2yKXHgI1
+         wqO5mYEg3LAHtAxGtFLS1l2xeY3FPWJNcdoIEHQFGMcA7NoN1KDGBTAvZbTfiDdruL
+         SjGqjJBdqFw9nGPiLLRZpMGrhMihXRQkce0nLMR6GJ7hpSXKlRmowAkVN1/Z1tBm2v
+         GsjY8O1tS8wEQ==
+Received: by mail.celldrum.pl for <xdp-newbies@vger.kernel.org>; Wed, 25 Jan 2023 08:47:13 GMT
+Message-ID: <20230125084505-0.1.5t.auvb.0.mhk3v78b9n@celldrum.pl>
+Date:   Wed, 25 Jan 2023 08:47:13 GMT
 From:   =?UTF-8?Q? "Pawe=C5=82_Kamieniecki" ?= 
         <pawel.kamieniecki@celldrum.pl>
 To:     <xdp-newbies@vger.kernel.org>
@@ -38,10 +37,9 @@ X-Mailer: mail.celldrum.pl
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         URIBL_ABUSE_SURBL autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
