@@ -2,63 +2,68 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70756BC947
-	for <lists+xdp-newbies@lfdr.de>; Thu, 16 Mar 2023 09:38:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 485E26BDB0C
+	for <lists+xdp-newbies@lfdr.de>; Thu, 16 Mar 2023 22:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjCPIiD (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 16 Mar 2023 04:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51884 "EHLO
+        id S229629AbjCPVfH (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 16 Mar 2023 17:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjCPIiC (ORCPT
+        with ESMTP id S229534AbjCPVfG (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 16 Mar 2023 04:38:02 -0400
-X-Greylist: delayed 343 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Mar 2023 01:38:00 PDT
-Received: from mail.craftsplex.pl (mail.craftsplex.pl [162.19.155.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656145FEC
-        for <xdp-newbies@vger.kernel.org>; Thu, 16 Mar 2023 01:38:00 -0700 (PDT)
-Received: by mail.craftsplex.pl (Postfix, from userid 1002)
-        id 9FD4D23B63; Thu, 16 Mar 2023 08:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=craftsplex.pl;
-        s=mail; t=1678955528;
-        bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
-        h=Date:From:To:Subject:From;
-        b=zNTNL6m/LoViT2qAEsGTsZpCDac3dYDI1aq3DzljOpfaPlwsX5g0F+cnGZKYXU+RR
-         +qM5CXJTMQNyFfX+XP1AyYLJrmyrVLg281WJ/TtdZ9odvFj5LVGj8FaQOOZiZmDDZd
-         IVBJwFYB5EGiX8eYCBX3oe02Q6+PEBVeq8lL4aNvn9hDVsDvRK5bA5d9zsXpJFCjWx
-         DtyXF+mvd+UqYfiogNTxMnWFNGkR73moItnr1I6uy5Hh/Pj/hy4mMyeb+fBLCgW0hc
-         6lr6nf2y0WlluKe7I/J7BqtqZiTIQyzOb9BZYWPcHbmJcMKuvH3eWskIdMuYbx47jF
-         CJDQMDnxk5+aA==
-Received: by mail.craftsplex.pl for <xdp-newbies@vger.kernel.org>; Thu, 16 Mar 2023 08:31:07 GMT
-Message-ID: <20230316074500-0.1.4y.i70z.0.c7z5a9wm7u@craftsplex.pl>
-Date:   Thu, 16 Mar 2023 08:31:07 GMT
-From:   "Kamil Tralewski" <kamil.tralewski@craftsplex.pl>
-To:     <xdp-newbies@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.craftsplex.pl
+        Thu, 16 Mar 2023 17:35:06 -0400
+Received: from sragenkab.go.id (mail.sragenkab.go.id [103.172.109.4])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 337812917D
+        for <xdp-newbies@vger.kernel.org>; Thu, 16 Mar 2023 14:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sragenkab.go.id;
+         h=mime-version:content-type:content-transfer-encoding:date:from
+        :to:subject:reply-to:message-id; q=dns/txt; s=dkim1; bh=QGcIAmD5
+        O/Y9qXzDV8MxyimbsW3+rMaQ/kz75GzBHbk=; b=qaxj4dUxOVFwqa1ijOXiOM+h
+        DAyYzgD/heliEQc0iqereYdrwE0IbwRbmNf4Vy//1IQnKnuhmBCmz4cCYCSnEHMm
+        NLPLwpXF6fdM5BFbrcE0Zt4HbXg0P/yx9ySN9xe3vUJwvvmS0FI2cBzPYLmRA5La
+        YI76/Xl/upU0llabR+T8N0Q8RhMWEkA9lEZBHrkn2zyDGy2iSvW073HUM/SVRNNI
+        ic3umxZSJ4KiH2xm2u8ePVY5Fzl3ambUfduOI2EzZLFDAP3B6oQ+uyaoSeNSJtYL
+        lf4raskS0m1HYGPstPr9FaAZlwMRqHZ2niKV3/ub+1e1o4rJU1q05Mj1UYiZjA==
+Received: (qmail 67778 invoked from network); 15 Mar 2023 02:20:46 -0000
+Received: from localhost (HELO mail2.sragenkab.go.id) (127.0.0.1)
+  by localhost with SMTP; 15 Mar 2023 02:20:46 -0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Mar 2023 19:20:45 -0700
+From:   Ibrahim Tafa <jurnalsukowati@sragenkab.go.id>
+To:     undisclosed-recipients:;
+Subject: LOAN OPPORTUNITY AT LOW-INTEREST RATE.!
+Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Mail-Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Message-ID: <eedb6b710f8a180efdaef8c4f58a4c4c@sragenkab.go.id>
+X-Sender: jurnalsukowati@sragenkab.go.id
+User-Agent: Roundcube Webmail/0.8.1
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        SUBJ_ALL_CAPS,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Dzie=C5=84 dobry,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+-- 
+Greetings,
+   I am contacting you based on the Investment/Loan opportunity for 
+companies in need of financing a project/business, We have developed a 
+new method of financing that doesn't take long to receive financing from 
+our clients.
+    If you are looking for funds to finance your project/Business or if 
+you are willing to work as our agent in your country to find clients in 
+need of financing and earn commissions, then get back to me for more 
+details.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
-
-Pozdrawiam
-Kamil Tralewski
+Regards,
+Ibrahim Tafa
+ABIENCE INVESTMENT GROUP FZE, United Arab Emirates
