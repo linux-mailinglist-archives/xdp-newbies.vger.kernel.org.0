@@ -2,94 +2,93 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 007B86ED54C
-	for <lists+xdp-newbies@lfdr.de>; Mon, 24 Apr 2023 21:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AC876F13A1
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Apr 2023 10:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbjDXTXM (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 24 Apr 2023 15:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37778 "EHLO
+        id S1345452AbjD1Ixt (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 28 Apr 2023 04:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232670AbjDXTXE (ORCPT
+        with ESMTP id S1345607AbjD1Ixc (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 24 Apr 2023 15:23:04 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D7CF6EBA;
-        Mon, 24 Apr 2023 12:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References;
-        bh=7yqMz6dS/0GILuAnJ+Bw+7l2gpqpGz2ORupHC3iMp7g=; b=Udci7HXQo5Z06+JGryPD826NnV
-        4KHAviN35/kVbULrsH2ITkkI8qbaxejQXlubCdG2bGjuBJW1k+DU8bkSzpDbaq2KKRl2jNEMMeyCM
-        Z4otWX9AzD26rvexAy+93Cq1NKuKn07+egoTVvBjM1HrqqNae8xTbcRqBda/eCZCZX1gdabFYEyef
-        aJ1PE6Lu0nhYEUoyIhXcOZEuwY30hOMLLh9jDXQuNkv9VZxf+H4AnlLObPAnh2or8/0/uP7syO6IH
-        k1tM8LQo6tk8Vg3JrEzDxeHDNMBgSa/d2ryMmh2Ry+ecYcN6NWzck/IiCkTQU6n7NhmwxPr3l9L6I
-        RWzmSGKQ==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pr1m3-0005db-97; Mon, 24 Apr 2023 21:22:55 +0200
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pr1m3-0007lP-1F; Mon, 24 Apr 2023 21:22:55 +0200
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     xdp-newbies@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Subject: LPC 2023 Networking and BPF Track CFP
-Message-ID: <1515db2c-f517-76da-8aad-127a67da802f@iogearbox.net>
-Date:   Mon, 24 Apr 2023 21:22:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 28 Apr 2023 04:53:32 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2749D6183
+        for <xdp-newbies@vger.kernel.org>; Fri, 28 Apr 2023 01:52:57 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6a5f03551fdso7200372a34.0
+        for <xdp-newbies@vger.kernel.org>; Fri, 28 Apr 2023 01:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682671960; x=1685263960;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FVU03kRNS3s05bMbtN2tGD02CLGjL7t7hvMi1z7794Q=;
+        b=H4OlYDM/9uPLri13FjKg40DHGaczSKGeixs4Z/Yno87Y64uGpHypwsd7ktd3Z4cCJh
+         EjT70MpH8OhsvRqId3SOc7//BMwp52xMKcI2zcCzSjbLihyJzKaGRfJQ+5iL9TFZT4MG
+         7TKh3RUfyGAmhblMr2tigLtdDL+yVl9U/nSBpYx7hnsS0KFqDsqIw/lhC/xyyq5mBaz8
+         LZclvUdG7VNmbtNuNbhq6wa6Rb9W8jVBVm6c30/JD7wUcYbpQw53WSWegGo9RANTWZOI
+         QTILoBoGmGI9qcI5q7GKXH5Y4v1qE34hzuTqLESBZzshIF9LKSdkYwiSOK7HPuy5xcy+
+         lxJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682671960; x=1685263960;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FVU03kRNS3s05bMbtN2tGD02CLGjL7t7hvMi1z7794Q=;
+        b=ULtsT3tetnKVGvXbEUfXqh4TFFWwTUYFSYfBtOjqz8tOPXwX0ldp7xIwwimWZQ07If
+         KZmonql1z8ZPZi7eLiA0CzsiKxgGVV7QGJ+PBFMhK4beZGL2dzZ8guQm/U38+fJcfnH7
+         nkzHaCUMxbK2XLAX8kdGV8u/XI2pwgYxbGgp/7yqDK9RX0G46rfi0zyNriAuWHcFhE3a
+         +Yl8Q5UYhjJAF5UNG5QZNicLhZD2CLlwoqEZAvBBJBnz7djcIdSQ1EpN1Yh5YzSz3foK
+         lTpYhc8INCDfvcR0sRSa+uKGq6N/YfewXiO89rF9Y8BGD9Z7RA2e6Y1GGVMPyLqAzd0X
+         9KAg==
+X-Gm-Message-State: AC+VfDwPPpr2Cj7X1d81iGKuYEfK2efZIkl5YmI01vUWWQJtZQ5kaFll
+        ysAlIE4OrZ5wXJUWeiQNtcB1nf9FvSSgLyNjYOfDkw+Q6trNLw==
+X-Google-Smtp-Source: ACHHUZ7Kb1MR8sWuSl+7LJEN/oniweRJhlqUn97bgKi3Hqe1PzQoO3550JTZzwrncWKrrl0u8ZU0nKhHsAt9irVM2AQ=
+X-Received: by 2002:aca:2212:0:b0:38c:66d3:67bf with SMTP id
+ b18-20020aca2212000000b0038c66d367bfmr2006745oic.4.1682671960023; Fri, 28 Apr
+ 2023 01:52:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26886/Mon Apr 24 09:25:10 2023)
+Reply-To: ctxspi@gmail.com
+From:   Marco <ctxspi@gmail.com>
+Date:   Fri, 28 Apr 2023 11:55:17 +0200
+Message-ID: <CAAVAo4MCYB9LKeDVJ=5Eaiy2gJ00bEvbvnE6PzQEc=U67WPQ4A@mail.gmail.com>
+Subject: Ebpf map question
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-We are pleased to announce the Call for Proposals (CFP) for the Networking and
-BPF track at the 2023 edition of the Linux Plumbers Conference (LPC) which is
-taking place in Richmond, VA, United States, on November 13th - 15th, 2023.
+Hi
 
-Note that the conference is planned to be both in person and remote (hybrid).
-CFP submitters should ideally be able to give their presentation in person to
-minimize technical issues, although presenting remotely will also be possible.
+Assuming to have this struct:
 
-The Networking and BPF track technical committee consists of:
+struct hash_elem {
+    int cnt;
+    };
 
-    David S. Miller <davem@davemloft.net>
-    Jakub Kicinski <kuba@kernel.org>
-    Paolo Abeni <pabeni@redhat.com>
-    Eric Dumazet <edumazet@google.com>
-    Alexei Starovoitov <ast@kernel.org>
-    Daniel Borkmann <daniel@iogearbox.net>
-    Andrii Nakryiko <andrii@kernel.org>
-    Martin Lau <martin.lau@linux.dev>
+and kernel space program want read cnt value:
 
-We are seeking proposals of 30 minutes in length (including Q&A discussion). Any
-kind of advanced Linux networking and/or BPF related topic will be considered.
+struct hash_elem *val = bpf_map_lookup_elem(&hash_map, &key);
 
-Please submit your proposals through the official LPC website at:
+    if (val)
+   {
 
-    https://lpc.events/event/17/abstracts/
+# time fraction
 
-Make sure to select "eBPF & Networking Track" in the track pull-down menu.
+    bpf_printk("My value %d", val->cnt);
+    }
 
-Proposals must be submitted by September 27th, and submitters will be notified
-of acceptance by October 2nd. Final slides (as PDF) are due on the first day of
-the conference.
+What happens if the hash_map is a pinned map and in the same time
+space of 'time fraction" a user program deletes the element of the
+key?
+What happen at val pointer?
 
-We are very much looking forward to a great conference and seeing you all!
+
+Thanks.
+
+Marco
