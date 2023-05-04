@@ -2,53 +2,53 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0226F70FC
-	for <lists+xdp-newbies@lfdr.de>; Thu,  4 May 2023 19:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 773A36F7135
+	for <lists+xdp-newbies@lfdr.de>; Thu,  4 May 2023 19:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbjEDRf7 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 4 May 2023 13:35:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34830 "EHLO
+        id S229671AbjEDRjT (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 4 May 2023 13:39:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEDRf6 (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 May 2023 13:35:58 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE08940CF
-        for <xdp-newbies@vger.kernel.org>; Thu,  4 May 2023 10:35:56 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4f00d41df22so11625737e87.1
-        for <xdp-newbies@vger.kernel.org>; Thu, 04 May 2023 10:35:56 -0700 (PDT)
+        with ESMTP id S229470AbjEDRjP (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Thu, 4 May 2023 13:39:15 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C296A5FE6
+        for <xdp-newbies@vger.kernel.org>; Thu,  4 May 2023 10:38:39 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2ac770a99e2so9285841fa.3
+        for <xdp-newbies@vger.kernel.org>; Thu, 04 May 2023 10:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683221755; x=1685813755;
+        d=gmail.com; s=20221208; t=1683221910; x=1685813910;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=QJChVOUgE7/YqZzrEYlFu/bQja0RuhvRqEqYFgLcEfM=;
-        b=EwYvitvwJWd5XIi75dQtFLYPMRFIizAa1RvuwQu0FYy8qsEIr4T18X/s3zFaabJOSa
-         udoYh7g/NUlYldMwUyKaRD0YJU2l8Siwxz7/AsOhlfsVaZsG2h4PJnUkjNgQsAHht872
-         KyMsXbBIW4gasyybRPAZW0CdYY5+FK2WgNwUCQAM0tLcRzTQTowsf3qNuMrnatR1FyHa
-         RyluvGVO/xbQ2fVO2Nzlu/yeF5gW33TCMAnma80FlBqom85Lb3/a/eS+TfcEADdHhbJt
-         RgEcKdXjDBgNnvcGwYdE+0xTS9tEW3ekcfcWjxfTLs0/ykRcQHI7OLMpWazfcfLYXpwf
-         5yZw==
+        bh=e/U2FsRAABcYvDrg9qeQvqxqaubdM5gWSSkhYZVJEMM=;
+        b=crQgcTkgibaCRmG3vdxRDkmKOahAWFSXobQJoaz9VnNnPmSVBHi0RQhfaxNf6jsKUp
+         bSVkuc+8iWLGHXiiTR+8JkV309Qww9CxdA9njNQgrZYiGTl2zJ2X/T8/BUgG7KOaecxJ
+         uERd2gldm2fxUHdcRFOWJuTdm0PKyxzNaK5ci+ihcT+cc4rW6Bi+8Hj+3Oe8/xPIVdH1
+         FE40JoNimtbp19gs23wpCVJ7yxLusFJJuoL0yO0Ulpr9u6yA9VHqyM9mE9N3mB9hZsbD
+         rSX//1uW94GbVirpaCQHEVKZnFru+DRUr28AiLDXRaVDISK5aF74OWyMPccBxjm4Zf9M
+         UBzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683221755; x=1685813755;
+        d=1e100.net; s=20221208; t=1683221910; x=1685813910;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QJChVOUgE7/YqZzrEYlFu/bQja0RuhvRqEqYFgLcEfM=;
-        b=AinKR0I45j3uToVJpj+TQzUxHrH6TLWMAz6vAxYR3DAjqw9t+SOeouaIJikYQr/A8k
-         zXoOMUixoG2K9+ys51pIVQqbvr88nX6LDMLcU2jcH0Pa5Xot5kz+u+I4ObtmKq3uYati
-         iFdm3cC3PgL1E11oV6vuc3uQy0ndj6k4LvCKq46fRj6dSfUAx+hI+JrR5T33zR4OjOwV
-         phELJwre1yK1H1srrHayGSUh6Imj/KUH4zn3xgWI7+sSrDlHJtIRg+nyMQ9TiH8GEaaH
-         VqEbE51d0QvFmeN6ZQb6+q3yE8ik0Wf28j8dGdtlYsmMUSVnH2hqxt72pkDVgc7vP5OF
-         vRfw==
-X-Gm-Message-State: AC+VfDzfxLqw4UI3ODU5nlWxsiDWqrL6sehIehHEuumCbb4Cbz4KsLeU
-        m0iYzLFuODq+fqDYy2ukGCi5gskIzKxVKArI3og9tyXvif6MiA==
-X-Google-Smtp-Source: ACHHUZ7KNsGyVvWpQW/CHkbbVHq/o8jEwDMdBVWGHy3K/WhGAaYQx4qz/H0nNtSE8bMUZzRzVxiIeyIXuO4tqr0dIrU=
-X-Received: by 2002:a2e:a488:0:b0:2a8:b792:d7cd with SMTP id
- h8-20020a2ea488000000b002a8b792d7cdmr1168825lji.4.1683221754839; Thu, 04 May
- 2023 10:35:54 -0700 (PDT)
+        bh=e/U2FsRAABcYvDrg9qeQvqxqaubdM5gWSSkhYZVJEMM=;
+        b=dNQ0Ar5FbF8I6pqfgGbPyE5OhLBC+0qNE17sZsBAAtgUdufwEIWsGqQ3Uf4Qiwy4Dl
+         TvZyfbaKboUTDMYmHxABopMrat1VH2qZUBYIIjLjEYpzVeOIRgD0ktvMmVDN9ucxZoIJ
+         KQ5vuwQWbzX8t8bpMJKaXxQ1V1kQmENSbRAwIhxP03MXkqlqzktSDOEk/0xtJAnsVBeC
+         CqVdoL7qaRICY2hzcu8OBI2Syd/LrN7rPYl9RshTBMfyhEfTMw1A665EkQFc9gqqNnvX
+         z3slZ7m5wjVHm0wnFJFQ7rQ78LtLodEMdG3xQfHSRPEENzOf7JbuVlML60+nlq9HWXqM
+         s9Jg==
+X-Gm-Message-State: AC+VfDw62WlQKXlJVLrzPZF39hUFqfbm6yH9ojV7uWu225PoWcZ3YyU4
+        SM2oIeYwClBgczkmFWpQkccuqeyImmwKA1MCgjVb0paI4l3/DQ==
+X-Google-Smtp-Source: ACHHUZ72wFIxhMm0MuNyr/tHVrYjssna1aFxMAXHOMz0P7aaujJB7KbGPr5vIyMRM49C4+gPYn6FlBYhFYSnqYSL/xw=
+X-Received: by 2002:a2e:9599:0:b0:2a8:bd47:caf7 with SMTP id
+ w25-20020a2e9599000000b002a8bd47caf7mr1125193ljh.7.1683221910369; Thu, 04 May
+ 2023 10:38:30 -0700 (PDT)
 MIME-Version: 1.0
 From:   team lnx <teamlnxi8@gmail.com>
-Date:   Thu, 4 May 2023 10:35:43 -0700
-Message-ID: <CAOLRUnCCoHQLd_kyfrZ7QvVKD2D2TmxxUaZf17ZijP1qU5z3mw@mail.gmail.com>
-Subject: XDP Redirect - Ping fail
+Date:   Thu, 4 May 2023 10:38:19 -0700
+Message-ID: <CAOLRUnDWorqnndvxXe=oUuAgQ+z8kRFpn0ZWN4RexkMOyO_X2Q@mail.gmail.com>
+Subject: XDP redirect - ping fail
 To:     xdp-newbies@vger.kernel.org
 Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,10 +66,8 @@ Hello,
 
 I see a ping not working in below topology with xdp redirect
 
-                               --------------------------------------
-IFACE1 <--------->  |  IFACE2                  IFACE3 |
-<------------------> IFACE4
-                              ----------------------------------------
+
+IFACE1 <--------->   IFACE2      IFACE3    <------------------> IFACE4
 
 IFACE2 and IFACE3 are on same host machine
 
