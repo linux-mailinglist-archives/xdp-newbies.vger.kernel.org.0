@@ -2,129 +2,165 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F442718123
-	for <lists+xdp-newbies@lfdr.de>; Wed, 31 May 2023 15:11:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3DE5718346
+	for <lists+xdp-newbies@lfdr.de>; Wed, 31 May 2023 15:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236327AbjEaNLJ (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Wed, 31 May 2023 09:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36926 "EHLO
+        id S237031AbjEaNtL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Wed, 31 May 2023 09:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236086AbjEaNLH (ORCPT
+        with ESMTP id S236965AbjEaNsf (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Wed, 31 May 2023 09:11:07 -0400
-X-Greylist: delayed 94523 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 31 May 2023 06:10:11 PDT
-Received: from us-smtp-delivery-119.mimecast.com (us-smtp-delivery-119.mimecast.com [170.10.133.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D1419F
-        for <xdp-newbies@vger.kernel.org>; Wed, 31 May 2023 06:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=progress.com;
-        s=mimecast2021; t=1685538610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=GT5i70JngofmRhQemGCMy+wHnXb+d5TqUH/GIZGwTfQ=;
-        b=PYv7YjytgHq9rVy9VuYcI1AmWiarRndWpRQTbol++QIB8qMy9p8evyrqoEMm0AA141O8a4
-        mLDjx8C/Z8zbciAojAckWJ50iJL6WeQV4+lD3htg3JeEEVTnm6J+neBJEC0nDBLntHxcEN
-        /Qna+bnqezqPr0Tm945zlSNtAjETi8gFCa+XPQ1i5hegYTgKU/z8FsEDwqQCCcXWVHhktC
-        VKiyp+fYTijcVPqd19J4nJCbhP/bWUK7b96kdDQJSQYv1iwVgfXs9g+idg6eDvNvAB8ww7
-        tmgL2cIlY1HK0B70uWhdNIj6YXsykdJiYcBQmzc+QGmA/Z7Ly4lpfTVQ5DXyRw==
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com
- (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-604-z2aeSBe0Oc2BKe0C601uNw-1; Wed, 31 May 2023 09:10:09 -0400
-X-MC-Unique: z2aeSBe0Oc2BKe0C601uNw-1
-Received: from SA1PR13MB4925.namprd13.prod.outlook.com (2603:10b6:806:1a7::8)
- by SA1PR13MB4992.namprd13.prod.outlook.com (2603:10b6:806:186::11) with
+        Wed, 31 May 2023 09:48:35 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB33226BB
+        for <xdp-newbies@vger.kernel.org>; Wed, 31 May 2023 06:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685540690; x=1717076690;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=oMOfvVWwCPhDSHW/5zJ0RMBQx+PBCXk5Jn4pxJIHhYQ=;
+  b=NUw5ZKJofktvBRKxJfUYbedVpmPCRqzUcBs554IhuzE/24k6loTgPt2D
+   nAv0hznLby1fDdc+BWAgKxTRrEIGjzyhu5nD3hhQmzCMDXtRMp878Fxu3
+   cHNrdOOjJO4aokNLX9w6SUWFxNBIVey93i74eIKlnyLyD7S3TTdzRMc80
+   ANia5iIeo8mS2HZajCcixiN0oSbzEYqGyNoPX9XRe4KwpXHdnMrF+86FO
+   QpVDZKg0zdyNGXhSmuX0PgXJgy/MW4NZscYmAokigipKgxH/3aaizI1yD
+   lh8mvQUzMYkbwd70K9ubru+UvPIXv5mWLsl9783cunN1BujVPBJbcBGt8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="334860106"
+X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
+   d="scan'208";a="334860106"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 06:43:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="771993623"
+X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
+   d="scan'208";a="771993623"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga008.fm.intel.com with ESMTP; 31 May 2023 06:43:09 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 31 May 2023 06:43:08 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 31 May 2023 06:43:08 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.106)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 31 May 2023 06:43:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mi6p5PUsvU8PvwY0JsC2DXCf/MW6sX66HDpgfRv8/mq13lP8gOH70hnK/WT/xNQuEry6pK63xEVVSH9Vc0SNcNh/z8mdUO+kvcQZBL75Rc9WjOtuKqacqGkqlaLxdE5DK7Dw1rFZQ20+0nIRwKz15N2k2k2ruJyJx0jmEjbmo0Cju4Bi1pytwSUPYR3cUA4j3TTNf350W/YHBzETTJC3y076VsBVG3hniXCMrgU8qi/DyYmeZGRIXr2kQj5AAPwpTg96zrf1uvoiaXT193FZEoePXOVyQK3whDHwk2b5Ny7FfuOnjtoO4oRI3sjPBiQdzBEBb1ANHdaSxbPsAf3hZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nOga8FlMhiyNvAL1znhIUPiJwOD3/x5hNdCuC7QWzig=;
+ b=oACmQeiBdSkqgncrVatqC0MTM+HyTT0Jcv7SBR8Bh7ZrDhMuYCrxqXf9uNfnEMhCUH5I9lfNfOxPhUn+kMDscjekblWVtE1jZvklPumzuV/3xGpzvD9UmoL05tWsIi3cjy8KoSt6oTyQ83qmobpzKUZRTl0swyE/UkvuvPgPdBZKF/V6muc55NjeDEAuiic3T6ALJ2jxwuKJtOcQOEZtreaFLgXeSWmpKAnDPpmPSX0VubOu/nzjpt5iv5kMZUnKCYRXkM6+InXlsK0efesA7u90MxrGdwFr3JI59UVBe65tuy7BO4DI1iWSgtWghIRDkheS1ewO/BISI/fGz+touw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
+ IA0PR11MB7257.namprd11.prod.outlook.com (2603:10b6:208:43e::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
- 2023 13:10:07 +0000
-Received: from SA1PR13MB4925.namprd13.prod.outlook.com
- ([fe80::fe02:e5ed:f217:94c3]) by SA1PR13MB4925.namprd13.prod.outlook.com
- ([fe80::fe02:e5ed:f217:94c3%4]) with mapi id 15.20.6455.020; Wed, 31 May 2023
- 13:10:07 +0000
-From:   Tomas Jansky <Tomas.Jansky@progress.com>
-To:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Processing Jumbo Packets via AF_XDP Sockets
-Thread-Topic: Processing Jumbo Packets via AF_XDP Sockets
-Thread-Index: AQHZk8E4COvLXQdOK0q6QxNZCnDzQw==
-Date:   Wed, 31 May 2023 13:10:07 +0000
-Message-ID: <SA1PR13MB4925B288F75F21F3709C8049E6489@SA1PR13MB4925.namprd13.prod.outlook.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR13MB4925:EE_|SA1PR13MB4992:EE_
-x-ms-office365-filtering-correlation-id: 0337841c-f2a7-4fd7-47c3-08db61d85b53
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0
-x-microsoft-antispam-message-info: SUXF/+jPgRlMFUs1SCMwRC2qn+hKuZi4mJ9ijG05GuAkHQNEJtwlJL7jKA3hJBj2AB1SB2Lu9whUJvektUP/jk4WFfAAEp5uQnCk8QY82eGDnXhHrP7x010kMutGw4ecZEPg9zcOYzX8QZcCXeYak+OTxRvs6vYj73xDZC2fk4K9DMmFyqJ/EMG8FkKK+7l4E8xaS+NVp+Ebk72WLhBup+vaifzQPC0mzGRhzEpQBMxSOKYgprBZ2Oy8SBwaJ/8p/T0HzQ5iho5W0aHRJaxRd05dbCCxkYcfnYWIT/oMpQ6MD9pRuaYVs8TOA1051XEgi/9pCQTDSi5Zmp/r/kV732MRVasm2jq/UbgdA5lMXGXURPlYTlLVvhzu0K8b5cFCurvtL2aWb9ukU9h6qBnvYjkCmXSPKid0xjPN+nmAC/s3g1JkDoJCkNipepuh54PZyvmv60wQmwncX3viqtJSclBn5WM7m19eErQEp6+0yJI1gzo+iOvCxbP6cDqa2dmgBrrex5Y8brF6a29zoLsnulmAXnnGsffxn2ueBb8dfrxyHc0U/4HqvF2/hm0uWW7NPrsq/aeuOil9dBCfq2k+MZd3PQglymA4dk33iVVY8DZ41HOHL9tJzec5T4E2mglZWk2y8bUFtvQ4E/gIJ/bfQA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR13MB4925.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(136003)(366004)(376002)(346002)(451199021)(316002)(66946007)(76116006)(91956017)(64756008)(71200400001)(6916009)(66556008)(478600001)(66446008)(66476007)(33656002)(86362001)(38070700005)(6506007)(26005)(9686003)(186003)(41300700001)(4744005)(2906002)(8676002)(8936002)(52536014)(5660300002)(7696005)(55016003)(122000001)(38100700002);DIR:OUT;SFP:1102
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?asTJdjH0NLrGK+CyyK7T92CTPtd5lPaHbSKYj9Gpwv7WLXvbxp1sD8JZ5E?=
- =?iso-8859-1?Q?wZAU2uxgM3w5YpWwJvVgR3K2FP4fCVr4l7jdZOMID8zugn2nerjo+rr8m8?=
- =?iso-8859-1?Q?PgNSL2fNTdfN/wra5dY3w1H/yGQB/6mNg5gYMpDrmyVqLiInaoNHDMfCfu?=
- =?iso-8859-1?Q?xs30pfLt1i7anNX6gaXwAlCJU23v1Kz2a98HD44VqZWN8QFKNeVppcy4Wl?=
- =?iso-8859-1?Q?kosbpnkqkUdT2sGy3939nFLV1Q2F4mS2llPbKoiYB2BBhgDYXHDfcm3IJy?=
- =?iso-8859-1?Q?4qVhFKHJfy77ljXg1YPH0rapQosVgveY8tOEZ4LIy3EjCZJlOZ/DRDhwNY?=
- =?iso-8859-1?Q?C6Jaa9QWcgrt3ddHoGqN2S5RPhfsJa6OpHgKFwzlYFVmYTpuVZNaqfyxEH?=
- =?iso-8859-1?Q?RLxqfHrXTknU2khGlyKlwqZs+6ZMdyp11NsK78p/BNa4LUAuJfZSNbNCIb?=
- =?iso-8859-1?Q?yHQJZTCXNxk1bBO8/nKWY1Arocx/FBzHDPxzlv1IZ9KakzdBuGohGFmEN2?=
- =?iso-8859-1?Q?Kw1Dk/L6PoTBWr3ReFF63ApoGisYWS4gXjQrDuO1qhvJ93wvjwPNCRPQNb?=
- =?iso-8859-1?Q?vABGJz19foSidujSBU6GDSv0JG9xghBf7yj0uJ/+HM5oZRPykUSg0pTDLi?=
- =?iso-8859-1?Q?/Uap/jRFj0G805J0DpowN5l6jCyh14rH0xUQgOaHM28Z7lkWuu1fHCHMq+?=
- =?iso-8859-1?Q?Qtrd2oLS9axehgESYG5Sem32nrxdPbXHzTYIzZOjx6ni6y3eweCqAcoA4n?=
- =?iso-8859-1?Q?zX7bapJQERC3loE59HtD0QUG+t8XBjfHuu3uJOjDfBF3GLNP4PRIU04fpY?=
- =?iso-8859-1?Q?+StSqVjMi7Pi84H8RJz1aW3j0Mu2a7EuUhGQ7V6fRXP/DNabAYqh/miALa?=
- =?iso-8859-1?Q?8W9KEWPNkqN9AcWMcasylO2pSjypDwYaeaygSC02MQwBCSh0lgcX5GrYA7?=
- =?iso-8859-1?Q?+Qkgh2PbW0VerMB0LJLgFvPBZTKsGx3D8QfO855wsG7wi5xbSJwpn0PNdb?=
- =?iso-8859-1?Q?kEgv+mRcPgq7KP01wRjwtRYnjgnvQNZ9XUYvPwkzfI/lYYjaORZIe33c+X?=
- =?iso-8859-1?Q?Zzzjmy/cM/vtZeaKG74ioCzU2Rex2ZWLy41meAfTW5fiQtGT/zTcmheIWS?=
- =?iso-8859-1?Q?ioH+yZR73wqWEIGV/PUJfhifCNMPZRqhYB8C3tKVNnARu0Bfs94A0RkPTE?=
- =?iso-8859-1?Q?LYvfYSmjwdpe5AH06KjF2oZkxId2TV6kA+DH3Xfr+FsAozXrMmOekHxa9v?=
- =?iso-8859-1?Q?xw6YdlAhNBHK9tvZyNviff7B6XSqCNgMBVTYL3jJXgnWOu1DBGcJi8Grm0?=
- =?iso-8859-1?Q?T/UzK9dB4ZGm7QCnAUfektuc8ZNQzQEcnuA2SbDRWlw1PgYWWZnjHM5bPa?=
- =?iso-8859-1?Q?D+ARaAFfTp+Pl97XWDYJV3RcHAiD7GIVRI3NFk2yduKv3ZhRCRvjH7LKfy?=
- =?iso-8859-1?Q?eQLDxMPOXZjwD0jKK8jluqAwsHlNwZZZ0rZn3qw6WjWc1+Ojj8bq/s3584?=
- =?iso-8859-1?Q?bVhf0di4RizHfGA5RMLuOF6xdh/3vtiGNNkddnb9OmOV8m6bxCPmzxphus?=
- =?iso-8859-1?Q?b7Ect23vj1D4BJaWQ8B59ILL/wmuaTk9VHHPOuVZnigEqNWB1uaf10BTWT?=
- =?iso-8859-1?Q?uAHUwjRDJsS0I=3D?=
+ 2023 13:43:03 +0000
+Received: from DM4PR11MB6117.namprd11.prod.outlook.com
+ ([fe80::9e4f:80cc:e0aa:6809]) by DM4PR11MB6117.namprd11.prod.outlook.com
+ ([fe80::9e4f:80cc:e0aa:6809%2]) with mapi id 15.20.6433.024; Wed, 31 May 2023
+ 13:43:02 +0000
+Date:   Wed, 31 May 2023 15:42:52 +0200
+From:   Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+To:     Tomas Jansky <Tomas.Jansky@progress.com>
+CC:     "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+Subject: Re: Processing Jumbo Packets via AF_XDP Sockets
+Message-ID: <ZHdO3DYOdjh7KKNi@boxer>
+References: <SA1PR13MB4925B288F75F21F3709C8049E6489@SA1PR13MB4925.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <SA1PR13MB4925B288F75F21F3709C8049E6489@SA1PR13MB4925.namprd13.prod.outlook.com>
+X-ClientProxiedBy: FRYP281CA0015.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::25)
+ To DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19)
 MIME-Version: 1.0
-X-OriginatorOrg: progress.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|IA0PR11MB7257:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ca309ad-60d2-4b9a-7911-08db61dcf47b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xtWLbySvCfdrDy79qTwvdl9MAjzGIqnucrkIzi9OAFzVF1s8mYkP1avAR8v8HEaGV+afOWMIY6lihdqOYFZ2Pw9pSfBG+NQWDCT26jC6FLQK6wA5VR2Y8I6DWmIq6VAbsHJvad1JE5k++j1G+/Bc4Oilz/M7fiLc4tlTWDaGCrU1VnT2swOzw5Yj4WTImccmwhUgYT5eIvXI7JLqY9ctuhvWip5PsfE4wFXxuleIf033BIR7ce7imhovzVR6hNTfDE7+jEzAxorz8eVfZ3Y7/NLIZqjBSjs9+nusfBif3o/k8dDeiRbcePXz11em9r22q0jyxC4CUoiVW+peHulAyuWw9v5JsgrrDDSsO5LPR5Dyo+gX2z72+bTIfwEu03s70WqN9REUXXuIuQtBY/Olo/HxcrdI8E/xFGXJEx/rgvK8hw1WDkPhatdZVRVtO8R5r+DU+eerSehtCR4w35/vMNLpbtKvMsCkgJwbb8SN2B404ZYx9mQ3+5N1Ng32EJ1uwiolisMQQgH73EQvQdYBlUtV7EYXdF5lZEJgOJP3AgI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(136003)(346002)(396003)(366004)(39860400002)(451199021)(6916009)(4326008)(6486002)(66556008)(5660300002)(66946007)(66476007)(86362001)(478600001)(41300700001)(8676002)(8936002)(966005)(44832011)(6666004)(9686003)(316002)(6512007)(6506007)(26005)(186003)(4744005)(2906002)(33716001)(38100700002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fzQF6a3qb0scnCNCVydbuO9x//RzRrmfAJtZiQMURfpjtcapT07oWWa+itPg?=
+ =?us-ascii?Q?sR1heLJjZwbrmoC5c2DvOz0k9FXKDycNeQQ7lv/kBc0+mxPGFB9sWoB9q/t7?=
+ =?us-ascii?Q?rR8gE6vnUF+/5Tye0zuBp5Uc+LSK9x0MisUZBDuUoGxWy9GblIYod0FUr0nw?=
+ =?us-ascii?Q?OQ0im73gN+l7Wfuche4BbJu3G1Yna1+T7FvC073mVgwMeZ+bRzcBO1as7v5F?=
+ =?us-ascii?Q?wCM8IqTT7u+qGQhYjOwX17HZGl3TLIXkqHxiKnplsaKsgH3Tckzdm7OfJCO2?=
+ =?us-ascii?Q?YMol17IFgxf7eW9DlZBQK5GWc9n4Peuct6TYjU/BVEqW1JPtgDexG0L8sBlS?=
+ =?us-ascii?Q?a1EbyalUX62XE+B8yJ4o3UBMKI75HKV+TGZ8JZfQQu1/nu18cIzk3EnGL96Y?=
+ =?us-ascii?Q?tk9VSWOSnktHMMRf+tWxm3dQ3O+ZC9eHT+J8VO3NrDa1hn46+JMxwfi1KvXu?=
+ =?us-ascii?Q?KuOFFuHT5UUtY3+pY9a0dzFqOY/HufOENty0SzQ1BN1q323FPkwbVtDjD/Fx?=
+ =?us-ascii?Q?Csv/8m9peftgqA+u6fTHJzl6MPPd0iNvlSHc3nrKuU7HuaYDDv4M4wsq0ay6?=
+ =?us-ascii?Q?q2Jv7hNd2MSKawY58CNxNlUm6chWCIOyvT5qAkxpZNiE55D8JPrE06LKWcuH?=
+ =?us-ascii?Q?yJHrtewj1Tdnp4hTU8CD9hdEZikTmyQ77pA8WgPZKClcbp7Jrcqwz119a56o?=
+ =?us-ascii?Q?7TX+v5jCcr6K6FGdO+IuAXYi4dGqoZiricjxfcaVpNpajfxPZIql0s8H+lXG?=
+ =?us-ascii?Q?yj02USwukJEAbCoEqwTvAHtwKENIHgAtW9Ky3HU9M9HPJx1jinpCbQmtYYDp?=
+ =?us-ascii?Q?JWqbiHvRFUy+NFLKKfUajw8MWQQ1WRdZ4W9Hlufl+Q3WUIAET4ghEmPXa026?=
+ =?us-ascii?Q?A+pG08vnjC1QamSxNaBFSsG7zPVkafwBdArpxKV58s4SYMQDBwhSw5drjLJd?=
+ =?us-ascii?Q?sBTuI1N94WLC7hVk4/we0uUkw7cfSOXF6NBv2MpsFV4eL1AOTsfobJ8KhZ4N?=
+ =?us-ascii?Q?jwe5lx/tJ8tj4RjjhUdezclT2jOL65VdE+/c85kNNF8Fs94q3rWdEHSDOyQb?=
+ =?us-ascii?Q?QVYWCXUlpm2eiiABGucFUDbUCFctSqHIJDANxLml++2Grpih+OYNSNoU8clt?=
+ =?us-ascii?Q?/jRrxVPuGJbAVMjaNe4Oi0bCK8C9stzZafswRiYFSRBYvNRLKXxwP5uL0t6P?=
+ =?us-ascii?Q?yjU6SpEVFVfrrfgiLoMj2T+L0M4VyrLERAHGABL0xr1j4bBM4aUXMIyakurF?=
+ =?us-ascii?Q?01S8IJp7Z+lWtDzhcqMQiMhVQS0z7y9UJUrUPBOYIx4mjm74Kbdp6Ell8gaF?=
+ =?us-ascii?Q?SRydG2WCFHTPF084whBL3rZQta9C7brTCc1103XGvW3tbRoajxC5uNq/XS4Q?=
+ =?us-ascii?Q?3fcYqBzvBYS7WPk2ZtL6UE3YXNmBeC/NeJhBkZ2rIB+wES5zJJxtOliiSFUj?=
+ =?us-ascii?Q?jyBQbvJ83z/cYhEXuvbDSTxLwACIZthYaI+5iTd+/gfSAWhr68M+FLnP7EUk?=
+ =?us-ascii?Q?wtwBoBVLzJ4ekAcCKj2CvJfXPkPz1/fSZDtko9lPWCobus9k4jone8+h5WPi?=
+ =?us-ascii?Q?+os1bAnq47IzT0cbFcgip8rKMs5/RrodbvjLsoPxjcGSuoPtV2Xca7bO56N1?=
+ =?us-ascii?Q?Kw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ca309ad-60d2-4b9a-7911-08db61dcf47b
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR13MB4925.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0337841c-f2a7-4fd7-47c3-08db61d85b53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2023 13:10:07.5540
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 13:43:02.6698
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: db266a67-cbe0-4d26-ae1a-d0581fe03535
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: faynD69S43WZebBTt0s8EzqPwiQoIpbBSnjNVZ19Fxcqeutqu8TSE8Xe0k7TduvZm+IZU+ZoWbv1UtP/pavp5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR13MB4992
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: progress.com
-Content-Language: en-US
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S5eK29oTHPrqxgUp2keO/GNuaUv9fMPX97Mf+WNltTkw/e0u76QMGwlBTe26m8Qv/BCjaI/DECmomkUapt7nmbbW4UAtb4Z2qaaZtY4tXXs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7257
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi,=0A=0AI came across a year-old thread about multipacket buffer support i=
-n AF_XDP (https://www.spinics.net/lists/xdp-newbies/msg02212.html).=0A=0AMy=
- company is very interested in the possibility of processing jumbo packets =
-via AF_XDP socket with Intel X710 and Mellanox ConnectX-5 cards, so I wante=
-d to ask about the current status of multipacket buffer support in AF_XDP s=
-ockets and also the possibility of using huge pages for UMEM with unaligned=
- chunk flag to achieve the same goal.=0A=0ACould we expect any of these fea=
-tures to be supported in the nearby future? Let's say a year from now.=0A=
-=0AThanks for any information,=0ATomas=0A
+On Wed, May 31, 2023 at 01:10:07PM +0000, Tomas Jansky wrote:
+> Hi,
+> 
+> I came across a year-old thread about multipacket buffer support in
+> AF_XDP (https://www.spinics.net/lists/xdp-newbies/msg02212.html).
+> 
+> My company is very interested in the possibility of processing jumbo
+> packets via AF_XDP socket with Intel X710 and Mellanox ConnectX-5 cards,
+> so I wanted to ask about the current status of multipacket buffer
+> support in AF_XDP sockets and also the possibility of using huge pages
+> for UMEM with unaligned chunk flag to achieve the same goal.
+> 
+> Could we expect any of these features to be supported in the nearby
+> future? Let's say a year from now.
 
+AF_XDP multi-buffer support is on mailing lists now:
+https://lore.kernel.org/bpf/20230529155024.222213-1-maciej.fijalkowski@intel.com/T/
+
+you already can try this out on your side but for zero-copy currently this
+patchset only enables ice driver. We will follow up with i40e (X710)
+support.
