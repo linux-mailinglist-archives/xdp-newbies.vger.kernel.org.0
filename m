@@ -2,98 +2,91 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 731AE74BEC2
-	for <lists+xdp-newbies@lfdr.de>; Sat,  8 Jul 2023 20:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F0F74D7FB
+	for <lists+xdp-newbies@lfdr.de>; Mon, 10 Jul 2023 15:43:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbjGHShh (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Sat, 8 Jul 2023 14:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50892 "EHLO
+        id S231201AbjGJNna (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Mon, 10 Jul 2023 09:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjGHShh (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>); Sat, 8 Jul 2023 14:37:37 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524291A8
-        for <xdp-newbies@vger.kernel.org>; Sat,  8 Jul 2023 11:37:35 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b6fbf0c0e2so46732761fa.2
-        for <xdp-newbies@vger.kernel.org>; Sat, 08 Jul 2023 11:37:35 -0700 (PDT)
+        with ESMTP id S229907AbjGJNna (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>);
+        Mon, 10 Jul 2023 09:43:30 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07914D2
+        for <xdp-newbies@vger.kernel.org>; Mon, 10 Jul 2023 06:43:27 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-307d58b3efbso4382889f8f.0
+        for <xdp-newbies@vger.kernel.org>; Mon, 10 Jul 2023 06:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688841453; x=1691433453;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9HUxxPT0UOOWF53wX4HXo8tkkIAaRlbiOadoJE91IPc=;
-        b=rUCWD/gKCsIWkn+CkI9trm+mxuN2s4/MgW54/GMUFPbDTHz7Q1h79J1rpFANQ4akIR
-         JqH8zwvHz8AeLbHwlrkrigUyZnno+rJuLFlbMcVWXFOH5KUQYjWvZRCmBYh/jY7AifrH
-         gBo/1Y7pWy2bAWyAKpUqsM5/91ddy82c5rz2Ez/wpDXNJR5YEQgNVMqXkBFLNdembmRp
-         ggYonryoMOmpA81YGbGizJvmtuLcAciKFuR4EQGM3i9r/0klwDNYlqagIcT2vhV8ASGO
-         Sn4cKyvUohGU5IXrGVmgnOjo68FqVAp8RiE9y3vvUw26OUaxDL29LI4OGU/pdzRfVdoa
-         HEJQ==
+        d=gmail.com; s=20221208; t=1688996605; x=1691588605;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xvIXFVrOcbgyCFvJr3XRaCY9PfDEzYUEvbAXFyWZShs=;
+        b=ji7izm+jmYVDoUudoYrzlxDRRggKj7bzi+C9lnWVS5vRzuNHoa9vUWtGUovvuo+ks1
+         fdJGvXn2YeM0beb7CKeNqVgoLden+f/Sbv+MHfbR3k6jKpbHn3A8UHz3ehRGodTruIa3
+         l5bRF/wCELXthKow/+4zO6OKwmsS/RYq0yVog/T65kmcmZBvMaVm2yP/65mxXD73NvWI
+         Ef2WnkbOSs0+fAA03AliXWZyWM+ebSYYEQ0CQOz5cuHITSQTNW+/Xxgzenh01j6AIbWW
+         xrMSw/xKdbWZ61H+fXD6vfhYBuPXVkIxTKwfoAwTkeAa26QIqPgW8VB+kG5eO/I2thsK
+         k/Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688841453; x=1691433453;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9HUxxPT0UOOWF53wX4HXo8tkkIAaRlbiOadoJE91IPc=;
-        b=Ube5JaE7pWUbU4IRngIJ1LfZTM+/W/PfyeAAJlsooIhx/F7qvyjGYVLlEycgmsAuCw
-         HPE1vkyNyuCw0MWPI2jC/RhjMqGfJYWyWacBp1qTgYDD1qdQQhsbzz3alMXYcZMDL5Mg
-         8lx46S5YVj6Zll7cMh9f8lb6VBRUoxMBBMIv/qnZSUTVJSIkV8tTdLaM90sKRQFqtdQM
-         IV5GVkfk5uK9bw70ZPqk1GSizqZcoSzDQ4nPSFynQsZ5BiYP5ZTmsfcu7xJb67yXrke0
-         9eS/eRlld6kCUqGXRXBuGFETiQV7YIBSi7LcXqAXkhxs1Uust++hNhO38sNpIQAWLhrK
-         PEHg==
-X-Gm-Message-State: ABy/qLak8bd25Y8hVcIROIFz4MDVTrmxIf3YzzxId+tRi4+0bQ7KS81v
-        J5znil8vMLWjUvjf8OritYH6ctIPoMI=
-X-Google-Smtp-Source: APBJJlFe+SQ9yxzkNX1nCEVM0+VDriQScJHH/ngCyAj7oNAX5ILl9s+xnL9wWoCRFtAXA76h+dunFg==
-X-Received: by 2002:a2e:969a:0:b0:2b6:dcde:b77f with SMTP id q26-20020a2e969a000000b002b6dcdeb77fmr6600620lji.35.1688841452969;
-        Sat, 08 Jul 2023 11:37:32 -0700 (PDT)
-Received: from user (85.253.129.61.cable.starman.ee. [85.253.129.61])
-        by smtp.gmail.com with ESMTPSA id r6-20020a2e80c6000000b002b6dbce8325sm1280721ljg.24.2023.07.08.11.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jul 2023 11:37:32 -0700 (PDT)
-Date:   Sat, 8 Jul 2023 21:37:31 +0300
-From:   Luigi De Matteis <luigi.dematteis.linuxdev@gmail.com>
-To:     xdp-newbies@vger.kernel.org
-Subject: error: =?utf-8?B?4oCYc29ja190eXBlX25hbWVz?= =?utf-8?B?4oCZ?=
- undeclared
-Message-ID: <ZKms65z9ciQkzwjU@user>
+        d=1e100.net; s=20221208; t=1688996605; x=1691588605;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xvIXFVrOcbgyCFvJr3XRaCY9PfDEzYUEvbAXFyWZShs=;
+        b=XL4md3+3jxRNHDJqluo1OIaWkFYVj+tEYcqlgLWxSbHoUgoY9CL2qiz+ChX1NAMsHp
+         iRoPoU5fUAQYkwqOcjGlaTRopp4/lAn1w/QvPasPFl6N7f/6YhcUmy5c2gyJCaPjG/8R
+         wKzYfj+bx0z+OvqNo46+Y9ABsWZ3ZPbmvybxFBXVUsd3sZub0wAzIw8JzV+yr2Q2J8rF
+         ajcAKGBQE3KqnyIxh6zTk9F7qyEV0JmpUuNbwTVgwCFlEeiL26V2a/uu/xijVnlMPHG1
+         GgPmbsMgHxAkpM8jEe2wtvbh8V1dHIpsspqtB8dfWpum11/BESx+owp2JiJOWkn5YxT9
+         /DYw==
+X-Gm-Message-State: ABy/qLbV2UcPjUw8yZxoYoUwZ/m/F6IwF4KGikfFVoAeHlWlOtv06f8Q
+        Aiz97RPdeu1vtbjWHqRScKifyjonZjjOE4dT/1iPTvgHpiw=
+X-Google-Smtp-Source: APBJJlH3aXPEWSoaFm7HL30u0k00tzvwhiIkQfkkwwTASXJCnIoZo2tiiEUXad38HXjoEKTqtKx/Vn/8V1QNle8twZw=
+X-Received: by 2002:a5d:504d:0:b0:314:38e4:259f with SMTP id
+ h13-20020a5d504d000000b0031438e4259fmr11088278wrt.37.1688996604789; Mon, 10
+ Jul 2023 06:43:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_NEW_HELO_USER,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+From:   =?UTF-8?Q?J=C3=BAlius_Milan?= <julius.milan.22@gmail.com>
+Date:   Mon, 10 Jul 2023 15:43:13 +0200
+Message-ID: <CANaGk7uNc171gmxH=NspPokePc+4eg2qg+jK+kVispnJcwRinA@mail.gmail.com>
+Subject: thread safe, lock free AF_XDP setup
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hi you all,
-I'm trying to build the linux kernel following the guide on
-kernelnewbies, is there anybody who can help me to figure out what the
-following error is pointing to?
+Hi all
 
-  CALL    scripts/checksyscalls.sh
-  DESCEND objtool
-  INSTALL libsubcmd_headers
-  DESCEND bpf/resolve_btfids
-  INSTALL libsubcmd_headers
-  CC      security/apparmor/net.o
-security/apparmor/net.c: In function ‘audit_net_cb’:
-security/apparmor/net.c:81:13: error: ‘sock_type_names’ undeclared (first use in this function)
-   81 |         if (sock_type_names[aad(sa)->net.type])
-      |             ^~~~~~~~~~~~~~~
-security/apparmor/net.c:81:13: note: each undeclared identifier is reported only once for each function it appears in
-make[4]: *** [scripts/Makefile.build:243: security/apparmor/net.o] Error 1
-make[3]: *** [scripts/Makefile.build:477: security/apparmor] Error 2
-make[2]: *** [scripts/Makefile.build:477: security] Error 2
-make[1]: *** [/home/user/Desktop/kernel/git/kernels/staging/Makefile:2020: .] Error 2
-make: *** [Makefile:234: __sub-make] Error 2
+I am missing a full understanding of what really is thread safe and
+what is not, when using AF_XDP.
 
+RX and TX operations look obvious as every xsk socket has its own RX
+and TX rings and so I can have multiple threads, as long as they don't
+try to use the same ring of the same socket concurrently, that's the
+only limitation (Am I correct yet?). So I can have for example 1:1
+mapping of thread to xsk socket to avoid locking.
 
-I'm running on Ubuntu 22.04
+However what about UMEM rings, i.e. Completion and Fill queue?
+About ring operations as __peek, __reserve ..., it is written (for ex.
+here: https://www.kernel.org/doc/html/latest/networking/af_xdp.html#rings),
+that they are not thread safe.
+So it seems that I should use mutex to access them.
+But I can see in:
+https://github.com/xdp-project/bpf-examples/blob/master/AF_XDP-forwarding/xsk_fwd.c#L526
+That they are filled / drained without locking, how is it then?
 
-thank you in advance,
-Luigi
+Does it make a difference if the socket is created by
+xsk_socket__create_shared or xsk_socket__create?
 
+What is the limitation that cannot be broken, as I described it for RX
+/ TX? (if correctly)
+
+Best Regards
+Julius
