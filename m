@@ -2,84 +2,78 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA7AF75C757
-	for <lists+xdp-newbies@lfdr.de>; Fri, 21 Jul 2023 15:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA7B7662A0
+	for <lists+xdp-newbies@lfdr.de>; Fri, 28 Jul 2023 05:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229927AbjGUNIL (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Fri, 21 Jul 2023 09:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
+        id S230486AbjG1Dvs (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Thu, 27 Jul 2023 23:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjGUNIK (ORCPT
+        with ESMTP id S229956AbjG1Dvr (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Fri, 21 Jul 2023 09:08:10 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14270186
-        for <xdp-newbies@vger.kernel.org>; Fri, 21 Jul 2023 06:08:07 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3fd190065a7so16057525e9.2
-        for <xdp-newbies@vger.kernel.org>; Fri, 21 Jul 2023 06:08:07 -0700 (PDT)
+        Thu, 27 Jul 2023 23:51:47 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1282D40
+        for <xdp-newbies@vger.kernel.org>; Thu, 27 Jul 2023 20:51:46 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fbb281eec6so2878951e87.1
+        for <xdp-newbies@vger.kernel.org>; Thu, 27 Jul 2023 20:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689944885; x=1690549685;
-        h=content-transfer-encoding:subject:from:to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qF7yXYmtGw17kBq5jxlzl3L9qi9whnJ5KNC/dRoY8ac=;
-        b=HrcXScnw4nAS7t/VBTB6/wIfW+VLR0kkmke2HxQwQO96GehEWrTH+rhT2VfYWkjwKc
-         OXCFBqjfDBIN8SgPUVOihjrrsmXp9mJgW9D50Wq4biLk92nV0b0sZS3EseOZUIK3c8RQ
-         CWrY2Um34favoZyqPL12I6bMWv2XKYrz/zaQUOlrZJW3cibFj0wju4rGHCqtlhP6dSGG
-         HvJEvZPbBWe1kQcSJjCISCyP86qrTf2Qs7le8MgLsz5kl3FyXehKhxFidp8kZrbTSBh5
-         b0M9+mQYPkYzuO4ZTdeTL47tY4cOrBYEB9WfK+ylc2E9+BMDi/UHRWXSoYUkrxr9AIYs
-         LycQ==
+        d=gmail.com; s=20221208; t=1690516305; x=1691121105;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E0AxmPES6KQVjtuWmURC/ljJ6ySWrFT12NnR64mLzZs=;
+        b=GPQJObYiGNelGng+4oiVlZ3m1Vlx+dkOm3Ii+T9O1e5ImrUmNg0qAGLvu915fm9lQK
+         6aogqaiMda/6KNWdf/KexnMq2SKA4EKly+zJY5WP5AnHkC23Pgs+UrLsrHwbl/VlB4g8
+         HMtMcETbW08LaRzXFqqA9bIZJQMSATV4kZe/DW1ZqXFc7q/nnfrh/qu7ipYETKxFC9nj
+         eG3jgngncPXe7l/j9sBNbh1cI9ivqlD3I5Z0pjJQEOni9HSebJQDczx8ztft7C7SoVnc
+         pFF8cJOB/8WkbaWJtiP/9HswRjCHOF/moyZsMTiNpf1AEXBtIPL8bFqXgtiy2zyBO9u2
+         FHhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689944885; x=1690549685;
-        h=content-transfer-encoding:subject:from:to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qF7yXYmtGw17kBq5jxlzl3L9qi9whnJ5KNC/dRoY8ac=;
-        b=dUsUo9hx4lPKc9IadhahHiXdH7zU+xRSly5sWxakJ6RN0Sw/Jsm0Q2ffd0sIQM+aE8
-         Bzgbqe0FjN+OECp1miQHZEg2/XlA2+YVZem/76bg+S7TAdsFjB5X/6zQoWQx4IXTMXbF
-         NJ8Dtxf7Vw9qRXJtu/9FGamqr/skJ7gB0QEFk1svLK+5tiv8zQtZNYKIYBgBlNZ/oliW
-         Ah+P+vlDB3AxTiG3q7g+YtwClj/Gpz8sGKNiBTmN71iUcF8kSIEF1RSDbwmVK8/LCQVq
-         j7JaWPxmObhWtenjJ9SmgtFa8zeJI6ITbWcXF/7rmnhoom/474k3HNviOhzZRR9fM7HI
-         +IXw==
-X-Gm-Message-State: ABy/qLZe3hdqgQ4/Ic2V3tlTdNMchyF1QT93gvGVQ1PR7p9APgXuTM2P
-        qhcNcIKxpglE/OqGRrXoMJQJQHOIm+nw3w==
-X-Google-Smtp-Source: APBJJlGftF3mj4Uu2Mt0CQ16LDKI4ghV7wLn5M9VI7eU2lY2b5VidIyVaHN6jCWSc8KTSiD+yJ0VpQ==
-X-Received: by 2002:adf:e710:0:b0:314:8d:7eb5 with SMTP id c16-20020adfe710000000b00314008d7eb5mr1400678wrm.29.1689944885388;
-        Fri, 21 Jul 2023 06:08:05 -0700 (PDT)
-Received: from [192.168.1.20] ([82.66.150.212])
-        by smtp.gmail.com with ESMTPSA id a12-20020a5d53cc000000b00313f9a0c521sm4145137wrw.107.2023.07.21.06.08.01
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jul 2023 06:08:02 -0700 (PDT)
-Message-ID: <ac17e949-52c3-2e42-52e2-5774a9e0d6cd@gmail.com>
-Date:   Fri, 21 Jul 2023 15:08:01 +0200
+        d=1e100.net; s=20221208; t=1690516305; x=1691121105;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E0AxmPES6KQVjtuWmURC/ljJ6ySWrFT12NnR64mLzZs=;
+        b=SDDOqMWhgTjsrhGz5bNfeJh5bCV6Oba8940e10cZ8PovzyhFCFA3MO82fEcwz/cnAv
+         SOAEyPo3S4+uunvxrq1luZ7mpFdkdbJp2VQs51Mhsh92WxZ0k4s1575b5NxgU9etymFm
+         D2ytMenrHWAo72tjg03qpRIF6HldzzYPHs3yOa42Cslq/Z3yJg70JvLYyi6gBHTZdqmY
+         p5WsfMkHXEYiisLGYOzjKCH61bYf8HahDyl+lX52X6xc29P4QlYC0lhePd5gRp5rPNHx
+         SBtC2YLM8m1VmlAzQ25avHWPfX2rJClK8Nw4zabH20lMoLOwGbJR3cXesc2f6l2ha0kn
+         vrkA==
+X-Gm-Message-State: ABy/qLbOWC7VSqsIUX/RaGjD/5PqOR5JK/ANrxILw+kQWj2g5Q7ebdfX
+        x8a9M5FJDsVFjB3Xh6NgXNKrfQz3RndmWPspMg19YnK9
+X-Google-Smtp-Source: APBJJlH5yYzll/j3y3Y10wswvBXcOXT4W4LTVOy/G+5BJ5b/CAzGPmRiaCa+bW5C/coiKC3g6VpVLMvnNYnEgf/3DUg=
+X-Received: by 2002:a05:6512:3a85:b0:4f9:52f3:9a2b with SMTP id
+ q5-20020a0565123a8500b004f952f39a2bmr881008lfu.54.1690516304770; Thu, 27 Jul
+ 2023 20:51:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
+References: <CA+hDufANB4-u3Hb2ZLX-3P3KMQkLqGub6g7y9LHgkmLmHjKL5Q@mail.gmail.com>
+In-Reply-To: <CA+hDufANB4-u3Hb2ZLX-3P3KMQkLqGub6g7y9LHgkmLmHjKL5Q@mail.gmail.com>
+From:   =?UTF-8?B?6LaK5bOw6KO0?= <peiyuefeng@gmail.com>
+Date:   Fri, 28 Jul 2023 11:51:32 +0800
+Message-ID: <CA+hDufCfhfrnDKkuNG=exYqDOCR0QiAPoagzbLwwYZPa_+282w@mail.gmail.com>
+Subject: Re: How to calculate the actual size of the memory occupied by the
+ map in the bpf program?
 To:     xdp-newbies@vger.kernel.org
-From:   Alexandre Cassen <acassen@gmail.com>
-Subject: New project around XDP
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Hello,
+ The value of memlock can be seen through bpftool map, but this number
+is not the actual size of the map, but only the data size of key and
+value.
 
-Just this quick pop-up to announce new opensource project using XDP/eBPF :
+ Is there any way to estimate the actual size of the map in memory
+based on the size of max_entries and key|value?
 
-www.gtp-guard.org
+ Is there any way to know the actual size of each map in the current
+xdp program?
 
-in short a GTP proxy/Firewall for mobile Core-Network and using XDP for 
-its data-plane.
-
-Any comments welcome.
-
-regs,
-Alexandre
+ Best Regards
+ Dalu Pay
