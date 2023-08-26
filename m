@@ -2,96 +2,99 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E7B977C0E5
-	for <lists+xdp-newbies@lfdr.de>; Mon, 14 Aug 2023 21:38:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB14D7892BB
+	for <lists+xdp-newbies@lfdr.de>; Sat, 26 Aug 2023 02:37:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjHNTiS (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 14 Aug 2023 15:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35152 "EHLO
+        id S230166AbjHZAbI (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 25 Aug 2023 20:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231233AbjHNTh7 (ORCPT
+        with ESMTP id S230249AbjHZAat (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 14 Aug 2023 15:37:59 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7F8BB;
-        Mon, 14 Aug 2023 12:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=H3/XY/jv4icK4NgBoiigxpPa2AsF3Mqwv5r97vJFS/w=; b=pOr8bcG6l/kfke8Nee4BbrwhDN
-        A2s7rzPErfg+NVwgfSWisFIPVQH8cUmi9poBS1F1nB4w0UNXGjbNEK6bNA/ENONh546s78g4R1edz
-        WAuBCj2wUx0j5lG1e9keu4qCMaxo35Zlae00gOpVVmuNUq5yHF6GbNIAizv/Ly7lH+ud3UzJKq/iE
-        9PPEPCWlZ40lnWip20o8IyQj3PlXFdkIZziRyF1CKarFaKT2LOy1L195COrXoJbtVWRluBGdKwI2x
-        yX8yOtm+eAo3yEBl/j9XgHpxa8a++yujMymBpgH1ERG+rbzqQZR4Wj7/rfbvbPsUZA4i5FRL1cJ0L
-        zm2L6yhw==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1qVdNw-000Kkk-B7; Mon, 14 Aug 2023 21:37:52 +0200
-Received: from [85.1.206.226] (helo=pc-102.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1qVdNw-0002wv-35; Mon, 14 Aug 2023 21:37:52 +0200
-Subject: LPC 2023 Networking and BPF Track CFP (Reminder)
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     xdp-newbies@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-References: <1515db2c-f517-76da-8aad-127a67da802f@iogearbox.net>
-Message-ID: <db3003d6-733b-099f-ef73-abce750d66c6@iogearbox.net>
-Date:   Mon, 14 Aug 2023 21:37:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 25 Aug 2023 20:30:49 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838AB26AD
+        for <xdp-newbies@vger.kernel.org>; Fri, 25 Aug 2023 17:30:47 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-4109c8ece5aso8746391cf.1
+        for <xdp-newbies@vger.kernel.org>; Fri, 25 Aug 2023 17:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693009846; x=1693614646;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=X7KC03+GhIOBKk5KznfFsf2qtm4kY6zeqqxFABAbREY=;
+        b=rcXJpvYionfN8Ky0IENeimG3U7yVZYrkTAC7BsCZ34OgVdNpN446+/KYeDaz6yEwm3
+         rfVdNerQHnoV7gDmKAsxwwmqWQOPfU+u8uWgdWWnePp5WoylUQTGjK8mPR8p7ZokpilJ
+         J6eOLFZuWfXqlUz7Xhjdw+z31houE7bwyc/g+MkitTTy6T8oqex9oMy8ODc25N17+uqv
+         NDzoBNYWMINJN55tXa3C4Vgz/74bMmIqZJcoq9GCcLwO749GeMphNPjum45KDCZ+j0jk
+         29uGj6Iv80kpZsyDkpcdus2bMWMXxLjYfaOpPARTkHJkKfRwT7ziwIGNn9a6z0dccQcR
+         PyKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693009846; x=1693614646;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X7KC03+GhIOBKk5KznfFsf2qtm4kY6zeqqxFABAbREY=;
+        b=dCeDGgQaZJSZAeqHM8tJ/kDfY7vQCmv9iOZdPK8jW9inf48VDZh40A1UwazjG0fQIX
+         7hYocgVu7Xvy+wn/W57toaUGK3Qs21wb8eul+lQBa0URRF8a2UEdf9FBawbi1r/urUJk
+         r++DAEYmzokfVN835z5KNnersA+RPDdbcd+SW0Gn7Di35PfRqqt7YIj3V6JT0GI9+tsv
+         o7HWlWKF3I7zklqZYaNbmlQQnsRThlMlEHLDOssuMlYDnMbeIFVPYuOrhH22do9Nyb45
+         PExZvngyfGddvEWwFIxBVTA//aSW1OYV+TSHPo5AbYU1x9s6F7lVaCcXvJWeVPrTlEiT
+         QxRw==
+X-Gm-Message-State: AOJu0Yy2unQsak+RWPS6+ZJtmrZFkRsGVVBvfbJABfNhVoHW6q/rEAgT
+        usMUfiS4B/tV23bOreQS9rvPLmNCzwxnmP5kyAwUOFBXN2A=
+X-Google-Smtp-Source: AGHT+IE67GoTQd8U8fm3oc8YWLKPBhDZkdkIN68JaMgYhAJ5TArEtBUHVA1uxY2JmdOJYxzmlXizt32P8njkY1P+DXU=
+X-Received: by 2002:a05:622a:145:b0:410:adf6:c6da with SMTP id
+ v5-20020a05622a014500b00410adf6c6damr12539718qtw.11.1693009846466; Fri, 25
+ Aug 2023 17:30:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1515db2c-f517-76da-8aad-127a67da802f@iogearbox.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/27000/Mon Aug 14 09:37:02 2023)
+From:   Vincent Li <vincent.mc.li@gmail.com>
+Date:   Fri, 25 Aug 2023 17:30:35 -0700
+Message-ID: <CAK3+h2w6E1YXBHPX9wTqqoJo2B68akCmxb7C2rk-rAhJQptbCw@mail.gmail.com>
+Subject: XDP syncookie not compatible with layer 2 Linux bridge middle box setup
+To:     xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This is a reminder for the Call for Proposals (CFP) for the Networking and
-BPF track at the 2023 edition of the Linux Plumbers Conference (LPC) which is
-taking place in Richmond, VA, United States, on November 13th - 15th, 2023.
+Hi,
 
-Note that the conference is planned to be both in person and remote (hybrid).
-CFP submitters should ideally be able to give their presentation in person to
-minimize technical issues, although presenting remotely will also be possible.
+I have been experimenting with
+https://elixir.bootlin.com/linux/latest/source/tools/testing/selftests/bpf/progs/xdp_synproxy_kern.c
+with suricata in AF_PACKET IPS inline bridge mode, my intention is to
+attach the XDP syncookie program to the same network interface that
+suricata inline mode runs on so the XDP syncookie could do SYN flood
+protection, the packet path is like
 
-The Networking and BPF track technical committee consists of:
+client <-->xdp syncookie<-->suricata AF_PACKET bridge<-->server
 
-     David S. Miller <davem@davemloft.net>
-     Jakub Kicinski <kuba@kernel.org>
-     Paolo Abeni <pabeni@redhat.com>
-     Eric Dumazet <edumazet@google.com>
-     Alexei Starovoitov <ast@kernel.org>
-     Daniel Borkmann <daniel@iogearbox.net>
-     Andrii Nakryiko <andrii@kernel.org>
-     Martin Lau <martin.lau@linux.dev>
+What I found out is:
 
-We are seeking proposals of 30 minutes in length (including Q&A discussion). Any
-kind of advanced Linux networking and/or BPF related topic will be considered.
+1, client send SYN,
+2, XDP syncookie respond with SYN+ACK (with cookie), return XDP_TX
+3, client send good ACK, XDP syncookie return XDP_PASS, ACK to AF_PACKET bridge
 
-Please submit your proposals through the official LPC website at:
+ The ACK from client is verified by XDP syncookie program and passed
+on (XDP_PASS) to suricata AF_PACKET and bridged to server, but the
+initial SYN from client is not passed on to suricata's AF_PACKET and
+not bridged to server, so server send RST to the ACK.
 
-     https://lpc.events/event/17/abstracts/
+My understanding is that XDP syncookie uses netfilter connection
+tracking,  if the packet  destinationated to the host, it works fine.
+But in layer 2 middle box bridge scenario, AF_PACKET bridge by
+suricata or Linux bridge does not know  about the initial SYN (XDP
+syncookie returns XDP_TX). I am wondering if there is any solution to
+get this work.
 
-Make sure to select "eBPF & Networking Track" in the track pull-down menu.
+If I run a firewall based on netfilter/iptables as a middle box, XDP
+syncookie attached to the firewall network interface works to protect
+the server, so my assumption is since XDP syncookie uses netfilter
+connection tracking, layer 2 bridge has no visibility to the
+connection tracking and initial SYN.
 
-Proposals must be submitted by September 27th, and submitters will be notified
-of acceptance by October 2nd. Final slides (as PDF) are due on the first day of
-the conference.
-
-We are very much looking forward to a great conference and seeing you all!
+Thanks!
