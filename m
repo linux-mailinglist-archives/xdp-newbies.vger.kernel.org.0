@@ -2,65 +2,70 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3CC279D939
-	for <lists+xdp-newbies@lfdr.de>; Tue, 12 Sep 2023 20:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D60DE7AACAB
+	for <lists+xdp-newbies@lfdr.de>; Fri, 22 Sep 2023 10:31:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230154AbjILSzl (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Tue, 12 Sep 2023 14:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        id S229709AbjIVIb2 (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Fri, 22 Sep 2023 04:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231477AbjILSzk (ORCPT
+        with ESMTP id S229536AbjIVIb1 (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Tue, 12 Sep 2023 14:55:40 -0400
+        Fri, 22 Sep 2023 04:31:27 -0400
 Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0ADB125;
-        Tue, 12 Sep 2023 11:55:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A686E83;
+        Fri, 22 Sep 2023 01:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:To:References:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=H3/XY/jv4icK4NgBoiigxpPa2AsF3Mqwv5r97vJFS/w=; b=RA/wx0tUm3Vp9scFBNIDz5aBad
-        57SO6Le9cPhQkKGGqL0nuOWzThcfhm/53JrwETkK8H/mmRCQ0ZrhvuD7f+ydRQcrPNZH6SWygJGf3
-        8STCqlopXi0x3/sePJEWe0YZiQ6luUOP89ZHecuzQQfMdlpdNHFCdtgv2F+XEw9hKwIvMnXiYUpal
-        sQDaWolmVS4DnMULSTLViflt+VJXZKjtKQgA5++MOrXm4tfD4ids5GZQVvi41ZmaowzFaCjhGr09r
-        9GYGDGgQ4R2OHXpmQT1XdfKzrDs1nWBMvk17ipTFo2pTenXGGcFs4UcPHC3n5bbBM0pyXPbrEQdo0
-        34HuguIQ==;
+        bh=O6U42eOE2ldK54dJpZcJGeTJkJVss+9hSeHi3irefeI=; b=HiCSWfTcg+iIBgtsk1jYShiEHQ
+        POSA2MirU470UqUCpTA9DeWFAWYEhTWWggCYnj8OuzxRFDWRWC/lAfScpTrxEx0zl3ixMW+2pmHhK
+        xhKEHElrBU1ROrUuh9zzkudoR+WkA0B0fEvWHknIEXE3ncFqhf1uHw0wTPItkKTAAGJQDMX8Fqkfh
+        cmRmyBzcrU1ikxPERV94lddOhYuDNfHvjD8EGxY1026O53GO3wb6I7JsvRbVirr3StunrYSbcsToN
+        CC9cLxDS6zDg7+dTXqJj8lu018165X53+DfQgUqougF2i1ZMOCyzuGFcy4q4wowVkU1INe1UxZoR0
+        YFHnm5OA==;
 Received: from sslproxy06.your-server.de ([78.46.172.3])
         by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <daniel@iogearbox.net>)
-        id 1qg8Xp-000FQs-8e; Tue, 12 Sep 2023 20:55:29 +0200
-Received: from [194.230.161.182] (helo=localhost.localdomain)
+        id 1qjbZG-0008eK-0n; Fri, 22 Sep 2023 10:31:18 +0200
+Received: from [109.164.249.201] (helo=localhost.localdomain)
         by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <daniel@iogearbox.net>)
-        id 1qg8Xo-00041T-OO; Tue, 12 Sep 2023 20:55:29 +0200
-Subject: LPC 2023 Networking and BPF Track CFP (Reminder)
-From:   Daniel Borkmann <daniel@iogearbox.net>
+        id 1qjbZF-000CbV-QO; Fri, 22 Sep 2023 10:31:17 +0200
+Subject: LPC 2023 Networking and BPF Track CFP (Final Reminder)
+References: <5c9482c9-1f61-2886-4137-a2e2679b2662@iogearbox.net>
 To:     netdev@vger.kernel.org, bpf@vger.kernel.org
 Cc:     xdp-newbies@vger.kernel.org, linux-wireless@vger.kernel.org,
         netfilter-devel@vger.kernel.org
-References: <1515db2c-f517-76da-8aad-127a67da802f@iogearbox.net>
- <db3003d6-733b-099f-ef73-abce750d66c6@iogearbox.net>
-Message-ID: <5c9482c9-1f61-2886-4137-a2e2679b2662@iogearbox.net>
-Date:   Tue, 12 Sep 2023 20:55:24 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+X-Forwarded-Message-Id: <5c9482c9-1f61-2886-4137-a2e2679b2662@iogearbox.net>
+Message-ID: <96d6e492-5e00-3bc7-ce5b-83347e8628a7@iogearbox.net>
+Date:   Fri, 22 Sep 2023 10:31:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <db3003d6-733b-099f-ef73-abce750d66c6@iogearbox.net>
+In-Reply-To: <5c9482c9-1f61-2886-4137-a2e2679b2662@iogearbox.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/27029/Tue Sep 12 09:38:51 2023)
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27038/Thu Sep 21 09:39:42 2023)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-This is a reminder for the Call for Proposals (CFP) for the Networking and
-BPF track at the 2023 edition of the Linux Plumbers Conference (LPC) which is
-taking place in Richmond, VA, United States, on November 13th - 15th, 2023.
+This is the final reminder for the Call for Proposals (CFP) for the Networking
+and BPF track at the 2023 edition of the Linux Plumbers Conference (LPC) which
+is taking place in Richmond, VA, United States, on November 13th - 15th, 2023.
 
 Note that the conference is planned to be both in person and remote (hybrid).
 CFP submitters should ideally be able to give their presentation in person to
