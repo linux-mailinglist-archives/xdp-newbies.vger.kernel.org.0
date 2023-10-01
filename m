@@ -2,96 +2,109 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D408D7AD22C
-	for <lists+xdp-newbies@lfdr.de>; Mon, 25 Sep 2023 09:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF9D07B48B0
+	for <lists+xdp-newbies@lfdr.de>; Sun,  1 Oct 2023 19:01:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232529AbjIYHpT (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Mon, 25 Sep 2023 03:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46392 "EHLO
+        id S235194AbjJARBq (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 1 Oct 2023 13:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232525AbjIYHpQ (ORCPT
-        <rfc822;xdp-newbies@vger.kernel.org>);
-        Mon, 25 Sep 2023 03:45:16 -0400
-X-Greylist: delayed 523 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 25 Sep 2023 00:44:50 PDT
-Received: from mail.mavenbizbuilders.pl (mail.mavenbizbuilders.pl [217.61.23.202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665CC197
-        for <xdp-newbies@vger.kernel.org>; Mon, 25 Sep 2023 00:44:49 -0700 (PDT)
-Received: by mail.mavenbizbuilders.pl (Postfix, from userid 1002)
-        id A5602823FA; Mon, 25 Sep 2023 09:36:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mavenbizbuilders.pl;
-        s=mail; t=1695627364;
-        bh=eDz+Sjl+yzEpSesSLCYHZ+CLqawaxo8QNW1VskJ4zaQ=;
-        h=Date:From:To:Subject:From;
-        b=gUOKVLQr0pZ64QDExOjxVQJw9OXQix/LbEcDXKhNDWbkAUOSQFuqOJA/6nx3LRpCP
-         /ypjH/4tQ8sZaJqroxx+qIIqokNTqQ1AwcSfORpFP78R1nXebGpdwhwUS4et4xJwCH
-         FtwERFsWC1IWnkDqYcZ9AEAc/VkRs/F8g8SK4P/WITtPAudqJeBaLZ8v9GO5bdobOf
-         qaBHzD7F8wRF38/ycEPYH58mJXFZWY9Wj4Pk9wahGd1EZA6rhxO1gvxZDDerz+EpLR
-         u9btdJuJjmjxy7hj9esPFbDTt2mo8sYs7ROtWN/pQ2/eaziOe+Br2+e/5pT9O9TGwB
-         wWOSomUK1lqMQ==
-Received: by mail.mavenbizbuilders.pl for <xdp-newbies@vger.kernel.org>; Mon, 25 Sep 2023 07:36:01 GMT
-Message-ID: <20230925084500-0.1.t.2vhf.0.ihhe56nnud@mavenbizbuilders.pl>
-Date:   Mon, 25 Sep 2023 07:36:01 GMT
-From:   "Mariusz Witczuk" <mariusz.witczuk@mavenbizbuilders.pl>
-To:     <xdp-newbies@vger.kernel.org>
-Subject: =?UTF-8?Q?Przyznano_now=C4=85_dotacj=C4=99?=
-X-Mailer: mail.mavenbizbuilders.pl
+        with ESMTP id S233932AbjJARBp (ORCPT
+        <rfc822;xdp-newbies@vger.kernel.org>); Sun, 1 Oct 2023 13:01:45 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363FFC9
+        for <xdp-newbies@vger.kernel.org>; Sun,  1 Oct 2023 10:01:43 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a4c073cc06so1919387b3.1
+        for <xdp-newbies@vger.kernel.org>; Sun, 01 Oct 2023 10:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=novoserve.com; s=google; t=1696179702; x=1696784502; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4xulq+XE/5CSlZdBmBea7JbrZN6UMAqPNMIz1QuVZWc=;
+        b=JdIBBKl0B4an7FlqjcdSesq2GmBYZAMPd7QeOq+gtY/YTaiv6iKZaL7Qi4ovC4HfH/
+         UTIkFSagNgqDxxAYHRJePvMt9Kh7/PVY3ck1rbmhndL9gvMSNnlFk5E23Oeosx2CJWSZ
+         GEnIQ3elt8Rol4NfBhQNNgIWWQS93nEX+QdyMQ26hTPitNOtYEzNstK2ZR7dHBpKeVVg
+         KlQM/Jl+BhPrCePYpdB8nqYzRP287ltW4bwiEr74RViQmPLTcc320IaGdqkeKACQGqyj
+         egA77D6k+5PWs2GHYyT6fpP20AMLaD2OxqRukf2YSMg3eKY+krqgCRTon+gSqWwhCvad
+         buNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696179702; x=1696784502;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4xulq+XE/5CSlZdBmBea7JbrZN6UMAqPNMIz1QuVZWc=;
+        b=QIX1UtMW4jx7rx6ktrChLeNb38c7XpaYWrjqvjPUHeB7GH40BHGrhn2ML9NhalnXM0
+         tuQuIoCtqcXeIMrj3hjw4yJSWnGMTIRuKQYsoFGFlZR/xXj/UyUPTt+yn0xBuycalCbz
+         LB32vyDeI4sfcpcycghiZcXbGoqsRtf1U173j4ergSatiezjbjpKIgb0Jkeb3+LLpntJ
+         S0cf+a/osJjPZaJ4umNZBHUzzUnRWtR0PQUDEQ5SWqTw8aUyhpUFmsG6EdejPWqVpkUg
+         YLQ5TtInP5F7+Dd+Ob7vZZOzIhaBSnkGf0fHKVQwR55GRQ2E7bGFtQEvHDjc/UA22CxJ
+         FM8Q==
+X-Gm-Message-State: AOJu0YxYxhrL/7PtPIROhPuTR7ZGZewtE3WWrynVIerofvvlDEwnBjSk
+        KpU2W8wPh7xrm/xGteNyCeRkS/GtJnG5qC7GcRR17EqH519mxEsnbhyBOw==
+X-Google-Smtp-Source: AGHT+IF4wkLXoGKZPiaqLQZEiPIUz3gw7dF1jVcdPxs6SIlTJfF6sth9ZfX5dP0Y9e4r2IKnebKWtFTShXfknevnC9c=
+X-Received: by 2002:a25:b301:0:b0:d86:476c:3f9b with SMTP id
+ l1-20020a25b301000000b00d86476c3f9bmr9806625ybj.17.1696179702127; Sun, 01 Oct
+ 2023 10:01:42 -0700 (PDT)
 MIME-Version: 1.0
+From:   Minh Le Hoang <minh.lehoang@novoserve.com>
+Date:   Sun, 1 Oct 2023 19:01:31 +0200
+Message-ID: <CAAi1gX6u0giV3U9DrnqGfTDQRYvL5D=R6za55JSk5goPAHpczQ@mail.gmail.com>
+Subject: Xdp synproxy causes tcp resest
+To:     xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
-        *      blocklist
-        *      [URIs: mavenbizbuilders.pl]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *      [217.61.23.202 listed in zen.spamhaus.org]
-        * -0.0 BAYES_20 BODY: Bayes spam probability is 5 to 20%
-        *      [score: 0.1126]
-        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
-        *      DNSWL was blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [217.61.23.202 listed in list.dnswl.org]
-        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-        *      blocklist
-        *      [URIs: mavenbizbuilders.pl]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-X-Spam-Level: *****
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi everyone, currently I am trying to make the xdp synproxy work from
+the sample of linux kernel repository. I take the xdp kernel code from
+here: https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/progs/xdp_synproxy_kern.c
+ , and the xdp synproxy userspace program from here:
+https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/xdp_synproxy.c
+.
+I set up my testing environment with 3 network namespaces: ns1 as a
+server, ns2 as a router and ns3 as a client. I set 4 virtual
+ethernets: veth1 with peer veth2, veth3 with peer veth4 and add them
+to the different namespaces. To be specific, I use veth1
+(192.168.1.1/24) for namespace ns1, veth2(192.168.1.2/24) and
+veth3(192.168.2.1/24) for namespace ns2, and veth4(192.168.2.2/24) for
+namespace ns3. For the namespace ns1, I enable tcp syncookie, tcp
+loose contract by using these command:
+sysctl -w net.ipv4.tcp_syncookies=2
+sysctl -w net.ipv4.tcp_timestamps=1
+sysctl -w net.netfilter.nf_conntrack_tcp_loose=0
+Then I upload the xdp synproxy program to the veth1 using this command:
+./xdp_synproxy --iface veth1 --ports 80 --single --mss4 1460 --mss6
+1440 --wscale 7 --ttl 64
+and upload the xdp dummy kernel program, which is just simple xdp_pass
+to the veth2 interface of namespace ns2 with this command:
+ip link set veth2 xdp object xdp_dummy_kern.bpf.o section xdp
+. Most of my setup is taken from the test program from linux kernel repository:
+https://github.com/torvalds/linux/blob/master/tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c
 
-chcemy poinformowa=C4=87 Pa=C5=84stwa o mo=C5=BCliwo=C5=9Bci uzyskania do=
-finansowania na instalacj=C4=99 systemu fotowoltaicznego i magazyn=C3=B3w=
- energii.=20
+After that, I run the a simple http server at port 80 in namespace
+ns1. I use the netcat in network namespace ns3 to check for the tcp
+connect:
+# nc -v 192.168.1.1 80
+nc: connect to 192.168.1.1 port 80 (tcp) failed: Connection reset by peer
 
-Pi=C4=85ta edycja Programu M=C3=B3j Pr=C4=85d znacz=C4=85co rozszerza zak=
-res i kwot=C4=99 dofinansowania kt=C3=B3ra wynosi 58 tys. z=C5=82, gdzie =
-w poprzedniej edycji, mo=C5=BCna by=C5=82o otrzyma=C4=87 nie wi=C4=99cej =
-ni=C5=BC 31 tys. z=C5=82.=20
+. I debug using tcpdump and xdpdump in both interface veth1 and veth2
+and discover that the xdp synproxy program allow tcp ack packet to
+passthrough but does not notify the host which causes invalid tcp
+state and causes the server to respond with tcp reset flag. For more
+detail, here are the link to the Wireshark files of veth1 and veth2:
 
-Jako firma specjalizuj=C4=85ca si=C4=99 w monta=C5=BCu i serwisie fotowol=
-taiki ch=C4=99tnie podejmiemy si=C4=99 realizacji ca=C5=82ego projektu wr=
-az z przygotowaniem, z=C5=82o=C5=BCeniem i rozliczeniem wniosku o dotacj=C4=
-=99. =20
+https://www.dropbox.com/scl/fo/26kgk8sfozme1d6cc9zn4/h?rlkey=s1y9klybryilk5btylnp0dttg&dl=0
 
-Kiedy mogliby=C5=9Bmy um=C3=B3wi=C4=87 si=C4=99 na kr=C3=B3tk=C4=85 rozmo=
-w=C4=99 w celu zbadania potrzeb?=20
+Why does this problem happen? What should I do to fix this problem? In
+addition, I notice that if the veth2 interface does not attach the xdp
+dummy program, it does not recognise the tcp syn-ack packet generated
+by xdp synproxy program. What could be the solution for this?
 
+Kind regard
 
-Pozdrawiam
-Mariusz Witczuk
+Minh.
