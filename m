@@ -2,319 +2,252 @@ Return-Path: <xdp-newbies-owner@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3800A7C734E
-	for <lists+xdp-newbies@lfdr.de>; Thu, 12 Oct 2023 18:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BE467C97F2
+	for <lists+xdp-newbies@lfdr.de>; Sun, 15 Oct 2023 06:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347311AbjJLQnX (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
-        Thu, 12 Oct 2023 12:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
+        id S233429AbjJOE6k (ORCPT <rfc822;lists+xdp-newbies@lfdr.de>);
+        Sun, 15 Oct 2023 00:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344029AbjJLQnW (ORCPT
+        with ESMTP id S230091AbjJOE6j (ORCPT
         <rfc822;xdp-newbies@vger.kernel.org>);
-        Thu, 12 Oct 2023 12:43:22 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FFFA9
-        for <xdp-newbies@vger.kernel.org>; Thu, 12 Oct 2023 09:43:21 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d9ac31cb021so1025503276.1
-        for <xdp-newbies@vger.kernel.org>; Thu, 12 Oct 2023 09:43:21 -0700 (PDT)
+        Sun, 15 Oct 2023 00:58:39 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B887BA9
+        for <xdp-newbies@vger.kernel.org>; Sat, 14 Oct 2023 21:58:37 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d84f18e908aso3780852276.1
+        for <xdp-newbies@vger.kernel.org>; Sat, 14 Oct 2023 21:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697129000; x=1697733800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vW+OF/LmLuo7QUhPOjsfxReXb9QDDYn/v+ZZIEDLDmA=;
-        b=kLRjEdbklCNNiY/P8vDa0p4merQtX1fTkvrLmbZNDZf8WUAcomEPZTw+kfCuF3PCV0
-         /JeNEfKDqUF2ZpcWhIryL8bvSZkLSSa4TTVMh6/nYfVyzsbpHG+O6sRiIsT3sP1VUiPx
-         hGal+OlxTtPHsw22vTYynJx0qi+zLcz12h2pewq2gOILPL0ltGlI/Ce465wc33vSnj8b
-         DZuuIcYcXLH0X+GCS9OuoM74iPMqjA02/C1lEU9Cdl6hLVmMnW7rbtehr5o2lBr7GIQE
-         IVuJESNWQrOh3/2cPNtw95M9LUzMJmj1irNFihRYTWupzVglZXykgLvg0EGEQ2fnfK7l
-         nDfA==
+        d=novoserve.com; s=google; t=1697345917; x=1697950717; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kp7ZIe2m4tJVbbluH33S5UC3YAZY3ESAEhmL74yAq18=;
+        b=RHlsTmjxi2rhYggXP7UduAiaOXumbea/tnTof/5RaYzlkEMBMwTOV7ePFMQn0q1OJV
+         lLMbzfX0J5Gw1gCxrboGqqOpnZhjxhkwoaHJ/bTj4TTCO+WDLoucYA0sAmhdHJ+DvJ8E
+         rJIKbJMB8NfsBf2xm3wgCwIHqbVCNY22y3AmIrGfFrHeLBe8bOOze2CfFtX8SzoCnoiQ
+         w1066RaF9mXx3vwDNCGiQ5x4QzQiwlYvZPJJDmJsBYsw1eLam9/urzk6uCjG8gwU1taq
+         3oYU5JZlHMhj+RM+Z05f17Wme5eSQrRnGl/xIxvrZDR4AOw0owRwqlSUekNL9y7BQKfB
+         g9iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697129000; x=1697733800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vW+OF/LmLuo7QUhPOjsfxReXb9QDDYn/v+ZZIEDLDmA=;
-        b=KFsxo7lfCrVPRgfUyhwdh/leVKVLTAkrVVNtFiXel1DzgUN50n+kAOIOUBVwSuRJr9
-         W4Ei36Vc7Pi6Wn5buUsOPEJq6TN3kwue78QjxC1HVvDPcLeeivexXF4/fDkK2FrJhpTr
-         UUgerBToiCW/owy3qyxRZ5S+P8P4F1fzz7v0cghRYyFp/IdST6o4RFm0yXkCarUwGuVL
-         SDmvDLAAoTDHMhZK8UtTrgH/GQ3LgaNPtKigL8FRY0nJFQzx5gl0yv2djiD9x9stUf1+
-         y23JViDSvRQ+xn/02N5CBpPwqtKbVXcqY8Ai214vIurEnTKLM+YD9n+Hp6CdniIIK2eB
-         ksJg==
-X-Gm-Message-State: AOJu0Yz549tkJWyJigxJlHudXUVsXOKxlCu94+G3o96rnMbaNkidw55z
-        9pufq3E9EBZZsGJ2R5KoNxSOL3GYD2NuVYLZK2Y=
-X-Google-Smtp-Source: AGHT+IH5k9nW6IJ+85eBAhZErgOp0YPjCZ9/6+y/HwfECeiKLkskLet1HQJNum31/ZznE6bscK8R9Ss947I4kUoWfnU=
-X-Received: by 2002:a25:508a:0:b0:d9a:ce05:37b with SMTP id
- e132-20020a25508a000000b00d9ace05037bmr2070704ybb.56.1697129000251; Thu, 12
- Oct 2023 09:43:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697345917; x=1697950717;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kp7ZIe2m4tJVbbluH33S5UC3YAZY3ESAEhmL74yAq18=;
+        b=aWPoFSSVj3dPd95i7vMyhs1wZUd9dVRhaBH/GNWKnWKzVkqHBCjHVyOEcjcpGzbgTl
+         5GoAw0ja5z8JdGVbFtLivJnE70A75cbUzJf14VK6pm/rzVTVUNzfxDQQzH5CvoXm/Wf+
+         dUBm/B1Y/XTEVItAWuRUFDmnwpfRlBxSd686Zff7cpaNmiYI2eO6NDQzHtQHF9m1TEdP
+         pkfOAbEvxenc+QNihAIvREX5ZAfgRRJyIu6bJ1KJAPe6QqbXflBgVRMwH/DHy/RBAsN5
+         ajlrCJ8nyoHDaheM7n5cjYQBx5pS5QHYZYPRIFntUsgAyfBRcn0HypQBSqpN3ffAr/HE
+         qSIg==
+X-Gm-Message-State: AOJu0YzCQgE2T8/vQfmvtVO/rDPoXbabC7xwoOvnOhzTcAAGU/E79f0x
+        LwA6wGZZn2BNmKeHqB8Hj3Z5SNUZ3uWnHssBhwQDL34Nnmy0M0DTzbc/Bg==
+X-Google-Smtp-Source: AGHT+IGN2DI5wKWDjoTBOJYFkmEPcDq4ZN5GwWRZviST5RT65Ww7ttHayPEcHI/PJLXKC8sdPRAkAUiOyKabqU5Z0iE=
+X-Received: by 2002:a25:14d5:0:b0:d0c:9ab2:72d3 with SMTP id
+ 204-20020a2514d5000000b00d0c9ab272d3mr27904450ybu.14.1697345916703; Sat, 14
+ Oct 2023 21:58:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANzUK5-9PCbE-brUL+xbRnJr+8ZaUJDCLVAJmxO=gnkR3MxBQg@mail.gmail.com>
- <CAJ8uoz3g7Pw1rfRPsU8Z0QcvxK3_E7c6CJBa=c7tYvoZDyZr4g@mail.gmail.com>
-In-Reply-To: <CAJ8uoz3g7Pw1rfRPsU8Z0QcvxK3_E7c6CJBa=c7tYvoZDyZr4g@mail.gmail.com>
-From:   Srivats P <pstavirs@gmail.com>
-Date:   Thu, 12 Oct 2023 22:12:43 +0530
-Message-ID: <CANzUK5_rqe6ND+3J9acEnZj-bbTFNzdA3zNsnHd0YgQKFSYEsQ@mail.gmail.com>
-Subject: Re: ixgbe: xdpsock txonly hangs and does not complete
-To:     Magnus Karlsson <magnus.karlsson@gmail.com>
-Cc:     Xdp <xdp-newbies@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <CAAi1gX6u0giV3U9DrnqGfTDQRYvL5D=R6za55JSk5goPAHpczQ@mail.gmail.com>
+ <CAK3+h2xMqRe_Ta=R3sikpqxzr9TfiHyWtp7V=xeYFD9h2z8XtA@mail.gmail.com>
+In-Reply-To: <CAK3+h2xMqRe_Ta=R3sikpqxzr9TfiHyWtp7V=xeYFD9h2z8XtA@mail.gmail.com>
+From:   Minh Le Hoang <minh.lehoang@novoserve.com>
+Date:   Sun, 15 Oct 2023 06:58:25 +0200
+Message-ID: <CAAi1gX45-41AJdFdAUVNL6KQWvR=MxgJ3xjqu36CFCSj=41YLg@mail.gmail.com>
+Subject: Re: Xdp synproxy causes tcp resest
+To:     Vincent Li <vincent.mc.li@gmail.com>
+Cc:     xdp-newbies@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000006d50260607ba2467"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <xdp-newbies.vger.kernel.org>
 X-Mailing-List: xdp-newbies@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 1:56=E2=80=AFPM Magnus Karlsson
-<magnus.karlsson@gmail.com> wrote:
->
-> On Wed, 11 Oct 2023 at 08:06, Srivats P <pstavirs@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > While debugging a TX problem with my AF_XDP app it seems that there
-> > might be a bug in the ixgbe driver (see thread:
-> > https://www.spinics.net/lists/xdp-newbies/msg02406.html)
-> >
-> > So I decided to try xdpsock txonly and I see a similar behaviour as my
-> > app with xdpsock as well.
-> >
-> > Essentially, after sending 'n' packets on Tx ring, the app (or xdpsock
-> > for that matter) expects to free 'n' packets from the completion ring,
-> > but it either gets less or sometimes more packets/descriptors from the
-> > completion ring.
-> >
-> > Please see the log below.
-> >
-> > <log>
-> > root@tditwtga002:~# ./xdpsock -t -i eno49
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 7,388,073      7,390,400
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,689,548      17,082,880
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,660,591      26,745,152
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,690,513      36,437,184
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,684,898      46,123,840
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,688,898      55,815,168
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,654,194      65,471,488
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,681,793      75,154,880
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,664,164      84,821,376
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,681,688      94,504,768
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,637,019      104,143,552
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 9,684,780      113,830,720
-> > ^Coutstanding 2466 (-64)
-> > outstanding 2402 (-64)
-> > outstanding 2338 (-64)
-> > outstanding 2274 (-64)
-> > outstanding 2210 (-64)
-> > outstanding 2146 (-64)
-> > outstanding 2082 (-64)
-> > outstanding 2020 (-62)
-> > outstanding 1956 (-64)
-> > outstanding 1892 (-64)
-> > outstanding 1828 (-64)
-> > outstanding 1764 (-64)
-> > outstanding 1700 (-64)
-> > outstanding 1636 (-64)
-> > outstanding 1572 (-64)
-> > outstanding 1510 (-62)
-> > outstanding 1446 (-64)
-> > outstanding 1382 (-64)
-> > outstanding 1318 (-64)
-> > outstanding 1254 (-64)
-> > outstanding 1190 (-64)
-> > outstanding 1126 (-64)
-> > outstanding 1062 (-64)
-> > outstanding 1000 (-62)
-> > outstanding 936 (-64)
-> > outstanding 872 (-64)
-> > outstanding 808 (-64)
-> > outstanding 744 (-64)
-> > outstanding 680 (-64)
-> > outstanding 616 (-64)
-> > outstanding 552 (-64)
-> > outstanding 490 (-62)
-> > outstanding 426 (-64)
-> > outstanding 362 (-64)
-> > outstanding 298 (-64)
-> > outstanding 234 (-64)
-> > outstanding 170 (-64)
-> > outstanding 106 (-64)
-> > outstanding 42 (-64)
-> > outstanding 1 (-41)
-> >
-> >  sock0@eno49:0 txonly xdp-drv
-> >                    pps            pkts           1.00
-> > rx                 0              0
-> > tx                 5,625,834      119,457,536
-> >
-> > ^C
-> >
-> > ^C
-> >
-> > ^C
-> > ^[[A^H^H^H^H^C
-> > ^C
-> > ^C
-> > ^C^Z
-> > [1]+  Stopped                 ./xdpsock -t -i eno49
-> > root@tditwtga002:~#
-> > </log>
-> >
-> > As you can see, the code gets into a infinite loop waiting for 1
-> > descriptor which never appears on the completion ring.
-> >
-> > Note that I added the code to print the outstanding count and also
-> > call complete_tx_only_all() in case of Ctrl-C also and not just when
-> > number of packets were specified. Here's the exact diff (the sample
-> > code was taken from 5.15 Linux kernel tree) -
-> >
-> > <diff>
-> > --- xdpsock_user.c.orig 2023-10-11 11:20:47.553580604 +0530
-> > +++ xdpsock_user.c      2023-10-07 12:18:33.849399960 +0530
-> > @@ -1174,7 +1174,7 @@ static inline void complete_tx_l2fwd(str
-> >  }
-> >
-> >  static inline void complete_tx_only(struct xsk_socket_info *xsk,
-> > -                                   int batch_size)
-> > +                                   int batch_size, bool print)
-> >  {
-> >         unsigned int rcvd;
-> >         u32 idx;
-> > @@ -1191,6 +1191,9 @@ static inline void complete_tx_only(stru
-> >         if (rcvd > 0) {
-> >                 xsk_ring_cons__release(&xsk->umem->cq, rcvd);
-> >                 xsk->outstanding_tx -=3D rcvd;
-> > +                if (print)
-> > +                    fprintf(stderr, "outstanding %u (-%02u) \n",
-> > +                            xsk->outstanding_tx, rcvd);
-> >         }
-> >  }
-> >
-> > @@ -1271,7 +1274,7 @@ static void tx_only(struct xsk_socket_in
-> >
-> >         while (xsk_ring_prod__reserve(&xsk->tx, batch_size, &idx) <
-> >                                       batch_size) {
-> > -               complete_tx_only(xsk, batch_size);
-> > +               complete_tx_only(xsk, batch_size, false);
-> >                 if (benchmark_done)
-> >                         return;
-> >         }
-> > @@ -1288,7 +1291,7 @@ static void tx_only(struct xsk_socket_in
-> >         xsk->outstanding_tx +=3D batch_size;
-> >         *frame_nb +=3D batch_size;
-> >         *frame_nb %=3D NUM_FRAMES;
-> > -       complete_tx_only(xsk, batch_size);
-> > +       complete_tx_only(xsk, batch_size, false);
-> >  }
-> >
-> >  static inline int get_batch_size(int pkt_cnt)
-> > @@ -1311,7 +1314,7 @@ static void complete_tx_only_all(void)
-> >                 pending =3D false;
-> >                 for (i =3D 0; i < num_socks; i++) {
-> >                         if (xsks[i]->outstanding_tx) {
-> > -                               complete_tx_only(xsks[i], opt_batch_siz=
-e);
-> > +                               complete_tx_only(xsks[i], opt_batch_siz=
-e, true);
-> >                                 pending =3D !!xsks[i]->outstanding_tx;
-> >                         }
-> >                 }
-> > @@ -1353,7 +1356,9 @@ static void tx_only_all(void)
-> >                         break;
-> >         }
-> >
-> > +#if 0
-> >         if (opt_pkt_count)
-> > +#endif
-> >                 complete_tx_only_all();
-> >  }
-> > </diff>
-> >
-> > Distro/Kernel:
-> > Ubuntu 22.04.3 LTS (GNU/Linux 5.15.0-86-generic x86_64)
->
-> Thanks for reporting. Could you please try with a bleeding edge kernel
-> please and check if the problem is still there? 6.5 for example.
+--0000000000006d50260607ba2467
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Unfortunately, I don't have an ixgbe NIC. The problem was reported by
-my app's customer. They have rolled back to an older driver version
-(that ships as part of the native Ubuntu 22.04 Linux Kernel). The
-reason they had upgraded the driver was because with the native driver
-they were running into the ixgbe limitation of not being able to
-support more than 64 cores - which they have now resolved by disabling
-hyper-threading). After disabling hyper threading and rolling back to
-the native Ubuntu 22.04 ixgbe driver both xdpsock and our app is
-working fine.
+Hi Vincent,
+Thank you for your reply. I have now changed the setup a little bit by
+making network namepace ns2 as a firewall to use iptable. I run these
+command for iptable configuration:
+sysctl -w net.ipv4.tcp_syncookies=3D2
+sysctl -w net.ipv4.tcp_timestamps=3D1
+sysctl -w net.netfilter.nf_conntrack_tcp_loose=3D0
 
-Srivats
+iptables -t raw -I PREROUTING  -i veth3 -p tcp -m tcp --syn --dport 80
+-j CT --notrack
+iptables -t filter -A INPUT -i veth3 -p tcp -m tcp --dport 80 -m state
+--state INVALID,UNTRACKED -j SYNPROXY --sack-perm --timestamp --wscale
+7 --mss 1460
+iptables -t filter -A INPUT -i veth3 -m state --state INVALID -j DROP
 
+./xdp_synproxy --iface veth3 --ports 80 --single --mss4 1460 --mss6
+1440 --wscale 7 --ttl 64
+
+ The result is really confusing because the xdp program drops all the
+tcp SYN packets. Below is the wireshark file I capture by using
+xdpdump program in veth3:
+Kind regards,
+Minh
+
+On Wed, Oct 11, 2023 at 4:32=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.com=
+> wrote:
 >
-> > Driver:
-> > # ethtool -i eno49
-> > driver: ixgbe
-> > version: 5.19.6
-> > firmware-version: 0x80000887, 1.2688.0
-> > expansion-rom-version:
-> > bus-info: 0000:04:00.0
-> > supports-statistics: yes
-> > supports-test: yes
-> > supports-eeprom-access: yes
-> > supports-register-dump: yes
-> > supports-priv-flags: yes
+> On Sun, Oct 1, 2023 at 10:11=E2=80=AFAM Minh Le Hoang
+> <minh.lehoang@novoserve.com> wrote:
 > >
-> > I would be grateful if someone can try the same and let me know if
-> > they see a similar behaviour.
+> > Hi everyone, currently I am trying to make the xdp synproxy work from
+> > the sample of linux kernel repository. I take the xdp kernel code from
+> > here: https://github.com/torvalds/linux/blob/master/tools/testing/selft=
+ests/bpf/progs/xdp_synproxy_kern.c
+> >  , and the xdp synproxy userspace program from here:
+> > https://github.com/torvalds/linux/blob/master/tools/testing/selftests/b=
+pf/xdp_synproxy.c
+> > .
+> > I set up my testing environment with 3 network namespaces: ns1 as a
+> > server, ns2 as a router and ns3 as a client. I set 4 virtual
+> > ethernets: veth1 with peer veth2, veth3 with peer veth4 and add them
+> > to the different namespaces. To be specific, I use veth1
+> > (192.168.1.1/24) for namespace ns1, veth2(192.168.1.2/24) and
+> > veth3(192.168.2.1/24) for namespace ns2, and veth4(192.168.2.2/24) for
+> > namespace ns3. For the namespace ns1, I enable tcp syncookie, tcp
+> > loose contract by using these command:
+> > sysctl -w net.ipv4.tcp_syncookies=3D2
+> > sysctl -w net.ipv4.tcp_timestamps=3D1
+> > sysctl -w net.netfilter.nf_conntrack_tcp_loose=3D0
+> > Then I upload the xdp synproxy program to the veth1 using this command:
+> > ./xdp_synproxy --iface veth1 --ports 80 --single --mss4 1460 --mss6
+> > 1440 --wscale 7 --ttl 64
+> > and upload the xdp dummy kernel program, which is just simple xdp_pass
+> > to the veth2 interface of namespace ns2 with this command:
+> > ip link set veth2 xdp object xdp_dummy_kern.bpf.o section xdp
+> > . Most of my setup is taken from the test program from linux kernel rep=
+ository:
+> > https://github.com/torvalds/linux/blob/master/tools/testing/selftests/b=
+pf/prog_tests/xdp_synproxy.c
 > >
-> > Thanks in advance,
-> > Srivats
+> > After that, I run the a simple http server at port 80 in namespace
+> > ns1. I use the netcat in network namespace ns3 to check for the tcp
+> > connect:
+> > # nc -v 192.168.1.1 80
+> > nc: connect to 192.168.1.1 port 80 (tcp) failed: Connection reset by pe=
+er
+> >
+> > . I debug using tcpdump and xdpdump in both interface veth1 and veth2
+> > and discover that the xdp synproxy program allow tcp ack packet to
+> > passthrough but does not notify the host which causes invalid tcp
+> > state and causes the server to respond with tcp reset flag. For more
+> > detail, here are the link to the Wireshark files of veth1 and veth2:
+>
+> I did not look at your capture, this problem sounds familiar and I
+> guess you probably missed the iptables rules for SYNPROXY, if you look
+> at bpf selftest, it has iptables rules setup for synproxy, I am
+> porting xdp synproxy to bpf-examples repo and here are the iptables
+> rules for example
+>
+> https://github.com/vincentmli/bpf-examples/tree/vli-dev/xdp-synproxy
+>
+> >
+> > https://www.dropbox.com/scl/fo/26kgk8sfozme1d6cc9zn4/h?rlkey=3Ds1y9klyb=
+ryilk5btylnp0dttg&dl=3D0
+> >
+> > Why does this problem happen? What should I do to fix this problem? In
+> > addition, I notice that if the veth2 interface does not attach the xdp
+> > dummy program, it does not recognise the tcp syn-ack packet generated
+> > by xdp synproxy program. What could be the solution for this?
+> >
+> > Kind regard
+> >
+> > Minh.
+
+--0000000000006d50260607ba2467
+Content-Type: application/octet-stream; name="veth3cap_xdp.pcapng"
+Content-Disposition: attachment; filename="veth3cap_xdp.pcapng"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lnqzt0a40>
+X-Attachment-Id: f_lnqzt0a40
+
+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
+--0000000000006d50260607ba2467--
