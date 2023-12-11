@@ -1,219 +1,200 @@
-Return-Path: <xdp-newbies+bounces-12-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-13-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DF4380AC88
-	for <lists+xdp-newbies@lfdr.de>; Fri,  8 Dec 2023 19:57:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ADDA80C61D
+	for <lists+xdp-newbies@lfdr.de>; Mon, 11 Dec 2023 11:12:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 381312818FE
-	for <lists+xdp-newbies@lfdr.de>; Fri,  8 Dec 2023 18:57:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 182251F21447
+	for <lists+xdp-newbies@lfdr.de>; Mon, 11 Dec 2023 10:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C85DE481C1;
-	Fri,  8 Dec 2023 18:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164972230A;
+	Mon, 11 Dec 2023 10:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNgmgZcj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iya3IZ2p"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44FE91718
-	for <xdp-newbies@vger.kernel.org>; Fri,  8 Dec 2023 10:57:39 -0800 (PST)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-425a3cdbda9so5456151cf.1
-        for <xdp-newbies@vger.kernel.org>; Fri, 08 Dec 2023 10:57:39 -0800 (PST)
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F65B6
+	for <xdp-newbies@vger.kernel.org>; Mon, 11 Dec 2023 02:12:23 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id ada2fe7eead31-466006f9fa5so977849137.3
+        for <xdp-newbies@vger.kernel.org>; Mon, 11 Dec 2023 02:12:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702061858; x=1702666658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1702289543; x=1702894343; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KpYakrOByamSsbDcuspTuL9XMh1fzT1iYs6UfhtzCCI=;
-        b=KNgmgZcjxN/MuqjA9RlP7WSgXDwXGu2TRx7oE1f3GnFHlQ1vu5ErB44yG/yvCcdjmW
-         7GboyfyfrKCcTTZr/PkuSQ1FYmMQl90KvmaPMimJxo3FBvF/bNdjOIz7e7RUh8L2JTQr
-         nPOULiWyH1wbOvqWSyBMxcoYpO5HEBeBb1EEyjyizxwnPg0tn/LyVp9dB1/bdUEkWTh/
-         1qkqHiSdsf2ttyaxGsJK8n9zpgISF9guD5YxxN14nHv9rOBcSzjjkap8IkTqbwWlyvWp
-         fWeHLdXycn+uSKEsBu2rwBm71OUuIFhDQ4wDR8MmBjFPzksGK70UXUtWbF9LqDOe2f3/
-         P/yw==
+        bh=x4BUdSP+iv+lI0P3PRCggGghfuGH1IptfxoDp8f2+Fo=;
+        b=iya3IZ2p+/zunT66rws26ZD4VlLRME6LGHRaHhemRkId7qgJfwLQU0NIUaW3/NxNyQ
+         uciMR0xSaPKb31hPjR1ZunlBO7oNqXPtdsysDMPNK6ML2N0bJN5zWdD+PkDnurU6fFC7
+         fpNAv43iZwLFn3k/By1GDp9aH5tFRF27Fh3BFsoM+U1IoP8NlGEXtAEU3f3TKI5fLADT
+         mwGI23Z6dwPaAds2atGo/9vvbkj4zJhu0m0hNBAFLGcztbVKgoqyMF5CfHIAYp4wnoZw
+         sukpYWK0R818QauPgOh5sYBtfgzK7C8AsMyKbTy53bbTy+WD2M2vIgascqdaH0k5RVce
+         zIyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702061858; x=1702666658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1702289543; x=1702894343;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KpYakrOByamSsbDcuspTuL9XMh1fzT1iYs6UfhtzCCI=;
-        b=i4yeEqJ8frqcTY3hqXaSfGP/f4faebyq6CsLU0kUh/FzLAJUzEV7bCAEg57Ay2NoP0
-         DLmEOSlOR9RONxHoBDy7YXLVfc834sG1fvVDNo+E5lokfYTkcgweKc99121v19bPS/sk
-         7mV87W778vM+xlvlheKfdBLD7Dp6aYyxkPYBGgW9SfZ59o1evhKTb73i6QmVbs8aeOel
-         4m/dKRoPZ6M1Al4b/tHLSmMijshXUFuZu0rSSxU7ErC9twF3UiOydez8GY7050rx5yzS
-         DlIE1g30TDIxWkPg1IwYMWEfnQEJYHwfu+gNqfXdXM4D06w7ib58sI4vaOJC2LCHTr3J
-         liuQ==
-X-Gm-Message-State: AOJu0Yw5IIMhwBK6O26HKAY1c8S7QBESgMqc1IggtYbdv5P+yoLd4q9c
-	CrayAIE7WEV0agrSq+ds3H1qRTMzwJVXVChlUX9hMRts
-X-Google-Smtp-Source: AGHT+IGbnH5K7rddEh0odHlTZ159aOdCxTZkAM1Q8oxPyzaAmXGlc6Z7WSB8aH5yoqihqWRTBB6pYJgNI2fQ68M3yis=
-X-Received: by 2002:a05:622a:14c6:b0:425:9e97:b1c6 with SMTP id
- u6-20020a05622a14c600b004259e97b1c6mr855889qtx.35.1702061858321; Fri, 08 Dec
- 2023 10:57:38 -0800 (PST)
+        bh=x4BUdSP+iv+lI0P3PRCggGghfuGH1IptfxoDp8f2+Fo=;
+        b=t37y6MiVNMGZN4JqwM2t8heL3iz/Uv8i9LoQUh8PeWV1aDC5fh6KVKn0Xr077vxceA
+         2BP2kdEXxWvCwzeW0Uc35gda3Q+djid3EmWFsVvhvNznBlNo1/05U6WNyggfBkqysx1A
+         P+7Lf6QAkuwPC7CV/Wo9f0eBtt4uX1o2dNsB4ufJZmU7pLVIsHjLpswj/hXjhLTn55Y+
+         4EgrE9x11db3Vt71cT4Elx9p7wRmqOxL9qcV4F84Orw5dw6cFevnhRVVsgsQH8SdJs/V
+         8zoCC5DQV5522bmS7C/ehEafz7PypFrfV20lXdG+Oq4kDAmbzIp+UItXniTXTBQzqrUj
+         fK2g==
+X-Gm-Message-State: AOJu0YwLOMbz/3RZJmhpLcjWNvuem43RhkicD6/9NDyim3MxcLy1PdqN
+	PcN6kX75SVTMCw9CKZMYGQnG7iZ0FgMQhAFUZ2uvM65G0w==
+X-Google-Smtp-Source: AGHT+IHWvoF3QBfdyoq0GdWh3spax8vb2xvLGLePl3bhVfJHQ1xeTzdlOnoaAP3EyWHYIJXoMAHxWDQ08Wi0uywXn0c=
+X-Received: by 2002:a05:6102:3a10:b0:464:7a10:6d2f with SMTP id
+ b16-20020a0561023a1000b004647a106d2fmr2469683vsu.4.1702289542672; Mon, 11 Dec
+ 2023 02:12:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAAi1gX7owA+Tcxq-titC-h-KPM7Ri-6ZhTNMhrnPq5gmYYwKow@mail.gmail.com>
- <CAK3+h2w-k4xYmLWtcmrit1kfWQiSCOY4Zp2--w-iMVqH3zVopQ@mail.gmail.com>
- <c5a2af04-5028-4f71-b6d1-4a428e8a7bc4@novoserve.com> <CAK3+h2w_sZ+cm4HJr+GvHCkWUUE3cfYweuSTh3XWDe7SCHbSsg@mail.gmail.com>
- <CAAi1gX4iUmdd=uZpoBAVxYohX629g7RDw_Qs44bKD9XFW_qP1w@mail.gmail.com> <CAAi1gX5O3TpTdryKkfxT7Xp0dqJzkNu8KCuJTJSREPJ1cBC9_A@mail.gmail.com>
-In-Reply-To: <CAAi1gX5O3TpTdryKkfxT7Xp0dqJzkNu8KCuJTJSREPJ1cBC9_A@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Fri, 8 Dec 2023 10:57:27 -0800
-Message-ID: <CAK3+h2z1r69Z5g+qTwCaJzgnD5sv93x67TLJ3gVQ70_nFE0AqQ@mail.gmail.com>
-Subject: Re: Bug in xdp synproxy kernel code
-To: Minh Le Hoang <minh.lehoang@novoserve.com>
-Cc: xdp-newbies@vger.kernel.org, 
-	Jeroen van Ingen Schenau <jeroen.vaningenschenau@novoserve.com>
+References: <CAOafi9EZ8L150jw_pC_DZj4_VO6r-BxCMDZzsC_X-V06o73org@mail.gmail.com>
+In-Reply-To: <CAOafi9EZ8L150jw_pC_DZj4_VO6r-BxCMDZzsC_X-V06o73org@mail.gmail.com>
+From: Joshua Coutinho <souichirosano@gmail.com>
+Date: Mon, 11 Dec 2023 10:12:12 +0000
+Message-ID: <CAOafi9FEH7dPOVftHx=02O7DNFJNK0mRe_xxwTm2OAZC+bHARQ@mail.gmail.com>
+Subject: Re: XSK tx on loopback drops packets.
+To: xdp-newbies@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 8, 2023 at 4:42=E2=80=AFAM Minh Le Hoang <minh.lehoang@novoserv=
-e.com> wrote:
->
-> ---------- Forwarded message ---------
-> From: Minh Le Hoang <minh.lehoang@novoserve.com>
-> Date: Fri, Dec 8, 2023 at 1:40=E2=80=AFPM
-> Subject: Re: Bug in xdp synproxy kernel code
-> To: Vincent Li <vincent.mc.li@gmail.com>
->
->
-> Hi Vincent,
-> I think the reason why the xdp synproxy works with and without the
-> changing of the code is that in my setup lab, only 1 interface in the
-> filter node is responsible for dealing with the incoming packet from
-> both client and server. If you look in the mailing list naming "XDP
-> synproxy causes tcp reset" which I finally made the code work by
-> creating an iptable FORWARD chain, I set up a different lab containing
-> 3 different network namespaces. The namespace ns2 which is both router
-> and firewall, I upload the XDP synproxy program to the interface
-> against the client's interface. When the XDP synproxy program triggers
-> the conntrack table to establish TCP connection with the server, the
-> interface containing XDP synproxy program is not involved in that
-> operation. Thus, the bug in the code does not react. Only when I set
-> up this network topology containing client, server, router, and filter
-> node, my colleague Jeroen and I discovered this bug.
-> Kind regards
-> Minh
->
+Please let me know if there is a better forum for this type of
+question or if there is someone in particular I should address this
+to.
+If this is a known issue, I would not mind taking a stab at fixing it
+and would appreciate pointers on what needs to be done.
 
-Thanks, I understand that.  I could not get your filter scenario
-working in the lab probably due to my lab setup issue. I thought
-letting synproxy handle SYNACK from the backend server is kind of an
-extra workload in my humble opinion :), filtering only on
-client/internet side should be good enough, but I don't know your
-environment.
+Yours sincerely,
+Josh
 
-> On Fri, Dec 8, 2023 at 1:56=E2=80=AFAM Vincent Li <vincent.mc.li@gmail.co=
-m> wrote:
-> >
-> > On Thu, Dec 7, 2023 at 2:19=E2=80=AFAM Jeroen van Ingen Schenau
-> > <jeroen.vaningenschenau@novoserve.com> wrote:
-> > >
-> > > Hi Vincent, list,
-> > >
-> > > >> iptables -t filter -A FORWARD \
-> > > >>     -i eth1 -p tcp -m tcp --dport 80 -m state --state INVALID,UNTR=
-ACKED \
-> > > >>     -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
-> > > >> iptables -t filter -A FORWARD \
-> > > >>     -i eth1 -m state --state INVALID -j DROP
-> > > >
-> > > > I have been unable to get it working by attaching  xdp synproxy to
-> > > > firewall/router without having target/protected destination IP on
-> > > > firewall/router by adding rules in filter table INPUT chain, your i=
-dea
-> > > > of adding  rules in filter FORWARD  chain solves my puzzle :)
-> > >
-> > > Glad that that helped! It was something that Minh struggled with too,
-> > > for a while.
-> > >
-> > > Indeed you need to use the INPUT chain for traffic destined to the ho=
-st
-> > > itself (eg when you run this code on a webserver, reverse proxy or
-> > > something like HAproxy in TCP mode). The FORWARD chain should be used
-> > > when the host is just a hop in the path, so when it's bridging or
-> > > routing the traffic, as is the case with a firewall placed in front o=
-f
-> > > one or more servers.
-> > >
-> > > Our use case is a transparent firewall that can be placed in line wit=
-h
-> > > traffic to clean it, so probably similar to what you were trying.
-> > >
-> > > On a side note: the presentation [0] that you reference in your repo =
-[1]
-> > > also gives an example with the FORWARD chain, see pages/slides 12 & 1=
-3.
-> > >
-> > >
-> > > >> I use the curl command in the client to get the web page from the
-> > > >> server for testing. It is strange for me that after the synproxy c=
-ode
-> > > >> completes the 3 way handshake tcp with the client, it sends the sy=
-n
-> > > >> packet to the server but it drops the SYNACK packet from the serve=
-r.
-> > > >>
-> > > > I guess maybe originally the synproxy code is not expected to handl=
-e
-> > > > SYNACK from the backend server?
-> > >
-> > > Looking through the code, we thought that it was actually designed to
-> > > handle this (but not sure how it was tested then, and why this issue
-> > > hadn't been identified yet).
-> > >
-> > >
-> > > >> Now the xdp synproxy kernel code does not drop the SYNACK tcp pack=
-et
-> > > >> from the server.
-> > > >
-> > > > Thanks for the analysis, if this is right and confirmed by other
-> > > > expert, I guess I should also fix it up in the xdp synproxy  code I
-> > > > ported to bpf-samples repo
-> > > > https://github.com/xdp-project/bpf-examples/tree/master/xdp-synprox=
-y.
-> > >
-> > > Well, it would be nice if you can also test and validate our patch -
-> > > having read through the code numerous times and after several tests i=
-n
-> > > our VM setup (as Minh describes), this change makes the code do what =
-we
-> > > expect.
-> > >
-> >
-> > Thank you for your detailed explanation,   I tried Minh's lab setup
-> > but for some reason I could not get it
-> > working, I suspect it is my lab setup issue, I also tried a simple
-> > firewall/router setup and attach
-> > the xdp synproxy program directly to the firewall/router interface, no
-> > standalone filter box involved to handle SYNACK from backend server
-> > it works with and without your patch.
-> >
-> > > It has been accepted into bpf-next [2], so hopefully it will propagat=
-e
-> > > to the relevant upstream repos - and maybe make it into Linux kernel =
-6.8.
-> > >
-> >
-> > I will add your fix to the bpf-examples repo, and thank you for having
-> > a real world working example xdp synproxy from kernel bpf selftest :)
-> >
-> > >
-> > > Kind regards,
-> > >
-> > > Jeroen van Ingen Schenau
-> > >
-> > > [0]:
-> > > https://netdevconf.info/0x15/slides/30/Netdev%200x15%20Accelerating%2=
-0synproxy%20with%20XDP.pdf
-> > > [1]: https://github.com/xdp-project/bpf-examples/tree/master/xdp-synp=
-roxy
-> > > [2]:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/comm=
-it/?id=3Db6a3451e0847
+On Mon, Dec 4, 2023 at 3:41=E2=80=AFPM Joshua Coutinho <souichirosano@gmail=
+.com> wrote:
 >
+> Hi All,
+>
+> I'm trying to transmit udp packets via an xsk socket. (XDP receives
+> work just fine). The xdp program is irrelevant/unused, I'm trying to
+> simply leverage the xsk socket write.
+>
+> (Kernel: Linux fedora 6.5.12-300.fc39.x86_64)
+> (OS: "Fedora Linux 39 (Workstation Edition)"
+>
+> I want a minimal working example of sending packets via an XSK socket
+> over loopback in user space land. I want to be able to fill in the
+> required memory regions and trigger the kernel to send the packet and
+> capture the sent packets on the other side with 'nc -lu 127.0.0.1
+> <port>'  This seems to happen partly successfully but on the ingress
+> part of the loopback it is dropped somewhere after reaching the kernel
+> function ip_rcv and then nf_hook_slow. Specifically, I simply want to
+> write a packet into a UMEM region, fill in the TX descriptor and then
+> submit that descriptor like so.
+>
+>         u32 txIdx =3D -1;
+>         const u32 txSlotsRecvd =3D xsk_ring_prod__reserve(&qs.txQ, 1, &tx=
+Idx);
+>         u32 addr =3D umem.txState.nextSlot();
+>
+>         xdp_desc* txDescr =3D xsk_ring_prod__tx_desc(&qs.txQ, txIdx);
+>         txDescr->addr =3D addr;
+>         txDescr->len =3D sizeof(OrderFrame);
+>         txDescr->options =3D 0;
+>
+>         u8* outputBuf =3D umem.buffer + addr;
+>
+>         TimeNs submitTime =3D currentTimeNs();
+>         OrderFrame& frame =3D *reinterpret_cast<OrderFrame *>(outputBuf);
+>
+>         std::array<u8, ETH_ALEN> sourceMac =3D {0x0, 0x0, 0x0, 0x0, 0x0, =
+0x0};
+>         std::array<u8, ETH_ALEN> destMac =3D {0x0, 0x0, 0x0, 0x0, 0x0, 0x=
+0};
+>         std::copy(sourceMac.begin(), sourceMac.end(), frame.eth.h_source)=
+;
+>         std::copy(destMac.begin(), destMac.end(), frame.eth.h_dest);
+>
+>         frame.eth.h_proto =3D htons(ETH_P_IP);
+>         frame.ip.ihl =3D 5;
+>         frame.ip.version =3D 4;
+>         frame.ip.tos =3D 0;
+>         frame.ip.tot_len =3D htons(sizeof(OrderFrame) - sizeof(ethhdr));
+>         frame.ip.id =3D orderId;
+>
+>         frame.ip.frag_off =3D 0x0;
+>         frame.ip.ttl =3D static_cast<u8>(255);
+>         frame.ip.protocol =3D 17;
+>         frame.ip.check =3D 0;
+>         constexpr u8 sourceIPBytes[4] =3D {127, 0, 0, 1};
+>         constexpr u8 destIPBytes[4] =3D {127, 0, 0, 1};
+>         const u32 sourceIP =3D *reinterpret_cast<const u32*>(sourceIPByte=
+s);
+>         const u32 destIP =3D *reinterpret_cast<const u32*>(destIPBytes);
+>         frame.ip.saddr =3D sourceIP;
+>         frame.ip.daddr =3D destIP;
+>         const u8* dataptr =3D reinterpret_cast<u8 *>(&frame.ip);
+>         const u16 kernelcsum =3D ip_fast_csum(dataptr, frame.ip.ihl);
+>         frame.ip.check =3D kernelcsum;
+>         constexpr int udpPacketSz =3D sizeof(OrderFrame) -
+> sizeof(ethhdr) - sizeof(iphdr);
+>         frame.udp.len =3D htons(udpPacketSz);
+>         frame.udp.check =3D 0;
+>         frame.udp.dest =3D htons(OE_PORT);
+>         frame.udp.source =3D htons(1234);
+>         ... // application packet logic
+>         frame.udp.check =3D 0;
+>
+>         xsk_ring_prod__submit(&qs.txQ, 1);
+>         if (xsk_ring_prod__needs_wakeup(&qs.txQ)) {
+>             assert((socket.cfg.bind_flags & XDP_COPY) !=3D 0);
+>             const ssize_t ret =3D sendto(socket.xskFD, nullptr, 0,
+> MSG_DONTWAIT, nullptr, 0);
+>         }
+>
+> This is a relevant stacktrace from the kernel indicating the path of
+> my packet after the above sendto is called.
+>
+>          __netif_receive_skb_one_core+0x3c/0xa0
+>          process_backlog+0x85/0x120
+>          __napi_poll+0x28/0x1b0
+>          net_rx_action+0x2a4/0x380
+>          __do_softirq+0xd1/0x2c8
+>          do_softirq.part.0+0x3d/0x60
+>          __local_bh_enable_ip+0x68/0x70
+>          __dev_direct_xmit+0x152/0x210
+>          __xsk_generic_xmit+0x3e4/0x710
+>          xsk_sendmsg+0x12f/0x1f0
+>          __sys_sendto+0x1d6/0x1e0
+>          __x64_sys_sendto+0x24/0x30
+>          do_syscall_64+0x5d/0x90
+>          entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+>
+> My socket is bound to localhost using xdpgeneric. I see the
+> transmitted packets in tcpdump and via bpftrace I see that ip_rcv is
+> invoked for the packets. nf_hook_slow is also invoked with 1 active
+> prerouting hook. On kfree_skb I see the reason for the drop is 'reason
+> not specified'. Examining the packet in tcpdump I see no errors with
+> the checksums or packet lengths and ports. Listeners for the
+> corresponding udp ports never receieve the packets.This is how I
+> create my socket
+>
+>         cfg.rx_size =3D XSKQueues::NUM_READ_DESC;
+>         cfg.tx_size =3D XSKQueues::NUM_WRITE_DESC;
+>         cfg.libxdp_flags =3D XSK_LIBBPF_FLAGS__INHIBIT_PROG_LOAD;
+>         cfg.xdp_flags =3D XDP_FLAGS_SKB_MODE;
+>         cfg.bind_flags =3D XDP_USE_NEED_WAKEUP | XDP_COPY;
+>
+>         if (xsk_socket__create(&socket, iface.c_str(), QUEUE, umem.umem,
+>                                &qs.rxQ, &qs.txQ, &cfg)) {
+>             perror("XSK: ");
+>             exit(EXIT_FAILURE);
+>         }
+>
+> What could be the issue?
 
