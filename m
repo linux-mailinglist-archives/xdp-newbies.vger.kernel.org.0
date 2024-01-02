@@ -1,161 +1,449 @@
-Return-Path: <xdp-newbies+bounces-23-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-24-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FF9B81D6C9
-	for <lists+xdp-newbies@lfdr.de>; Sat, 23 Dec 2023 23:25:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0345D821947
+	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Jan 2024 10:57:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7D2628271E
-	for <lists+xdp-newbies@lfdr.de>; Sat, 23 Dec 2023 22:25:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B87C282DDA
+	for <lists+xdp-newbies@lfdr.de>; Tue,  2 Jan 2024 09:57:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58871D53B;
-	Sat, 23 Dec 2023 22:24:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76875CA69;
+	Tue,  2 Jan 2024 09:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=radware.com header.i=@radware.com header.b="FVkJzIWI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmXGZT0L"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2133.outbound.protection.outlook.com [40.107.105.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC6E1D527
-	for <xdp-newbies@vger.kernel.org>; Sat, 23 Dec 2023 22:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radware.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gAZEJwMLVqCklwTRhQCeeTDfPe5Gfs9iSubDxuxiwwqGXltjZWghHZnIytQetp8VmJuixX171v06+qNL7CsMu7WMgrVTiFUxb5q+XTgPkKvGJT67M4Pkdok0t16t/j76DON+iMXVDfz3R2Xo+xqjOMtOC0lKQHEJxwp5PRD7UGMa1JyCvNW7m5aI5QyOo2Qja1sdgbWh1GegHDTqrb8GvQMW8u5c47UBYO7GiytCRfhv/8Eoig0CjuDtvQ0dlekveIsAI7AjMjTu8YGOSDby6Fs7A/BPJ3KAxUpAPP+I7rxBlghdAwhVJfRjKB/c+X8O5dheeVElE8ZcMxBkqUrbRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I+3rRhEUe16z9bup6wHH9xXnelzfmZBDtueX60Fm/D4=;
- b=lS/FNrcMOALfhgjfr/dAsuAvWbVzGyS82vYn/R18Dhi9W7cFKLfgE/03fm6s40j4q5k2ZEvDGXSIdMTqJPRPC6daqL7QLsjR1pl2jSqad161GcoT4mR3QhHC4g7fQzfdCAWb4KnJRy2Ndtf3UsqB92bt+se7PAKDUMKLwYFl+eo7B0WPDMeHbzkJInPkP8BdkKkTiaMRAt/VgQBcpeUougCw2YQHiC/mH7s5MVRgJMK1x3MMQnnjeANopAWHcXGQ2V7y29dqTH9uS66gAr84mXIP1sH2Q8kQit1pRh+IdzTu9xTPAHiNu7SU1kh4Qig12tl1FE7dIA7QAsQUTqQiKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=radware.com; dmarc=pass action=none header.from=radware.com;
- dkim=pass header.d=radware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=radware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I+3rRhEUe16z9bup6wHH9xXnelzfmZBDtueX60Fm/D4=;
- b=FVkJzIWI62aI8k7In0shYLv2lpiLCIJPCwaZUtLAEe0V8EJFTm9Pa8bZub/0pyL1Q36FYT/Tc194zGdW0FswGbGuUkTqWEbz9Qj2hR/sGKiPGTrzZlImQHEmZ4qO7XG29YJtp3hiZfxyi8dCqD1o6yI/A41QGQ9ClObMiR9g3PnLvyl4jdS6q2ZmV0ubXDJrAD2Tvo1ex0s5FBbS+0iX/Xkhf9vQg+M7lc9RwFMEZpZH/+rZzv76sR0+nx4KOoAsYsC+VG6WaMRNk7XQkXOLGaQGfAHv1AlZ/vrsoSY3xwbmD68qZkjGXrCFSFTWCnaBYFEiN0DJa87w/gxCaKhEvA==
-Received: from VI1PR01MB3807.eurprd01.prod.exchangelabs.com
- (2603:10a6:802:65::22) by DBAPR01MB6839.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:192::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.24; Sat, 23 Dec
- 2023 22:24:51 +0000
-Received: from VI1PR01MB3807.eurprd01.prod.exchangelabs.com
- ([fe80::ef21:2a9d:3d2:e750]) by VI1PR01MB3807.eurprd01.prod.exchangelabs.com
- ([fe80::ef21:2a9d:3d2:e750%3]) with mapi id 15.20.7113.023; Sat, 23 Dec 2023
- 22:24:50 +0000
-From: Yuval El-Hanany <yuvale@radware.com>
-To: "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
-Subject: Switching packets between queues in XDP program
-Thread-Topic: Switching packets between queues in XDP program
-Thread-Index: AQHaNe7X8gP71i0WGE+d1MjtKBFQfA==
-Date: Sat, 23 Dec 2023 22:24:49 +0000
-Message-ID: <52605D3E-4242-46D9-BFA8-50DDA0F6A84F@radware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: Apple Mail (2.3774.300.61.1.2)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=radware.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI1PR01MB3807:EE_|DBAPR01MB6839:EE_
-x-ms-office365-filtering-correlation-id: acf5501e-c5e2-42c0-23f4-08dc0405fa2c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- nrPoKhTqx6L9mSHjqQD6r3+z7VMRuCaR6l6+UUAsZ9x32SCSsIubplOt0OvCh7ChqU4XeecikO4DUUbsGMJp9WBaXCjv60/gTktcFXYePtGvXuNWZQfjew1JY+qWXs10GSqUeKWKGwY0xAYNVurOA47InlO9Djf6CsUVHcZ+bo0JMCGtewAwrBjRsnm2e9Icd8ZtEtpEtQaSXmzUTztpAiT11+XaWE/86Pt0XsEavNu6rprMUZ8O5rli2W/TdAz0wyJ4KEgmT7ePeWQ+ll0AVbT47Jq6VQ7HIXDEkK25AweQd3+kEjbj+6DhTW+fYDHKqjzYEiMz5VZzIdP4i8iMjVUDEgUMjNUO5atfepzTxlPwvKz6VMYbNAFAbXKeO46YMJNRoM/RR+ZzmhR0lA9gXW479qu7/ywvWDr0acFs2wfOUtr+ugdTFFxABXP10/l5AqnDj+3cLTgvW9HJauPVN6rHVv41UzjTCp5zv8wHZljvF25uxzIBFbTTSGYaVqN9RstLLLwFFLygsfmwlvTVfmVXGtHFiyuxVhGME167w/vC0MOKY+PJVe68IjRCueIg/B8Qfv+eOkc+bA0O3WgGu1nGFk7AcNJUYM7FErY8w05WcjXLEmPTPf585mXdhmQu
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR01MB3807.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(39860400002)(366004)(396003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(86362001)(6916009)(6512007)(6506007)(2906002)(478600001)(71200400001)(26005)(2616005)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(91956017)(8676002)(8936002)(316002)(6486002)(5660300002)(122000001)(41300700001)(38100700002)(83380400001)(33656002)(36756003)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WGRkcFNBTUs0TWJzWSt6dkpPb2xoeURrSXdPY2tOR0FsYTBneFRxM0Q0UFhV?=
- =?utf-8?B?Q3lSV05KaFZOMWFOZVZpYlV0dHp3L01iU3o2dVNsL08xc2F4YVdZdHhQY0Z5?=
- =?utf-8?B?bEpOc2diQklrMFlkUlZISnAvdC9jaytVSStSb3A1dlVibHE1UEJiZ2RIb1F3?=
- =?utf-8?B?MGs2dWo5N2NLeEphM3BSbGpNRk12VlJyU0wwWEErMTZEczlrdEpiTkJQd1pn?=
- =?utf-8?B?YWpNVzhEbDhkQXRTT3QyNWt1Q1lyZmtzRjVMY245emQ2OUowZS9uWkFFQy9E?=
- =?utf-8?B?djQra0lWL3dmRUlTN1lKUWE2L0lEb1E5b0JuOFg0OXhRMFYvL2llZkdNejZG?=
- =?utf-8?B?cVhhWmVkR1ppWXhxd3JYQk4yRTdOQ0FJRHVxK2J6aGdxKzFqSG1wdDl2U05z?=
- =?utf-8?B?ZjhVTGdhanhyb2lNa094ZkkyM0ozWVNFdVpPakROZDV1Yk5xWUs5ZUlSMkhU?=
- =?utf-8?B?NkhVMUZoNy9kdUdHd0k1T1M1U1VaVXFTSy9GNFREWDBMQmlySllIWVBnWnIv?=
- =?utf-8?B?KzFyaEhsMTM4dlllWHRBUkVhbXg2T2Uyb3UwYXV0ZWJaMk83a1RneEZqOTAv?=
- =?utf-8?B?R0ZSWGNhLzRZUmczaVlhdS92VHFhOFdNOUpTNmhPZnl0ekxaaldLYUlkQThM?=
- =?utf-8?B?cFVaRzBCMjYvM0xSVmNMZkFRS2ZaOGllOU12T3FyNkZublFkdmZsdXR4N0tv?=
- =?utf-8?B?NWFUV01SMURFd25qa3FIUU5tdFNaam53WVFncUJ2UXc2TGZvYWF4eVk3TGtt?=
- =?utf-8?B?dU4raWt3WGcreTJPbVJRMjhJNXhoVGhRY1g1WWVoTEZXcUpiWWdPQk9DNkJD?=
- =?utf-8?B?Rkw2ZG82Q1c1TjBwTkMrcWpEUVpUWHhIRklscVNua01WKzBBMU1RVEF4UTJo?=
- =?utf-8?B?c2pwdjY2WEZhNEZHQU1QMkxBODluQXpmV0VuRCtXWXZCTFRyckhuUHUvTjha?=
- =?utf-8?B?VXZoUjBqRXFBZWhSRW1YSTEzNjJseXpBQjdOUkRKVDB1Slk3UW1iSmM5VG1l?=
- =?utf-8?B?TUUrWU9tR1RSZVNmSlRuV1BUN2dQTFgyWU9QTVFFRXhXSEVZYTZtUmFpWXdG?=
- =?utf-8?B?bWMrWVFKNytqSVlzTXdOc2JER09YZmI5bTNCVTN4QVgyVW5ZR3JhMXlXV0NK?=
- =?utf-8?B?N25xWGRSVWhLRUdGQXpId055SDN1dDRaa1NWU1F3ZWFEMTJEcFg1WFBCS0Zy?=
- =?utf-8?B?ZHpwd0xYZ0VLaG9EelpmWUtBZGFPTDZGdFpUL0ZETEg2dFVoOTVEUzFXUWRo?=
- =?utf-8?B?b0F3a3lnaWFLUTYzSFVNMUErYjh6bHM5c3J4eGZEOEFITVg5SUs2Ylp3RS9a?=
- =?utf-8?B?d0dueU0yMzhTUHhra2tFNHFUdU5zMUN0VytTVTYva2g2dkNnd28zcTYwUkJH?=
- =?utf-8?B?RFk4U2RxaDhYdHhmVWM5dFhjeUN1djQzOCs5ektBOUpSVXJsTkdOMVIzVEVn?=
- =?utf-8?B?WHExelZpOHNLNVlRNUFlZCtHVmptN2IrZ0RBdFhObDRSNGM0dFhUL0tJN1NX?=
- =?utf-8?B?SG42bHhxVk1TQzFjSlVnUDEvT2MxNVFjb0YvVGJidG5CTnFPN0t5eGo1MEo1?=
- =?utf-8?B?RzhGTWJNSkM2d2dxV2V4NXg5NDF1aitDQkRZRE5jVytJdEE4a2lqNVJCVlBj?=
- =?utf-8?B?ek5XVkdYdnVReDZRa1NxeXRodkJ0TDVtTGEzQk5LNmx5SHViZ0ZmSno3TVJR?=
- =?utf-8?B?UW1uaGlUK3lvQlJhcDhtOWZLNG9yNCsvVjhNNVd1Uk9PNU1JQlNPVEY3bUNl?=
- =?utf-8?B?bDgxMmpmcEtOOU92UFpuemtSaEZJeWl1VUcwMFU0SUJ6Z0o1T1hvS0dPYlZZ?=
- =?utf-8?B?dnA0Nll0MUlFZndCRmNkcDdQV2xJaEo4dFMxeEtRMFNtU2lXVlZ0VEdPN1R2?=
- =?utf-8?B?TlI1RjV0SFpLSEZFN3pCV0pYbHU5SWxRZWtsUElQdFI3elo4T2E4aksyekhk?=
- =?utf-8?B?cTZjSlJJay9TTlBrVmFMM1laS2lyVDZKMURGbWNoNGRFTjlvaUZNVVNnZEJi?=
- =?utf-8?B?dFR0cU1tdG80Y1hwQ1JndkE0U1VycXlSdFhvcDhrS1NEcnprcXhWcWx3cFlC?=
- =?utf-8?B?NWw0MERpR1FEQTk0UlMwRXo1VTBCMVoxNXJPWjRJL0JVVHFCMkJqa04vbTVk?=
- =?utf-8?Q?71y28mzh6/uGd4tTyu6CySZB+?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <26A8EB4F9212AC4782BA71384C5AD02A@eurprd01.prod.exchangelabs.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9292ECA62
+	for <xdp-newbies@vger.kernel.org>; Tue,  2 Jan 2024 09:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-67f9b98e555so19967956d6.0
+        for <xdp-newbies@vger.kernel.org>; Tue, 02 Jan 2024 01:57:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704189468; x=1704794268; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XWJ3y5NOwEv4+coCLgacKsgYv7YEJKkJLiTqisILBII=;
+        b=LmXGZT0LozcxZBV7kNzF6EWDBdhIuGA8F3M6jKQtbcP9r2mVFVxYDxO+rr729Yb1fa
+         OOJFEByEngUdTW6Cl0KDaBf3ZtnIBc4GjdwLxws7mV2OztlOMMHIDkS1B91wFqP0UDnO
+         vozB2qgGG6s/6nWqc+OkSo1Ne2KQe9Ei3uln7ivMraGWBE+JH2oHUJEFbjnNOkiFhEjt
+         Ny4pKNOYwLNOiO625/cXmGYQAwUvfnWFb20tU0MA4mqAgn0gNXbouqHK4ZclIYNJtW6l
+         SLg/IsGcn9tpPQ6+EyKSlW4TrEf4j9/9+ueDDmTS0GDHsNCIjxeJRR3FDvwQISsCFt91
+         w4cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704189468; x=1704794268;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XWJ3y5NOwEv4+coCLgacKsgYv7YEJKkJLiTqisILBII=;
+        b=IrTu6OGsp+9CbRGKfu1jzRklbCcM39uFv74I0GNx4oP5KZDJCDeesup9wXMGDOgJ5b
+         4yr/t5xqNDWYga0D0dujL62C2OuyveUT8MpN6Wd+7n3kbAERq6QsxRyQU8Z89NO3rNme
+         YGPY26N9ruJzAtevc61vOIyhFPn9SW/N8SY5UCGAkHtdkBO/Z/S4zzNJdA9BiBoD4qtM
+         uTcDVFf5ym83YIAvEth3AhiIehPYVCtakyGRO6LhGy+7IM6V1DKPttGvxhAIB877E5Bh
+         9Uh2IBOSgH8q3FHaraWw9v887ElAtb4NWawVkvxp3DFxenDDSZF1psBAILV5FLxJMKm2
+         pcMQ==
+X-Gm-Message-State: AOJu0Yzh6cfZhhvCQN34GxyVXvOyQbTsxVaeC2iFV2euTqvF9V7mGzkr
+	doZ6By1O7axqUdnno9Qgy2g81ASdjizO3EN/wqM=
+X-Google-Smtp-Source: AGHT+IG8bb8qxaYoCiHwcNWJILcDJIr8pIoyack8yViHUWS3kQid1X+Pv3pkpgZ6nwAKa8IOwpOrjzQkYkeZDIBwxUw=
+X-Received: by 2002:a05:6214:2609:b0:680:c21c:2ab5 with SMTP id
+ gu9-20020a056214260900b00680c21c2ab5mr1382826qvb.6.1704189468295; Tue, 02 Jan
+ 2024 01:57:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: radware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR01MB3807.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: acf5501e-c5e2-42c0-23f4-08dc0405fa2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2023 22:24:49.8222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6ae4e000-b5d0-4f48-a766-402d46119b76
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O6cLJ9GdqIH9KPrm8OZIR/qX8rfvXk57yOdWgehjzInbjnBZAHE1q1quat0XxTUPDD1JJU97XK9H0jm5pnEJgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR01MB6839
+References: <CAAAYKZPF8BiBy_aPnJA2z1n+2M8Xj6ZdETCm5+dQd3U+A_mMTA@mail.gmail.com>
+ <CAJ8uoz2ieZCopgqTvQ9ZY6xQgTbujmC6XkMTamhp68O-h_-rLg@mail.gmail.com>
+ <CAAAYKZOrEUnD-5JOoB_kH8+dbrPJ84OPUiZn=As9ERQrR6y0tg@mail.gmail.com>
+ <CAJ8uoz30xYV7dG1r30wNx+M-5uoDytNtVCOU+avTaVWBJ-57yw@mail.gmail.com>
+ <CAAAYKZM35fLYfibDmq9WB5W5ht2N05prd_N2-ABY07+tWbKMcA@mail.gmail.com>
+ <CAJ8uoz3aLQR65GhuO5JSVr=BAB7eJ3R06Cx5mO-bU1upyDt+Cw@mail.gmail.com> <CAAAYKZOwckVv+xHmXTg8QpfbRGy=ysy0NTJZb77ij-6ZPCVQMw@mail.gmail.com>
+In-Reply-To: <CAAAYKZOwckVv+xHmXTg8QpfbRGy=ysy0NTJZb77ij-6ZPCVQMw@mail.gmail.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Tue, 2 Jan 2024 10:57:36 +0100
+Message-ID: <CAJ8uoz065BceDsz+DEGVZvKWs2AeAPaB0dKgaX8SsQ36rVN2wg@mail.gmail.com>
+Subject: Re: Redirect to AF_XDP socket not working with bond interface in
+ native mode
+To: Prashant Batra <prbatra.mail@gmail.com>, 
+	"Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>
+Cc: xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGksDQoJSeKAmW0gZGVzaWduaW5nIGEgUE9DIHRvIHBvcnQgYSBsYXJnZSBhcHBsaWNhdGlvbiBm
-cm9tIERQREsgdG8gWERQLiBTd2l0Y2hpbmcgaW5ncmVzc2luZyBwYWNrZXRzIGJldHdlZW4gZGlm
-ZmVyZW50IHByb2Nlc3NlcyBpcyBwYXJ0IG9mIHRoZSBjb3JlIGNvbmNlcHQgb2YgdGhlIFBPQy4g
-SSBzYXcgYSBxdWVzdGlvbiBpbiB0aGUgUSZBIG9mIEFGX1hEUCBidXQgdGhlIHF1ZXN0aW9uIGFu
-ZCBhbnN3ZXIgc2VlbSBhIGJpdCBtaXNtYXRjaGVkLiBUaGUgcXVlc3Rpb24gaXMgYWJvdXQgc3dp
-dGNoaW5nIHVtZW1zIGluIGNvcHkgbW9kZSBhbmQgdGhlIGFuc3dlciBpcyBnZW5lcmljIGFib3V0
-IHN3aXRjaGluZyBxdWV1ZXMuDQoNClE6IENhbiBJIHVzZSB0aGUgWFNLTUFQIHRvIGltcGxlbWVu
-dCBhIHN3aXRjaCBiZXR3ZWVuIGRpZmZlcmVudCB1bWVtcyBpbiBjb3B5IG1vZGU/DQpBOiBUaGUg
-c2hvcnQgYW5zd2VyIGlzIG5vLCB0aGF0IGlzIG5vdCBzdXBwb3J0ZWQgYXQgdGhlIG1vbWVudC4g
-VGhlIFhTS01BUCBjYW4gb25seSBiZSB1c2VkIHRvIHN3aXRjaCB0cmFmZmljIGNvbWluZyBpbiBv
-biBxdWV1ZSBpZCBYIHRvIHNvY2tldHMgYm91bmQgdG8gdGhlIHNhbWUgcXVldWUgaWQgWC4gVGhl
-IFhTS01BUCBjYW4gY29udGFpbiBzb2NrZXRzIGJvdW5kIHRvIGRpZmZlcmVudCBxdWV1ZSBpZHMs
-IGZvciBleGFtcGxlIFggYW5kIFksIGJ1dCBvbmx5IHRyYWZmaWMgZ29taW5nIGluIGZyb20gcXVl
-dWUgaWQgWSBjYW4gYmUgZGlyZWN0ZWQgdG8gc29ja2V0cyBib3VuZCB0byB0aGUgc2FtZSBxdWV1
-ZSBpZCBZLiBJbiB6ZXJvLWNvcHkgbW9kZSwgeW91IHNob3VsZCB1c2UgdGhlIHN3aXRjaCwgb3Ig
-b3RoZXIgZGlzdHJpYnV0aW9uIG1lY2hhbmlzbSwgaW4geW91ciBOSUMgdG8gZGlyZWN0IHRyYWZm
-aWMgdG8gdGhlIGNvcnJlY3QgcXVldWUgaWQgYW5kIHNvY2tldC4NCg0KCU15IGZvbGxvdyB1cCBx
-dWVzdGlvbiBpcyB3aGV0aGVyIHRoaXMgYXBwbGllcyBpZiBJIHVzZSBhIHNoYXJlZCB1bWVtIHRv
-IGFsbCBxdWV1ZXMgYW5kIGRldmljZXMuIE9idmlvdXNseSwgaXQgZG9lcyBub3QgYXBwbHkgaW4g
-dXNlciBtb2RlLCBhcyBpdOKAmXMgcG9zc2libGUgdG8gc2VuZCB0aGUgcGFja2V0cyB0byBhbnkg
-ZGV2aWNlIGFuZCBxdWV1ZSBzaGFyaW5nIHRoZSB1bWVtLiBJcyBpdCBpbXBvc3NpYmxlIHRvIHNl
-bmQgcGFja2V0cyB0byBkaWZmZXJlbnQgcXVldWVzIGV2ZW4gaWYgdGhleSBzaGFyZSB1bWVtIGlu
-IHRoZSBYRFAgcHJvZ3JhbSB1c2luZyB0aGUgWFNLTUFQPyBJcyB0aGlzIGEgaGFyZCBsaW1pdCBv
-ciBhIHNhZmV0eSBtZWFzdXJlLCB0aGF0IG1heSBiZSBsaWZ0ZWQgdXNpbmcgc29tZSBrZXJuZWwg
-cGF0Y2g/IEZvciB0aGUgUE9DLCB0aGUgbGltaXRhdGlvbiBtYXkgZmFpbCB0aGUgd2hvbGUgcG9y
-dC4gSSd2ZSB0cmllZCB0byBzd2l0Y2ggcGFja2V0cyBiZXR3ZWVuIHF1ZXVlcyBpbiBhIHNpbXBs
-ZSBzaW5nbGUgcHJvY2VzcyBhcHBsaWNhdGlvbiBpbiBza2IgbW9kZSB3aXRoIGEgc2hhcmVkIHVt
-ZW0gYW5kIGluZGVlZCBpdCBzZWVtcyB0aGUgcGFja2V0cyBkaWQgbm90IHJlYWNoIHRoZWlyIGRl
-c3RpbmF0aW9uLg0KDQoJVGhhbmtzLA0KCQlZdXZhbC4=
+On Fri, 22 Dec 2023 at 12:23, Prashant Batra <prbatra.mail@gmail.com> wrote=
+:
+>
+> Yes, I found the place where the packet is getting dropped. The check
+> for device match b/w xs and xdp->rxq is failing in xsk_rcv_check() .
+> The device in xs is the bond device whereas the one in xdp->rxq is the
+> slave device on which the packet is received and the xdp program is
+> being invoked from.
+>
+> static int xsk_rcv_check(struct xdp_sock *xs, struct xdp_buff *xdp)
+> {
+> --
+>     if (xs->dev !=3D xdp->rxq->dev || xs->queue_id !=3D xdp->rxq->queue_i=
+ndex)
+>         return -EINVAL;
+> --
+> }
+
+I am now back from the holidays.
+
+Perfect! Thank you for finding the root cause. I will rope in Maciej
+and we will get back to you with a solution proposal.
+
+> Here is the perf backtrace for the xdp_redirect_err event.
+> ksoftirqd/0    14 [000] 10956.235960: xdp:xdp_redirect_err: prog_id=3D69
+> action=3DREDIRECT ifindex=3D5 to_ifindex=3D0 err=3D-22 map_id=3D19 map_in=
+dex=3D5
+>         ffffffff873dcbf4 xdp_do_redirect+0x3b4
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff873dcbf4 xdp_do_redirect+0x3b4
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffffc05d0f0f ixgbe_run_xdp+0x10f
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/kernel/drivers/net/ethernet/intel=
+/ixgbe/ixgbe.ko)
+>         ffffffffc05d297a ixgbe_clean_rx_irq+0x51a
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/kernel/drivers/net/ethernet/intel=
+/ixgbe/ixgbe.ko)
+>         ffffffffc05d2da0 ixgbe_poll+0xf0
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/kernel/drivers/net/ethernet/intel=
+/ixgbe/ixgbe.ko)
+>         ffffffff873afad7 __napi_poll+0x27
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff873affd3 net_rx_action+0x233
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff8762ae27 __do_softirq+0xc7
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff86b04cfe run_ksoftirqd+0x1e
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff86b33d83 smpboot_thread_fn+0xd3
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff86b2956d kthread+0xdd
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>         ffffffff86a02289 ret_from_fork+0x29
+> (/lib/modules/5.14.0-362.13.1.el9_3_asn/build/vmlinux)
+>
+> I am curious why the xdp program is invoked from the ixgbe driver
+> (running for slave device) when the xdp program is actually attached
+> to the bond device? Is this by design?
+> # xdp-loader status bond0
+> CURRENT XDP PROGRAM STATUS:
+> Interface        Prio  Program name      Mode     ID   Tag
+>   Chain actions
+> -------------------------------------------------------------------------=
+-------------
+> bond0                  xdp_dispatcher    native   64   90f686eb86991928
+>  =3D>              20     xsk_def_prog              73
+> 8f9c40757cb0a6a2  XDP_PASS
+>
+> # xdp-loader status ens1f0
+> CURRENT XDP PROGRAM STATUS:
+> Interface        Prio  Program name      Mode     ID   Tag
+>   Chain actions
+> -------------------------------------------------------------------------=
+-------------
+> ens1f0                 <No XDP program loaded!>
+>
+> # xdp-loader status ens1f1
+> CURRENT XDP PROGRAM STATUS:
+> Interface        Prio  Program name      Mode     ID   Tag
+>   Chain actions
+> -------------------------------------------------------------------------=
+-------------
+> ens1f1                 <No XDP program loaded!>
+>
+> Now, if I skip the device check in xsk_rcv_check(), I can see the
+> packets being received in the AF_XDP socket in the driver mode.
+>  # ./xdpsock -r -i bond0 -q 5 -p -n 1 -N
+>  sock0@bond0:5 rxdrop xdp-drv poll()
+>                    pps            pkts           1.00
+> rx                10,126,924     1,984,092,501
+> tx                 0              0
+>
+> I am sure we would not want to skip the device check generally
+> especially for non-bonded devices, etc. Please guide on how to take
+> this further and get the issue fixed in the mainline.
+>
+> The ZC mode doesn't work. Mostly because of the problem you had
+> pointed out before.
+> # ./xdpsock -r -i bond0 -q 5 -p -n 1 -N -z
+> xdpsock.c:xsk_configure_socket:1068: errno: 22/"Invalid argument"
+>
+>
+> On Thu, Dec 21, 2023 at 7:16=E2=80=AFPM Magnus Karlsson
+> <magnus.karlsson@gmail.com> wrote:
+> >
+> > On Thu, 21 Dec 2023 at 13:39, Prashant Batra <prbatra.mail@gmail.com> w=
+rote:
+> > >
+> > > On Wed, Dec 20, 2023 at 1:54=E2=80=AFPM Magnus Karlsson
+> > > <magnus.karlsson@gmail.com> wrote:
+> > > >
+> > > > On Tue, 19 Dec 2023 at 21:18, Prashant Batra <prbatra.mail@gmail.co=
+m> wrote:
+> > > > >
+> > > > > Thanks for your response. My comments inline.
+> > > > >
+> > > > > On Tue, Dec 19, 2023 at 7:17=E2=80=AFPM Magnus Karlsson
+> > > > > <magnus.karlsson@gmail.com> wrote:
+> > > > > >
+> > > > > > On Tue, 19 Dec 2023 at 11:46, Prashant Batra <prbatra.mail@gmai=
+l.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > I am new to XDP and exploring it's working with different int=
+erface
+> > > > > > > types supported in linux. One of my use cases is to be able t=
+o receive
+> > > > > > > packets from the bond interface.
+> > > > > > > I used xdpsock sample program specifying the bond interface a=
+s the
+> > > > > > > input interface. However the packets received on the bond int=
+erface
+> > > > > > > are not handed over to the socket by the kernel if the socket=
+ is bound
+> > > > > > > in native mode. The packets are neither being passed to the k=
+ernel.
+> > > > > > > Note that the socket creation does succeed.
+> > > > > > > In skb mode this works and I am able to receive packets in th=
+e
+> > > > > > > userspace. But in skb mode as expected the performance is not=
+ that
+> > > > > > > great.
+> > > > > > >
+> > > > > > > Is AF_XDP sockets on bond not supported in native mode? Or si=
+nce the
+> > > > > > > packet has be to be handed over to the bond driver post recep=
+tion on
+> > > > > > > the phy port, a skb allocation and copy to it is indeed a mus=
+t?
+> > > > > >
+> > > > > > I have never tried a bonding interface with AF_XDP, so it might=
+ not
+> > > > > > work. Can you trace the packet to see where it is being dropped=
+ in
+> > > > > > native mode? There are no modifications needed to an XDP_REDIRE=
+CT
+> > > > > > enabled driver to support AF_XDP in XDP_DRV / copy mode. What N=
+ICs are
+> > > > > > you using?
+> > > > > >
+> > > > > I will trace the packet and get back.
+> > > > > The bond is over 2 physical ports part of the Intel NIC card. Tho=
+se are-
+> > > > > b3:00.0 Ethernet controller: Intel Corporation 82599ES 10-Gigabit
+> > > > > SFI/SFP+ Network Connection (rev 01)
+> > > > > b3:00.1 Ethernet controller: Intel Corporation 82599ES 10-Gigabit
+> > > > > SFI/SFP+ Network Connection (rev 01)
+> > > > >
+> > > > > Bonding algo is 802.3ad
+> > > > >
+> > > > > CPU is Intel Xeon Gold 3.40GHz
+> > > > >
+> > > > > NIC Driver
+> > > > > # ethtool -i ens1f0
+> > > > > driver: ixgbe
+> > > > > version: 5.14.0-362.13.1.el9_3
+> > > >
+> > > > Could you please try with the latest kernel 6.7? 5.14 is quite old =
+and
+> > > > a lot of things have happened since then.
+> > > >
+> > > I tried with kernel 6.6.8-1.el9.elrepo.x86_64. I still see the same i=
+ssue.
+> >
+> > OK, good to know. Have you managed to trace where the packet is lost?
+> >
+> > > > > Features
+> > > > > # xdp-loader features ens1f0
+> > > > > NETDEV_XDP_ACT_BASIC:           yes
+> > > > > NETDEV_XDP_ACT_REDIRECT:        yes
+> > > > > NETDEV_XDP_ACT_NDO_XMIT:        no
+> > > > > NETDEV_XDP_ACT_XSK_ZEROCOPY:    yes
+> > > > > NETDEV_XDP_ACT_HW_OFFLOAD:      no
+> > > > > NETDEV_XDP_ACT_RX_SG:           no
+> > > > > NETDEV_XDP_ACT_NDO_XMIT_SG:     no
+> > > > >
+> > > > > CPU is
+> > > > >
+> > > > > Interesting thing is that the bond0 does advertise both native an=
+d ZC
+> > > > > mode. That's because the features are copied from the slave devic=
+e.
+> > > > > Which explains why there is no error while binding the socket in
+> > > > > native/zero-copy mode.
+> > > >
+> > > > It is probably the intention that if both the bonded devices suppor=
+t a
+> > > > feature, then the bonding device will too. I just saw that the bond=
+ing
+> > > > device did not implement xsk_wakeup which is used by zero-copy, so
+> > > > zero-copy is not really supported so that support should not be
+> > > > advertised. The code in AF_XDP tests for zero-copy support this way=
+:
+> > > >
+> > > > if ((netdev->xdp_features & NETDEV_XDP_ACT_ZC) !=3D NETDEV_XDP_ACT_=
+ZC) {
+> > > >     err =3D -EOPNOTSUPP;
+> > > >     goto err_unreg_pool;
+> > > > }
+> > > >
+> > > > So there are some things needed in the bonding driver to make
+> > > > zero-copy work. Might not be much though. But your problem is with
+> > > > XDP_DRV and copy mode, so let us start there.
+> > > >
+> > > > > void bond_xdp_set_features(struct net_device *bond_dev)
+> > > > > {
+> > > > > ..
+> > > > >     bond_for_each_slave(bond, slave, iter)
+> > > > >         val &=3D slave->dev->xdp_features;
+> > > > >     xdp_set_features_flag(bond_dev, val);
+> > > > > }
+> > > > >
+> > > > > # ../xdp-loader/xdp-loader features bond0
+> > > > > NETDEV_XDP_ACT_BASIC:           yes
+> > > > > NETDEV_XDP_ACT_REDIRECT:        yes
+> > > > > NETDEV_XDP_ACT_NDO_XMIT:        no
+> > > > > NETDEV_XDP_ACT_XSK_ZEROCOPY:    yes
+> > > > > NETDEV_XDP_ACT_HW_OFFLOAD:      no
+> > > > > NETDEV_XDP_ACT_RX_SG:           no
+> > > > > NETDEV_XDP_ACT_NDO_XMIT_SG:     no
+> > > > >
+> > > > > > > Another thing I notice is that other XDP programs attached to=
+ bond
+> > > > > > > interface with targets like DROP, REDIRECT to other interface=
+ works
+> > > > > > > and perform better than AF_XDP (skb) based. Does this mean th=
+at these
+> > > > > > > are not allocating skb?
+> > > > > >
+> > > > > > I am not surprised that AF_XDP in copy is slower than XDP_REDIR=
+ECT.
+> > > > > > The packet has to be copied out to user-space then copied into =
+the
+> > > > > > kernel again, something that is not needed in the XDP_REDIRECT =
+case.
+> > > > > > If you were using zero-copy, on the other hand, it would be fas=
+ter
+> > > > > > with AF_XDP. But the bonding interface does not support zero-co=
+py, so
+> > > > > > not an option.
+> > > > > >
+> > > > >
+> > > > > Just to put forth the pps numbers with the above mentioned single=
+ port
+> > > > > in different modes and a comparison to the bond interface.
+> > > > > Test is using pktgen pumping 64 byte packets on a single flow.
+> > > > >
+> > > > > Single AF_XDP sock on a single NIC queue-
+> > > > >   AF_XDP rxdrop        PPS    CPU-SI*   CPU-xdpsock   Command
+> > > > >  =E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90
+> > > > >   ZC                            14M      65%        35%
+> > > > > ./xdpsock -r -i ens1f0 -q 5 -p -n 1 -N -z
+> > > > >   XDP_DRV/COPY     10M     100%       23%                ./xdpsoc=
+k -r
+> > > > > -i ens1f0 -q 5 -p -n 1 -N -c
+> > > > >   SKB_MODE            2.2M     100%       62%                ./xd=
+psock
+> > > > > -r -i ens1f0 -q 5 -p -n 1 -S
+> > > > > * CPU receiving the packet
+> > > > > In the above tests when using ZC and XDP_DRV/COPY, is this SI usa=
+ge as
+> > > > > expected? Especially in ZC mode. Is it majorly because of the BPF
+> > > > > program running in non-HW offloaded mode? Don't have a NIC which =
+can
+> > > > > run BPF in offloaded mode so I cannot compare it.
+> > > >
+> > > > I get about 25 - 30 Mpps at 100% CPU load on my system, but I have =
+a
+> > > > 100G card and you are maxing out your 10G card at 65% and 14M. So y=
+es,
+> > > > sounds reasonable. HW offload cannot be used with AF_XDP. You need =
+to
+> > > > do the redirect in the CPU for it to work. If you want to know wher=
+e
+> > > > time is spent use "perf top". The biggest chunk of time is spent in
+> > > > the XDP_REDIRECT operation, but there are many other time thiefs to=
+o.
+> > > >
+> > > > > The XDP_DROP target using xdp-bench tool (from xdp-tools) on the =
+same NIC port-
+> > > > >   xdp-bench                PPS       CPU-SI*   Command
+> > > > >  =E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90
+> > > > >   drop, no-touch         14M           41%      ./xdp-bench drop =
+-p
+> > > > > no-touch ens1f0 -e
+> > > > >   drop, read-data        14M           55%      ./xdp-bench drop =
+-p
+> > > > > read-data ens1f0 -e
+> > > > >   drop, parse-ip          14M           58%      ./xdp-bench drop=
+ -p
+> > > > > parse-ip ens1f0 -e
+> > > > > * CPU receiving the packet
+> > > > >
+> > > > > The similar tests on bond interface (above mentioned 2 ports bond=
+ed)-
+> > > > >  AF_XDP rxdrop       PPS   CPU-SI*   CPU-xdpsock   Command
+> > > > >  =E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90
+> > > > >   ZC                           X         X              X
+> > > > >       ./xdpsock -r -i bond0 -q 0 -p -n 1 -N -z
+> > > > >   XDP_DRV/COPY    X         X              X
+> > > > > ./xdpsock -r -i bond0 -q 0 -p -n 1 -N -c
+> > > > >   SKB_MODE            2M      100%        55%              ./xdps=
+ock
+> > > > > -r -i bond0 -q 0 -p -n 1 -S
+> > > > > * CPU receiving the packet
+> > > > >
+> > > > >   xdp-bench            PPS     CPU-SI*   Command
+> > > > >  =E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=
+=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=
+=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=
+=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90=E2=95=90
+> > > > >   drop, no-touch     10.9M    33%         ./xdp-bench drop -p no-=
+touch
+> > > > > bond0 -e
+> > > > >   drop, read-data    10.9M    44%         ./xdp-bench drop -p
+> > > > > read-data bond0 -e
+> > > > >   drop, parse-ip       10.9M   47%         ./xdp-bench drop -p
+> > > > > parse-ip bond0 -e
+> > > > > * CPU receiving the packet
+> > > > >
+> > > > >
+> > > > > > > Kindly share your thoughts and advice.
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Prashant
+> > > > > > >
 
