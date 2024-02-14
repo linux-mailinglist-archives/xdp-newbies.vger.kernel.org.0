@@ -1,160 +1,134 @@
-Return-Path: <xdp-newbies+bounces-45-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-46-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1D698537FC
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Feb 2024 18:31:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C859A854A5D
+	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Feb 2024 14:22:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12D3D1C21E14
-	for <lists+xdp-newbies@lfdr.de>; Tue, 13 Feb 2024 17:31:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BEC21C20E00
+	for <lists+xdp-newbies@lfdr.de>; Wed, 14 Feb 2024 13:22:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75885FDDF;
-	Tue, 13 Feb 2024 17:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981AF54672;
+	Wed, 14 Feb 2024 13:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ML3ScIRq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFrhmnQY"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E885FF04
-	for <xdp-newbies@vger.kernel.org>; Tue, 13 Feb 2024 17:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C408D53389
+	for <xdp-newbies@vger.kernel.org>; Wed, 14 Feb 2024 13:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707845506; cv=none; b=T+oKa1wopH8THTbM2x8LHh5FoSwDjl2v8XJxnu09dZhoApV1iVcaH7109IwYzocJJ3sS9+YIebvqPAYUudV7vejtemwm4nkfsBZvZ6j0I0tf9Ki6B8McuXxENZqHLsGBiBVD50VpcrFc31Bu9DTc+2hQUGtYDTQMRRxzczYitOs=
+	t=1707916925; cv=none; b=Qhvp81Ba0PCLf4Mr1Oe45kZS+GjwZWfmKXpCERqxHS3j62EF9pPkaqhcIPXsRe0FwLu6Ka9keXgkGBXGodWcKl3j7EDfXZlgkCXMI7vNQkU0znfDA2ByX9Zs2NMCjpfBZP6WxWZDdKgQBXW/k3cO/09+bQAn8GpCLcJsXtAvMp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707845506; c=relaxed/simple;
-	bh=KdTCEdYP5Q8bxB+l82hXEFBjxp3M4wqyRt01dp7tWsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KJS4H47BpND3LE2KjAEwB41+TLLRIFUsdFbSZ7PCnn5iJ3KzlksS0Z04IVyuea/YurFAHZdUeAZ2QWWl8n5hov88kjXRi3YrljgGAUI2dbuagWUnu/LL3JEmARrz9/qZeR4bNYvxx3psDWkKeId9U377L2x06DzdatBqIhRxfEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ML3ScIRq; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5119da22560so811692e87.2
-        for <xdp-newbies@vger.kernel.org>; Tue, 13 Feb 2024 09:31:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707845503; x=1708450303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w+3/3KxMmdWH90S+4vOrIUbr9Bwl27gimAzgHHO2+/w=;
-        b=ML3ScIRqqN2ZyhfG4gbKW+NklySJXZ5UNgCOP09y1ne3gtdprGr9AKNRG1jRsl8A8Z
-         N/ywetE3cqH8Co86i9ovSeu80ajAzyWtGXB3hbhUenEK4VWaAipqvuAUn+IvU/CXRag7
-         Eb+sYY8U9/0Tb82Y/pydd71sy6cDW6zaEmJXU+G9hS30K/baBBK+Q7ahBBetSuAyYhf1
-         iIckZcUhnAuaLWR1HMNXYgGz1IKX81RyBJS1YL+vUpd7f9JUS7FbfjB8YMDnP76fP3MZ
-         59KKP+vbZ/Nyt6GkIkUU7PloulY8X03qX2waRXGTpSQ7jxWXMaE8fUBLqaYmnR6KSJy/
-         uHRw==
+	s=arc-20240116; t=1707916925; c=relaxed/simple;
+	bh=XOUJC/BXIVu4D5FS5QDOAzI4bxYUSaY2JfDGHeKk8ZM=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=F97cSoH6HYjC9PVP2sg7/NCRO6MPWq5EnFjqWgc9hkds+2ZSadEY6/v0kbBydTposkVHybRJNE3D/Ldq+SlZ0GG6G5s+LphtO59Low4ANK4MoP1C0C5t6H3PwNGJs7pJ+zZ8IWEGQrSCL96MO0MOdRRicuY6hOjx5gpCVNttM8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eFrhmnQY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707916921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rReQrI5PmLBByAgC5r6Fn0ghiA0uwYK6bA2Ka5a7nvk=;
+	b=eFrhmnQYaRXFtJuiC+ffEQKxcanULWcJDhwbFIQoEdz5xuWNuVnaV2FgLBNuZRR46qMpLu
+	Dao2/8l0jmqKfOs2Y430heXFzw7H+nWhzVYz4AKDyx/VeeLCpD9pDqHevd1MzV/omF5W+9
+	veQt9WSSeOzqe4+QRmVNGgeCeYQdiVc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-i0o_zOM0O6GZ-oLMNwWj7A-1; Wed, 14 Feb 2024 08:21:59 -0500
+X-MC-Unique: i0o_zOM0O6GZ-oLMNwWj7A-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a357c92f241so324906066b.0
+        for <xdp-newbies@vger.kernel.org>; Wed, 14 Feb 2024 05:21:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707845503; x=1708450303;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1707916919; x=1708521719;
+        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+3/3KxMmdWH90S+4vOrIUbr9Bwl27gimAzgHHO2+/w=;
-        b=rdwP0d79/HV1/a760ux8iwWCbnWB6bJkyT9jaj9JoiVKXSouaHQ89Xu7aizK/H2OOJ
-         2DN6/K/MEjwKvJQrWz1STkdwb2OIuAQPOwBlVpr8dMZNFWrwr5+9xKun/7jdO5T+tXAy
-         Pqy395ayeNz1SPIpnYGWqgkJOTA9Z77Mk8tTMeztV5X3nin4OBAyhW9comQUPNObbM26
-         M8TjPERx9y2+U/DtjWQHanm2Xs91Ua5jKmze25gwLxv/pLFKE6M7aRWDOHnF7GxAgcTu
-         HL96r4y3MM7lqy8MmjMYt1K5F8KSu4Ltcal4K95BqS9x9YoYSYYnuF1dhEEJlglg7Dbc
-         A+NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPM/5Kc43Ul+cOuMuWM62tBHw+n4glus7fFnv0AU0V1a+t1SOpoDSfO7NeQK1hgP/NQqeTMSR0oUtrSVAHL3oxARpxYvI5aiZUN4I=
-X-Gm-Message-State: AOJu0YxG43YNrsGwN5UZdIaTdUEI3x+G8Z6cjgDKS434rxskL5+HP9+g
-	DSrBB+/lilpMnWuHq7qzUV3CYDCh1EsFA7l0RPlleTNoLfsTIdeL
-X-Google-Smtp-Source: AGHT+IGbYvii4IQQdalQ8tgNoy/PjFLzQ5zsXqPDBSFID4Xe2WOYa2QryGb1WeKNqzqOdtD6wQGEeg==
-X-Received: by 2002:a19:f811:0:b0:511:83b3:a9a9 with SMTP id a17-20020a19f811000000b0051183b3a9a9mr186901lff.14.1707845502701;
-        Tue, 13 Feb 2024 09:31:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV7XzFuMXRPPkAzWV3vCCvF4rNUAzWDtk/ww4SN+VjBq5DN/U/2RTideSDUY0nv640gTOAqb3jW+9e+moHUyzRTS3P44+GDO0K5UKRv+iGs1Z3WL/+x4BnYDtvFRB9/dlk=
-Received: from [192.168.1.56] ([82.66.150.212])
-        by smtp.gmail.com with ESMTPSA id ti13-20020a170907c20d00b00a3ce3c5b2a4sm1304917ejc.195.2024.02.13.09.31.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Feb 2024 09:31:42 -0800 (PST)
-Message-ID: <e4086e04-ca73-439c-8a77-529c2f3562af@gmail.com>
-Date: Tue, 13 Feb 2024 18:31:41 +0100
+        bh=rReQrI5PmLBByAgC5r6Fn0ghiA0uwYK6bA2Ka5a7nvk=;
+        b=TgifJO7g2Cze9JwtIfSJoi84IjPvjNjKbe6TYoEknNEYULZRxdCqfBv8eDeWMsuijo
+         hV0QniuwTY7oVnNmGhuhjLz8YyrlrxEcmlBDJ186rs8PsiTfGFkf7KOjDp8EixLsilcZ
+         gl3yoDGtlGxYQjO7M/OgDMDdUZFt7IV5u2OWxDToth3YU/7eK+6oG4Putql+tXUq+n/r
+         v2Ohtovd0+m/nUdKJoIFM28Nyycmb0zFIRaqLZh84yOwkIqZSfe84lrR+X58W+zfcLIV
+         7SrnKSPFRPlsfhfIRekBQCj81GQbFY6uHtA7U6UcmSTghwovcZvD2GPJODvOuvCwXYF3
+         gRdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQm7mglHSQZ1U5689uuzy/73KUGjSpwuKrz3XlL7E0Vxw9Gvr3gc3k6q/wE2a8/FPI7y1fJN7zPS/8/h5m1dx5LafFfvSgNYYyFqw=
+X-Gm-Message-State: AOJu0YyLB2N7zcNQnM1u89mDxssmDifKcd3hFIkq6LU5F8I2KHSmG1A1
+	zZetFYZv+30lZ8/9acoedvBNje3q3RyfM4jMj4f8R8qPQrL7IGMUueG48MXV+Ti9HPus0G/3xdB
+	Rau0kgzrI8TWj5ZYUza4Dw5NX2aXs0LNXiRb07W04UuYvnvXb9eBeoqcJdZsS
+X-Received: by 2002:a17:906:6812:b0:a3d:967:eab6 with SMTP id k18-20020a170906681200b00a3d0967eab6mr1829425ejr.41.1707916918902;
+        Wed, 14 Feb 2024 05:21:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHF9MJF7638WB7XQeW92lf2FTuGuPhqBveiGWqBI6O4J1qV+Q4Otgr6CaiaWRrF1NaZ80/B7A==
+X-Received: by 2002:a17:906:6812:b0:a3d:967:eab6 with SMTP id k18-20020a170906681200b00a3d0967eab6mr1829407ejr.41.1707916918490;
+        Wed, 14 Feb 2024 05:21:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWtxX2phpXb8uD0qvSsOXndbDNOYhLFrmzaOUVaOskjTOSxpEm7m/nlGcdHsUE5KwLquAWFrQExRQJPsW9h22TUyEscuc6wCRfB+2AkeVaJsWjokpMd9bWYEJ5AWMmrYD0=
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id cd6-20020a170906b34600b00a34c07816e3sm2314205ejb.73.2024.02.14.05.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 05:21:58 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id BE17910F57A2; Wed, 14 Feb 2024 14:21:57 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Alexandre Cassen <acassen@gmail.com>, team lnx <teamlnxi8@gmail.com>,
+ xdp-newbies@vger.kernel.org
+Subject: Re: XDP packet queueing and scheduling capabilities
+In-Reply-To: <e4086e04-ca73-439c-8a77-529c2f3562af@gmail.com>
+References: <CAOLRUnCd4obob4vRbK9jmOEA-dkZHfaQcOd2sqesJaH=bKpaZw@mail.gmail.com>
+ <87le7ofre3.fsf@toke.dk> <d9da33bf-ecef-4470-9a8d-1b638a5ffa24@gmail.com>
+ <87il2sfivb.fsf@toke.dk> <e4086e04-ca73-439c-8a77-529c2f3562af@gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Wed, 14 Feb 2024 14:21:57 +0100
+Message-ID: <871q9ffafe.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: XDP packet queueing and scheduling capabilities
-Content-Language: en-GB
-To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
- team lnx <teamlnxi8@gmail.com>, xdp-newbies@vger.kernel.org
-References: <CAOLRUnCd4obob4vRbK9jmOEA-dkZHfaQcOd2sqesJaH=bKpaZw@mail.gmail.com>
- <87le7ofre3.fsf@toke.dk> <d9da33bf-ecef-4470-9a8d-1b638a5ffa24@gmail.com>
- <87il2sfivb.fsf@toke.dk>
-From: Alexandre Cassen <acassen@gmail.com>
-In-Reply-To: <87il2sfivb.fsf@toke.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Alexandre Cassen <acassen@gmail.com> writes:
 
+>>> Watching at your LPC 2022 presentation, at the end, discussions where
+>>> made around using existing Qdisc kernel framework and find a way to
+>>> share the path between XDP and netstack. Is it a target for adding
+>>> PIFO, or more generally getting queuing support for XDP ?
+>> 
+>> I don't personally consider it feasible to have forwarded XDP frames
+>> share the qdisc path. The presence of an sk_buff is too simply too
+>> fundamentally baked into the qdisc layer. I'm hoping that the addition
+>> of an eBPF-based qdisc will instead make it feasible to share queueing
+>> algorithm code between the two layers (and even build forwarding paths
+>> that can handle both by having the different BPF implementations
+>> cooperate). And of course co-existence between XDP and stack forwarding
+>> is important to avoid starvation, but that is already an issue for XDP
+>> forwarding today.
+>
+> Agreed too, eBPF backed Qdisc 'proxy' sounds great idea. latency 
+> forecast impact ?
 
-On 13/02/2024 17:07, Toke Høiland-Jørgensen wrote:
-> Alexandre Cassen <acassen@gmail.com> writes:
-> 
->> Hi Toke,
->>
->> here is a target with lot of interest for it : www.gtp-guard.org
-> 
-> Ah, seems like a cool project; thanks for the pointer!
+Of writing the qdisc in eBPF instead of as a regular kernel module?
+Negligible; the overhead shown in the last posting of those patches[0]
+is not nil, but it seems there's a path to getting rid of it (teaching
+BPF how to put skbs directly into list/rbtree data structures instead of
+having to allocate a container for it).
 
-Well, right now focus is much more on code rather than documentation :D
+The latency impact of mixing XDP and qdisc traffic? Dunno, depends on
+the traffic and the algorithms managing it. I don't think there's
+anything inherent in the BPF side of things that would impact latency
+(it's all just code in the end), as long as we make sure that the APIs
+and primitives can express all the things we need to effectively
+implement good algorithms. Which is why I'm asking for examples of use
+cases :)
 
-but doc will happen at one time. In a hurry right now adding support to 
-XDP routing data-path that will deal with GTP-U decap on one side and 
-PPPoE encap the other side, and reciprocally. This is one use-case to 
-make mobile access network converge to existing isp access network 
-infrastructure (not L2TP since it just create scalling issues for bunch 
-of customers). another one will be SRv6 later on... Anyway, having fun 
-hacking around on it :)
+-Toke
 
+[0] https://lore.kernel.org/r/cover.1705432850.git.amery.hung@bytedance.com
 
->> When dealing with mobile network data-plane, at some point you have
->> ordering issues and shaping needs, so queuing is truly needed.
->> Alternatively ones can implement PIFO or others built on AF_XDP but if
->> dedicated bpf map covers the use-case, would be nice.
-> 
-> Right, I'm kinda thinking about the map type that is part of the XDP
-> queueing series as a general-purpose packet buffer that will enable all
-> kinds of features, not just queueing for forwarding. Whether it'll end
-> up being the PIFO map type, or a simpler one, I'm less certain about.
-> The PIFO abstraction may end up being too special-purpose. Opinions
-> welcome!
-
-
-Read the code last night, that is exactly what is required here, 
-bpf_timer trick is fun.
-
-(IP fragmentation in gtp-guard is using bpf_timer for ephemeral id 
-tracking handling, this is just here re-ordering pop-up... on 
-constructor vendors equipements where normal path is using diffrent 
-processing-unit than frag handling this happen !)
-
-Agreed on your point, having a general purpose map type enable 
-inheritage option for specific feature instead of multiplying meaningful 
-map type for each feature/use-case.
-
-
->> Watching at your LPC 2022 presentation, at the end, discussions where
->> made around using existing Qdisc kernel framework and find a way to
->> share the path between XDP and netstack. Is it a target for adding
->> PIFO, or more generally getting queuing support for XDP ?
-> 
-> I don't personally consider it feasible to have forwarded XDP frames
-> share the qdisc path. The presence of an sk_buff is too simply too
-> fundamentally baked into the qdisc layer. I'm hoping that the addition
-> of an eBPF-based qdisc will instead make it feasible to share queueing
-> algorithm code between the two layers (and even build forwarding paths
-> that can handle both by having the different BPF implementations
-> cooperate). And of course co-existence between XDP and stack forwarding
-> is important to avoid starvation, but that is already an issue for XDP
-> forwarding today.
-
-Agreed too, eBPF backed Qdisc 'proxy' sounds great idea. latency 
-forecast impact ?
-
-
-- Alexandre
 
