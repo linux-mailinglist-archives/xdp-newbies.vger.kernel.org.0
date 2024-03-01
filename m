@@ -1,147 +1,95 @@
-Return-Path: <xdp-newbies+bounces-52-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-53-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A77DF86D9BE
-	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Mar 2024 03:30:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7EA586ECB8
+	for <lists+xdp-newbies@lfdr.de>; Sat,  2 Mar 2024 00:10:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB2E21C2268E
-	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Mar 2024 02:30:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F0F51C218A1
+	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Mar 2024 23:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9311E3B298;
-	Fri,  1 Mar 2024 02:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520DA5EE79;
+	Fri,  1 Mar 2024 23:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8djSJl9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=aibor.de header.i=@aibor.de header.b="CyV/FvUe"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from boethin.uberspace.de (boethin.uberspace.de [185.26.156.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7CA3A8FC
-	for <xdp-newbies@vger.kernel.org>; Fri,  1 Mar 2024 02:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EBD5EE7F
+	for <xdp-newbies@vger.kernel.org>; Fri,  1 Mar 2024 23:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709260221; cv=none; b=ikYWNh3FfgNEDXLGFbkeHxBkiKqCsjEiFhjZJD1vCrbxAZq1xh0XRrKGcXoAa4/LHVtrUHpFzmhg4bWSL8FU0YIYPbBnMub1N/nIwOf44SWzAuOqt3UyPrN0+1R8M8GYbGOGUeZcq8ilWuJA0fozJBwn8waU8fIXEEVSizLVCN0=
+	t=1709334649; cv=none; b=ONoF9+BY1018aMy7ip4S1uF1XWOKz3QZ75eHUlJK0OCrtxGB4B7vQsBo4qokjxqiRw2DuOkPvF0XcmI7Z+5XAHjULbYmPT9vbymECGA63aYESJ18Q5MWPkyh034AZBXTZSIXh334jsqMkW+YqNe5KoPnc4opWf+NsnZnF6dgxDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709260221; c=relaxed/simple;
-	bh=AIc60/XlrsZ15zt/pJ3nTB88YPqRYr2eWiCY1dUoVjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U6XqSfv0MaJuvAw4XT3YB5rk5VLuT7VkbK6IxFfbVRIlaFsuqIa6op19jy/aCFDq8KEQg1De0IWPsENo31+AnGcC8p+zCdDUi3bUOsxUznq8JoVTGuZFdc28SVz2sjNtJjKmYtUx0APobTvfx1G8SP2z2xfZW6Q7JRDbFfYN2ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8djSJl9; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a293f2280c7so317681266b.1
-        for <xdp-newbies@vger.kernel.org>; Thu, 29 Feb 2024 18:30:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709260218; x=1709865018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5ADpK8Y85+/sk5GOY2j0XDlmVrJU742/ZqUgA6BjyC4=;
-        b=L8djSJl9wpX1UTr9HxTlgboLD4JIGk8uSEHYod/QpdepXiicOwtgWjLbZzxNWpZbGK
-         Tb1ZU9b7PWYrhjJrSFAaKCLftEVx6qA8T3be6dQ/65NYL3NhGEToApIFu8IQf3IlhNBF
-         vyeTXP257bc138+LzcFGl+/jGwXr0u8aT2B15OgJ8Fn7w5hzronUR05375EwVVK3Xt5J
-         J+7EYPy3KkuUht8tAe8Evn5uM7hudNg2uodrCQU2Zr5isTGJru4/sMqL11aL1uXYwEp8
-         a/RmbfpKRE58abiO7c4Gs/k3HlqsltQG5REKHwNvLMDwpdFOSLQWzd6cWsfOy8zkaep9
-         ZROA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709260218; x=1709865018;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5ADpK8Y85+/sk5GOY2j0XDlmVrJU742/ZqUgA6BjyC4=;
-        b=K/rtax8EuojrAOCIzt4VUE2ZJUWmy2pbouxiRkw7VDfRktVoRpDP2SGZSArTNPW3xa
-         +nMUyJ4jOJRjqJlPPuy1MAb8VFFTRGoj9WYwNs8aJFLoWgBGQWizMRjma4/hL9FDFQ6K
-         7NuMiGy9N8CaZO2riuIMXe2gaUtgjF6jhGnMmPWh32gS5LALnJkh9mXf73B1TWXwZVUG
-         ffpLXKntfcoP4/QTxb/zyZzrOAegVyMmz7VPptnRtzCJPqfbKthh9yY+15L3s+egUNAd
-         dkjLm4+feqg+8yqRR3LnyIRT9PFv7IZQbPaYKcp+X77P+8HSYyOeYHfPMzIA8Z0hdNrd
-         Hlcw==
-X-Gm-Message-State: AOJu0YxYPEVDE1PcL42RnbySGRzbQY5bq5G7TOba7FMfofk+SIKYsfFc
-	JDZq5yEB/OofV+w4Jw4WnYa+bueS7Ri0/SXxjFNGWJEnNoAdi3G92JmyLHCULvUDUyO5J0PjUqi
-	CKm/CMwrMzPuAC5ygVCP3Z/aqqk0=
-X-Google-Smtp-Source: AGHT+IHiQeKjiuAdJTvsywcM8Ix6nNuYo0BG6oMVYW85OdOBLLh9FDKVQhBYOEVpwgVR5C1RKdpyIUXFgdzW+84UgCI=
-X-Received: by 2002:a17:907:76f2:b0:a3e:7ef1:8c91 with SMTP id
- kg18-20020a17090776f200b00a3e7ef18c91mr205975ejc.77.1709260217803; Thu, 29
- Feb 2024 18:30:17 -0800 (PST)
+	s=arc-20240116; t=1709334649; c=relaxed/simple;
+	bh=8nC/ceW8olJ5iQejJ6JWEamggOAV+xEnrY06hXgr1AM=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KjVJifqYGB3+UIN/8nGdVdpJny40jF8Bj9TORRIvMJNiiEcOJXS6LDT0g9OCII7xHe3h686o4aQkt/P8mzukrbCd15qU7Ua4B8n52i2kHzjVvcAdbakxE+Za95SlDW0K4Bsa3DGuU5Wom/A3a7rXq4sUk5UlTQqWluE4QpIbYVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibor.de; spf=pass smtp.mailfrom=aibor.de; dkim=fail (0-bit key) header.d=aibor.de header.i=@aibor.de header.b=CyV/FvUe reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibor.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aibor.de
+Received: (qmail 14425 invoked by uid 990); 1 Mar 2024 23:04:01 -0000
+Authentication-Results: boethin.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by boethin.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sat, 02 Mar 2024 00:04:01 +0100
+Date: Sat, 2 Mar 2024 00:04:00 +0100
+From: Tobias =?utf-8?B?QsO2aG0=?= <tobias@aibor.de>
+To: xdp-newbies@vger.kernel.org
+Subject: cpumap infinite loop
+Message-ID: <xgct6vpbwh6c5zjljdc6ypa5hbmcw4bapebdh4eetxwjama3so@iq3xdtavnq4g>
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFR4CiudyKWsSe3xdaDTFn-zGS12w47tF8kKb8fd+s=cMsRA5A@mail.gmail.com>
- <24438.1709259030@famine>
-In-Reply-To: <24438.1709259030@famine>
-Reply-To: mr.bo.jangles3@gmail.com
-From: Logan B <mrbojangles3@gmail.com>
-Date: Thu, 29 Feb 2024 21:30:06 -0500
-Message-ID: <CAFR4Citj2uBtzz9ffdOpFcLwq5H88fuwgn6yCg-vQahHxJNSRw@mail.gmail.com>
-Subject: Re: sizeof pointer vs sizeof struct
-To: Jay Vosburgh <jay.vosburgh@canonical.com>
-Cc: xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Rspamd-Bar: +
+X-Rspamd-Report: R_MIXED_CHARSET(0.833333) BAYES_HAM(-0.156098) MID_RHS_NOT_FQDN(0.5) MIME_GOOD(-0.1)
+X-Rspamd-Score: 1.077234
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=aibor.de; s=uberspace;
+	h=from:to:subject:date;
+	bh=8nC/ceW8olJ5iQejJ6JWEamggOAV+xEnrY06hXgr1AM=;
+	b=CyV/FvUerCQO5ZGXltLqiplL1xs5zmD/215jCtttNsH9ncMxooRQecTRGZvCjbRq6fdsac1N8S
+	Y3Ro+Y7+UbWgIZCI1wHtBiIYqpw9m0uTpxMzCyEoIFBBnCvpkqLq97oS6ob7N52V+P3HXI17rJki
+	UqZ19bH3H+b1jSD1ElgzRi8DBkRRi5BxBIIdSUbEafFIg0dfl9+RfXpeaPMtq0bca2Yl7vM77b3E
+	dM8Gp8GIAsmZAy3Vstz0sAEjI/VbkDS6EM0ND0Q8dJDwhwWVtO2ANXt7XfEMFSUSyuz7lw3Lv+2q
+	reFcTQ8ZAVq54LYuLgEmxLz/2An8MJsvQNtRqQXinfVrfZStZMSDNycUgSXBZoSPo/uOz9nEVdbk
+	SVwBj/gic99JliHjNu7qQxOeeFX2WNwlIEYmXh1B5xE1tgrY2tNnQJ3jN/524657ARm4qQTtGXRl
+	R7z+RNgFJ+Lo+J79JhybvIgd6XSV0xAUlgsKL7Vmu4aRkIDyVXOsfrFUgmKD2p3tkY4ZKfL8ryXc
+	Rv1vrAoSzCpz7IT6xJMsmeJv6ghkxqQcr6OwacSGpEcAlXPTtYNIlpCcJRLkkWxg1J4OtM7XDxxG
+	ofZ9J/BNwfVLBnXmuhQpwHz16qbb92CPr67WCnzLwMiaZYiZ++TBVFeJcBtu94XPzQNlPuTgszp4
+	U=
 
-On Thu, Feb 29, 2024 at 9:10=E2=80=AFPM Jay Vosburgh <jay.vosburgh@canonica=
-l.com> wrote:
->
-> Logan B <mrbojangles3@gmail.com> wrote:
->
-> >Hello,
-> >I was recently working through the xdp tutorial and in the
-> >packet01-parsing lesson the sizeof a pointer to the ethernet header
-> >struct is used, not the sizeof the struct itself[0]. I peeked and the
-> >solution for this section also still uses the sizeof a pointer and not
-> >the struct so this isn't part of the tutorial and I was wondering what
-> >is going on? I don't think the verifier is re-writing these addresses,
-> >only those for the memory access into the packet data.
->
->         The referenced code at [0] is:
->
->         struct ethhdr *eth =3D nh->pos;
->         int hdrsize =3D sizeof(*eth);
->
->         "*eth" means "what eth points to," so this is indeed taking the
-> sizeof struct ethhdr.
->
->         I suspect you missed the "*" in your reading of the code; in
-> this context, "*" is the indirection operator, per K&R 2, (The C
-> Programming Language, 2nd Edition), Appendix A 7.4.3.
->
->         -J
->
-I did miss that. Thank you
-Logan
-> >
-> >#include <stdio.h>
-> >#include <linux/if_ether.h>
-> >
-> >int main(void)
-> >
-> >       {
-> >
-> >                           struct ethhdr normal =3D {0};
-> >    struct ethhdr *eth_hdr_ptr;
-> >
-> >     printf("Size of struct %lu\n",sizeof(normal)); // prints 14
-> >    printf("Size of struct pointer %lu\n",sizeof(eth_hdr_ptr)); //
-> >prints 8
-> >    return 0;
-> >}
-> >
-> >
-> >[0]https://github.com/xdp-project/xdp-tutorial/blob/master/packet01-pars=
-ing/xdp_prog_kern.c#L34
-> >--
-> >Logan
-> >
->
-> ---
->         -Jay Vosburgh, jay.vosburgh@canonical.com
+Hello,
 
+I was playing around a bit with cpumaps and wondered what happens when
+the attached program just does another CPU redirect to itself.
 
+I ended up having an infinite loop. The working example can be found
+here: https://github.com/aibor/cpumap-loop
 
---=20
-Logan
+Now, I wonder if there is a way to detect and break this loop. I took a
+look at the xdp_md->rx_queue_index values. When executed by a NIC event,
+the value is the NIC ID, so a fairly low number. After CPU redirection
+the values I saw were far above the range of NIC queue IDs. I couldn't
+figure out if it is just a random memory value or if this value still 
+has a (maybe different) meaning after CPU redirection. Maybe somehow
+related to the CPU queue?
+
+If the field is set to a meaningful value I can make assumptions about
+it and would be able to detect previous CPU redirection, I guess.
+
+I'd appreciate any pointers and tips how I could detect such a loop. Or
+maybe there is a way to prevent it in the first place other than "just
+being careful"?
+
+Thanks in advance,
+Tobias
 
