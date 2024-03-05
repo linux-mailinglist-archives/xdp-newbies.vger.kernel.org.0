@@ -1,95 +1,138 @@
-Return-Path: <xdp-newbies+bounces-53-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-54-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7EA586ECB8
-	for <lists+xdp-newbies@lfdr.de>; Sat,  2 Mar 2024 00:10:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 970F8872534
+	for <lists+xdp-newbies@lfdr.de>; Tue,  5 Mar 2024 18:08:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F0F51C218A1
-	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Mar 2024 23:10:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4F5B1C22EAB
+	for <lists+xdp-newbies@lfdr.de>; Tue,  5 Mar 2024 17:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520DA5EE79;
-	Fri,  1 Mar 2024 23:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F3D13FE7;
+	Tue,  5 Mar 2024 17:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=aibor.de header.i=@aibor.de header.b="CyV/FvUe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fEssl2B/"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from boethin.uberspace.de (boethin.uberspace.de [185.26.156.96])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EBD5EE7F
-	for <xdp-newbies@vger.kernel.org>; Fri,  1 Mar 2024 23:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56BC8F70
+	for <xdp-newbies@vger.kernel.org>; Tue,  5 Mar 2024 17:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709334649; cv=none; b=ONoF9+BY1018aMy7ip4S1uF1XWOKz3QZ75eHUlJK0OCrtxGB4B7vQsBo4qokjxqiRw2DuOkPvF0XcmI7Z+5XAHjULbYmPT9vbymECGA63aYESJ18Q5MWPkyh034AZBXTZSIXh334jsqMkW+YqNe5KoPnc4opWf+NsnZnF6dgxDQ=
+	t=1709658493; cv=none; b=jiG2e5XJOnMVWDE4OkJ65OEqEcT0tmqfi8rYiFyzOLbfDo/GDpy8bUkiltfiX/+sMqeEEVARdu3Wh7Ow1JB84ys+989f1NRGrhwAbthMesHvUGP3urwSF3Y73qIrIWvbazQMjrdwYPg1pvm/sqoBEyPSTOZdUZ+JvKjshoZLNIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709334649; c=relaxed/simple;
-	bh=8nC/ceW8olJ5iQejJ6JWEamggOAV+xEnrY06hXgr1AM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KjVJifqYGB3+UIN/8nGdVdpJny40jF8Bj9TORRIvMJNiiEcOJXS6LDT0g9OCII7xHe3h686o4aQkt/P8mzukrbCd15qU7Ua4B8n52i2kHzjVvcAdbakxE+Za95SlDW0K4Bsa3DGuU5Wom/A3a7rXq4sUk5UlTQqWluE4QpIbYVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibor.de; spf=pass smtp.mailfrom=aibor.de; dkim=fail (0-bit key) header.d=aibor.de header.i=@aibor.de header.b=CyV/FvUe reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibor.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aibor.de
-Received: (qmail 14425 invoked by uid 990); 1 Mar 2024 23:04:01 -0000
-Authentication-Results: boethin.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by boethin.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sat, 02 Mar 2024 00:04:01 +0100
-Date: Sat, 2 Mar 2024 00:04:00 +0100
-From: Tobias =?utf-8?B?QsO2aG0=?= <tobias@aibor.de>
-To: xdp-newbies@vger.kernel.org
-Subject: cpumap infinite loop
-Message-ID: <xgct6vpbwh6c5zjljdc6ypa5hbmcw4bapebdh4eetxwjama3so@iq3xdtavnq4g>
+	s=arc-20240116; t=1709658493; c=relaxed/simple;
+	bh=h5DCyGJ9gLOXrOQsf7UfG4ISraN9SJq0wH8FLGYO//s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gWowE3FNTfpg8bVvQ6braPBxDBBzjg7Eabjvzh9XIUgXy3iMQZv7z1k6+R5aVUGTOf7K1U3N4sR88Knko7ezyodxK5feUnjWGH2Uvm26s4hQ+KouK6jwFIM/ElwsE9gWJ28H1lCdNCrzMbM9VZg4+nCb/T3HXSBcjkH35NqewnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fEssl2B/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709658490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h5DCyGJ9gLOXrOQsf7UfG4ISraN9SJq0wH8FLGYO//s=;
+	b=fEssl2B/ahubFMrFCanh0N4zXAp7nTZE8FTNHgYDezX3kQq0FlIeShoGO9qE33z/2UN471
+	oIXdSuLmJW1wF/eb3IYXow6nAWOiVjPnO0UW7l6O5GM2/MSlgGsgR1+idpg/w2qlNSC27I
+	otdmvvACgjAb0yFQtgcZJYL8CcpmPLg=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-446-yVFtRe-3POSf9UnHd-xyaQ-1; Tue, 05 Mar 2024 12:08:09 -0500
+X-MC-Unique: yVFtRe-3POSf9UnHd-xyaQ-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-567dcad189bso15235a12.0
+        for <xdp-newbies@vger.kernel.org>; Tue, 05 Mar 2024 09:08:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709658487; x=1710263287;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h5DCyGJ9gLOXrOQsf7UfG4ISraN9SJq0wH8FLGYO//s=;
+        b=iXKmZxLi/0ASVcDamVJdyZ+j2lMZVhH8uMuU9141DN2Qmc1JZM/3v5iFDBRDJgJikn
+         7PWhuh1NGpESnvBNa58Fh2DAoKvdtKunNpKEzvayunFuNBHmiRD+iXvd3Qs7d1cygr15
+         UTxPert4/Y1kGrMlc/n/UTKsae0L5oJJs2qGoePXb8y0nJ2EjKy5Gb7vgtKFnpJ9GlXA
+         ZkPlgnP/9tZbSGj14aw3FwFMH8rU2droAQgsklUu3MkXjslCS8ncboeP5pTsEChlr1B7
+         4SX0Cp8gFwjseiAQfbQcRb+gg9H5drPlFauXchFtZKzQUvyEfrKSdtcOpiLsFOZpIfgg
+         QKow==
+X-Forwarded-Encrypted: i=1; AJvYcCWJkvJz8h8z4F3xz1/RFbl3rqmOVasslAl5DJt4zpJUAEXeGN25r3QDwkrXA6PBiakJSkkboXeyYRpQ1Zs9sNKnAo5iHz7e4CZ01ng=
+X-Gm-Message-State: AOJu0YzBvsgzYbS4sSZg3XFg57uxLl483vu5/j4vWe4BlPGmHslQZKN3
+	Gd4re2Jp6/Q23jtUxSH6mF4nZoi3rsrCCYusjutTyLXOhiv5u/vbqXfMMyM7feD+kiACxCUNMgi
+	lCKvUVje2XqxdOqQIs/7qj0eUMG0L4FIurl89hhtLlZsF6Yli3uPPhAzay/U1ma9/Q6ks
+X-Received: by 2002:a05:6402:2267:b0:566:d333:45e8 with SMTP id du7-20020a056402226700b00566d33345e8mr9448364edb.20.1709658487506;
+        Tue, 05 Mar 2024 09:08:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGurPWIkjTbSmdy3uKK88Zt4wvgIdk48kidXsPpySWE1+mPGrNIdmH4yy2rQpR9SXvJMVDnlQ==
+X-Received: by 2002:a05:6402:2267:b0:566:d333:45e8 with SMTP id du7-20020a056402226700b00566d33345e8mr9448345edb.20.1709658487133;
+        Tue, 05 Mar 2024 09:08:07 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id cs4-20020a0564020c4400b00566a4dec01fsm5876818edb.11.2024.03.05.09.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 09:08:06 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 6DCA6112EF23; Tue,  5 Mar 2024 18:08:06 +0100 (CET)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Tobias =?utf-8?Q?B=C3=B6hm?= <tobias@aibor.de>,
+ xdp-newbies@vger.kernel.org
+Cc: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Subject: Re: cpumap infinite loop
+In-Reply-To: <xgct6vpbwh6c5zjljdc6ypa5hbmcw4bapebdh4eetxwjama3so@iq3xdtavnq4g>
+References: <xgct6vpbwh6c5zjljdc6ypa5hbmcw4bapebdh4eetxwjama3so@iq3xdtavnq4g>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Tue, 05 Mar 2024 18:08:06 +0100
+Message-ID: <871q8od2tl.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Rspamd-Bar: +
-X-Rspamd-Report: R_MIXED_CHARSET(0.833333) BAYES_HAM(-0.156098) MID_RHS_NOT_FQDN(0.5) MIME_GOOD(-0.1)
-X-Rspamd-Score: 1.077234
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=aibor.de; s=uberspace;
-	h=from:to:subject:date;
-	bh=8nC/ceW8olJ5iQejJ6JWEamggOAV+xEnrY06hXgr1AM=;
-	b=CyV/FvUerCQO5ZGXltLqiplL1xs5zmD/215jCtttNsH9ncMxooRQecTRGZvCjbRq6fdsac1N8S
-	Y3Ro+Y7+UbWgIZCI1wHtBiIYqpw9m0uTpxMzCyEoIFBBnCvpkqLq97oS6ob7N52V+P3HXI17rJki
-	UqZ19bH3H+b1jSD1ElgzRi8DBkRRi5BxBIIdSUbEafFIg0dfl9+RfXpeaPMtq0bca2Yl7vM77b3E
-	dM8Gp8GIAsmZAy3Vstz0sAEjI/VbkDS6EM0ND0Q8dJDwhwWVtO2ANXt7XfEMFSUSyuz7lw3Lv+2q
-	reFcTQ8ZAVq54LYuLgEmxLz/2An8MJsvQNtRqQXinfVrfZStZMSDNycUgSXBZoSPo/uOz9nEVdbk
-	SVwBj/gic99JliHjNu7qQxOeeFX2WNwlIEYmXh1B5xE1tgrY2tNnQJ3jN/524657ARm4qQTtGXRl
-	R7z+RNgFJ+Lo+J79JhybvIgd6XSV0xAUlgsKL7Vmu4aRkIDyVXOsfrFUgmKD2p3tkY4ZKfL8ryXc
-	Rv1vrAoSzCpz7IT6xJMsmeJv6ghkxqQcr6OwacSGpEcAlXPTtYNIlpCcJRLkkWxg1J4OtM7XDxxG
-	ofZ9J/BNwfVLBnXmuhQpwHz16qbb92CPr67WCnzLwMiaZYiZ++TBVFeJcBtu94XPzQNlPuTgszp4
-	U=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Tobias B=C3=B6hm <tobias@aibor.de> writes:
 
-I was playing around a bit with cpumaps and wondered what happens when
-the attached program just does another CPU redirect to itself.
+> Hello,
+>
+> I was playing around a bit with cpumaps and wondered what happens when
+> the attached program just does another CPU redirect to itself.
+>
+> I ended up having an infinite loop. The working example can be found
+> here: https://github.com/aibor/cpumap-loop
+>
+> Now, I wonder if there is a way to detect and break this loop. I took a
+> look at the xdp_md->rx_queue_index values. When executed by a NIC event,
+> the value is the NIC ID, so a fairly low number. After CPU redirection
+> the values I saw were far above the range of NIC queue IDs. I couldn't
+> figure out if it is just a random memory value or if this value still=20
+> has a (maybe different) meaning after CPU redirection. Maybe somehow
+> related to the CPU queue?
 
-I ended up having an infinite loop. The working example can be found
-here: https://github.com/aibor/cpumap-loop
+It's random. The rxq data structure is not initialised on the stack, so
+it's basically whatever was in that memory. Interestingly, there's a
+TODO comment in there to fix this:
 
-Now, I wonder if there is a way to detect and break this loop. I took a
-look at the xdp_md->rx_queue_index values. When executed by a NIC event,
-the value is the NIC ID, so a fairly low number. After CPU redirection
-the values I saw were far above the range of NIC queue IDs. I couldn't
-figure out if it is just a random memory value or if this value still 
-has a (maybe different) meaning after CPU redirection. Maybe somehow
-related to the CPU queue?
+https://elixir.bootlin.com/linux/latest/source/kernel/bpf/cpumap.c#L195
 
-If the field is set to a meaningful value I can make assumptions about
-it and would be able to detect previous CPU redirection, I guess.
+Not sure what the intention was here. +Lorenzo, who wrote that code.
+Returning the contents of a random uninitialised stack variable is
+probably not a good idea, though, we should zero out the data structure.
+I'll send a patch for that.
 
-I'd appreciate any pointers and tips how I could detect such a loop. Or
-maybe there is a way to prevent it in the first place other than "just
-being careful"?
+> If the field is set to a meaningful value I can make assumptions about
+> it and would be able to detect previous CPU redirection, I guess.
+>
+> I'd appreciate any pointers and tips how I could detect such a loop. Or
+> maybe there is a way to prevent it in the first place other than "just
+> being careful"?
 
-Thanks in advance,
-Tobias
+Well, you kinda have to go out of your way to construct a loop like
+this. How are you envisioning this would happen accidentally? :)
+
+-Toke
+
 
