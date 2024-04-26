@@ -1,101 +1,211 @@
-Return-Path: <xdp-newbies+bounces-63-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-64-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA4728A698C
-	for <lists+xdp-newbies@lfdr.de>; Tue, 16 Apr 2024 13:23:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68FB38B39BC
+	for <lists+xdp-newbies@lfdr.de>; Fri, 26 Apr 2024 16:22:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAE951C20FE7
-	for <lists+xdp-newbies@lfdr.de>; Tue, 16 Apr 2024 11:23:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D5411C23F32
+	for <lists+xdp-newbies@lfdr.de>; Fri, 26 Apr 2024 14:22:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDF03128396;
-	Tue, 16 Apr 2024 11:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CE651487CD;
+	Fri, 26 Apr 2024 14:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODB3fJFD"
+	dkim=pass (1024-bit key) header.d=std.iyte.edu.tr header.i=@std.iyte.edu.tr header.b="sDMCrAzO"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from spam-gw3.iyte.edu.tr (spam-gw3.iyte.edu.tr [193.140.248.213])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188C112883A
-	for <xdp-newbies@vger.kernel.org>; Tue, 16 Apr 2024 11:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7211B42A99
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 14:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.140.248.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713266622; cv=none; b=UmtTq0qm4iVjwyrHjfwD45p+IA+1bJ81QLABHfW8YUHMcwvBI6hz7mDsMO2nOXGC2uNw9XUcslWi1o/TAvldiNfg9vP2/IYMan+bwxdAMRxuD1jJXIsIaKyjb1sCsMTbrRG5uycvbm8cFWvG0piqg1abMe66ugtqX+GSUif2ZQk=
+	t=1714141347; cv=none; b=YdXc+WRBDH0GV9UX1biYwreVbWL6Jam5/WBUxWcHElvwSQrmkPvcI6mvaFvWlWSvEKjydMDmP8dVXcDKTaFV8bkDJhCzX6S4I7XcMOG5nsHpWZPLumIy0vGZZtz+caVhV8NZkficHX0uAllfZIWXPZmgU8ai0LLAPVENzWkmWdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713266622; c=relaxed/simple;
-	bh=m9Xm2jW01C34MhX58dEl20XRlfsnzetxl2Gb1elFe1o=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=mHHj4JkMg6wx2zl2dUCxzrKqA4JejMU9njI5//0VR83fJ9RLcoMDbDlTMb9/jmNjRZleJ8ShtN0s523+tcUwyXQHe+hwxgjY0Z8Sk/MSZLxIqpIhlalnAeXgYPIeiuXmvpuIThdOtYbPoQStmJ/zvT2gTfsNRjv2AYFNrhyaueU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODB3fJFD; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-416a8ec0239so23954955e9.0
-        for <xdp-newbies@vger.kernel.org>; Tue, 16 Apr 2024 04:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713266619; x=1713871419; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zoyxhd+VEJWGjVBlmhS6rkWnZPWCZYDIpEixQQbgbZk=;
-        b=ODB3fJFD3653HybFfLDrh9ORfYdD667glrgqFyNcYJKBAVNiW01uuMM2Tzr10lqJcI
-         hBJAGbpIcgsdxb4Q3MQeH0UBF0i9Na6G7eD7PYWRa05SfdP404QRom9HNwLUgKE1taPY
-         5lzIIEAkISzX+wpSGhwavMPkDinpmlNAnC+Lx76aZ3tPMHbgzkAXK1hWE8T98btGMbkB
-         s3hBB6YDEhw456r5X/TFtzCCs00dJagRG/oX7+TLFkIzr2DhktSYr6BQQ2AH94l4Yvat
-         0hm2i8eEsehF7co9ECPoyHaLV410wYHwKrAUoCScbD/mzb+q5C+80gSUmswdYBhwVKYl
-         /+gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713266619; x=1713871419;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zoyxhd+VEJWGjVBlmhS6rkWnZPWCZYDIpEixQQbgbZk=;
-        b=koqvKXie2uMQuKuTz8TlJCTQq8nnrIOXKkYA9TNDOMGHOkj2WLZImx+kzZuq9oKNHH
-         4XFmVP/NtTyiw90aS8LJmvsgIyxbC6yAF050DR6992liF3aAJmgE1Kz3HrG91oUmMYeQ
-         0olUZlnhJZzQyhGxeWiYc7qNoR7EtVhusAiVxosA26IJ71HYkBono93bkXWHrABSo7Hy
-         uK3C4qkA1jjppvpg5xoTTPixcQjTBhBBtgx754DFEFODCfGu7N6EzZwrFr7VGvD83tId
-         Fz9vkfhaWsrMxUlogh3l9B5AX1FBfAiz/wL6pZJA6mvVXUsAt4kPX0nZ3MhjF2+/mJKE
-         IzHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYtYHN7f70iJEBMyV8Rtt1Lvk8vF1zPrt0HjSdFuaP/WCb5OXE30XYmD8Vo6g53McH+k6ItzE2Ltwq/8nX8LKM6iuQnYvRNl0d9I4=
-X-Gm-Message-State: AOJu0YzP/vs0sgizRCKS3kx/wTKKbnlEjP3TnJ6KuCo7qDZDzxARd9VU
-	L3CzcLiWXzfOJaiH22T26IbCq39yxWMVKkw5l2u/Qz4cvcEte0QT4kq9jWT0
-X-Google-Smtp-Source: AGHT+IGK52dBcnVQjQWZgjWMfTLjxEl99gwlgmJRX0hYMvMP5WxvSap+Xecrtuq6uALRnMC9zm7k2Q==
-X-Received: by 2002:a7b:c3d6:0:b0:418:91ae:befc with SMTP id t22-20020a7bc3d6000000b0041891aebefcmr1544870wmj.0.1713266619172;
-        Tue, 16 Apr 2024 04:23:39 -0700 (PDT)
-Received: from localhost ([45.130.85.5])
-        by smtp.gmail.com with ESMTPSA id m11-20020a05600c4f4b00b0041816c3049csm13978071wmq.11.2024.04.16.04.23.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Apr 2024 04:23:38 -0700 (PDT)
-Message-ID: <1ab45503-e774-4227-92fb-5d30d9e7c156@gmail.com>
-Date: Tue, 16 Apr 2024 13:23:27 +0200
+	s=arc-20240116; t=1714141347; c=relaxed/simple;
+	bh=S11xcxGekLae2W8I8Be/TEZLV7EeFrs4ZqJCraKAbok=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type; b=avtKm9OUJBA+vyytTe85aekFQl6EAskHcMnPvsOPNPZ3BhG1CMkiUYGVV2r6K52Es58FlaEFG0ESFUiwKfLlPvr1u0mi9TgsOLEvRDxxR3OJRTmAQdp8I+JizNpoVwFmXxT9NKPeEIGdRp8vis8UB7uigoBmZnUeRf9a0S6+f4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=std.iyte.edu.tr; spf=pass smtp.mailfrom=std.iyte.edu.tr; dkim=pass (1024-bit key) header.d=std.iyte.edu.tr header.i=@std.iyte.edu.tr header.b=sDMCrAzO; arc=none smtp.client-ip=193.140.248.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=std.iyte.edu.tr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=std.iyte.edu.tr
+Received: from spam-gw.iyte.edu.tr (localhost [127.0.0.1])
+	by spam-gw.iyte.edu.tr (Postfix) with ESMTP id 19AC29A4E32
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:18 +0300 (+03)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=std.iyte.edu.tr;
+	s=rsa; t=1714141338;
+	bh=S11xcxGekLae2W8I8Be/TEZLV7EeFrs4ZqJCraKAbok=;
+	h=Date:From:To:Subject;
+	b=sDMCrAzOsLU18AnnJvDGa0TGzCU4iLnAfCMdty2k525eh9AUnhCPKKG8wq+siUWbz
+	 LIRmzhZm58ihlf/l/mtp2BVeR4JrauTjCHJ1nKfh19dMFZUNVAXTvX/TKCjR/1Go8A
+	 ZMdQ3PMjt3TBh7Vx1mHkXcNOsHoXRD7Dk6EmppZs=
+Received: from localhost (localhost [127.0.0.1])
+	by spam-gw.iyte.edu.tr (Postfix) with ESMTP id 15B2D9A4E23
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:18 +0300 (+03)
+X-Virus-Scanned: by SpamTitan at iyte.edu.tr
+Received: from spam-gw.iyte.edu.tr (localhost [127.0.0.1])
+	by spam-gw.iyte.edu.tr (Postfix) with ESMTP id BE1C49A4E01
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Authentication-Results: spam-gw.iyte.edu.tr;
+        x-trusted-ip=pass
+Received: from mail.iyte.edu.tr (mail.iyte.edu.tr [193.140.248.4])
+	by spam-gw.iyte.edu.tr (Postfix) with ESMTPS id B48C89A4E28
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.iyte.edu.tr (Postfix) with ESMTP id A3B3E6623001
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Received: from mail.iyte.edu.tr ([127.0.0.1])
+ by localhost (mail.iyte.edu.tr [127.0.0.1]) (amavis, port 10032) with ESMTP
+ id 1n68vPIlYa8e for <xdp-newbies@vger.kernel.org>;
+ Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Received: from mail.iyte.edu.tr (localhost [127.0.0.1])
+	by mail.iyte.edu.tr (Postfix) with ESMTPS id 827E76623006
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Received: from mail.iyte.edu.tr (mail.iyte.edu.tr [193.140.248.4])
+	by mail.iyte.edu.tr (Postfix) with ESMTP id 79B966623005
+	for <xdp-newbies@vger.kernel.org>; Fri, 26 Apr 2024 17:22:17 +0300 (+03)
+Date: Fri, 26 Apr 2024 17:22:17 +0300 (TRT)
+From: HAKAN SARIMAN <hakansariman@std.iyte.edu.tr>
+To: xdp-newbies <xdp-newbies@vger.kernel.org>
+Message-ID: <1920889031.78418857.1714141337441.JavaMail.zimbra@std.iyte.edu.tr>
+Subject: Packet Filtering with AF_XDP in Forwarded Traffic
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Language: en-US
-To: jbrouer@redhat.com, xdp-newbies@vger.kernel.org
-From: Leone Fernando <leone4fernando@gmail.com>
-Subject: Benchmarking Routing in Real Life Workloads
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4562 (ZimbraWebClient - GC123 (Mac)/8.8.15_GA_4562)
+Thread-Index: RdBwLbTbf1ssmXMPnJKM2MGVJwZkfg==
+Thread-Topic: Packet Filtering with AF_XDP in Forwarded Traffic
 
-Hi everyone!
+Hi folks,
 
-We encountered slowdowns in routing, and implemented a simple cache 
-to speed it up: 
-https://lore.kernel.org/netdev/20240307171202.232684-1-leone4fernando@gmail.com/ 
-Our patch shows considerable improvement in our use-case (hundreds 
-of daddrs), and non-negligible improvement in other scenarios as well. 
-We received some pushback from the kernel community claiming this 
-improvement is modest in real-life scenarios.
+I'm currently working on setting up a packet filter using AF_XDP on my Linux server to manage network traffic  in userspace.
+I tried to work with xdp-tutorial/AF_XDP example,
+I've attached a simple XDP program that redirects to the traffic by using xsks_map on enp8s0.
+You can find the XDP code below. 
+To test my setup, I'm trying to block a specific IPv4 address.
+Although I can see the traffic on userspace, I couldn't block any traffic. 
+You can find the userspace code below.
 
-We measured our changes using udp floods with different numbers of 
-daddrs. The benchmarking setup is comprised of 3 machines: a sender,
-a forwarder and a receiver. We measured the PPS received by the receiver 
-as the forwarder was running either the mainline kernel or the patched 
-kernel, comparing the results.
+I think there is something I am missing, can you help me what I am doing wrong?
 
-Does anyone have a good idea for more accurate benchmarking methods?
+Here's a brief overview of my current setup:
+
+Network Interfaces: enp1s0 (Egress Interface),  ens8s0 (Local Network Interface)
+
+Current iptables Rules:
+-A FORWARD -i enp1s0 -o ens8s0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i ens8s0 -o enp1s0 -j ACCEPT
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+23461 1790K MASQUERADE  0    --  *      enp1s0  0.0.0.0/0            0.0.0.0/0
+
+
+
+XDP Code:
+-----
+/* SPDX-License-Identifier: GPL-2.0 */
+
+#include <linux/bpf.h>
+
+#include <bpf/bpf_helpers.h>
+
+struct {
+ __uint(type, BPF_MAP_TYPE_XSKMAP);
+ __type(key, __u32);
+ __type(value, __u32);
+ __uint(max_entries, 64);
+} xsks_map SEC(".maps");
+
+struct {
+ __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+ __type(key, __u32);
+ __type(value, __u32);
+ __uint(max_entries, 64);
+} xdp_stats_map SEC(".maps");
+
+SEC("xdp")
+int xdp_sock_prog(struct xdp_md *ctx)
+{
+    int index = ctx->rx_queue_index;
+    __u32 *pkt_count;
+
+    pkt_count = bpf_map_lookup_elem(&xdp_stats_map, &index);
+    if (pkt_count) {
+
+        /* We pass every other packet */
+        if ((*pkt_count)++ & 1)
+            return XDP_PASS;
+    }
+
+    /* A set entry here means that the correspnding queue_id
+     * has an active AF_XDP socket bound to it. */
+    if (bpf_map_lookup_elem(&xsks_map, &index))
+        return bpf_redirect_map(&xsks_map, index, 0);
+
+    return XDP_PASS;
+}
+
+char _license[] SEC("license") = "GPL";
+
+
+----
+Userspace code (rest of the code is identical with xdp-tutorial/AF_XDP [https://github.com/xdp-project/xdp-tutorial/blob/master/advanced03-AF_XDP/af_xdp_user.c]):
+
+static bool process_packet(struct xsk_socket_info *xsk,
+			   uint64_t addr, uint32_t len)
+{
+	uint8_t *pkt = xsk_umem__get_data(xsk->umem->buffer, addr);
+
+		struct ethhdr *eth = (struct ethhdr *) pkt;
+		struct iphdr *ip = (struct iphdr *) (eth + 1);
+		struct in_addr tmp_ip;
+
+		tmp_ip.s_addr = ip->saddr;
+		char src_ip_str[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &tmp_ip, src_ip_str, INET_ADDRSTRLEN);
+
+		tmp_ip.s_addr = ip->daddr;
+		char dest_ip_str[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &tmp_ip, dest_ip_str, INET_ADDRSTRLEN);
+
+		printf("saddr: %s, daddr: %s\n", src_ip_str, dest_ip_str);
+
+                // trying to block an ip 
+		if (strcmp(src_ip_str, "x.y.z.t") == 0 || strcmp(dest_ip_str, "x.y.z.t") == 0) {
+			return false;
+    	}
+
+	int ret;
+	uint32_t tx_idx = 0;
+	ret = xsk_ring_prod__reserve(&xsk->tx, 1, &tx_idx);
+	if (ret != 1) {
+		/* No more transmit slots, drop the packet */
+		return false;
+	}
+
+	xsk_ring_prod__tx_desc(&xsk->tx, tx_idx)->addr = addr;
+	xsk_ring_prod__tx_desc(&xsk->tx, tx_idx)->len = len;
+	xsk_ring_prod__submit(&xsk->tx, 1);
+	xsk->outstanding_tx++;
+
+	return true;
+}
+
+...
+
+/* Process received packets */
+	for (i = 0; i < rcvd; i++) {
+		uint64_t addr = xsk_ring_cons__rx_desc(&xsk->rx, idx_rx)->addr;
+		uint32_t len = xsk_ring_cons__rx_desc(&xsk->rx, idx_rx++)->len;
+
+		if (!process_packet(xsk, addr, len))
+			xsk_free_umem_frame(xsk, addr);
+        }
 
