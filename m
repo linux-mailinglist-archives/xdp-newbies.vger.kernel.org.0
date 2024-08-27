@@ -1,351 +1,330 @@
-Return-Path: <xdp-newbies+bounces-132-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-133-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1904A95CFBE
-	for <lists+xdp-newbies@lfdr.de>; Fri, 23 Aug 2024 16:28:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBEB9960C3C
+	for <lists+xdp-newbies@lfdr.de>; Tue, 27 Aug 2024 15:37:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C32862858CC
-	for <lists+xdp-newbies@lfdr.de>; Fri, 23 Aug 2024 14:28:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5DC83B2855C
+	for <lists+xdp-newbies@lfdr.de>; Tue, 27 Aug 2024 13:37:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94923188587;
-	Fri, 23 Aug 2024 14:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42AF61C1723;
+	Tue, 27 Aug 2024 13:35:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcvrdmC1"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Im1ozDvA"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02olkn2086.outbound.protection.outlook.com [40.92.48.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4179B18453E
-	for <xdp-newbies@vger.kernel.org>; Fri, 23 Aug 2024 14:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7131C2317
+	for <xdp-newbies@vger.kernel.org>; Tue, 27 Aug 2024 13:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.48.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724422181; cv=fail; b=FohXFOOzQiwUD5qjQebMRwRuLh/r1dYhGHPRXIHCO8U+L2ZSFqKRw/eodzGCry95mwJHtwlHYIvzYyNk40vAAiM+JDeE4qmbvTWswoNNqLklp/TpKepVPHM6FtSDsUGHDAvlY92VSNmpPQXLwpyv56AZKCVmUh1tRDKRemhmKXE=
+	t=1724765735; cv=fail; b=A9RCPttIXdN/PRKudFydPNkUbFfaq8LHPRg9SbjxWhzsTFm4TOGkQa550nMcM8EIn3dQQ/G/64JpkRjWOrHbqw6r/1CcU74s/ImBbYFIYapJKzoM+q7SbH8rTBKN8p6WPruyheb4W8Urz0g0VMZRdS4YrLiyWMoc951ct4K5YJY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724422181; c=relaxed/simple;
-	bh=jp7ZKu32GIPKxWQwoh/ywGyVVjzjld05MLVaiqYn0as=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VdMWQA/qZ/l7qrGV6qUeWMFFF0+iiUiKmIOLLgY+2QiKeP/ni8Wl3oTbQp6ZPEJbSYbnJsBzzMINwadL59SW5tJn/sdoov7rTNzuQ2vMOYng6a5Ju4ZOmzhZ87NMD4Tz5L8eiwbMHjgzuHe/mdmi9dlkMq3DCVHH5hwUl+EigNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcvrdmC1; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724422179; x=1755958179;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=jp7ZKu32GIPKxWQwoh/ywGyVVjzjld05MLVaiqYn0as=;
-  b=mcvrdmC1n6ekpwhcwHCmEFfwT+vqf+atnHoA2S7o7pnGYBRGEdBzg2ez
-   lSB0KNbo9xo6rQ8IQVbCrcnfQOW4iZl6RLvYZz8s/wWx24ma2mWVni3/L
-   kEKfClX2HKHuh3Ghasi0tWZ0j6AJPxTOyyMZxFWaV2IEK1ensQB0Wktqw
-   dL3OE9LMk4mEoR92/IotUXATn92otf0+0BkK8ciLW6Q6DoVTe8P04KgR6
-   SgpK4wj3bPKuOmgi+fApsVrt2mrJXiw7t6L7eJJMkrFAnC9jDo4J+S5TK
-   DyFpdE4uNh2p9bqwyp3Z4Jnvbs+qAcAfgKA61I59o7N1c6QAzAopNdqg1
-   w==;
-X-CSE-ConnectionGUID: nLguc8ZrQyWSQ906YsVzUQ==
-X-CSE-MsgGUID: y1joqAgwS8OZvzq0D+eYQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33459563"
-X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="33459563"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 07:09:36 -0700
-X-CSE-ConnectionGUID: xaHwCl+kRp+d6o/fz+0+BQ==
-X-CSE-MsgGUID: u85VEH3yQoq5DjmA69R5rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="61668082"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Aug 2024 07:09:35 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 23 Aug 2024 07:09:33 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Fri, 23 Aug 2024 07:09:33 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 23 Aug 2024 07:09:33 -0700
+	s=arc-20240116; t=1724765735; c=relaxed/simple;
+	bh=6+vklRP8nHuN0a8U6gQp1mSWckPd2FTs4Jf17jj4YPY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iaWCbnl068X6sVvELxJZvPxvnmVjgHbTqb1bX9n65QfZdc9BoI5tyY9/jO6W3Fu3TIy7G56vw90SMEbBEzlvcgK6oiSukH8vXQ5f5V1XE039dKyBapnP8Pu7NbVUIuzwDAn9/L5u0uKIR3fhC8/VhJMrtBe4idYHUuoecB3CCmg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Im1ozDvA; arc=fail smtp.client-ip=40.92.48.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JMtgGZQIKck3MPDRwWzFLOOAZEufNg6D4yX1D4rFReEF9Z8o5N++V3XL4E7lVIjYrkfsEiTs6CkWDm1+S+752diuwOrd+Ivz8NF0FPMpV7b8wXJKZhCBfEilsyHzrhKiqhuEI8MtO3DnnJacNTWf0J57Ne1nCO0S761cmWy1yy3JhpLcfAS2TD++LSrRMP0vErd6taEl9ohnWka042EXZxiu5FSbhJjl+TFR4HknkzkrtN3UfHBVPOKrVHLx8HA74ylsHR8tx7mi6wNtW1KX22I7pLjyNzvSl5H32OkaO3c5hwvkcg/5JWb84exG7YLV4R7zcMm2myKXh3NGP2HtLg==
+ b=nVV44A2N93sQ2LOdCz4Vr3ekNWBcgJnDKnb4wFsuuJdxfDtv5oFW3PYicOidVtW9uzsNVnywcwshAdqy3OWO/MYRQkdwcuxsZqhStNSn21TJqStFJWVgfWQBcichpTaW832RwieYU7pwBtK9/jdi9TpXkEPVtdPYJFcjlyylYQ03moCI2PDq3C38jmomOVF4Yx9x3x9zVhGU4Mj9tahdU/rjjiyH1ojl+K4JOpFc1RdoS/a5iaL/nUqg9s2Ue3D0mzFTpPAg17QfJh3UEc8GXkXLhzd/bzqSN6vpP6npfuquBObSgGJgP5POZSrohCPLRaD/nr6qZMLfOS7eUTxCkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JElMqgygOXCyzYfDKlJ+RCSW+lCcEycgkrvXLzFOpkU=;
- b=lWZLOr12djZHsBjVpP7Lktigfhne5nB466Ykd2eqZ9tkaahvT1Ym31ozFe2064xSmGTXuUyocSZw/2/1dZvZyHcVVitCRRzXi5eHwaattjX7G1IFugLOQnq+Dz10znfpLfDRDt2flazIIBcLDckNMtyOSwJaenR7cXe1Wq7mrgt4M1TLIHbKM0tJw2VfeSIeMS8Gs+VDZwQ34WDnUmmbUoRl3q45WkSAMgwLjG6lxQ7COob9/laI78g7WzmqgqOueoGRMSNRRoQGdWjHHj3G360B6wJxMW2Siitl93kUjT4mDZWPpEQeEWChFhiYoH5ghm+9RQdPsAcVvDZNHW5LwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- CH3PR11MB8239.namprd11.prod.outlook.com (2603:10b6:610:156::21) with
+ bh=iO4WeAszqmGXuFqEOD/rRCGf3HcaklOOXojpiW+Jnvk=;
+ b=Lgh9yiGo5E53hx3xzPL5ETw7CxEHERxobina8d2HwfQ2sbWWM7JCZviIDnetXVFDkkUIT5i5xMRoj9cRoAaFQi7COye8X9W9/D7Xum0MPlcYNJPCWqVFQG6jKi2pPcCNh+yLkiHT7hoMN8v40dUBFO9TGvjMTEUnUZYGr11/nZnzzA01LubB53K0IfdCprJ3CMbktS20lHjw/iUxzqZHQaSpw5/z8GQx71hgNLcNgde5oN7HeoQ2ZKvARG9zCtp6lQBgeFgGCyNC7Tth1GFb5Tn3tqpJIzcnsOfGJrWaEBELaEtHJIcC3WjUghu2hvDzhNeWXcDfp7j7UixNbf9lFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iO4WeAszqmGXuFqEOD/rRCGf3HcaklOOXojpiW+Jnvk=;
+ b=Im1ozDvADZ9kuGXVcg3+e1xZTLx6JMHvPeDldm8da54rU0oNfeKacPcrKQLT1O2ZwYAcjyOArE6EtG6YLWqJe2npm/Ha5jk0FRSbSB7wcPPot/vcjT7RbGzO9zVH0+ddfgmdW4b2n7XuM457iD/YgXPmio5GAcbTKheWd7KhAcUG+zZ8EP+bKv3Tjf/XuRBXv6F+M9aSOWSiyAt23Ve4u5ISgDcW+fQZKciRrXsH/NdrfWxCOI+f5BJpTA0ZJIpD2j9/82bBWv6j3neSlLyMO/mV+FkEuKAwb9XU6aAiSs9h1uzb2tvUrqRuGTf+OlTi+5uthZ8Fj0irXN+44s2rLQ==
+Received: from AS8P194MB2042.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:5bc::12)
+ by AM7P194MB0724.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:14f::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.16; Fri, 23 Aug
- 2024 14:09:29 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%4]) with mapi id 15.20.7897.014; Fri, 23 Aug 2024
- 14:09:29 +0000
-Date: Fri, 23 Aug 2024 16:09:23 +0200
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: Magnus Karlsson <magnus.karlsson@gmail.com>
-CC: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>,
-	"xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.25; Tue, 27 Aug
+ 2024 13:35:27 +0000
+Received: from AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
+ ([fe80::3644:f8b7:ee68:3865]) by AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
+ ([fe80::3644:f8b7:ee68:3865%4]) with mapi id 15.20.7897.021; Tue, 27 Aug 2024
+ 13:35:27 +0000
+From: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
+To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Magnus Karlsson
+	<magnus.karlsson@gmail.com>
+CC: "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
 Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?
-Message-ID: <ZsiYE9j5DK79h1+/@boxer>
-References: <AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+Thread-Topic: ICE + XSK ZC - page faults on 6.1 LTS when process exits?
+Thread-Index: AQHa9Kum6G+35KCgHUKyhMMxUcg+pbI0gHmAgABiS4CABj+DUg==
+Date: Tue, 27 Aug 2024 13:35:27 +0000
+Message-ID:
+ <AS8P194MB2042F210A9972E19D579D05D86942@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+References:
+ <AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
  <CAJ8uoz0XANzvCwdJYUaY=CcK__AfL7x-FvjQKLCbngZT3_=2gw@mail.gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+ <ZsiYE9j5DK79h1+/@boxer>
+In-Reply-To: <ZsiYE9j5DK79h1+/@boxer>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [FbW3zi8SZJsz0AHFzmGgy6Ae/dalpOO7]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8P194MB2042:EE_|AM7P194MB0724:EE_
+x-ms-office365-filtering-correlation-id: f6aa26fa-ce21-4e77-9be0-08dcc69d1cc4
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799006|15030799003|19110799003|8060799006|461199028|440099028|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ O3oclZ3zZhrniSgzhm9FoE/zHK3eL+cXIS3bkA3lZVS8Dp7x6TT/eY+op4u/LPPKqk7FgqjlCpswDOK6xUztebbyjFVAjwSEeg9Au4gSAhP4J6PLs/dp5YhIFvoMHylxT/sGjMR/0VuQgA5fVVQHkCu6khQBIRXrtoJf+oDarW2BkdbBFc+Ay7qnJXzKQqb7nuwYwnYB70yJakQk9Q7eXeMAtqAu2zqqLbVLuwtpRLCkQ94iQdXnhyzMHfi1PnO2iJ+HrSYvlZ4MF2DR0yeoARf7jdgCIZ0nSszaTFNfcEWfZeJ7fcNefb+lTx+C8t5gU2l1jZ6CC5RqXqXLM6zH+VNlusqHPpeTi9JDmZM8N+/7E8VHqyjh3+L0qTopJvM+fDw4ZtQFpt6oIHqCMA76hx08/Y8OmesIEU3FPi0Z2P03kcbLFvn0E8tr7EggjCT8z2qtG8XlkEbyWDIz5QDyJM7ByxExqoMfKxKLiXQD+tMpxgD5e+dvgf7NIElINl/ySMIfWunm2RJ7xl82yd8CZpznPvwvqNF06mxmwBBaxHmSOXwieue/VL7BuYjVS6PbKPIremA/gEWihGC5nLINxgFq/HIlXhbfXNl2J/2B+8pW9W18SxfD1+GKD3GMlavE3avnjO8qllfZACqljS7foroIiZgrJhCMbJTAmZXRTi2e+HRkv5zUIMbIC2qXSFUYblc7y1R0kU7OWj3oVxlXwQ==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?P/xw7Ix4Czjui/JAElzXIKntmo4JzlwgEQhwGf//cYwOq8CpezbOfsyS?=
+ =?Windows-1252?Q?pEkrS8xAjn/sOpjBxff/Af6lKHPSVLNkOEtl4+9uq7W2OrfPUVv7WGDh?=
+ =?Windows-1252?Q?Z/6IdLW/lIrI4KP6rVOuf+bUjwuF+PlwbiIYUg4NGLpVkTcQxpMUsKQD?=
+ =?Windows-1252?Q?xxsl3KQmS03JXaKLweddhu2NwhZFKuRllMPjMvkPVKJspulxXubtAcH2?=
+ =?Windows-1252?Q?uPZfdfxsV0Rplk/Z4GJf8Mwb3RTxzdoVyF8ePrEiDsNOrIqoWC4Ivfw0?=
+ =?Windows-1252?Q?lUNGE3AfqrrzsjSy65EGIlg2aRZRtVjOhX40KSMIWr6ITvNCpyn0MGwo?=
+ =?Windows-1252?Q?qtsr5nnHIn2kF61/TlYaTDWQAfxL+ki+ga9jwifar6+IHDv5IaVNt/kl?=
+ =?Windows-1252?Q?9B61LucYNooOE+yDrBtXIaSXHqeIK7zLHn9mztCR6BlyW4lKL1iU4Qjn?=
+ =?Windows-1252?Q?LEfFqQqqojTi7WrRR+qFPCkzhqHhBYiV6QPCLYwUDoxD6c1yWIEaIxDy?=
+ =?Windows-1252?Q?CcOrMvZs5sbvKA+JAb0d2w14knmmsSg9dePsAFdWbtuEvprvh6HAL7yg?=
+ =?Windows-1252?Q?Sw2M/W84UHKcev6myQfm5/wzACf6t4RyevaKR3ArsCQ/c4qp/De7NUoT?=
+ =?Windows-1252?Q?y7fei6XNbRwSYY1gpZiLnOurXAbf+hsCESwkVX7A3JXBNjyzMJEnbKa+?=
+ =?Windows-1252?Q?u/37M8qhQYaYTCLmogk8d4dIZjlapl7WJ4eATDddrEPh8+opjlg5hVHe?=
+ =?Windows-1252?Q?51Y9TIDd0wBRluX5naH4XlaZ2qItFcB1VU3geEJBwhOSrfvUsRuj4TBz?=
+ =?Windows-1252?Q?39mWcg5L/ez5eP+BW+42lDRTixtNnoUEOQLC63V2u1nniMu13NChmrS4?=
+ =?Windows-1252?Q?Fb0NWCRcbk5g0Qdx+jAxxFf06C+ybhRmXHXeeeaVn/q27bzcG/wtUsSJ?=
+ =?Windows-1252?Q?de3HUfXtS3G1+ldm9EXAEj3WMvl8wCfPt2lkltIASuqqPANXFvouZGkW?=
+ =?Windows-1252?Q?/8HckD8NBEWKy+t1XsTtEa1yvxlh1cJbWq7cQn2YSX4lh/3aRLfUSvNg?=
+ =?Windows-1252?Q?9Sq4DCQtJEI/n5Oymgza8KFpQJ5LrB6Qr6GaAmBQiUKJGR4bScSjCk3t?=
+ =?Windows-1252?Q?wiTitKUKqov2O7ltIDSUzIOVFYOvtZUKHz3dbrIhyOEupAQVi0VBEZny?=
+ =?Windows-1252?Q?mt0bV4cS0vDcEhdkZ1ZHmHMloZYWlTf36WpC4Vf2+D4ZVl3fHhhp4xR0?=
+ =?Windows-1252?Q?YpOb+EHTlzPn+GmdVuso4t+5S4IunEXDNBmVQn70jT6UNtQ2rqIqqIfK?=
+ =?Windows-1252?Q?FHLFCrOLpYy27+is2I4mPW0AO9RjaWkz5lZHesLYeVSVaOgI?=
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJ8uoz0XANzvCwdJYUaY=CcK__AfL7x-FvjQKLCbngZT3_=2gw@mail.gmail.com>
-X-ClientProxiedBy: ZR0P278CA0080.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:22::13) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|CH3PR11MB8239:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0efac08-904b-4a4e-4d69-08dcc37d3437
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Dfv8BX7oTcxj9r6AL0qrhMFEZJ6nGzqKkepOW+zYigrrtJHqtrXt8SCTvxi4?=
- =?us-ascii?Q?biX4br94ILUixASsIoytGdtPddzbWGxRpOl4N/TczFlg5M1k50r0tu5+PKeR?=
- =?us-ascii?Q?coP1UXTPUVx0+kinStCB4b7VXMnukT2kjN4WS766Ag+AyMb2gp+rKIcxKcHq?=
- =?us-ascii?Q?zeDOmzrOr+ULO3aIzohBrabF5Bie4qJGXi+w/n8detMsXkTT5qwyJuMpI1Ol?=
- =?us-ascii?Q?/RswxL9jUnO14nW5qiOgeEoabxmlkVXRJOQJiMNJQq6VPpLI4U9/FPUXf2Dw?=
- =?us-ascii?Q?2ppo5ZaA7sfuS2MVX85+N2/Vo4DhZ5E2CDO66RYG7wLnRwIjwyr9mxSJZUvj?=
- =?us-ascii?Q?vquYYohjZFyfPuEf/pBXe58cH9KS+DzvL32Rf7CQ12ErqnnOgxz++n7EDGtK?=
- =?us-ascii?Q?/wjbYD0bGb9g8cdUPDRA/jkMIeR8aFFhLiHB6WFj9Iq+UMNL0FgixTveUbpz?=
- =?us-ascii?Q?2JGHDSfDc++A3U6xcctUNNsnSfDRxsimlLW8e6TN9AQJYfhsWncfL6z6xtI8?=
- =?us-ascii?Q?HEC2Wv/nJPc9OpZq/Y4EQNeZO3lPCA/UgcyNZERIK3ACqvY0ckbsfAJ777QA?=
- =?us-ascii?Q?hgreBQvj4R6Vp423EgfkfwSyhcnv7BD2u+9/OIyrglmup9CUQQZx2z86+M+L?=
- =?us-ascii?Q?D3Wv6VulVszHAOH9Gv87rcs0DtxoRsfFDnXLVMQ69QcxHbX8EudHjiH2cY22?=
- =?us-ascii?Q?UWKDJDgSQRFsrMFI/PRrMGq6Cg7oHqLqyveRtki9KSEsVt20oQmzmHwFOfxN?=
- =?us-ascii?Q?lOgIslQ55zbakrKvGz+PsmZjISphq0MMOLPvkKhAYTg5znn3GuqitXRJ6K1X?=
- =?us-ascii?Q?d6CN4DpcWwgxNYGEC31i4EdnWxWPY2gt9tdOP0Abpmk4rSayL2Q+bywZh7d3?=
- =?us-ascii?Q?FcP2aMwVQ3MlrvG9ml5AbeioEHFCANh05PcKJ9fXfGLykHudOcebPX5lS1O8?=
- =?us-ascii?Q?lVc/QiShqDsCL1pBF0o71N62vMwUA1i/u8kGlrT72Y32wv4yqqhHmTa5g0Mi?=
- =?us-ascii?Q?4yZyqLFnxGGImGDeKcarzMWK9TJi23ZUHhJuQhPpIrYweAC3aM5a07ief81B?=
- =?us-ascii?Q?y3ISUkFo/NzQ1tpnyOJ/3fSm2u+JbH8IxteeyystywelKou/XSR6jwLRrFHP?=
- =?us-ascii?Q?I8jJnJiDtRrLlc06NMdWQxrT/iFQy2uzKUzxJGjRZc01JQa0d4L8oslavvle?=
- =?us-ascii?Q?AzQz6nj4Ku7RF7arEGbrPuRCulTHX7wlfC3yz7H70Yl7peyPzp0boH47+LHW?=
- =?us-ascii?Q?aQNs/wfBZY17I+QjPWsTCM7BwFGUJebNcNG7LjUrG4b9P3999rNLoYIrLhKw?=
- =?us-ascii?Q?57z3h35p5iG7wcCWJoWsH1IJCugsM67Ql6+fotAI2WRIXQ=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f1lR7K4qFjQD3u4zQKXNtQB5OVJxzLuH4FvdBxRA5u1PK5kmasMPajX7W1u8?=
- =?us-ascii?Q?2VQVXUl7SPRPY0aris7Hdm55Kbu2vehGZom1M2Racg6ldn5yyxw0Xx3SiP0v?=
- =?us-ascii?Q?IC6uuAxBRvH7kUUO/mMlF19GEKFEt+G5vcL81Is4OEg7taRTylMgCDBcenAs?=
- =?us-ascii?Q?53Rz7znnTDUYx4bsFszhLad+gH+GWJ8IfFLzEq53rQL90YWkgPHZz0boCRyO?=
- =?us-ascii?Q?aCYEBsVmbKaMItPvwXEajsm3IQn2Kgm2VuttkqgMx85m5rm2hixnvCxtUklv?=
- =?us-ascii?Q?HQQwbLP9yuVQ90ivKO8x4Z9hDNSGX/LFTuWYIDUYZD//gMYuxRBHYrsUHnxY?=
- =?us-ascii?Q?KYVRxJI7HBtzA17q8oSrkqmd+K8NZd0NEbihLPa37aJWnCIZa7KjM+S+7qar?=
- =?us-ascii?Q?H2EH1nPvmcnio2L+aZvb/bHO1c4O8eI7aoJ+MMWejlNNzeKxAZWUXKdXAOyC?=
- =?us-ascii?Q?zSVABFOAr3iEd8dPMiRV7JDA+ctWFJnUXDqTB1wWJ+oFErS3Q0ubqVpbLUzI?=
- =?us-ascii?Q?FvjiA/Q5P3jjHF3+ds1gsL65fxs36roMxbUBy8IWjp+ExmnaXCZ+dKcd5avf?=
- =?us-ascii?Q?68TiBFNoCZ2Insq4rDXjEPj6anyD+tacOIHd3Tc42GZHX2ZIIg0oq2tC6WOn?=
- =?us-ascii?Q?VhHEkuOc910MozAFlQE9QolU4TMJqmGtVegzhAZsNdZa37AghHqlUKgTIm2H?=
- =?us-ascii?Q?TSdcetBeYRA9/awY8B8KHJHNuOqo0jXrbIv7oGcc8T8zWlRL1E7lX1a4BOcs?=
- =?us-ascii?Q?1kFunPD7HmWUOwbhr05s3WqIaVZYYnGTBzByhrHYvanHMdsSA/VdVwd8OO3t?=
- =?us-ascii?Q?uMcoNEAfibPRAzaetc+ebfO4PKWmGCXJ7NNKfU/TQj5ebJe8aoAxXMlVcmPP?=
- =?us-ascii?Q?HSl07eWALfeGFYVxVmoiMwNeauXrhB3OG6uWhsBTeCcndwAqUeOSQBfKyKZn?=
- =?us-ascii?Q?P/HHAg0bcm241i4QKxLuQWGfIv+AZK1MKCxsv/tDolJBEEEbQX+JYwdsWUJv?=
- =?us-ascii?Q?bDSGDkNdv1kWhtV5Kkv38U0Zv1f/pz4PhwZRLbJP52H0lcvG4oL/j6n4C6EE?=
- =?us-ascii?Q?+BisJdfZ8s3WlTyWviODCIooypT+1OWFU/+ih7i1RWp+A75kzL8wrngT4g3Z?=
- =?us-ascii?Q?S34oX4iWP1hVJ/0E6IqUE0vuHSBWtzLaXTlE6/XIMBKjHpjh43lhYQTjPLV8?=
- =?us-ascii?Q?T1vt8DafWM375pXwq/5w2PCVM7f45q2H1G8EGmFsZk+fQhUpYl33VQ0UOFLH?=
- =?us-ascii?Q?5IpIz8Z0XV4AFBzH99NO2mdyBc0i0jBa8fELedzZdpZ/cFktdnEXqT5PGB4Y?=
- =?us-ascii?Q?kKlYcoBWZP/lIbdWSzFA2ZPHzP6b7gaOjuRr5r32z1quvxEbrfGmz2eOzGDE?=
- =?us-ascii?Q?MI6usOpLpzWi8V+fHrJeO8Xdqig3ZawkQ/ndPwmzcMiEmdorv9FK/hvPy/4a?=
- =?us-ascii?Q?oLsm/JDs8bMzlvUgO+4+6nPjZduUxdBN0rozF1Q9KoNuwE8wVNThXLoAAlF6?=
- =?us-ascii?Q?x6pejMoFg8tTJ+y+YpNlM/+ltt3xssTrbcWbAEZ5Ibpvg+xjE1E489j5bx9D?=
- =?us-ascii?Q?ZLONnJSy46JcftV4NewH0qdmx+OPMDmLtNS5pDQEV7RBvHOvNvoy8LeDrNgC?=
- =?us-ascii?Q?Qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0efac08-904b-4a4e-4d69-08dcc37d3437
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2024 14:09:29.5292
+X-MS-Exchange-CrossTenant-AuthSource: AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6aa26fa-ce21-4e77-9be0-08dcc69d1cc4
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2024 13:35:27.4004
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TyKhLK9A0VojH4AILoa/TEx/EaDxdifpf+1OZYxHO0P+0LXLEnW6xX3gm2UB2OiwDNWrfsHDBNPd8r+t6cq3719VQtuUagFwoD3SJLBq0vE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8239
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7P194MB0724
 
-On Fri, Aug 23, 2024 at 10:17:35AM +0200, Magnus Karlsson wrote:
-> On Thu, 22 Aug 2024 at 18:25, Alasdair McWilliam
-> <alasdair.mcwilliam@outlook.com> wrote:
-> >
-> > Hi,
-> >
+Hi Maciej, Magnus,=0A=
+ =0A=
+Apologies for slow reply =96 bank holiday in the UK yesterday.=0A=
+ =0A=
+Just a quick update.=0A=
+=0A=
+It=92s quicker and easier for me to build a released version of code than i=
+t is to build a production kernel from a git tree due to build apparatus.=
+=0A=
+ =0A=
+So, based on the suggestion to back out commit a62c50545b4d, I have taken t=
+he first step of identifying that said commit was included in 6.1.95. I=92v=
+e run both 6.1.95 and 6.1.94 through a build to test both. Some quick and d=
+irty testing shows:=0A=
+=0A=
+I can reproduce the issue on 6.1.95=0A=
+I cannot (so far) reproduce the issue on 6.1.94=0A=
+ =0A=
+I=92ve only tested the latter version 3-4 times so I=92m going to keep thro=
+wing dead processes at it in different ways to just to be sure 6.1.94 is no=
+t affected. Then, to validate, I will grab the actual git tree at 6.1.95 an=
+d manually back out a62c50545b4d and re-test. But, this will take me a litt=
+le longer.=0A=
+=0A=
+Thanks=0A=
+Alasdair=0A=
+=0A=
+________________________________________=0A=
+From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>=0A=
+Sent: 23 August 2024 15:09=0A=
+To: Magnus Karlsson=0A=
+Cc: Alasdair McWilliam; xdp-newbies@vger.kernel.org=0A=
+Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?=0A=
+=0A=
+On Fri, Aug 23, 2024 at 10:17:35AM +0200, Magnus Karlsson wrote:=0A=
+> On Thu, 22 Aug 2024 at 18:25, Alasdair McWilliam=0A=
+> <alasdair.mcwilliam@outlook.com> wrote:=0A=
+> >=0A=
+> > Hi,=0A=
+> >=0A=
 > > I've been testing apps that use XSK+ZC on ICE with newer builds of the =
 6.1 LTS kernel in preparation for some production upgrades, and I've starte=
 d to notice some instability on newer versions. I can reproduce the issue e=
-asily in the lab.
-> >
-> > Config:
-> > - Known good multi-threaded application (i.e. production grade)
+asily in the lab.=0A=
+> >=0A=
+> > Config:=0A=
+> > - Known good multi-threaded application (i.e. production grade)=0A=
 > > - Uses eBPF and AF_XDP with zero copy to act as 'bump in wire' in netwo=
-rk
-> > - Xeon's with Intel E810-CQDA2 (firmware: 3.20 0x8000d83e 1.3146.0)
+rk=0A=
+> > - Xeon's with Intel E810-CQDA2 (firmware: 3.20 0x8000d83e 1.3146.0)=0A=
 > > - Effectively a vanilla rebuild of 6.1 using configs from el-repo proje=
-ct
-> >
-> > Scenario:
-> > - Noticing hard kernel faults when shutting down application
-> > - Can happen if the process is shut down via systemctl stop
-> > - Can even happen with a simple kill -9 command to the PID
-> > - Appears in builds after 6.1.87
-> >
-> > Tested kernels:
-> > - 6.1.84: process exits smoothly
-> > - 6.1.87: process exits smoothly
-> > - 6.1.97: BUG: unable to handle page fault for address
-> > - 6.1.106: BUG: unable to handle page fault for address
-> >
+ct=0A=
+> >=0A=
+> > Scenario:=0A=
+> > - Noticing hard kernel faults when shutting down application=0A=
+> > - Can happen if the process is shut down via systemctl stop=0A=
+> > - Can even happen with a simple kill -9 command to the PID=0A=
+> > - Appears in builds after 6.1.87=0A=
+> >=0A=
+> > Tested kernels:=0A=
+> > - 6.1.84: process exits smoothly=0A=
+> > - 6.1.87: process exits smoothly=0A=
+> > - 6.1.97: BUG: unable to handle page fault for address=0A=
+> > - 6.1.106: BUG: unable to handle page fault for address=0A=
+> >=0A=
 > > Kdump log is below [1] from 6.1.106 but does seem to be the same in the=
- earlier version.
-> >
-> > Can anyone advise if this is a known issue?
-> >
+ earlier version.=0A=
+> >=0A=
+> > Can anyone advise if this is a known issue?=0A=
+> >=0A=
 > > I don't have any builds between 6.1.87 and 6.1.97 but I can spend some =
 time trying to pinpoint the exact version things start to go wrong in, if i=
-t would help anyone better equipped than me to debug!
->=20
-> Hi Alasdair,
->=20
-> It would be of great help if you could pinpoint the exact version for
-> this breakage. Hopefully we could then find the commit in the ice
-> driver that breaks your app, since there should be just a handful of
-> commits in the ice driver for any stable release.
-
-$ git log --oneline v6.1.87..v6.1.97 drivers/net/ethernet/intel/ice/
-dd37b86999fd ice: Fix VSI list rule with ICE_SW_LKUP_LAST type
-224b69e8751c ice: avoid IRQ collision to fix init failure on ACPI S3 resume
-531d85b4fb66 ice: move RDMA init to ice_idc.c
-a62c50545b4d ice: remove af_xdp_zc_qps bitmap
-447a5433bd1e ice: remove null checks before devm_kfree() calls
-a388961be5ed ice: Introduce new parameters in ice_sched_node
-17ccdebe5ac7 ice: fix iteration of TLVs in Preserved Fields Area
-07cbc5512023 ice: fix accounting if a VLAN already exists
-5ef3a27c6142 ice: Interpret .set_channels() input differently
-90cbd4c081bb ice: remove unnecessary duplicate checks for VF VSI ID
-59161a21cae0 ice: pass VSI pointer into ice_vc_isvalid_q_id
-6a6ebec40820 ice: tc: allow zero flags in parsing tc flower
-
-can you revert a62c50545b4d and see if the issue persists?
-
->=20
-> > Kind regards
-> > Alasdair
-> >
-> > [1] kdump log
-> >
+t would help anyone better equipped than me to debug!=0A=
+>=0A=
+> Hi Alasdair,=0A=
+>=0A=
+> It would be of great help if you could pinpoint the exact version for=0A=
+> this breakage. Hopefully we could then find the commit in the ice=0A=
+> driver that breaks your app, since there should be just a handful of=0A=
+> commits in the ice driver for any stable release.=0A=
+=0A=
+$ git log --oneline v6.1.87..v6.1.97 drivers/net/ethernet/intel/ice/=0A=
+dd37b86999fd ice: Fix VSI list rule with ICE_SW_LKUP_LAST type=0A=
+224b69e8751c ice: avoid IRQ collision to fix init failure on ACPI S3 resume=
+=0A=
+531d85b4fb66 ice: move RDMA init to ice_idc.c=0A=
+a62c50545b4d ice: remove af_xdp_zc_qps bitmap=0A=
+447a5433bd1e ice: remove null checks before devm_kfree() calls=0A=
+a388961be5ed ice: Introduce new parameters in ice_sched_node=0A=
+17ccdebe5ac7 ice: fix iteration of TLVs in Preserved Fields Area=0A=
+07cbc5512023 ice: fix accounting if a VLAN already exists=0A=
+5ef3a27c6142 ice: Interpret .set_channels() input differently=0A=
+90cbd4c081bb ice: remove unnecessary duplicate checks for VF VSI ID=0A=
+59161a21cae0 ice: pass VSI pointer into ice_vc_isvalid_q_id=0A=
+6a6ebec40820 ice: tc: allow zero flags in parsing tc flower=0A=
+=0A=
+can you revert a62c50545b4d and see if the issue persists?=0A=
+=0A=
+>=0A=
+> > Kind regards=0A=
+> > Alasdair=0A=
+> >=0A=
+> > [1] kdump log=0A=
+> >=0A=
 > > [  158.666867] BUG: unable to handle page fault for address: ffffa6510e=
-5580c0
-> > [  158.666887] #PF: supervisor read access in kernel mode
-> > [  158.666896] #PF: error_code(0x0000) - not-present page
-> > [  158.666903] PGD 100000067 P4D 100000067 PUD 106dc4067 PMD 0
-> > [  158.666914] Oops: 0000 [#1] PREEMPT SMP PTI
+5580c0=0A=
+> > [  158.666887] #PF: supervisor read access in kernel mode=0A=
+> > [  158.666896] #PF: error_code(0x0000) - not-present page=0A=
+> > [  158.666903] PGD 100000067 P4D 100000067 PUD 106dc4067 PMD 0=0A=
+> > [  158.666914] Oops: 0000 [#1] PREEMPT SMP PTI=0A=
 > > [  158.666922] CPU: 7 PID: 1808 Comm: tlndd.bin Kdump: loaded Tainted: =
-G            E      6.1.106-1.X.el9.x86_64 #1
+G            E      6.1.106-1.X.el9.x86_64 #1=0A=
 > > [  158.666940] Hardware name: Supermicro SYS-1028R-TDW/X10DDW-i, BIOS 3=
-.2 12/16/2019
-> > [  158.666950] RIP: 0010:xp_free+0x11/0x80
+.2 12/16/2019=0A=
+> > [  158.666950] RIP: 0010:xp_free+0x11/0x80=0A=
 > > [  158.666962] Code: 8b 04 d0 48 83 e0 fe 48 01 f0 c3 cc cc cc cc 66 2e=
  0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 56 41 55 41 54 55 48 8d 6f 58 53=
- <48> 8b 47 58 48 39 c5 74 0d 5b 5d 41 5c 41 5d 41 5e c3 cc cc cc cc
-> > [  158.666985] RSP: 0018:ffffa65089e8b760 EFLAGS: 00010202
+ <48> 8b 47 58 48 39 c5 74 0d 5b 5d 41 5c 41 5d 41 5e c3 cc cc cc cc=0A=
+> > [  158.666985] RSP: 0018:ffffa65089e8b760 EFLAGS: 00010202=0A=
 > > [  158.666993] RAX: ffff8fcf077c0000 RBX: 0000000000000001 RCX: 0000000=
-000000000
+000000000=0A=
 > > [  158.667003] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa65=
-10e558068
+10e558068=0A=
 > > [  158.667012] RBP: ffffa6510e5580c0 R08: fffff8c50415a108 R09: ffff8fc=
-7cac60000
+7cac60000=0A=
 > > [  158.667022] R10: 0000000000000219 R11: ffffffffffffffff R12: 0000000=
-000000fff
+000000fff=0A=
 > > [  158.667031] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8fc=
-7c139d340
+7c139d340=0A=
 > > [  158.667040] FS:  00007f8504996880(0000) GS:ffff8fcedfdc0000(0000) kn=
-lGS:0000000000000000
-> > [  158.667050] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+lGS:0000000000000000=0A=
+> > [  158.667050] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033=0A=
 > > [  158.667058] CR2: ffffa6510e5580c0 CR3: 00000001448e2002 CR4: 0000000=
-0001706e0
-> > [  158.667068] Call Trace:
-> > [  158.667075]  <TASK>
-> > [  158.667082]  ? show_trace_log_lvl+0x1c4/0x2df
-> > [  158.667094]  ? show_trace_log_lvl+0x1c4/0x2df
-> > [  158.667103]  ? ice_xsk_clean_rx_ring+0x39/0x60 [ice]
-> > [  158.667157]  ? __die_body.cold+0x8/0xd
-> > [  158.667166]  ? page_fault_oops+0xac/0x150
-> > [  158.667176]  ? fixup_exception+0x22/0x340
-> > [  158.667185]  ? exc_page_fault+0xb2/0x150
-> > [  158.667195]  ? asm_exc_page_fault+0x22/0x30
-> > [  158.667206]  ? xp_free+0x11/0x80
-> > [  158.667215]  ice_xsk_clean_rx_ring+0x39/0x60 [ice]
-> > [  158.667250]  ice_clean_rx_ring+0x157/0x180 [ice]
-> > [  158.667284]  ice_down+0x172/0x2b0 [ice]
-> > [  158.667311]  ? ice_xdp_setup_prog+0x3b0/0x3b0 [ice]
-> > [  158.667337]  ice_xdp_setup_prog+0xe3/0x3b0 [ice]
-> > [  158.667364]  ? ice_xdp_setup_prog+0x3b0/0x3b0 [ice]
-> > [  158.667391]  dev_xdp_install+0xc7/0x100
-> > [  158.667402]  dev_xdp_attach+0x1e0/0x560
-> > [  158.667412]  do_setlink+0x7a8/0xc10
-> > [  158.667422]  ? __nla_validate_parse+0x12b/0x1b0
-> > [  158.667436]  __rtnl_newlink+0x540/0x650
-> > [  158.667446]  rtnl_newlink+0x44/0x70
-> > [  158.667454]  rtnetlink_rcv_msg+0x15c/0x3d0
-> > [  158.667477]  ? rtnl_calcit.isra.0+0x140/0x140
-> > [  158.667485]  netlink_rcv_skb+0x51/0x100
-> > [  158.667727]  netlink_unicast+0x246/0x360
-> > [  158.667953]  netlink_sendmsg+0x24e/0x4b0
-> > [  158.668173]  __sock_sendmsg+0x62/0x70
-> > [  158.668389]  ____sys_sendmsg+0x247/0x2d0
-> > [  158.668602]  ? copy_msghdr_from_user+0x6d/0xa0
-> > [  158.668815]  ___sys_sendmsg+0x88/0xd0
-> > [  158.669028]  ? __sk_destruct+0x156/0x230
-> > [  158.669234]  ? kmem_cache_free+0x134/0x300
-> > [  158.669437]  ? rcu_nocb_try_bypass+0x4a/0x440
-> > [  158.669634]  ? __sk_destruct+0x156/0x230
-> > [  158.669825]  ? _raw_spin_unlock_irqrestore+0x23/0x40
-> > [  158.670010]  ? mod_objcg_state+0xc9/0x2f0
-> > [  158.670186]  ? refill_obj_stock+0xae/0x160
-> > [  158.670359]  ? rseq_get_rseq_cs.isra.0+0x16/0x220
-> > [  158.670529]  ? rcu_nocb_try_bypass+0x4a/0x440
-> > [  158.670696]  ? rseq_ip_fixup+0x72/0x1e0
-> > [  158.670860]  __sys_sendmsg+0x59/0xa0
-> > [  158.671021]  ? syscall_trace_enter.constprop.0+0x11e/0x190
-> > [  158.671185]  do_syscall_64+0x35/0x80
-> > [  158.671345]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> > [  158.671503] RIP: 0033:0x7f850510f917
+0001706e0=0A=
+> > [  158.667068] Call Trace:=0A=
+> > [  158.667075]  <TASK>=0A=
+> > [  158.667082]  ? show_trace_log_lvl+0x1c4/0x2df=0A=
+> > [  158.667094]  ? show_trace_log_lvl+0x1c4/0x2df=0A=
+> > [  158.667103]  ? ice_xsk_clean_rx_ring+0x39/0x60 [ice]=0A=
+> > [  158.667157]  ? __die_body.cold+0x8/0xd=0A=
+> > [  158.667166]  ? page_fault_oops+0xac/0x150=0A=
+> > [  158.667176]  ? fixup_exception+0x22/0x340=0A=
+> > [  158.667185]  ? exc_page_fault+0xb2/0x150=0A=
+> > [  158.667195]  ? asm_exc_page_fault+0x22/0x30=0A=
+> > [  158.667206]  ? xp_free+0x11/0x80=0A=
+> > [  158.667215]  ice_xsk_clean_rx_ring+0x39/0x60 [ice]=0A=
+> > [  158.667250]  ice_clean_rx_ring+0x157/0x180 [ice]=0A=
+> > [  158.667284]  ice_down+0x172/0x2b0 [ice]=0A=
+> > [  158.667311]  ? ice_xdp_setup_prog+0x3b0/0x3b0 [ice]=0A=
+> > [  158.667337]  ice_xdp_setup_prog+0xe3/0x3b0 [ice]=0A=
+> > [  158.667364]  ? ice_xdp_setup_prog+0x3b0/0x3b0 [ice]=0A=
+> > [  158.667391]  dev_xdp_install+0xc7/0x100=0A=
+> > [  158.667402]  dev_xdp_attach+0x1e0/0x560=0A=
+> > [  158.667412]  do_setlink+0x7a8/0xc10=0A=
+> > [  158.667422]  ? __nla_validate_parse+0x12b/0x1b0=0A=
+> > [  158.667436]  __rtnl_newlink+0x540/0x650=0A=
+> > [  158.667446]  rtnl_newlink+0x44/0x70=0A=
+> > [  158.667454]  rtnetlink_rcv_msg+0x15c/0x3d0=0A=
+> > [  158.667477]  ? rtnl_calcit.isra.0+0x140/0x140=0A=
+> > [  158.667485]  netlink_rcv_skb+0x51/0x100=0A=
+> > [  158.667727]  netlink_unicast+0x246/0x360=0A=
+> > [  158.667953]  netlink_sendmsg+0x24e/0x4b0=0A=
+> > [  158.668173]  __sock_sendmsg+0x62/0x70=0A=
+> > [  158.668389]  ____sys_sendmsg+0x247/0x2d0=0A=
+> > [  158.668602]  ? copy_msghdr_from_user+0x6d/0xa0=0A=
+> > [  158.668815]  ___sys_sendmsg+0x88/0xd0=0A=
+> > [  158.669028]  ? __sk_destruct+0x156/0x230=0A=
+> > [  158.669234]  ? kmem_cache_free+0x134/0x300=0A=
+> > [  158.669437]  ? rcu_nocb_try_bypass+0x4a/0x440=0A=
+> > [  158.669634]  ? __sk_destruct+0x156/0x230=0A=
+> > [  158.669825]  ? _raw_spin_unlock_irqrestore+0x23/0x40=0A=
+> > [  158.670010]  ? mod_objcg_state+0xc9/0x2f0=0A=
+> > [  158.670186]  ? refill_obj_stock+0xae/0x160=0A=
+> > [  158.670359]  ? rseq_get_rseq_cs.isra.0+0x16/0x220=0A=
+> > [  158.670529]  ? rcu_nocb_try_bypass+0x4a/0x440=0A=
+> > [  158.670696]  ? rseq_ip_fixup+0x72/0x1e0=0A=
+> > [  158.670860]  __sys_sendmsg+0x59/0xa0=0A=
+> > [  158.671021]  ? syscall_trace_enter.constprop.0+0x11e/0x190=0A=
+> > [  158.671185]  do_syscall_64+0x35/0x80=0A=
+> > [  158.671345]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8=0A=
+> > [  158.671503] RIP: 0033:0x7f850510f917=0A=
 > > [  158.671658] Code: 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b9 0f=
  1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2e 00 00 00 0f 05=
- <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 89 54 24 1c 48 89 74 24 10
+ <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 89 54 24 1c 48 89 74 24 10=0A=
 > > [  158.671993] RSP: 002b:00007ffcc805f238 EFLAGS: 00000246 ORIG_RAX: 00=
-0000000000002e
+0000000000002e=0A=
 > > [  158.672171] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8=
-50510f917
+50510f917=0A=
 > > [  158.672352] RDX: 0000000000000000 RSI: 000000000198e9e8 RDI: 0000000=
-000000009
+000000009=0A=
 > > [  158.672534] RBP: 0000000001933c00 R08: 0000000001935980 R09: 0000000=
-000460e48
+000460e48=0A=
 > > [  158.672716] R10: 0000000000000011 R11: 0000000000000246 R12: 0000000=
-001933c30
+001933c30=0A=
 > > [  158.672899] R13: 0000000000515fd8 R14: 000000000198e9d0 R15: 0000000=
-000513690
-> > [  158.673086]  </TASK>
+000513690=0A=
+> > [  158.673086]  </TASK>=0A=
 > > [  158.673269] Modules linked in: bonding(E) tls(E) nft_fib_inet(E) nft=
 _fib_ipv4(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E=
 ) nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_c=
@@ -359,9 +338,9 @@ r(E) i2c_i801(E) lpc_ich(E) mei(E) i2c_smbus(E) mxm_wmi(E) ioatdma(E) acpi_=
 ipmi(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) acpi_pad(E) acpi_powe=
 r_meter(E) joydev(E) drm(E) fuse(E) ext4(E) mbcache(E) jbd2(E) sd_mod(E) t1=
 0_pi(E) sg(E) ahci(E) crct10dif_pclmul(E) crc32_pclmul(E) libahci(E) crc32c=
-_intel(E) ice(E)
+_intel(E) ice(E)=0A=
 > > [  158.673314]  polyval_clmulni(E) polyval_generic(E) igb(E) libata(E) =
 ghash_clmulni_intel(E) i2c_algo_bit(E) dca(E) wmi(E) dm_mirror(E) dm_region=
-_hash(E) dm_log(E) dm_mod(E)
-> > [  158.675578] CR2: ffffa6510e5580c0
+_hash(E) dm_log(E) dm_mod(E)=0A=
+> > [  158.675578] CR2: ffffa6510e5580c0=0A=
 
