@@ -1,113 +1,115 @@
-Return-Path: <xdp-newbies+bounces-133-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-134-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBEB9960C3C
-	for <lists+xdp-newbies@lfdr.de>; Tue, 27 Aug 2024 15:37:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64757968BAA
+	for <lists+xdp-newbies@lfdr.de>; Mon,  2 Sep 2024 18:09:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5DC83B2855C
-	for <lists+xdp-newbies@lfdr.de>; Tue, 27 Aug 2024 13:37:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BD602838D8
+	for <lists+xdp-newbies@lfdr.de>; Mon,  2 Sep 2024 16:09:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42AF61C1723;
-	Tue, 27 Aug 2024 13:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B09F1A2653;
+	Mon,  2 Sep 2024 16:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Im1ozDvA"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VvwRkHKx"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02olkn2086.outbound.protection.outlook.com [40.92.48.86])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03olkn2021.outbound.protection.outlook.com [40.92.59.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7131C2317
-	for <xdp-newbies@vger.kernel.org>; Tue, 27 Aug 2024 13:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.48.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B91A265A
+	for <xdp-newbies@vger.kernel.org>; Mon,  2 Sep 2024 16:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.59.21
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724765735; cv=fail; b=A9RCPttIXdN/PRKudFydPNkUbFfaq8LHPRg9SbjxWhzsTFm4TOGkQa550nMcM8EIn3dQQ/G/64JpkRjWOrHbqw6r/1CcU74s/ImBbYFIYapJKzoM+q7SbH8rTBKN8p6WPruyheb4W8Urz0g0VMZRdS4YrLiyWMoc951ct4K5YJY=
+	t=1725293379; cv=fail; b=IWg7blAJWE2fbKF/P0n0XAqy3Er33FcJPY8g03VieIZkvRYMPp0XDxIr7dncfCcXUkJeTbPGNqMcztl0IfsFQPCg9p4DdvtvbLn+9EQczz/R1I6/wR9UH0sqCc6MHPH5FTrHAkBcYOCVopOHLN/C2ymaRKydQrLYItWYG46tB4g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724765735; c=relaxed/simple;
-	bh=6+vklRP8nHuN0a8U6gQp1mSWckPd2FTs4Jf17jj4YPY=;
+	s=arc-20240116; t=1725293379; c=relaxed/simple;
+	bh=3te3wDrAzCqMMFV8Me4bwCAExHFrP1zxvthMeAkKlVE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=iaWCbnl068X6sVvELxJZvPxvnmVjgHbTqb1bX9n65QfZdc9BoI5tyY9/jO6W3Fu3TIy7G56vw90SMEbBEzlvcgK6oiSukH8vXQ5f5V1XE039dKyBapnP8Pu7NbVUIuzwDAn9/L5u0uKIR3fhC8/VhJMrtBe4idYHUuoecB3CCmg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Im1ozDvA; arc=fail smtp.client-ip=40.92.48.86
+	 Content-Type:MIME-Version; b=Q2s+/i72UMvCGrM5yl4oPpTM5eTDt4ijCjXBQrY2QeLlz4RyVLYPjwz8Q7Vlg9YL6cVOBtSKis/F2jChPN/TPsVgEZ6Ou+YKI63eYbrJfOJBeBSXrwNWttFntYBy165jJFro7W1J7W3j/QMQdmLi3BsZ6ajrtnPuodlYTtJMCl0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VvwRkHKx; arc=fail smtp.client-ip=40.92.59.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nVV44A2N93sQ2LOdCz4Vr3ekNWBcgJnDKnb4wFsuuJdxfDtv5oFW3PYicOidVtW9uzsNVnywcwshAdqy3OWO/MYRQkdwcuxsZqhStNSn21TJqStFJWVgfWQBcichpTaW832RwieYU7pwBtK9/jdi9TpXkEPVtdPYJFcjlyylYQ03moCI2PDq3C38jmomOVF4Yx9x3x9zVhGU4Mj9tahdU/rjjiyH1ojl+K4JOpFc1RdoS/a5iaL/nUqg9s2Ue3D0mzFTpPAg17QfJh3UEc8GXkXLhzd/bzqSN6vpP6npfuquBObSgGJgP5POZSrohCPLRaD/nr6qZMLfOS7eUTxCkg==
+ b=SZU3wsVTigS7XNZl5npWbZTAov/hqcqV1IN9aE54/JpXKVBIEdn9kJoVSbOSeuWKV3G5o+9HSGnHald9bgfSLmqsG7vIA7qqJTOQQ07oeIIEJuWb5j4/IFVZYQ98gxZP2tBNmNqYjS7HiDEObfHQN82sILZvwIurGLcgpeLx9fpX3EKvvrMJb+F+rUAozlU7AjmtMXBWRpoK/fHKLbgqaDkPMXIDgEOm6A10wVF7XZjT0DDTA6ja6+MzSWgim9J4hwEOIKhtfcv1bNyAz6BAbRmvTGTjRwwfGAz8Dy1x/ZdF5BAs4m1zQOrnz0gNaXQ4MjLO4bf6+KhozPprXBNcwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iO4WeAszqmGXuFqEOD/rRCGf3HcaklOOXojpiW+Jnvk=;
- b=Lgh9yiGo5E53hx3xzPL5ETw7CxEHERxobina8d2HwfQ2sbWWM7JCZviIDnetXVFDkkUIT5i5xMRoj9cRoAaFQi7COye8X9W9/D7Xum0MPlcYNJPCWqVFQG6jKi2pPcCNh+yLkiHT7hoMN8v40dUBFO9TGvjMTEUnUZYGr11/nZnzzA01LubB53K0IfdCprJ3CMbktS20lHjw/iUxzqZHQaSpw5/z8GQx71hgNLcNgde5oN7HeoQ2ZKvARG9zCtp6lQBgeFgGCyNC7Tth1GFb5Tn3tqpJIzcnsOfGJrWaEBELaEtHJIcC3WjUghu2hvDzhNeWXcDfp7j7UixNbf9lFg==
+ bh=djCGbMt9biGCWzlDiCzzVvmiJdkvBRrKexzGZqlMaaA=;
+ b=hc/mI1hvpZu2f1bu+Lj6BbWYM3yCdH0BiB99YKsGhzoQi50u39zjKiGexW+0DdMVOD1/cr1ildozG4r+r8s5I1+q4t2moIjImJvqvzlmTzT7mLx2ckwPKbrSx5U6vECNpCTbx9ghAjR9mtb8kpgIqhymh6qCF2UYqhyqjH7UMMjadjfXm5UnDiKkhts8CY5fQ0UckPiFWNjW+xLUP3Z8azeRlThwBg5gwQ68moL2h2PvmSas1Hl89UfETid0gJ8YOS10F2C/kLp7xCYh+3Bl1T1Peeu7CljBoXFZbjHX5SgT44Qp+2XiZjoPgQD8e46kOamoCsiNn2bKSOQFqxmNhw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iO4WeAszqmGXuFqEOD/rRCGf3HcaklOOXojpiW+Jnvk=;
- b=Im1ozDvADZ9kuGXVcg3+e1xZTLx6JMHvPeDldm8da54rU0oNfeKacPcrKQLT1O2ZwYAcjyOArE6EtG6YLWqJe2npm/Ha5jk0FRSbSB7wcPPot/vcjT7RbGzO9zVH0+ddfgmdW4b2n7XuM457iD/YgXPmio5GAcbTKheWd7KhAcUG+zZ8EP+bKv3Tjf/XuRBXv6F+M9aSOWSiyAt23Ve4u5ISgDcW+fQZKciRrXsH/NdrfWxCOI+f5BJpTA0ZJIpD2j9/82bBWv6j3neSlLyMO/mV+FkEuKAwb9XU6aAiSs9h1uzb2tvUrqRuGTf+OlTi+5uthZ8Fj0irXN+44s2rLQ==
+ bh=djCGbMt9biGCWzlDiCzzVvmiJdkvBRrKexzGZqlMaaA=;
+ b=VvwRkHKx2yAyrm7rZWoONNL2DjPyx+6MSVmPaB5AXaJjQdSk9vXYPiIrsjWfCqaWyF853vuGNkwvx+SbWksuz0OvbLFpx1lD/oqfvlON7ESqHy8j5arK0YsQ48Se/vfAFECEHnpZnQMwEzXIBLcnv6v77PeasDq3ufd7l+rqyF35upm+4ctzDsybnTFzC2tS+bkZLEoxBu37czHvFeAh7TGVLaDL8zvd13KyPHSjztMqWc8YL4AjiTiSicT1lXUF9edrkoMtWFHWVyko/W4QUYyigQoeqQf+oG2yy+5TF2LrBVdmKo9DogSqPOJ+UYoPCGXCBqpjSGSx9gpaMwuQHQ==
 Received: from AS8P194MB2042.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:5bc::12)
- by AM7P194MB0724.EURP194.PROD.OUTLOOK.COM (2603:10a6:20b:14f::19) with
+ by DB8P194MB0662.EURP194.PROD.OUTLOOK.COM (2603:10a6:10:144::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.25; Tue, 27 Aug
- 2024 13:35:27 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.24; Mon, 2 Sep
+ 2024 16:09:33 +0000
 Received: from AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
  ([fe80::3644:f8b7:ee68:3865]) by AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
- ([fe80::3644:f8b7:ee68:3865%4]) with mapi id 15.20.7897.021; Tue, 27 Aug 2024
- 13:35:27 +0000
+ ([fe80::3644:f8b7:ee68:3865%4]) with mapi id 15.20.7918.024; Mon, 2 Sep 2024
+ 16:09:33 +0000
 From: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
 To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Magnus Karlsson
 	<magnus.karlsson@gmail.com>
 CC: "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>
 Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?
 Thread-Topic: ICE + XSK ZC - page faults on 6.1 LTS when process exits?
-Thread-Index: AQHa9Kum6G+35KCgHUKyhMMxUcg+pbI0gHmAgABiS4CABj+DUg==
-Date: Tue, 27 Aug 2024 13:35:27 +0000
+Thread-Index: AQHa9Kum6G+35KCgHUKyhMMxUcg+pbI0gHmAgABiS4CABjyi54AJmpyQ
+Date: Mon, 2 Sep 2024 16:09:33 +0000
 Message-ID:
- <AS8P194MB2042F210A9972E19D579D05D86942@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <AS8P194MB20428CBC955EF3E67DC8535B86922@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
 References:
  <AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
  <CAJ8uoz0XANzvCwdJYUaY=CcK__AfL7x-FvjQKLCbngZT3_=2gw@mail.gmail.com>
  <ZsiYE9j5DK79h1+/@boxer>
-In-Reply-To: <ZsiYE9j5DK79h1+/@boxer>
+ <AS8P194MB204216F8B886FBE04D1B51FD86942@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+In-Reply-To:
+ <AS8P194MB204216F8B886FBE04D1B51FD86942@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
 Accept-Language: en-GB, en-US
 Content-Language: en-GB
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 msip_labels:
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [FbW3zi8SZJsz0AHFzmGgy6Ae/dalpOO7]
+x-tmn: [Ojbu4ttpXjMBgFW0RzURLFneCScsCWWh]
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8P194MB2042:EE_|AM7P194MB0724:EE_
-x-ms-office365-filtering-correlation-id: f6aa26fa-ce21-4e77-9be0-08dcc69d1cc4
+x-ms-traffictypediagnostic: AS8P194MB2042:EE_|DB8P194MB0662:EE_
+x-ms-office365-filtering-correlation-id: 7d0e76ab-a292-41d9-ec5e-08dccb69a238
 x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|15030799003|19110799003|8060799006|461199028|440099028|3412199025|102099032;
+ BCL:0;ARA:14566002|19110799003|15030799003|15080799006|8060799006|461199028|3412199025|440099028|102099032;
 x-microsoft-antispam-message-info:
- O3oclZ3zZhrniSgzhm9FoE/zHK3eL+cXIS3bkA3lZVS8Dp7x6TT/eY+op4u/LPPKqk7FgqjlCpswDOK6xUztebbyjFVAjwSEeg9Au4gSAhP4J6PLs/dp5YhIFvoMHylxT/sGjMR/0VuQgA5fVVQHkCu6khQBIRXrtoJf+oDarW2BkdbBFc+Ay7qnJXzKQqb7nuwYwnYB70yJakQk9Q7eXeMAtqAu2zqqLbVLuwtpRLCkQ94iQdXnhyzMHfi1PnO2iJ+HrSYvlZ4MF2DR0yeoARf7jdgCIZ0nSszaTFNfcEWfZeJ7fcNefb+lTx+C8t5gU2l1jZ6CC5RqXqXLM6zH+VNlusqHPpeTi9JDmZM8N+/7E8VHqyjh3+L0qTopJvM+fDw4ZtQFpt6oIHqCMA76hx08/Y8OmesIEU3FPi0Z2P03kcbLFvn0E8tr7EggjCT8z2qtG8XlkEbyWDIz5QDyJM7ByxExqoMfKxKLiXQD+tMpxgD5e+dvgf7NIElINl/ySMIfWunm2RJ7xl82yd8CZpznPvwvqNF06mxmwBBaxHmSOXwieue/VL7BuYjVS6PbKPIremA/gEWihGC5nLINxgFq/HIlXhbfXNl2J/2B+8pW9W18SxfD1+GKD3GMlavE3avnjO8qllfZACqljS7foroIiZgrJhCMbJTAmZXRTi2e+HRkv5zUIMbIC2qXSFUYblc7y1R0kU7OWj3oVxlXwQ==
+ c3d3JUEDsVRusZ7xeK9UCff0M5pbtZNRJsIdJ0HNyDH/ZXMearkj4K8vQbHi16Io9TPki2LUePpT7ifjlyTwKBO48a/Sq2eTWtH20/wT4IEL1LD0VB2NALLK3D9Tvr1HKQ+Pma9W/bWtG9Jis+7EcgdvOx+kT0cg7H90a03XWrztFkkEaFj39KywiEBpk5esQl6VINS5yk1clhUpxT1lHGmt6SeqQQuptoULcia4vG5gOIscDuMEhovuJLwcHXUi26UuhL0tP+KpEpSslHnv+qUbHh3M6C6ZX1eZJ/Uz4lGlNZjR9Yk6wk3rg3iSI1VA74OvYsR7U2JflG1elxyMY9C2NaQeAE+PVd4xSwCEluBPlsgnjsFh17XtDOBMMc1DH5imL+QuHkdp6unK0IfmrFf31trfA67bZqgGdSYR7uuEtd4q3jJz2pDRx+mb4n5prwOroTrUQOkYA0J1Cxem9BgKdZCoKkLZvHfUZo0rEWypNVCj0/YyYKANI017pzGSP7tth2Y8PO3BU/4P0BwpZ4j8GQLcMzlHutFxHAy9/6Xq1HJDWywTQkoGu44Vj8pSEc+8x+RZhm7wR0Z7DWBFnjzo9A/hpZImcGBme++++WBmI1whO0eaK+7OOYIE17lea3duYhNAq+k0TZd/J5yc2/G8Cq0VwVcn9+k9xtBe8XEX7Cjh7nrtB1s1rMqCgEWS/Np3tcCwCpS3XxfvC/S/Og==
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?P/xw7Ix4Czjui/JAElzXIKntmo4JzlwgEQhwGf//cYwOq8CpezbOfsyS?=
- =?Windows-1252?Q?pEkrS8xAjn/sOpjBxff/Af6lKHPSVLNkOEtl4+9uq7W2OrfPUVv7WGDh?=
- =?Windows-1252?Q?Z/6IdLW/lIrI4KP6rVOuf+bUjwuF+PlwbiIYUg4NGLpVkTcQxpMUsKQD?=
- =?Windows-1252?Q?xxsl3KQmS03JXaKLweddhu2NwhZFKuRllMPjMvkPVKJspulxXubtAcH2?=
- =?Windows-1252?Q?uPZfdfxsV0Rplk/Z4GJf8Mwb3RTxzdoVyF8ePrEiDsNOrIqoWC4Ivfw0?=
- =?Windows-1252?Q?lUNGE3AfqrrzsjSy65EGIlg2aRZRtVjOhX40KSMIWr6ITvNCpyn0MGwo?=
- =?Windows-1252?Q?qtsr5nnHIn2kF61/TlYaTDWQAfxL+ki+ga9jwifar6+IHDv5IaVNt/kl?=
- =?Windows-1252?Q?9B61LucYNooOE+yDrBtXIaSXHqeIK7zLHn9mztCR6BlyW4lKL1iU4Qjn?=
- =?Windows-1252?Q?LEfFqQqqojTi7WrRR+qFPCkzhqHhBYiV6QPCLYwUDoxD6c1yWIEaIxDy?=
- =?Windows-1252?Q?CcOrMvZs5sbvKA+JAb0d2w14knmmsSg9dePsAFdWbtuEvprvh6HAL7yg?=
- =?Windows-1252?Q?Sw2M/W84UHKcev6myQfm5/wzACf6t4RyevaKR3ArsCQ/c4qp/De7NUoT?=
- =?Windows-1252?Q?y7fei6XNbRwSYY1gpZiLnOurXAbf+hsCESwkVX7A3JXBNjyzMJEnbKa+?=
- =?Windows-1252?Q?u/37M8qhQYaYTCLmogk8d4dIZjlapl7WJ4eATDddrEPh8+opjlg5hVHe?=
- =?Windows-1252?Q?51Y9TIDd0wBRluX5naH4XlaZ2qItFcB1VU3geEJBwhOSrfvUsRuj4TBz?=
- =?Windows-1252?Q?39mWcg5L/ez5eP+BW+42lDRTixtNnoUEOQLC63V2u1nniMu13NChmrS4?=
- =?Windows-1252?Q?Fb0NWCRcbk5g0Qdx+jAxxFf06C+ybhRmXHXeeeaVn/q27bzcG/wtUsSJ?=
- =?Windows-1252?Q?de3HUfXtS3G1+ldm9EXAEj3WMvl8wCfPt2lkltIASuqqPANXFvouZGkW?=
- =?Windows-1252?Q?/8HckD8NBEWKy+t1XsTtEa1yvxlh1cJbWq7cQn2YSX4lh/3aRLfUSvNg?=
- =?Windows-1252?Q?9Sq4DCQtJEI/n5Oymgza8KFpQJ5LrB6Qr6GaAmBQiUKJGR4bScSjCk3t?=
- =?Windows-1252?Q?wiTitKUKqov2O7ltIDSUzIOVFYOvtZUKHz3dbrIhyOEupAQVi0VBEZny?=
- =?Windows-1252?Q?mt0bV4cS0vDcEhdkZ1ZHmHMloZYWlTf36WpC4Vf2+D4ZVl3fHhhp4xR0?=
- =?Windows-1252?Q?YpOb+EHTlzPn+GmdVuso4t+5S4IunEXDNBmVQn70jT6UNtQ2rqIqqIfK?=
- =?Windows-1252?Q?FHLFCrOLpYy27+is2I4mPW0AO9RjaWkz5lZHesLYeVSVaOgI?=
+ =?Windows-1252?Q?e76yvIXegXmVFpLEaUnvSKXIuV0T1WYfa0uUrJA9ZOgKR7zqMVXIBeS6?=
+ =?Windows-1252?Q?9UqO4nheAKKGTQDFHb7Jn3tay2SUNdidTntdJ2ut5b8/l1M6HAT4kgDK?=
+ =?Windows-1252?Q?5fA2a+XzXyRnDOXqWaNCOuc/8RgWS8tCkb+6m2HoDshsjya5wrAKfqyx?=
+ =?Windows-1252?Q?xEO3Hk6+YkxOB7jzPcDxpZ0XO2mhJib1PtXYIfs/r0SxtVlwuuuaBrbN?=
+ =?Windows-1252?Q?4rkEnWPKBiP3BKBjRxbmBefNvyOAJdsFtZqjgez/Uzhx7bK7aQdueHDs?=
+ =?Windows-1252?Q?P41X+t9mXZB+pc2LuY2pc1kfGwo9gnCjxiBhCuIeCchUjNUBnpN/GULC?=
+ =?Windows-1252?Q?Ea60uNc6qxdz4VS3kZlTCwXnyQxZ9BuYq5LYKa5n6KnKjX8UZPspo5ky?=
+ =?Windows-1252?Q?V5ojySh1XNCUFXY/d0CUcvvaUXRC+gF8KACYkgT12rQ3Dv87yj4iKISE?=
+ =?Windows-1252?Q?d90VrvKHgncVqxl6JB7NZbbASBICxTOjDcqzShis5W2C0UboljaxuS65?=
+ =?Windows-1252?Q?+NXonMX40vySAszpUdDScXdDQ4Gxmsim8YeVm9JuDlzPfmxl2z5zfSTN?=
+ =?Windows-1252?Q?OxUrkDI0ocgB1QR1Zl6Mesw6Y5/bvvXNevjAPY32p+bAYo/eF+yDPHxo?=
+ =?Windows-1252?Q?8lRCWoLF/sdrtF4Sde+Pq3sK55x/N/1IAEirzggLFf+jMQKs4aNGhZHM?=
+ =?Windows-1252?Q?U71f9i8Rw4x344AejhB2pwWuZmMlawcyqrK0iFHEiondZrYJ3Z9UGuze?=
+ =?Windows-1252?Q?fs4lJdWhnAPGug8LSwi50rVY5Qk5XWV1Zik9LMT+XsGcnL3c+WNlcn62?=
+ =?Windows-1252?Q?lNS58RBDm3FjUtVvRjdBfYXIufexfyraQfTdG9mitauw/brdjW4Gyb4g?=
+ =?Windows-1252?Q?6ezcLhDWifFrchDXOS9rQJ2NEdzz4x59l72FktouQ6BNKGfAXiBLWjSg?=
+ =?Windows-1252?Q?76qrwUo4lcxisGHv6hoDmrvobkxr+WVcFWMyoOPRHWDqmO4vmuUt1b1i?=
+ =?Windows-1252?Q?w45ArXdS5rATe0MotM6+801Y0ZlZu9tHCWtjU87ZYM6mOzV5Pej/mAjB?=
+ =?Windows-1252?Q?mhZptBotz2mP0prihVvrTELwIHGuuyrurtjezgezP4gRKW8E8/rwo7lF?=
+ =?Windows-1252?Q?HA1PK1LmJPgu/87LMF3vgsddskSIcL2/Ayz0AOv1X8ycaFnUCthvD9zr?=
+ =?Windows-1252?Q?f6j96FnODyaDFwTYcW7s/fWVRw5cz2CBb/tLwExMEi93GNEHZenL6Ep1?=
+ =?Windows-1252?Q?+V6HDcUt6YG1YGwm3RV0IgTCiume4uaYe4Mpl3BKYpBNAMcMrSrQM0Jb?=
+ =?Windows-1252?Q?Upnje+msXi5V9uQw+/470Hc477BZs2Zql/r1nOYSuZDVlz+w?=
 Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -120,32 +122,56 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: AS8P194MB2042.EURP194.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6aa26fa-ce21-4e77-9be0-08dcc69d1cc4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d0e76ab-a292-41d9-ec5e-08dccb69a238
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2024 13:35:27.4004
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2024 16:09:33.2891
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7P194MB0724
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8P194MB0662
 
+Good evening,=0A=
+=0A=
+Looks like commit a62c50545b4d is the culprit.=0A=
+=0A=
+I've produced a production-grade build of kernel 6.1.95 with commit a62c505=
+45b4d backed out. Seems I can no longer trigger the fault. I can kill -9 th=
+e process while pushing 50Gbps / 14Mpps and the process is just restarted a=
+nd resumes like it should.=0A=
+=0A=
+I'm going to back out the same commit from 6.1.106 for our production build=
+s and verify that fixes the issue there too.=0A=
+=0A=
+Can you advise if this will be reversed in future commits, or if you have a=
+n alternate fix in the wings?=0A=
+=0A=
+Thank you ! :-)=0A=
+Alasdair=0A=
+=0A=
+=0A=
+________________________________________=0A=
+From: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>=0A=
+Sent: 27 August 2024 14:33=0A=
+To: Maciej Fijalkowski; Magnus Karlsson=0A=
+Cc: xdp-newbies@vger.kernel.org=0A=
+Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?=0A=
+=0A=
 Hi Maciej, Magnus,=0A=
- =0A=
+=0A=
 Apologies for slow reply =96 bank holiday in the UK yesterday.=0A=
- =0A=
-Just a quick update.=0A=
 =0A=
-It=92s quicker and easier for me to build a released version of code than i=
-t is to build a production kernel from a git tree due to build apparatus.=
+Just a quick update =96 it=92s quicker and easier for me to build a release=
+d version of code than it is to build a production kernel from a git tree d=
+ue to build apparatus.=0A=
 =0A=
- =0A=
-So, based on the suggestion to back out commit a62c50545b4d, I have taken t=
-he first step of identifying that said commit was included in 6.1.95. I=92v=
+Based on the suggestion to back out commit a62c50545b4d, I have taken the f=
+irst step of identifying that said commit was included in 6.1.95. So, I=92v=
 e run both 6.1.95 and 6.1.94 through a build to test both. Some quick and d=
 irty testing shows:=0A=
 =0A=
-I can reproduce the issue on 6.1.95=0A=
-I cannot (so far) reproduce the issue on 6.1.94=0A=
- =0A=
+  *   I can reproduce the issue on 6.1.95=0A=
+  *   I cannot so far reproduce the issue on 6.1.94=0A=
+=0A=
 I=92ve only tested the latter version 3-4 times so I=92m going to keep thro=
 wing dead processes at it in different ways to just to be sure 6.1.94 is no=
 t affected. Then, to validate, I will grab the actual git tree at 6.1.95 an=
@@ -155,13 +181,13 @@ le longer.=0A=
 Thanks=0A=
 Alasdair=0A=
 =0A=
-________________________________________=0A=
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>=0A=
-Sent: 23 August 2024 15:09=0A=
-To: Magnus Karlsson=0A=
-Cc: Alasdair McWilliam; xdp-newbies@vger.kernel.org=0A=
-Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?=0A=
 =0A=
+From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>=0A=
+Date: Friday, 23 August 2024 at 15:09=0A=
+To: Magnus Karlsson <magnus.karlsson@gmail.com>=0A=
+Cc: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>, xdp-newbies@vger.k=
+ernel.org <xdp-newbies@vger.kernel.org>=0A=
+Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?=0A=
 On Fri, Aug 23, 2024 at 10:17:35AM +0200, Magnus Karlsson wrote:=0A=
 > On Thu, 22 Aug 2024 at 18:25, Alasdair McWilliam=0A=
 > <alasdair.mcwilliam@outlook.com> wrote:=0A=
