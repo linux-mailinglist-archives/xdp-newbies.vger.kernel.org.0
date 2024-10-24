@@ -1,144 +1,252 @@
-Return-Path: <xdp-newbies+bounces-153-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-154-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7A709ACA0D
-	for <lists+xdp-newbies@lfdr.de>; Wed, 23 Oct 2024 14:31:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D6879ADF78
+	for <lists+xdp-newbies@lfdr.de>; Thu, 24 Oct 2024 10:48:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 16376B2252C
-	for <lists+xdp-newbies@lfdr.de>; Wed, 23 Oct 2024 12:31:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B88031F215F7
+	for <lists+xdp-newbies@lfdr.de>; Thu, 24 Oct 2024 08:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FFCF1A76CC;
-	Wed, 23 Oct 2024 12:31:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4F901AE001;
+	Thu, 24 Oct 2024 08:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUlExcX5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNWLNkKQ"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69536155C87
-	for <xdp-newbies@vger.kernel.org>; Wed, 23 Oct 2024 12:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5725C189F4B
+	for <xdp-newbies@vger.kernel.org>; Thu, 24 Oct 2024 08:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729686679; cv=none; b=Pfzq4g2t2hx2hM2KMz+/heKFs6lbnG27UBJDicCiKhZHAmq1vz7IpzntHtFsNVS0SR5VDtdlaMGVqRpbZnhMszWiFTal7PF51Kq8MQr8qfuM386tqpuu1h5Z+PJSfXd610+M5LcfJR7sP9lJhyMyQXvx6Xz/1pXbdaiXobO5pZ0=
+	t=1729759731; cv=none; b=f/Qog8Kgt10076w6GUFaDzZ1driL561nDuHvGPBNeRupwuLVIvIMQZFLwWCvO6amuZKXrBidnv/js3G/FmPt26vDAa6pMda/I5ng/vWGHCyKggIp5U0NDiEgh1qURMc/x0FE9PJg7m0A/M+7AMVxa+eJhpMVljHPX7smyCA5lFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729686679; c=relaxed/simple;
-	bh=8i9iyEOCtXRRzCnZiKPN7yDpx/NAShkAcHF0JfsZWgg=;
-	h=Date:From:To:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z+Q/xqIvv7NOZY0lG4XJw1K1GVRfe8CyJkkQyn80rHqar2kbyZWRgL+N2zRKFyEbbOQImVuNIr+HEI2Y3b64fpHRa9BNIXfaJD963blSRfUQ5OnWecDK6lnh0EokpqlbZb9K5bf2LkBX+Vz3JGK0DcVb9Rbcl2gmgrAuzT39c70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kUlExcX5; arc=none smtp.client-ip=209.85.167.47
+	s=arc-20240116; t=1729759731; c=relaxed/simple;
+	bh=8Qm0Sr8aKuQmv8a06k4gp3uTzACoRzdq80NoP+Ck1Ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=icFba87jSh+SRzNW/tceSrh/4DJmmdRTrYjiXO37OrLDkv2Gwg4m7BNQRdU7EjG2P0qhgu330hIHOvtBxcMp4YzWwTMq477ivDfVSUI39wldtySaUs0OBk5UTHGlhl5RmN2mCzAQbwMUBp9M5Z9qFr35qrtI2EsUd+cZSTwuC/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNWLNkKQ; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-539f53973fdso762911e87.1
-        for <xdp-newbies@vger.kernel.org>; Wed, 23 Oct 2024 05:31:16 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b152a23e9aso46177485a.0
+        for <xdp-newbies@vger.kernel.org>; Thu, 24 Oct 2024 01:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729686674; x=1730291474; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:to:from:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z337n/g2XYWujxEzK5VR/4OjqD6ARCS4QldFg2roH6Q=;
-        b=kUlExcX5hGo6RMOwwmLeby83fa9fP/fG4aqrcZB5/tY/NZfB+JYqQy5HPO8MM8sGBO
-         +Uea5DnAFitYT0hEbzSA+c/5FT2dN32OdN+UfuoxcKJoE6Q8dczF/ztvN4Prq43FgvoO
-         +B44+Hi4waB/FD6EOEbuFz0hhjgD0oZnH0MlLrXuuQVIKD4ehixTjleJxEP/gaXxVbvh
-         oMugQFnDIPYFTn5cup4MpPFizGebmmHHnabKW3NhCgqYTczq4uYyFLbim5d761hJMQe2
-         BpuF6fLea0UXoPmw4GiIrBSgUhFTo3bL3m3qxAXhCOyih2hIi3QNT0kd86UfKmQULEuv
-         vo2Q==
+        d=gmail.com; s=20230601; t=1729759728; x=1730364528; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xespiMXdmKFQiF3EM/zdYMkNTMpigExIbiCJ1ZaIxJA=;
+        b=KNWLNkKQcJKBeviH6Ka0naWwCWMUArxpUOzVY2a94nZOoaGq73yopWYEgPGVp2/KsS
+         I6XH/I6pjjJPf6613Il8bYJ/C57n2vAZe8OqWyDoMZ9uf24hbYvTyHV+kkX2FU9fYNvo
+         /fuINy1BMgvKj0HpV+Pu/e3KiouLdeNh7sHKs591dYWNUDPKnfbfgmcGvKo26U+bNged
+         wHa0CxSN3+D+GKHOlxn64LBENhpYX9XUQZRNPBg7rD6oP91DScwlNyizetaithSnciII
+         nc/920BdqSM2xSpys4MSZDBaUnclXsYIPXfbbUJTZ86Lec2Pi8/MRdUhk96eb0+3xRFO
+         OiSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729686674; x=1730291474;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z337n/g2XYWujxEzK5VR/4OjqD6ARCS4QldFg2roH6Q=;
-        b=EomUDr+FYUGxuvV+wJN3IEikbSYSF8AQJ9WSl8Dl0IkH+SQpfArF595T7sQoDbZMa7
-         lquRH8N9o7e++ZCeAp3g6UvRlPhzezcCZXdBa6wEC7SLaxC6lHtVBOfibBaS7eP5dD2k
-         jEh0yY5X0aDs5BrrASN5VxPOCrntWraaLHTDOTZBFO3/EdnYXXCMMILA1qMoA6C2zap+
-         5osU03BXzBeKcZ2Jikq5dRtGt9J6MAOZCRlQjm3FScIh7n52Gj1HsMFr7b2jv8g6ztVA
-         egD2LloHS7Z3J4QsDLOe+7T5gTy82QWX3j8sVGEkZ3uR9bsEqci0CjLx4tk1lruO2qAe
-         yqNw==
-X-Gm-Message-State: AOJu0Yy+/u+oOaMHFIhhhrdubshBgQ8+fhZmHogQl/rtvZiID5fyD8/P
-	6VsiqClBGI7sPDyw17OhgBSeeVgAxr/sI7QA14x82BRyFujbJdWEw1mA+Q==
-X-Google-Smtp-Source: AGHT+IEqrRrn49On6ZbiGYa+2nno//TtC6VBragSY+5BPr1hjH6BFphdvUwXQ4zBwsJugIaf0khQZQ==
-X-Received: by 2002:a05:6512:2810:b0:539:fbf8:5735 with SMTP id 2adb3069b0e04-53b19c66f8emr851776e87.8.1729686673978;
-        Wed, 23 Oct 2024 05:31:13 -0700 (PDT)
-Received: from nuclight.lan ([37.204.254.214])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53a223e58aesm1047788e87.28.2024.10.23.05.31.13
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 05:31:13 -0700 (PDT)
-Date: Wed, 23 Oct 2024 15:31:11 +0300
-From: Vadim Goncharov <vadimnuclight@gmail.com>
-To: xdp-newbies@vger.kernel.org
-Subject: Re: XDP/eBPF map thread safety in kernel (e.g. lookup/delete)
-Message-ID: <20241023153111.2f18d350@nuclight.lan>
-In-Reply-To: <871q07ggv0.fsf@toke.dk>
-References: <20241023145426.210fce4d@nuclight.lan>
-	<871q07ggv0.fsf@toke.dk>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; amd64-portbld-freebsd12.4)
+        d=1e100.net; s=20230601; t=1729759728; x=1730364528;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xespiMXdmKFQiF3EM/zdYMkNTMpigExIbiCJ1ZaIxJA=;
+        b=rs892XUT7jLQujDFky0Bg/TFa8W44n4AsqP9jmsnlT+Q9cDeMGNdyRTYviHoFurRUM
+         +JhA+ulIAo3Qp6NnCD8PSgSktXju8clRgEXUDITtlKMw32koLG8BVcDApi+E4grTw6hT
+         IbkDMqz6k6z/Yyya5oPoStGjt/ReeY8eIFqiujqwMqXcTOMiX03tNeaC8QA2Aex3FKY4
+         ag2D5bN0db87I9dIaPaSoohM87mruytlZSyA6KMKJWI1vzsXPxNrDzi8I1NyB5EWLvsg
+         y7hV06yNV+1f6Z+h+rE28euBLJNd0EBDQdlAKpKi9Syi048VYDHz1s0KRCkVTYE/40QT
+         4n5g==
+X-Gm-Message-State: AOJu0YwzfBmvuC/Le05wyxkdbU2OYcJ9Jj2ME5RKQlxWZaPQ7GvhwGR2
+	C2SyEo2tqawYdT1oVyOr9PWBpaweREyMUDxjou3R+o6ZGwtEwQGozm7SKHoJXk5+kb9mNFE3S8E
+	E4OWyo5rDdTdz6DHe3wefeNZVlMHVWF9wpSJl3w==
+X-Google-Smtp-Source: AGHT+IGyY0Ag5qMfjh6EdbiE+OIMGCaM2rQQVhMoVhGsqFfRiofYh8J/nZXjArMuOmaI9QHPidP00KRTkxu4vRN85cM=
+X-Received: by 2002:a05:6214:5693:b0:6cb:fe7f:27c4 with SMTP id
+ 6a1803df08f44-6d08d3ff204mr12649506d6.9.1729759728265; Thu, 24 Oct 2024
+ 01:48:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <CANzUK59AWbXTXBd9uYNapFS9SdphPP2vAQUuiQx+QQJ9CTq3eQ@mail.gmail.com>
+In-Reply-To: <CANzUK59AWbXTXBd9uYNapFS9SdphPP2vAQUuiQx+QQJ9CTq3eQ@mail.gmail.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Thu, 24 Oct 2024 10:48:37 +0200
+Message-ID: <CAJ8uoz25x0xJPCc6LuxG3mneMDQACnzRUsLOzFJ-E6vAzbLfFg@mail.gmail.com>
+Subject: Re: i40e: low tx rates for larger packet sizes
+To: Srivats P <pstavirs@gmail.com>
+Cc: Xdp <xdp-newbies@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 23 Oct 2024 14:10:11 +0200
-Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> wrote:
+On Wed, 23 Oct 2024 at 10:11, Srivats P <pstavirs@gmail.com> wrote:
+>
+> Hi,
+>
+> Trying AF_XDP xdpsock txonly on an i40e (XL710), I'm seeing some
+> behaviour across packet size that I need help to understand.
+>
+> All tests with zero-copy mode (similar results with busy poll mode
+> also). The i40e driver version is the native kernel version 6.8.0-47
+> included in Ubuntu 24.04. Flow control tx/rx is off.
+>
+> PktSize  Max-pps  Actual-pps
+>                                                                     64
+>    59.5M      ~18.9M
+>                                                                 512
+>  9.4M      ~7.5M
+>                                                              1024
+> 4.8M      ~4.6M
+>                                                             1518
+> 3.3M      ~3.0M
+>
+> Output logs below
+>
+> Since 64 byte packets can do around ~18.9M, I was expecting larger
+> packets (see 512 and 1518 above) to do line rate i.e. do close to
+> max-pps but they do less than that.
+>
+> Is this expected?
 
-> Vadim Goncharov <vadimnuclight@gmail.com> writes:
->  =20
-> > Hello,
-> >
-> > Where to find exact documentation about what happens in kernel BPF
-> > helpers calls with respect to locking? For example, I have
-> > `bpf_map_lookup_elem()` in one thread, then work on pointer, and at
-> > this time, another thread does `bpf_map_delete_elem()` for exactly
-> > same key. What happens to memory the first thread still continue to
-> > work on? Is it now dangling pointer to nowhere?
-> >
-> > In my particular case it's a bpf_timer callback who does
-> > `bpf_map_delete_elem()`. I'd prefer for it to not delete entry if
-> > another thread did `lookup` and works already, is it possible to do
-> > so (in a performant way)?   =20
->=20
-> Map elements are RCU protected,  =20
+I think it is hard to hit exactly line rate. Note that each queue on
+i40e can deliver max ~21 Mpps. How about trying with multiple queues
+and see what you get?
 
-I see this phrase everywhere, but always without details, whether it's
-about just map structures itself (OK, this minimum is guaranteed) or
-the user data, too.
-
-> so you already get exactly the
-> behaviour you're after: if another thread deletes a map element that
-> you already looked up, the element is guaranteed to stick around in
-> memory until the BPF program exits.
->=20
-> It won't be valid anymore *after* that of course, so if you're doing
-> concurrent updates it's you own responsibility to sync appropriately.
-> But there is no risk of the pointer suddenly being invalid in the
-> middle of the program execution (so no crashes) :) =20
-
-OK, no crash is half of good, thanks. But how'd I lock it from
-deletion? A "concurrent updates" are usually about memory area that
-still persist as a whole, but in my particular case it's a
-bpf_timer callback who does bpf_map_delete_elem(). This is a
-conntrack-like map - an entry contains some information about
-connection, a struct bpf_timer and expire field when this entry should
-be deleted due to inactivity, based on information in a connection
-(thus *_LRU map types are not suitable for me). So it's possible for a
-race condition here:
-
-1.  Thread 1 receives packet, does bpf_map_lookup_elem() and begins
-    processing, at end of which bpf_timer_start() will be called to
-    reschedule removal into future.
-
-2.  At moment after lookup, timer callback fires and does
-    bpf_map_delete_elem() while first thread is not yet finished.
-
-So how do I prevent connection record loss in such scenario?
-
---=20
-WBR, @nuclight
+> What factors could be playing a role in a lower rate for larger packet size?
+>
+> To determine how many cores/queues I need if I need to transmit X Gbps
+> - what factors do I need to use?
+>
+> Srivats
+>
+> $ sudo ./xdpsock -t -i enp1s0f0np0 -z -d5 -s64
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 1,88,28,546    1,88,39,104
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 1,88,25,658    3,76,73,792
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 1,92,29,105    5,69,07,520
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 1,96,44,299    7,65,55,904
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 1,96,46,711    9,62,06,336
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           0.00
+> rx                 0              0
+> tx                 0              9,62,06,720
+>
+>
+> $ sudo ./xdpsock -t -i enp1s0f0np0 -z -d5 -s512
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 75,09,247      75,11,104
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 74,89,511      1,50,01,856
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 74,98,753      2,25,01,568
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 74,86,126      2,99,88,672
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 74,86,807      3,74,76,416
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           0.00
+> rx                 0              0
+> tx                 0              3,74,76,416
+>
+>
+> $ sudo ./xdpsock -t -i enp1s0f0np0 -z -d5 -s1024
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 46,01,574      46,02,496
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 45,95,655      91,98,912
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 45,95,058      1,37,94,432
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 45,97,400      1,83,92,256
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 45,84,541      2,29,77,152
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           0.00
+> rx                 0              0
+> tx                 0              2,29,77,216
+>
+> $ sudo ./xdpsock -t -i enp1s0f0np0 -z -d5 -s1518
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 30,00,232      30,00,960
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 29,94,793      59,96,224
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 29,95,064      89,91,616
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 29,96,147      1,19,88,160
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           1.00
+> rx                 0              0
+> tx                 29,94,991      1,49,83,552
+>
+>  sock0@enp1s0f0np0:0 txonly xdp-drv
+>                    pps            pkts           0.00
+> rx                 0              0
+> tx                 0              1,49,83,552
+>
 
