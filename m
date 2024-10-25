@@ -1,159 +1,165 @@
-Return-Path: <xdp-newbies+bounces-157-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-158-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD8579B00E2
-	for <lists+xdp-newbies@lfdr.de>; Fri, 25 Oct 2024 13:07:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 787DD9B12A4
+	for <lists+xdp-newbies@lfdr.de>; Sat, 26 Oct 2024 00:32:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D18461C20AEB
-	for <lists+xdp-newbies@lfdr.de>; Fri, 25 Oct 2024 11:07:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2304F1F2177F
+	for <lists+xdp-newbies@lfdr.de>; Fri, 25 Oct 2024 22:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D509A1D2B02;
-	Fri, 25 Oct 2024 11:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBEB7217F31;
+	Fri, 25 Oct 2024 22:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OIoEt23/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FaaxKlwn"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08F422B66D
-	for <xdp-newbies@vger.kernel.org>; Fri, 25 Oct 2024 11:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D51217F5B;
+	Fri, 25 Oct 2024 22:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729854425; cv=none; b=hmPudS6+pkUoMKRXeGaJ9IQ2IMWCi5G/QuOJXkaRGzprBwMXuwDDrcMyAPwg8+t3GlHo3rdzP+PCyGVQod6AKkmyuZKvc0LsNjp0QAyEeqYb4IbXGLeXM3hxYQ1oUVOHKgKC69egLhiiypO6JCierafiXJtHqzE7vv3imfjekbg=
+	t=1729895555; cv=none; b=vCp3aMP5+pdgH8bBzP9TYGc+USjPgtnW4qhV6Kkge228fjXNJzunhKi2DOD34ixvCe7hy5TKy105WwCWMVB+HVoxT/8A7MIUkzCv5pdIhrGpUPafKMM0NRQaCXqDdvfqnKAQ7Mt98muLH8j8CFtQnPzTFrNXFE8S6UCVVEkBfWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729854425; c=relaxed/simple;
-	bh=iOTbyat07QI800P4N0Zs0r84eXGvkE4xs1LCXkxwnyI=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MthaULd4xDxNO+fpYhyhE3LBuhUE8zpDATHa8J3j5DaUr3uqb2iICUuAO+oEz4uppzEQh7yLW1uQHWlsQEDeZGSuqE0MgXybrk1WhZmfD4UrrkXflDgwbu7j42rWban3yjWuJmTS4pvUW9BDk/JL44/15fsiiIGjndxMQK/woa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OIoEt23/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729854422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YkEe6GiwGTyMIM1fhmBZjjjvA9NvF3/SJ7D8Usyc/JA=;
-	b=OIoEt23/dGesJANsbOmoZbp+P9LSsutDgcRT8lJCVXJvhfGo8J4k0s6uyHXKjG3yq1UMC7
-	nUVmeGoB8+pz2alVMR0UIPTcPluz+hZxUq5Ih7Jrrl/6r/oFIYd2R8Ow/KljtfUeq0/RwR
-	jTTjRI/2sug9dymw9EMjDrFA2TGWsrI=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-599-a5b9RF7UP3WfkVcgSsVSTw-1; Fri, 25 Oct 2024 07:07:01 -0400
-X-MC-Unique: a5b9RF7UP3WfkVcgSsVSTw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99f43c4c7bso125925366b.0
-        for <xdp-newbies@vger.kernel.org>; Fri, 25 Oct 2024 04:07:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729854419; x=1730459219;
-        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YkEe6GiwGTyMIM1fhmBZjjjvA9NvF3/SJ7D8Usyc/JA=;
-        b=cPjtZ+X2Dmqnd/n4i2yHyoP8cU3AIl+nVWmlfeSSe6aLBfCwJXxflOgnBdOhNJ3x3R
-         I+KQL99cdmOc5Fd7Vlo5X0ekg4VJ0x+j5vsVwIv6t4NGBSCALS/DESgQwPsPO6YtrBLa
-         QvAV/TlvDMlZzYLXXjN6R2gyuvbg4EcvbmnmFykO6oH2BHFKOZ4AlsFi6gmMeSbvgl6E
-         j5+NKXoLLfYjbmpeuzyCDWMdRApR43s1s8ct6IF1ih5CHXSuhCKyPYVPwSFStT3JMyNH
-         6Q+9LOgf0ootJUdckDdJz0aq2F48xlnNsjyMv23UyZHbb5ueqKs5WcnNc2yNOfZZRb8l
-         RehA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyzF/gqahtbekkMGj2u2ApEsbnQ8iHEdJ4Kb1hXomqQctWML/U0t3ASlS8jMVCDas+RSfr3b7N9qqVzg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxaagza9gUKKeeJ1iLjvh9llYGpvTO+ogfUaWsZXf9Vcsbr3ePo
-	KbNkPmdwBvzAVvKTykL2Nw3+dgNrI4aYn61Rn7My/Lh/B5bVELn2FonZYxtTKfA+nzh1I8HvxAu
-	pz+CYGc3TvRZ/nWs1f4L/dvrq58N8Im+4hNGONwM9Cg08t2eEe5qRvR+ubGwzFGAY0g01
-X-Received: by 2002:a17:907:6e94:b0:a9a:188f:efd9 with SMTP id a640c23a62f3a-a9ad275d4ccmr465815266b.29.1729854419425;
-        Fri, 25 Oct 2024 04:06:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyejiLvUzOnf4FhHaw0gYBmc9/3P7EByYJmX0O4DQlXNPyAwoOj4obvgbXx5Aid9zmElu5mw==
-X-Received: by 2002:a17:907:6e94:b0:a9a:188f:efd9 with SMTP id a640c23a62f3a-a9ad275d4ccmr465813466b.29.1729854418959;
-        Fri, 25 Oct 2024 04:06:58 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b3a0881d4sm57249566b.216.2024.10.25.04.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Oct 2024 04:06:58 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 6ADF1160B567; Fri, 25 Oct 2024 13:06:57 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Vadim Goncharov <vadimnuclight@gmail.com>, xdp-newbies@vger.kernel.org
-Subject: Re: XDP/eBPF map thread safety in kernel (e.g. lookup/delete)
-In-Reply-To: <20241025001819.2475ec77@nuclight.lan>
-References: <20241023145426.210fce4d@nuclight.lan> <871q07ggv0.fsf@toke.dk>
- <20241023152810.42936dc4@nuclight.lan> <875xphftdq.fsf@toke.dk>
- <20241025001819.2475ec77@nuclight.lan>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Fri, 25 Oct 2024 13:06:57 +0200
-Message-ID: <87ttd0e90u.fsf@toke.dk>
+	s=arc-20240116; t=1729895555; c=relaxed/simple;
+	bh=cBF+1dc1YuPA6i/wurtmA1xBN7bZ7fiqbS4p7GRgLco=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=C5kwIn+VD8JLUk2BifiwbATRHTYPUtDQL3lp1L9OyAfI7FDd80DpdQ/gbjWfQMIiZJ1aZyFQ//CFY42Nl0sBHBgKuDz4a7GVG1nLaaJ9soVG8TURgj1VgVlVAwC9pqXWoq82cmz2iQGAdEupx+HEOFGv5JAqW1vdqzgWXDj9xVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FaaxKlwn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9129DC4CEC3;
+	Fri, 25 Oct 2024 22:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729895555;
+	bh=cBF+1dc1YuPA6i/wurtmA1xBN7bZ7fiqbS4p7GRgLco=;
+	h=Date:From:To:Subject:From;
+	b=FaaxKlwnV1rAudCAp++GEnCe0D5rJMbscsqyBHVk0ypgDifzCewCxDPuiuK6BSXFg
+	 zChMBbBqWERgxyiCnmlaOgHUgy0z1CjLt3/5djdp+s1rU/PAg5jrZ8V54lFVG/Qj//
+	 c/ofgobOIQgx+7wZLvNoAz5Z+/sszy9CLrNwZfyH1iOlmEeNtNGboHVDMGy/z2NQ5q
+	 To/YevDY0YHIL/55WaVh3QQ7IsYLUTLNYFGZX0qkIOptSUpfHrT4aL+/u795sq4YMH
+	 dRz6DlikpvFtkNcOy5/Foo38LkXA4imli4MNSboA82Gm3cj8HP1B2iHDVmcI9sBV8p
+	 3IuXeRFheqANw==
+Message-ID: <12b6a2f7-a677-449d-b4f3-e2c29046229a@kernel.org>
+Date: Fri, 25 Oct 2024 23:32:32 +0100
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+To: bpf <bpf@vger.kernel.org>, xdp-newbies <xdp-newbies@vger.kernel.org>
+Subject: FOSDEM 2025 eBPF Devroom Call for Participation
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Vadim Goncharov <vadimnuclight@gmail.com> writes:
+We are delighted to announce the Call for Participation (CFP) for the
+very first eBPF Devroom at FOSDEM!
 
->> > OK, no crash is half of good, thanks. But how'd I lock it from
->> > deletion? A "concurrent updates" are usually about memory area that
->> > still persist as a whole, but in my particular case it's a
->> > bpf_timer callback who does bpf_map_delete_elem(). This is a
->> > conntrack-like map - an entry contains some information about
->> > connection, a struct bpf_timer and expire field when this entry
->> > should be deleted due to inactivity, based on information in a
->> > connection (thus *_LRU map types are not suitable for me). So it's
->> > possible for a race condition here:
->> >
->> > 1.  Thread 1 receives packet, does bpf_map_lookup_elem() and begins
->> >     processing, at end of which bpf_timer_start() will be called to
->> >     reschedule removal into future.
->> >
->> > 2.  At moment after lookup, timer callback fires and does
->> >     bpf_map_delete_elem() while first thread is not yet finished.
->> >
->> > So how do I prevent connection record loss in such scenario?  
->> 
->> Yeah, there is no protection against this; you will have to do your
->> own locking to prevent it. Something like putting a spinlock into
->> your data structure and using that to synchronise access, maybe?
->
-> Well, if I'll put bpf_spin_lock into map element, then it looks like
-> the following scenario is possible:
->
-> 1. Thread 1 receives packet, does bpf_map_lookup_elem(map, key)
->
->      1a. Timer callback(map, same_key) does bpf_spin_lock on same_key
->
-> 2. Thread 2 does bpf_spin_lock on same_key and waits.
->
->      2a. Timer callback sees lock successful, sets DELETED flag in entry
->          and bpf_map_delete_elem()'s it.
->
-> 3. Thread 1 unlocked and either updates map entry directly by pointer,
->     or reinserts new entry reinitializing timer.
+Mark the Dates
+--------------
 
-Yeah, something like this.
+- December 1st, 2024: Submission deadline
+- December 15th, 2024: Announcement of accepted talks and schedule
+- February 1st, 2025 (Saturday afternoon): eBPF Devroom at FOSDEM
 
-> Am I missing some race condition still present here? atomics or
-> something
+eBPF at FOSDEM
+--------------
 
-Unfortunately, I think the delete and update can still race. Deletion is
-based on the key only, there is no cmpxchg() semantics. So I don't see
-any reason why this sequence of events couldn't happen:
+FOSDEM is a free, community-organized event focusing on open source, and
+aiming at gathering open source software developers and communities to
+meet, learn, and share. It takes place annually in Brussels, Belgium.
+After hosting a number of eBPF-related talks in various devrooms over
+the years, FOSDEM 2025 welcomes a devroom dedicated to eBPF for the
+first time! This devroom aims at gathering talks about various aspects
+of eBPF, ideally on multiple platforms.
 
-- T2 sets the DELETED flag
-- T2 releases the lock, and then gets preempted
-- T1 grabs the lock, sees the deleted flag, allocates a new item and
-  inserts it with update()
-- T2 wakes back up and does a bpf_map_delete() with the expired key,
-  which then ends up deleting the new entry
+Topics of Interest
+------------------
 
-The only way I can think of to avoid this, is if the timer callback uses
-bpf_map_lookup_and_delete_item(), then rechecks the value and re-inserts
-it if the DELETED flag disappeared between operations. But this still
-leaves a window where the entry doesn't exist.
+If you have something to present about eBPF, we would love for you to
+consider submitting a proposal to the Devroom.
 
-Maybe someone else has a good idea for how to avoid this being racy?
+The projects or technologies discussed in the talks MUST be open-source.
 
--Toke
+Topics of interest for the Devroom include (but are not limited to):
 
+- eBPF development: recent or proposed features (on Linux, on other
+  platforms, or even cross-platform), such as:
+    - eBPF program signing and supply chain security
+    - Profiling eBPF with eBPF
+    - eBPF-based process schedulers
+    - eBPF in storage devices
+    - eBPF verifier improvements or alternative implementations
+    - Memory management for eBPF
+- Deep-dives on existing eBPF features
+- Working with eBPF: best practices, common mistakes, debugging, etc.
+- eBPF toolchain, for compiling, managing, debugging, packaging, and
+  deploying eBPF programs and related objects
+- eBPF libraries, in C/C++, Go, Rust, or other languages
+- eBPF in the real world, production use cases and their impact
+- eBPF community efforts (documentation, standardization, cross-platform
+  initiatives)
+
+The list is not exhaustive, don't hesitate to submit your proposal!
+
+Format
+------
+
+FOSDEM 2025 will be an in-person event in Brussels, Belgium.
+We do not accept remote presentations.
+
+We're looking for presentations in one of the following sizes:
+
+- 10 minutes (for example, a short demo)
+- 20 minutes (for example, a project update)
+- 30 minutes (for example, an introduction to a new technology or a deep
+  dive on a complex feature)
+
+The durations above include time for questions: allow at least 5 to 10
+minutes, depending on the total length, to answer questions from the
+public.
+
+How to Submit
+-------------
+
+Please submit your proposals on Pretalx, FOSDEM's submissions tool, at
+https://pretalx.fosdem.org/fosdem-2025/cfp
+
+Make sure to select "eBPF" as the track.
+
+The official communication channel for the Devroom is the dedicated
+FOSDEM mailing list, ebpf-devroom@lists.fosdem.org. If you submit a
+talk, please make sure to join the list:
+https://lists.fosdem.org/listinfo/ebpf-devroom
+
+Code of Conduct
+---------------
+
+All participants at FOSDEM are expected to abide by the FOSDEM's Code of
+Conduct. If your proposal is accepted, you will be required to confirm
+that you accept this Code of Conduct. You can find this code at
+https://fosdem.org/2025/practical/conduct/
+
+Devroom Organisers
+------------------
+
+- Alan Jowett
+- Alexei Starovoitov
+- Andrii Nakryiko
+- Bill Mulligan
+- Daniel Borkmann
+- Dimitar Kanaliev
+- Quentin Monnet
+- Yusheng Zheng
+
+If you have questions about any aspects of this Call for Participation,
+please email us at ebpf-devroom-manager@fosdem.org, and we will do our
+best to assist you.
+
+We keep an up-to-date version of this Call for Participation at
+https://ebpf.io/fosdem-2025.html
 
