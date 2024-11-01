@@ -1,516 +1,352 @@
-Return-Path: <xdp-newbies+bounces-159-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-160-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17D599B8DC7
-	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Nov 2024 10:24:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB9059B9132
+	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Nov 2024 13:37:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B8B01C228CC
-	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Nov 2024 09:24:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AB60283655
+	for <lists+xdp-newbies@lfdr.de>; Fri,  1 Nov 2024 12:37:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 240CB15A86A;
-	Fri,  1 Nov 2024 09:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3350719DF8E;
+	Fri,  1 Nov 2024 12:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRmLeEZh"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mwuKWR31"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03olkn2055.outbound.protection.outlook.com [40.92.58.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6A5158868
-	for <xdp-newbies@vger.kernel.org>; Fri,  1 Nov 2024 09:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730453038; cv=none; b=rM83T9P5TZlHT6xsSIltDCVisdNcW8KgShzL36jCG5/Wf2qVfy29t9H5jbkcIvLDm955kE9hyGnq8KcUmtQ8/VKw5GOA46itHptYRgK46+P3D2LP058zI3RvFkfmPPNJaUAJEvsNdfUB4fHn4dbYR+z/YBlmLyL8YV9mMIvFrIU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730453038; c=relaxed/simple;
-	bh=cVRZCVTAwmL1Nl88zpgDu/cxanX0ouGrolzZ/crP4UE=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=CnpUX/im83MVENzTMl+MkJJ72+GWzM0MehEPJb+b5HIbJyRNli9L2wVwVpRUuoq8GnNbvltiiCOsX+4pQpC6yG8cSM/+EGodlSJPezmqbiMpTTc3LHGVYS9OjvqD/b7PDWLBWOuEogn2jba957edZwNSiUS2LsgEPtwZ5wQESA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRmLeEZh; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5cacb76e924so2209965a12.0
-        for <xdp-newbies@vger.kernel.org>; Fri, 01 Nov 2024 02:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730453033; x=1731057833; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:content-language:to
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s197JfehcUUCJsPe1glA+JTP1d81oQ7iJEBpyKS4Rik=;
-        b=mRmLeEZhw4ZDZiMlYQG9CgaB4zTfMmZRfYNYX6f39lN+Kdf0llgfFElzWClRgWGPuC
-         UDObRJu3xRe4oBbC7FG+w0n1WWv7l55aGt0Jk9sJQu2LhQogqbtkOeBp6zaIwFS7NbA6
-         VjpB2qjoMbXt24xb0THUtcJVKIU3tumBCXTLM9jZHMrhvNBx4gSUk6OiDXAF9FOVf/AU
-         W21bV6vft2zOUrInN2j6h0YrMe9i/PSFZ6msZtgjul7T+gnihUxnVgHvhbMNCtDY1lWr
-         YdkG43JcvVKUvkXee7lAjIv/5TzNtRf4JxoNA2F3OAKNxYlgqTfpXP2/LFs/eS5KtMJ7
-         W0dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730453033; x=1731057833;
-        h=content-transfer-encoding:subject:from:content-language:to
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s197JfehcUUCJsPe1glA+JTP1d81oQ7iJEBpyKS4Rik=;
-        b=EgbVmG4KPp0c7Q9cQ6a3HXHqVMC1uAJJbWZmc8hk/g+zuO2UUrCvf2RDOyh7+I0T5/
-         fB8u3oWlkiZoxJY2/klow4fKW31gKLGB8s8bd0F81g59i4cgt/QJPpfS0I0/ADnHTyxh
-         l80b+ZF3XDwh8reX9cpVRzFdpK3F0lnNr0PC5PGqaic5InwGkDXSpGcmvbbwToC2U9zs
-         qC+dx4AjT+FuKgEoaN4CnlkM7VUs9TDD4RKeUdL3ImjfNKQlEGItOAKmuNHDSTOSfXl7
-         +xHP8a/ZHWpWoFSZazRHax8vxLYEsHXQi4nQs4hPo2uYoFb/anvmm99hiv52PaHPPLod
-         IfJg==
-X-Gm-Message-State: AOJu0YzkjSyROe3YcqZVBLwEGAaYpehPpQBQfoYamHgs2i5tWFAmbxtp
-	UQeB2wFHSo60ULK6fdfcquW6wDSyBCf3zPNQuJmjfaxsUaIzMVyqbSMANQ==
-X-Google-Smtp-Source: AGHT+IFimvvjafSsN1Xk37waPTLlQeBHCWRPCRYGMTc/HepZgtFI55PUMQSAu9FPXTw0o8R0AnnZJA==
-X-Received: by 2002:a05:6402:1d4f:b0:5c8:9548:f28b with SMTP id 4fb4d7f45d1cf-5ceb9263fb0mr1825421a12.11.1730453033102;
-        Fri, 01 Nov 2024 02:23:53 -0700 (PDT)
-Received: from ?IPV6:2001:4c3c:4205:4000:3145:1cae:1f54:c8f5? ([2001:4c3c:4205:4000:3145:1cae:1f54:c8f5])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ceac7e95f7sm1321571a12.90.2024.11.01.02.23.51
-        for <xdp-newbies@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Nov 2024 02:23:51 -0700 (PDT)
-Message-ID: <c195fc7c-58c1-45e1-9b18-8d858095cb1a@gmail.com>
-Date: Fri, 1 Nov 2024 10:23:51 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E64E22097;
+	Fri,  1 Nov 2024 12:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.58.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730464668; cv=fail; b=BnH1iksSGTH+dG42dHu65H3pYhvhwZ8s/KRjdwFfjAdx0KbLjXFwNiRx9AWdRlR4572gYMx6fFMPSMDBtjYVFkyLpjDqs2ko604MGBop9ZN5veyOHDBUaYy1EPUmE3085zWzl7lc70mv70WRWZloQGdJcomsie537G782Jh0E8A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730464668; c=relaxed/simple;
+	bh=XUpJUM2N1a/X0P4Spxg5xrNaMgb4VmdvlE2BdCJtwf0=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jyYHMFLAKFp/ICkIs164kLyi9y2/CzdUNms8/rXr5cozXoUTnZfihtkhMzHAIDk22i15NG2hwZkR2p2MaMa/iYjRs6xtCziQE1PhysHnstIVXrZudmUqC3HqHv4074iQPeuMXJP2IsFT80TBbgKpJndwMhg8U9mEwWecNBopiO8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mwuKWR31; arc=fail smtp.client-ip=40.92.58.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HwPyXGeLbDS7+xsyi03NuXovnZLIEywZp35Syvch/c+f8vyTncXyzVgP6cLXd6rmwC78SmJPUfHj2hH6wGGOMC79pPkyj/sg2EUZwSvZGaMCqRaEfvyk+dO7BrEA65WWDK5WZELP1e8UdPxsCiWBG8111s3to4EYYLsBo4xqDqUrvqkR5jimvty38nXKyl64+OESxWg6b28Az8TEdUCDaeYkNEAKZ/hC+z9sYWjXrlYz5mQXMC5nLrO/ONsTyGCJ5RaDvR6Lh4xEkb5d48ljEzWMS3qvLmuBp5HEm6wUUkUYPVDihEzu8NUhnNtAeLdn3wfrNZS7t9vLCQpZdiyBog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KklkXy1bHV9JWp5vd8bWzZ18TJDRqVRPkNAx43bzlxk=;
+ b=hYvdpfy79TerM19ZspR20cwTin0QKINZcF0Z9wuizITPVKcIQA9oOZsX48rlTGYfu4qsqXDhx8wCmTI/OmWdvYuHx5Ifdf5FyasHqw00Soy6Uyz89H36lm3i8a6Q1OrIf3Ia7if2isDKMj5zR/AyVq2AFjpHxwVrvog/8IQNAUsIRETVGq8oG60qDVpCv/kuhs0xrTRhhScINj3ZsF5CVfULg9rHTSaS30gM2Kh9m0CbiJMx3qOAPjZ1B9cdQXEAUF2Nby5QCYVt8McDETQc/xPE2kjWHy8Rv3QC2yh03KlsMjOtDjziTOCznFNGZIwOgFptdf4koOIuuD8x8CTp/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KklkXy1bHV9JWp5vd8bWzZ18TJDRqVRPkNAx43bzlxk=;
+ b=mwuKWR31hAkdMT1D2mH11wDinLlUKCgwyixJKkiWhRiQrvvJlC2CYd4ussgA0QW1lerVD7uUJP3yvZS/Rj8IwvSucDhGu6rhTpccn28iwVRDgjGSZg1gBnUstFAijxMPbQgyIU3qZYzhHQ2CMwZ6mopFMoYoBCxg+R2OpmLZIkcDh0GRSCiDD6CWJ2wRQBUL2UQZ+TzkeORZrVehc1Aw0QQ/dP6tEpYVJLA6aZsKi4cEdLPPwZ8+TAZJ1V8VBKOWdqc3Z2cciVr2QV++m6KUUvoNiQsSspr79NxnKFxPzwPdgfPd/sUTn3hfcTywEtVPBiuNkUhSFxdZl7MqgeXDyg==
+Received: from PA4P194MB1005.EURP194.PROD.OUTLOOK.COM (2603:10a6:102:bb::20)
+ by VE1P194MB0750.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:149::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.21; Fri, 1 Nov
+ 2024 12:37:43 +0000
+Received: from PA4P194MB1005.EURP194.PROD.OUTLOOK.COM
+ ([fe80::2903:e8fd:39bd:f0ca]) by PA4P194MB1005.EURP194.PROD.OUTLOOK.COM
+ ([fe80::2903:e8fd:39bd:f0ca%6]) with mapi id 15.20.8093.027; Fri, 1 Nov 2024
+ 12:37:43 +0000
+Message-ID:
+ <PA4P194MB10059D2195A387ACD32CA27E86562@PA4P194MB1005.EURP194.PROD.OUTLOOK.COM>
+Date: Fri, 1 Nov 2024 12:37:41 +0000
+User-Agent: Mozilla Thunderbird
+From: Alasdair McWilliam <alasdair.mcwilliam@outlook.com>
+Subject: Re: ICE + XSK ZC - page faults on 6.1 LTS when process exits?
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Cc: Magnus Karlsson <magnus.karlsson@gmail.com>,
+ "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Larysa Zaremba <larysa.zaremba@intel.com>,
+ Jacob Keller <jacob.e.keller@intel.com>, netdev <netdev@vger.kernel.org>
+References: <AS8P194MB204221F4E3BD3979A86D89BA868F2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <CAJ8uoz0XANzvCwdJYUaY=CcK__AfL7x-FvjQKLCbngZT3_=2gw@mail.gmail.com>
+ <ZsiYE9j5DK79h1+/@boxer>
+ <AS8P194MB204216F8B886FBE04D1B51FD86942@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <AS8P194MB20428CBC955EF3E67DC8535B86922@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <Ztg23DO9q2O7vJ4D@boxer>
+ <AS8P194MB20422D0DAF2767F6D3B2E3F7869D2@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <AS8P194MB204213A1F56409CBC709B9CD86652@AS8P194MB2042.EURP194.PROD.OUTLOOK.COM>
+ <30bd4ecb-961b-404a-ac3d-9c25c8269e4d@leemhuis.info>
+Content-Language: en-GB
+In-Reply-To: <30bd4ecb-961b-404a-ac3d-9c25c8269e4d@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0136.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c4::12) To PA4P194MB1005.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:102:bb::20)
+X-Microsoft-Original-Message-ID:
+ <9db26f44-d969-4482-8624-54df0bec155b@outlook.com>
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: xdp-newbies@vger.kernel.org
-Content-Language: en-US
-From: Thom Veldhuis <thomveldhuis03@gmail.com>
-Subject: XDP not working as expected when using AF_XDP
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4P194MB1005:EE_|VE1P194MB0750:EE_
+X-MS-Office365-Filtering-Correlation-Id: afa3e99d-c7e7-4614-a324-08dcfa71face
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599003|15080799006|19110799003|5072599009|8060799006|6090799003|461199028|1602099012|10035399004|4302099013|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RkNHQ0p6NUcveVJweTZJVGhLejlEZ2cyRUlJbXVoUEhYVm1RS2I1cUdydmJR?=
+ =?utf-8?B?cG5GNmRYRUgvSjhTUkUza1ZOUDN1Q2dYaDNsZk8zckpTeHJZazRnKzBZOWNi?=
+ =?utf-8?B?QUdFT21mejRRWXIzTVowbTdwY1gzczMzenVTUi9KK0x1SXRjc1NLR1Zxam45?=
+ =?utf-8?B?Z0JtdnhGeUV0WVhETnk1T0t4c2k3QXU4OVpBcFdJbkY2YUZIa2toajkybVRx?=
+ =?utf-8?B?MGpVV3ZCMDk3V3YvMDJrZlcwZ2srZHpiYXNZU2F5YWZyeDZaRjZsK3pmTlpn?=
+ =?utf-8?B?VmxodFVrVHBoNWEvS056b3NIcmY4eXBhU0MwSlRESlEyRHNncmYvVzlzdUF3?=
+ =?utf-8?B?bnVidFRIcEhrRmFIdEV2L3JKeFlaTThOT0tQSi90V2lWR0xDYnpoWVlWcU5X?=
+ =?utf-8?B?TWNVQm1CMkNhdkluNE5BUlhEN0RFWE5iLzk1MzNPR2VhMDFNZzMxbURqUVpw?=
+ =?utf-8?B?eWdnNVpmMGp3YXRydUhqTjB2T0ExWW0rY2FTc3ozTWI5aWJyZU1oQXhBUTNk?=
+ =?utf-8?B?TmVjTGwzNURkNFB0cG1qZ1crUmlyUXh4NExNKy8vRUdLTk1Dcm1PMnRUZUlT?=
+ =?utf-8?B?NGxaK2dBeGlNcXdMdkQ3bjBPbDVlcnE5bERvVXU2T0dCZ2svK25YcWdzQ2d4?=
+ =?utf-8?B?dDRLMEhOa2I0bjZocS9iRXNwcXlWbUpzM2FaZVlNV0RpUnNHQkUvc2lNN3Ru?=
+ =?utf-8?B?d1lZcTJFd3prL1FiaVAzQ0dFaU5aRUdlckZRT2wxY1ZHdTFYaXRxTlR5M3VO?=
+ =?utf-8?B?RHNpc0tjaGdsUWFRNmRKd0o2ZWdaRkxxOUR0RzBYYlVtdHF3ZEo5M3FSNDhG?=
+ =?utf-8?B?UVF1RjFMK1N3WjJ1WGxvQlgyd3NXSmh4Tjk1by9IcS9VeWliNHUyajJ4RmxF?=
+ =?utf-8?B?cnNZUnhOUGw0cEVyUmcyeDhHdUxVWHNPVWsrVzRhdlllQm9ta0t3QURMUUFh?=
+ =?utf-8?B?MXVhTkJnRmsxcnZPcm03OU11V28rR3Y1VncyTnIxdUY1RkpDZEM0cGhZYW52?=
+ =?utf-8?B?M3Q3eDFnN0xESGdaSTU4cVdqL0NjYThtZG5vWWFxdS81K3FlREV1SytUemM0?=
+ =?utf-8?B?UVhnSGZJclJrTlJHbUh2WDRzMmZRb0MxNzE5TDBIaWl6dTF2WFZ4OW1MQzd6?=
+ =?utf-8?B?OUlMVEtYaUoxVDJDazFDekd5ek9TWExJVXNTUmtSY1JhZzhiYXZPQWN5VHNF?=
+ =?utf-8?B?L3hJdVRPdmxmR2ZtTUJQSllMd3hWNWNQMTcxM1ZCZDNCeDloL1daZVFsM3A2?=
+ =?utf-8?B?OGlIN2xhd284RnpGRTNVMTdsTDRYenZKbmYyZjlJVDRoMmZBQ0dpOWd3QUJy?=
+ =?utf-8?B?eW1RZVlSQ2tFOE9GbDZNZFBoY1grSTE1ZzEzbitYRks4VElmUitRMkJFT25r?=
+ =?utf-8?B?TkJuS3ZneUFuT1JtQVZud0RIYVRqYWFid29adWRHOTNyaWRKQmovZEhxOEFq?=
+ =?utf-8?B?NW9xc3lDdWs4OEFVd1RNSmFQeC9FWjd3ZDdUUkdZUkxxUTl5aWlnekdrQWJT?=
+ =?utf-8?B?UkxhYTFRV0NSbzRKVGFxbmxNYW0rb3BRTjgrdlQ2QUZoSU5kWWhlRWovWlFs?=
+ =?utf-8?Q?3iBcd/dkp7cz22oZsP8GEo/SsWSVlytKfIaDzjtncO+oR2?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dUVNaTVJSy85U0RaVFFRTUNCenU2ZWZnaGNCVy9MeW5TYzVteHhFbXNqNDdW?=
+ =?utf-8?B?R2RNODNaMXJJeXgyV2h2UXJFNC9ESnZBU2h3dVh6dXhJVTdjbW8yREZ5Z2w1?=
+ =?utf-8?B?ckJGcFlRUlZkUTlIZ2VFVzdLUHowQ1lSTE5mM1dZa0dpRHVtRVlHcnArVSt5?=
+ =?utf-8?B?U2tsbzNRNXFWSFdYWUs3VGJ0N01vbWl2VzJ0MVptbVN0K2hlR0RYWktJMzRG?=
+ =?utf-8?B?WmsvZ1ZncjhvV1kwM3licmRxVGVjZVpkMUx4ajQwR1Z1M3BoM2M4SStNMmpK?=
+ =?utf-8?B?ZFJHMzQ4TDkvRUNiU3JiSktJNUpJYXVnUDI1WHZ2S3Z5YnIrSVBuWHpsME1r?=
+ =?utf-8?B?cDhVWlRuSHJNdTBzK2dsUmFDZGFjUHN1ZlREN3BTZVA3T0JXVkFtRy9IVEJN?=
+ =?utf-8?B?UTBVNU5GbVFiYzF2UENxODh3ZUsrZmJNRSszVk5lRnpFU0ZpMCtFem5FNjJR?=
+ =?utf-8?B?VGt6MjM5akRVSUp1dlpST0Exc0dpUE01U01wTXVjUTZVelhONG8rTUpsUGRX?=
+ =?utf-8?B?RERwK0g4NkRmYjdHTU4ya2U2UzI1V2JJLzJFTEo1ZUdvZTNOSXJlOUQ0R0Jp?=
+ =?utf-8?B?dlhVeGR6aVJBU2FzYldoYitRdkJMaGI2UmhreGp5aFZVQmM2ajdTZVBlc2NS?=
+ =?utf-8?B?Y250K2ZodTAvOTlKMm5CT0RHczVBTXJmSkJiUTZIR2VEeDdRdHJzd251UTJy?=
+ =?utf-8?B?L3FPUGtUVGhqRE52VTh2VDFUUDRZdUdLSDBmeHc4LzhJN2xtT2lCQ2Z5MVk5?=
+ =?utf-8?B?SVA0NUJxTFFLRGROaUFkUTdEUHlCNkQxamVvVWN3SWlqb2FIcUNaQWc5Sy85?=
+ =?utf-8?B?NkVBbzV6aFZvd05PckhyYXU0eWNtTktGMUxZc0RNOXR5UUhqdjk3Y2YrdWpx?=
+ =?utf-8?B?Z2l6TDQ0aC95bUpERlZseG1RdzdCV3hsdmxIZEE4ZzJIWE14d2kyMUUrM1lp?=
+ =?utf-8?B?cVQ4ZVhrZHpIOThMaVpYUjJZVmVSVzA2b3kwRHprWkRqN2xOeDBXRVJKOElE?=
+ =?utf-8?B?S1VBQUw2bHh4VkZpTTROOWxDSGkwQkdqOHRRZ1VPVmtHV0YxRkJYdTUwS2dP?=
+ =?utf-8?B?R2NDNjlUUHU1K0g1Tk9peWVJTUtacHBXY0xxY2lScC9JOExrTStGMTFnTUhv?=
+ =?utf-8?B?L2xiaVBYamJRK21ncUNxNHlhMlJQSDN3ai9vdFJUQ1p4dzdNZzQrai84SUoy?=
+ =?utf-8?B?Qy9ZSEppdzNIYUJ1bnp2MHN6cldsWm80alpzQUxDU290RG5YRVJFSHNCZUd2?=
+ =?utf-8?B?aTFhMERNcHA4LzQyRVcxbTNxc2wxcjIyYXVhUkh4WDVBUWpHUTNUT1RXeTZS?=
+ =?utf-8?B?YTJaOFdzem5rL0NFMFk4dWpXVS9sMHU4b0M5blZWZnVDZjREWHhkcWdmVzdX?=
+ =?utf-8?B?cHVhOWdQUEp3TU5QTzhPSkF5Y2dHd05HS0RrUUhoUFlWTUlvaG1wY0I4clov?=
+ =?utf-8?B?NVFvTDNOVEdNaHlucUlOTHV1Ri85T2ZhYUFkZnpqQjlUczZQWkd4UnB5UVAv?=
+ =?utf-8?B?WERvZzJpUEwwZmtGUDcvaG1XY1RJMkVNRENxcTI0UEJqQ3JQTnFQUXV4dFhB?=
+ =?utf-8?B?YnQ3UGpxbVlGbXNsQXIwM3ZkRW1IaDljS2RRQ2UwTHRaUUd5MXYzQWY1V0Nv?=
+ =?utf-8?B?b0NQNUlCd1pxRkIvNzA2TndKL1R5UGpUQ2M2K3hBWC9XbGYzR3NXaitUYXFB?=
+ =?utf-8?Q?KZQPKUVhTuSB8uST+80x?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afa3e99d-c7e7-4614-a324-08dcfa71face
+X-MS-Exchange-CrossTenant-AuthSource: PA4P194MB1005.EURP194.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 12:37:42.9848
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1P194MB0750
+
+Good day,
+
+On 27/09/2024 12:32, Thorsten Leemhuis wrote:
+
+> [CCing a few people that were involved in mainlining the culprit
+> (8adbf5a42341f6e ("ice: remove af_xdp_zc_qps bitmap") in case they want
+> to provide advice]
+> 
+> On 13.09.24 17:54, Alasdair McWilliam wrote:
+>> On 05/09/2024 13:50, Alasdair McWilliam wrote:
+>>
+>>>> We've been working recently on somewhat related issues and it looks like
+>>>> not every commit from [0] has been backported.
+>>>>
+>>>> $ git log --oneline v6.1.103..v6.1.104 drivers/net/ethernet/intel/ice/
+>>>> 5a80b682e3e1 ice: add missing WRITE_ONCE when clearing ice_rx_ring::xdp_prog
+>>>> 8782f0fcb19d ice: replace synchronize_rcu with synchronize_net
+>>>> 15115033f056 ice: don't busy wait for Rx queue disable in ice_qp_dis()
+>>>> 3dbc58774e58 ice: respect netif readiness in AF_XDP ZC related ndo's
+>>>>
+>>>> can you apply the rest of it on top of 6.1.107 and see the result?
+>>
+>>> The first one I've attempted doesn't apply cleanly to 6.1.107.
+>>>
+>>> Eg: d59227179949 ("ice: modify error handling when setting XSK pool in
+>>> ndo_bpf"). The above looks to have been based on code from around 6.8 or
+>>> 6.9 where the makeup of routines like ice_qp_ena() has changed. Looks
+>>> like this happened around a292ba981324 ("ice: make ice_vsi_cfg_txq()
+>>> static").
+>>>
+>>> Should I try and apply a292ba981324 as well?
+>>
+>> I just wondered if there was perhaps any further feedback on the above.
+> 
+> Hmmm. No reply afaics -- but that's how it is sometimes with
+> stable/longterm kernels series, as mainline developers are not required
+> to participate in their development.
+> 
+> Still it would be good to fix the problem. So unless the developers come
+> up with plan, it might be best to just revert a62c50545b4d in 6.1.y;
+> guess asking Greg to do so might be best way ahead unless some solutions
+> comes into sight within a few days.
+>
+
+It's been a minute since I've looked at this due to other commitments
+but accidentally bumped into the fault again when testing the latest 6.6
+LTS for a new feature of our software. (I forgot to revert the commit
+for "ice: remove af_xdp_zc_qps bitmap" in our build system.)
+
+This led me to wonder about the current version, and can trigger the
+same crash on 6.11.5 [3].
+
+Reverting "ice: remove af_xdp_zc_qps bitmap" [1] in the current mainline
+is a little more complicated as commit ebc33a3f8d0a ("ice: improve
+updating ice_{t,r}x_ring::xsk_pool") also changes things a little so the
+reversion doesn't work cleanly.
+
+I have tweaked everything a little the below patch [2] applies cleanly
+to 6.11.5 and 6.12-rc5 and seems to fix the fault.
+
+Thought I'd bubble this up as it's definitely still an issue in the
+mainline kernel as of now.
+
+Thanks
+Alasdair
+
+[1] Commit adbf5a42341f6ea038d3626cd4437d9f0ad0b2dd
+
+[2]
+https://github.com/OpenSource-THG/kernel-patches/tree/main/2024-11-ice-xskzc-page-fault
+
+[3] 6.11.5 ooops
+
+[  565.069120] BUG: unable to handle page fault for address:
+ffffa566707380c4
+[  565.069144] #PF: supervisor read access in kernel mode
+[  565.069155] #PF: error_code(0x0000) - not-present page
+[  565.069167] PGD 100000067 P4D 100000067 PUD 20ef17067 PMD 0
+[  565.069183] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+[  565.069195] CPU: 7 UID: 0 PID: 6967 Comm: tlndd.bin Kdump: loaded
+Tainted: G            E
+6.11.5-1.thg.836e8867d7.241031.135507.el9.x86_64 #1
+[  565.069220] Tainted: [E]=UNSIGNED_MODULE
+[  565.069228] Hardware name: Supermicro SYS-1028R-TDW/X10DDW-i, BIOS
+3.2 12/16/2019
+[  565.069241] RIP: 0010:ice_xsk_clean_rx_ring+0x37/0x110 [ice]
+[  565.069338] Code: 55 53 48 83 ec 08 44 0f b7 af a4 00 00 00 0f b7 af
+a2 00 00 00 66 41 39 ed 74 33 48 89 fb 48 8b 4b 38 41 0f b7 c5 4c 8b 34
+c1 <41> f6 46 34 01 75 30 4c 89 f7 41 83 c5 01 e8 f6 0c 7e ce 31 c0 66
+[  565.069365] RSP: 0018:ffffa5660f8f36d8 EFLAGS: 00010293
+[  565.069375] RAX: 0000000000000000 RBX: ffff8bb105d38600 RCX:
+ffff8bb184930000
+[  565.069387] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+ffff8bb105d38600
+[  565.069400] RBP: 00000000000007ff R08: 000000000000050b R09:
+0000000000000000
+[  565.069411] R10: ffff8bb10f910000 R11: 0000000000000020 R12:
+0000000000000004
+[  565.069422] R13: 0000000000000000 R14: ffffa56670738090 R15:
+ffff8bb1116b5740
+[  565.069434] FS:  00007f677a5d1dc0(0000) GS:ffff8bb85fd80000(0000)
+knlGS:0000000000000000
+[  565.069447] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  565.069457] CR2: ffffa566707380c4 CR3: 0000000120164005 CR4:
+00000000001706f0
+[  565.069470] Call Trace:
+[  565.069480]  <TASK>
+[  565.069489]  ? __die+0x20/0x70
+[  565.069504]  ? page_fault_oops+0x80/0x150
+[  565.069517]  ? exc_page_fault+0xcd/0x170
+[  565.069531]  ? asm_exc_page_fault+0x22/0x30
+[  565.069546]  ? ice_xsk_clean_rx_ring+0x37/0x110 [ice]
+[  565.069598]  ice_clean_rx_ring+0x16e/0x190 [ice]
+[  565.069650]  ice_down+0x2f8/0x3c0 [ice]
+[  565.069692]  ice_xdp_setup_prog+0x193/0x460 [ice]
+[  565.069734]  ice_xdp+0x7a/0xb0 [ice]
+[  565.069774]  ? __pfx_ice_xdp+0x10/0x10 [ice]
+[  565.069813]  dev_xdp_install+0xc7/0x100
+[  565.069829]  dev_xdp_attach+0x205/0x5d0
+[  565.069841]  do_setlink+0x7d3/0xc20
+[  565.069853]  ? dequeue_skb+0x80/0x4f0
+[  565.069866]  ? __nla_validate_parse+0x125/0x1d0
+[  565.069880]  __rtnl_newlink+0x4f7/0x630
+[  565.069892]  ? __kmalloc_cache_noprof+0x225/0x2b0
+[  565.069905]  rtnl_newlink+0x44/0x70
+[  565.069915]  rtnetlink_rcv_msg+0x15c/0x410
+[  565.069928]  ? avc_has_perm_noaudit+0x67/0xf0
+[  565.069943]  ? __pfx_rtnetlink_rcv_msg+0x10/0x10
+[  565.069956]  netlink_rcv_skb+0x57/0x100
+[  565.069969]  netlink_unicast+0x246/0x370
+[  565.069980]  netlink_sendmsg+0x1f6/0x430
+[  565.069991]  ____sys_sendmsg+0x3be/0x3f0
+[  565.070003]  ? import_iovec+0x16/0x20
+[  565.070015]  ? copy_msghdr_from_user+0x6d/0xa0
+[  565.070028]  ___sys_sendmsg+0x88/0xd0
+[  565.070038]  ? __memcg_slab_free_hook+0xd5/0x120
+[  565.070050]  ? __inode_wait_for_writeback+0x7d/0xf0
+[  565.070065]  ? mod_objcg_state+0xc9/0x2f0
+[  565.070076]  __sys_sendmsg+0x59/0xa0
+[  565.070086]  ? syscall_trace_enter+0xfb/0x190
+[  565.070098]  do_syscall_64+0x60/0x180
+[  565.070111]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  565.070126] RIP: 0033:0x7f677ab0f94d
+[  565.070136] Code: 28 89 54 24 1c 48 89 74 24 10 89 7c 24 08 e8 0a 67
+f7 ff 8b 54 24 1c 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 2e 00 00 00 0f
+05 <48> 3d 00 f0 ff ff 77 33 44 89 c7 48 89 44 24 08 e8 5e 67 f7 ff 48
+[  565.070164] RSP: 002b:00007ffd1e4f7a60 EFLAGS: 00000293 ORIG_RAX:
+000000000000002e
+[  565.070178] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
+00007f677ab0f94d
+[  565.070191] RDX: 0000000000000000 RSI: 000000001d698848 RDI:
+000000000000000a
+[  565.070203] RBP: 000000001d5350e0 R08: 0000000000000000 R09:
+0000000000465f98
+[  565.070215] R10: 0000000000200000 R11: 0000000000000293 R12:
+000000001d535110
+[  565.070227] R13: 000000000051d798 R14: 000000001d698830 R15:
+000000001d5384b0
+[  565.070240]  </TASK>
+[  565.070248] Modules linked in: bonding(E) tls(E) nft_fib_inet(E)
+nft_fib_ipv4(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E)
+nf_reject_ipv4(E) nf_reject_ipv6(E) nft_reject(E) nft_ct(E)
+nft_chain_nat(E) nf_nat(E) nf_conntrack(E) nf_
+defrag_ipv6(E) nf_defrag_ipv4(E) rfkill(E) ip_set(E) nf_tables(E)
+libcrc32c(E) nfnetlink(E) vfat(E) fat(E) intel_rapl_msr(E)
+intel_rapl_common(E) sb_edac(E) x86_pkg_temp_thermal(E)
+intel_powerclamp(E) coretemp(E) kvm_intel(E) ipmi_ssif(
+E) kvm(E) iTCO_wdt(E) intel_pmc_bxt(E) iTCO_vendor_support(E) rapl(E)
+intel_cstate(E) intel_uncore(E) ast(E) i2c_i801(E) pcspkr(E) mei_me(E)
+drm_shmem_helper(E) mxm_wmi(E) drm_kms_helper(E) i2c_mux(E) mei(E)
+i2c_smbus(E) lpc_ich(E) ioat
+dma(E) acpi_power_meter(E) ipmi_si(E) acpi_ipmi(E) joydev(E)
+ipmi_devintf(E) ipmi_msghandler(E) acpi_pad(E) drm(E) fuse(E) ext4(E)
+mbcache(E) jbd2(E) sd_mod(E) sg(E) ice(E) ahci(E) crct10dif_pclmul(E)
+crc32_pclmul(E) crc32c_intel(E) lib
+ahci(E) polyval_clmulni(E) igb(E) polyval_generic(E) libata(E)
+ghash_clmulni_intel(E)
+[  565.070304]  i2c_algo_bit(E) dca(E) libie(E) wmi(E) dm_mirror(E)
+dm_region_hash(E) dm_log(E) dm_mod(E)
+[  565.071430] CR2: ffffa566707380c4
 
-Hello everyone,
-
-I'm having an issue with my XDP program where the filtering isn't 
-working as expected when loaded through my user-space program.
-
-I'm working on a project to optimize UDP traffic using AF_XDP. My goal 
-is to filter the traffic using an XDP program and redirect it to my 
-user-space application (using BPF_MAP_TYPE_XSKMAP) where I then can 
-process the packets. However I'm running into the problem that my filter 
-isn't working when loading it with my user-space application, which 
-leads to receiving all traffic instead of only the UDP packets that I 
-want. But when I tried loading it using xdp-loader it does work and 
-filter out the correct traffic.
-
-The setup I'm using is in virtualbox, OS: Debian GNU/Linux 12 
-(bookworm), kernel: 6.1.0-25-amd64, and using the virtio-net driver for 
-my network interface. To test it I'm using a different VM to send ping 
-requests and the UDP packets that I want to filter for in my XDP program.
-
-I've tried many different things from the examples (like those from the 
-XDP-tutorial, basic03-04 and advanced03 in particular) that I could 
-find, but none of those options seem to work for my implementation. 
-Changing the XDP_MODE isn't an option because the other modes made it 
-fall back to the SKB mode.
-
-I'm wondering if anyone has an idea on what I'm doing wrong or what I 
-can do differently to make it work. Here are some relevant snippets, 
-with some of it coming directly from the xdpsock.c example in the 
-bpf-examples repo. For the creation of the UMEM, sockets and such I'm 
-using libbpf and libxdp by recommendation of the documentation on 
-kernel.org.
-
-Has anyone encountered similar issues or have any ideas on how to fix 
-the problem that I'm having?
-
-The XDP program:
-```
-#include <linux/bpf.h>
-#include <bpf/bpf_helpers.h>
-#include <xdp/xdp_helpers.h>
-#include <linux/if_ether.h>
-#include <linux/ip.h>
-#include <linux/ipv6.h>
-#include <linux/udp.h>
-#include <bpf/bpf_endian.h>
-#include <linux/in.h>
-
-#define TARGET_PORT 42795
-
-struct {
-     __uint(type, BPF_MAP_TYPE_XSKMAP);
-     __type(key, int);
-     __type(value, int);
-     __uint(max_entries, 1);
-} xsks_map SEC(".maps");
-
-struct {
-     __uint(priority, 10);
-     __uint(XDP_PASS, 1);
-     __uint(XDP_DROP, 1);
-} XDP_RUN_CONFIG(xdp_sock_prog);
-
-SEC("xdp")
-int xdp_sock_prog(struct xdp_md *ctx)
-{
-     void *data_end = (void *)(long)ctx->data_end;
-     void *data = (void *)(long)ctx->data;
-     bpf_printk("Processing packet, size: %d\n", data_end - data);
-
-     struct ethhdr *eth = data;
-     if ((void *)(eth + 1) > data_end) {
-         bpf_printk("invalid size of packet");
-         return XDP_PASS;
-     }
-
-     if (eth->h_proto != __bpf_htons(ETH_P_IP)) {
-         bpf_printk("no IP packet");
-         return XDP_PASS;
-     }
-
-     struct iphdr *ip = (void *)(eth + 1);
-     if ((void *)(ip + 1) > data_end) {
-         bpf_printk("invalid IP packet");
-         return XDP_PASS;
-     }
-     bpf_printk("Protocol: %d\n", ip->protocol);
-
-     if (ip->protocol != IPPROTO_UDP) {
-         bpf_printk("No UDP packet");
-         return XDP_PASS;
-     }
-
-     struct udphdr *udp = (void *)(ip + 1);
-     if ((void *)(udp + 1) > data_end) {
-         bpf_printk("invalid UDP packet");
-         return XDP_PASS;
-     }
-
-     if (ip->protocol == IPPROTO_UDP && __bpf_ntohs(udp->dest) == 
-TARGET_PORT) {
-         int index = ctx->rx_queue_index;
-         bpf_printk("found UDP packet with correct port!");
-
-         if (bpf_map_lookup_elem(&xsks_map, &index)) {
-             bpf_printk("Redirecting to map");
-             long ret = bpf_redirect_map(&xsks_map, index, 0);
-             bpf_printk("redirect return val: %lu", ret);
-             return ret;
-         }
-     }
-
-     bpf_printk("Passing to the kernel");
-     return XDP_PASS;
-}
-
-char _license[] SEC("license") = "GPL";
-```
-The code that loads the XDP program:
-```
-#include <bpf/libbpf.h>
-#include <xdp/xsk.h>
-#include <xdp/libxdp.h>
-#include <net/if.h>
-#include <errno.h>
-#include <unistd.h>
-
-int attach_program(struct xdp_program **prog, struct xsk_socket_info 
-*socket_info, const char *ifname) {
-     struct bpf_object *bpf_obj;
-     int err, map_fd;
-     int queue_id = 0;
-
-     *prog = xdp_program__open_file("bin/xdp_prog.o", "xdp", NULL);
-     err = libxdp_get_error(*prog);
-     if (err) {
-         perror("Failed to open XDP program");
-         return -1;
-     }
-
-     int ifindex = if_nametoindex(ifname);
-     if (ifindex == 0) {
-         perror("Interface index");
-         return -1;
-     }
-
-     err = xdp_program__attach(*prog, ifindex, XDP_MODE_SKB, 0);
-     if (err) {
-         perror("Failed to attach XDP program");
-         xdp_program__close(*prog);
-         return err;
-     }
-
-     bpf_obj = xdp_program__bpf_obj(*prog);
-     map_fd = bpf_object__find_map_fd_by_name(bpf_obj, "xsks_map");
-     printf("found map fd, %d\n", map_fd);
-     if (map_fd < 0) {
-         perror("Failed to get map fd from bpf object");
-         xdp_program__close(*prog);
-         return map_fd;
-     }
-     socket_info->xdp_map_fd = map_fd;
-
-     int xsk_fd = xsk_socket__fd(socket_info->xsk);
-     int ret = bpf_map_update_elem(map_fd, &queue_id, &xsk_fd, BPF_ANY);
-     if (ret < 0) {
-         perror("Error updating BPF map element");
-         return ret;
-     }
-
-     return 0;
-}
-
-void detach_program(struct xdp_program *prog, const char *ifname) {
-     int ifindex = if_nametoindex(ifname);
-     if (ifindex == 0) {
-         perror("Interface index");
-     }
-
-     int err = xdp_program__detach(prog, ifindex, XDP_MODE_SKB, 0);
-     if (err == -ENOENT) {
-         perror("No XDP program attached");
-     } else if (err) {
-         perror("Failed to detach XDP program");
-     }
-     xdp_program__close(prog);
-}
-```
-The code I'm using for receiving packets:
-```
-static void xsk_receive_packet(struct xsk_socket_info *socket_info) {
-     uint32_t idx_rx, idx_fq, recvd = 0;
-     int ret;
-
-     recvd = xsk_ring_cons__peek(&socket_info->rx, 64, &idx_rx);
-     if (!recvd) {
-         if (xsk_ring_prod__needs_wakeup(&socket_info->umem->fq)) {
-             recvfrom(xsk_socket__fd(socket_info->xsk), NULL, 0, 
-MSG_DONTWAIT, NULL, NULL);
-         }
-         return;
-     }
-
-     ret = xsk_ring_prod__reserve(&socket_info->umem->fq, recvd, &idx_fq);
-     while (ret != recvd) {
-         if (ret < 0)
-             return;
-         if (xsk_ring_prod__needs_wakeup(&socket_info->umem->fq)) {
-             recvfrom(xsk_socket__fd(socket_info->xsk), NULL, 0, 
-MSG_DONTWAIT, NULL, NULL);
-         }
-         ret = xsk_ring_prod__reserve(&socket_info->umem->fq, recvd, 
-&idx_fq);
-     }
-
-     for (size_t i = 0; i < recvd; i++) {
-         const struct xdp_desc *desc = 
-xsk_ring_cons__rx_desc(&socket_info->rx, idx_rx++);
-         uint64_t addr = desc->addr;
-         uint32_t len = desc->len;
-         uint64_t orig = xsk_umem__extract_addr(addr);
-
-         addr = xsk_umem__add_offset_to_addr(addr);
-         char *pkt = xsk_umem__get_data(socket_info->umem->buffer, addr);
-         print_hex(pkt, len);
-         *xsk_ring_prod__fill_addr(&socket_info->umem->fq, idx_fq++) = orig;
-     }
-     xsk_ring_prod__submit(&socket_info->umem->fq, recvd);
-     xsk_ring_cons__release(&socket_info->rx, recvd);
-}
-
-void xsk_receive_packets(struct xsk_socket_info *socket_info) {
-     int ret;
-     struct pollfd fds = {};
-     fds.fd = xsk_socket__fd(socket_info->xsk);
-     fds.events = POLLIN;
-     unsigned int timeout_seconds = 100;
-     time_t start = time(NULL);
-     while(1) {
-         time_t current = time(NULL);
-         if (difftime(current, start) >= timeout_seconds) {
-             printf("Timed out\n");
-             break;
-         }
-         ret = poll(&fds, 1, 0);
-         if (ret <= 0)
-             continue;
-         xsk_receive_packet(socket_info, and_send);
-     }
-}
-
-```
-Which are called in my main like this:
-```
-int main(void) {
-     struct xsk_umem_info *umem_info;
-     struct xsk_socket_info *socket_info;
-     struct xdp_program *program = NULL;
-     struct bpf_object *bpf_obj;
-     int res;
-
-     res = xsk_configure_umem(&umem_info, BUFFER_SIZE);
-     if (res != 0) {
-         perror("Configure UMEM");
-         exit(EXIT_FAILURE);
-     }
-
-     res = xsk_create_socket(&socket_info, UP_INTERFACE, umem_info);
-     if (res != 0) {
-         perror("Configure XDP socket");
-         exit(EXIT_FAILURE);
-     }
-
-     res = attach_program(&program, socket_info, UP_INTERFACE);
-     if (res != 0) {
-         perror("Attaching XDP program");
-         exit(EXIT_FAILURE);
-     }
-
-     xsk_fill_ring(socket_info);
-     xsk_receive_packets(socket_info, 1);
-
-     detach_program(program, UP_INTERFACE);
-
-
-     return 0;
-}
-```
-This is the output I'm getting from the bpf_printk and my program
-```
-         upstream-4960    [000] ..s11 16329.727555: bpf_trace_printk: 
-Processing packet, size: 98
-
-         upstream-4960    [000] ..s11 16329.727655: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16329.727656: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16329.727997: bpf_trace_printk: 
-Processing packet, size: 98
-
-         upstream-4960    [000] ..s11 16329.727997: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16329.727997: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16329.785383: bpf_trace_printk: 
-Processing packet, size: 980
-
-         upstream-4960    [000] ..s11 16329.785498: bpf_trace_printk: 
-Protocol: 17
-
-         upstream-4960    [000] ..s11 16329.785499: bpf_trace_printk: 
-found UDP packet with correct port!
-         upstream-4960    [000] ..s11 16329.785499: bpf_trace_printk: 
-Redirecting to map
-         upstream-4960    [000] ..s11 16329.785500: bpf_trace_printk: 
-redirect return val: 4
-         upstream-4960    [000] ..s11 16329.785505: bpf_trace_printk: 
-Processing packet, size: 590
-
-         upstream-4960    [000] ..s11 16329.785506: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16329.785506: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16329.891559: bpf_trace_printk: 
-Processing packet, size: 60
-
-         upstream-4960    [000] ..s11 16329.891658: bpf_trace_printk: no 
-IP packet
-         upstream-4960    [000] ..s11 16329.891959: bpf_trace_printk: 
-Processing packet, size: 42
-
-         upstream-4960    [000] ..s11 16329.891959: bpf_trace_printk: no 
-IP packet
-         upstream-4960    [000] ..s11 16330.286560: bpf_trace_printk: 
-Processing packet, size: 980
-
-         upstream-4960    [000] ..s11 16330.286656: bpf_trace_printk: 
-Protocol: 17
-
-         upstream-4960    [000] ..s11 16330.286657: bpf_trace_printk: 
-found UDP packet with correct port!
-         upstream-4960    [000] ..s11 16330.286657: bpf_trace_printk: 
-Redirecting to map
-         upstream-4960    [000] ..s11 16330.286658: bpf_trace_printk: 
-redirect return val: 4
-         upstream-4960    [000] ..s11 16330.286822: bpf_trace_printk: 
-Processing packet, size: 590
-
-         upstream-4960    [000] ..s11 16330.286822: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16330.286822: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16330.728671: bpf_trace_printk: 
-Processing packet, size: 98
-
-         upstream-4960    [000] ..s11 16330.728758: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16330.728758: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16330.729036: bpf_trace_printk: 
-Processing packet, size: 98
-
-         upstream-4960    [000] ..s11 16330.729036: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16330.729037: bpf_trace_printk: No 
-UDP packet
-         upstream-4960    [000] ..s11 16330.787123: bpf_trace_printk: 
-Processing packet, size: 980
-
-         upstream-4960    [000] ..s11 16330.787234: bpf_trace_printk: 
-Protocol: 17
-
-         upstream-4960    [000] ..s11 16330.787235: bpf_trace_printk: 
-found UDP packet with correct port!
-         upstream-4960    [000] ..s11 16330.787235: bpf_trace_printk: 
-Redirecting to map
-         upstream-4960    [000] ..s11 16330.787236: bpf_trace_printk: 
-redirect return val: 4
-         upstream-4960    [000] ..s11 16330.787633: bpf_trace_printk: 
-Processing packet, size: 590
-
-         upstream-4960    [000] ..s11 16330.787712: bpf_trace_printk: 
-Protocol: 1
-
-         upstream-4960    [000] ..s11 16330.787712: bpf_trace_printk: No 
-UDP packet
-      ksoftirqd/0-14      [000] ..s11 16330.946334: bpf_trace_printk: 
-Processing packet, size: 42
-
-      ksoftirqd/0-14      [000] ..s11 16330.946598: bpf_trace_printk: no 
-IP packet
-      ksoftirqd/0-14      [000] ..s11 16330.946606: bpf_trace_printk: 
-Processing packet, size: 60
-
-      ksoftirqd/0-14      [000] ..s11 16330.946606: bpf_trace_printk: no 
-IP packet
-         upstream-4960    [000] ..s11 16331.289930: bpf_trace_printk: 
-Processing packet, size: 980
-
-         upstream-4960    [000] ..s11 16331.290022: bpf_trace_printk: 
-Protocol: 17
-
-         upstream-4960    [000] ..s11 16331.290023: bpf_trace_printk: 
-found UDP packet with correct port!
-         upstream-4960    [000] ..s11 16331.290024: bpf_trace_printk: 
-Redirecting to map
-         upstream-4960    [000] ..s11 16331.290024: bpf_trace_printk: 
-redirect return val: 4
-```
-And the user-space program (with most of the bytes removed for brevity):
-```
-data [len: 98]: 0x080x000x270x2d0....
-data [len: 98]: 0x080x000x270xfffffff40.....
-data [len: 980]: 0x080x000x270x2d0xfffff....
-data [len: 590]: 0x080x000x270xfff....
-data [len: 980]: 0x080x000x270x2d0xff....
-data [len: 98]: 0x080x000x270x2d0xffffffeb...
-data [len: 98]: 0x080x000x270xfffffff40xf....
-data [len: 980]: 0x080x000x270x2d0xffffffe....
-```
-
-I was thinking of posting it on StackOverflow but this seemed a more 
-appropriate place to ask for advice.
-
-Thanks in advance for any advice,
-Thom
 
