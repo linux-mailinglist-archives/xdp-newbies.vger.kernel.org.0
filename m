@@ -1,96 +1,121 @@
-Return-Path: <xdp-newbies+bounces-166-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-167-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF56B9E580D
-	for <lists+xdp-newbies@lfdr.de>; Thu,  5 Dec 2024 15:00:12 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C2F99E58F4
+	for <lists+xdp-newbies@lfdr.de>; Thu,  5 Dec 2024 15:55:26 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACD1228BE62
-	for <lists+xdp-newbies@lfdr.de>; Thu,  5 Dec 2024 14:00:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC626169EA8
+	for <lists+xdp-newbies@lfdr.de>; Thu,  5 Dec 2024 14:55:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEEF21A44E;
-	Thu,  5 Dec 2024 14:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35EC521A44A;
+	Thu,  5 Dec 2024 14:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=wii.dev header.i=@wii.dev header.b="i5g15OlF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYGhxGTE"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-108-mta60.mxroute.com (mail-108-mta60.mxroute.com [136.175.108.60])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE328219A68
-	for <xdp-newbies@vger.kernel.org>; Thu,  5 Dec 2024 14:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E743217F50
+	for <xdp-newbies@vger.kernel.org>; Thu,  5 Dec 2024 14:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733407203; cv=none; b=N08aem7sYe+rd1NMwdBe7pjSEVujBdNTMcF79XBvKlc1T0PQaAbnlAjpabN9/KpBUPjl+K/rzICegiwEUbm7PTH9vqsLWq8t3lyw/zUQc/z/oF+Yp9Ynt3Yt4Ro8t60LvZhhlwjcspqIbHESmx1yDhGSzL3XXRvmgaz6b92OZbQ=
+	t=1733410522; cv=none; b=IcxQA53iYjU02x+lTiVbe9u5kd8Cd0eABZNdXO1Qp079A0lDwLTnCRch/BLQpEZW3YnMXAUpcdXSv+K5+Ngpm/x7xrGnRWQi3U+mgAbLe+ttr1LHTQibJVY4lgwMtz4IbuF7UoMnysVJsMG2/jpN4tp3V92JJSsBJzPsRMbWAm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733407203; c=relaxed/simple;
-	bh=fVjIRRNj6f3WD8yEGu/syh4XhmuZxDWEx557kgBcy44=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=c0xMne0IgAnFn1eBSujRJavDkfyfHYbhbIw6N7cQwyqU8qRA0QmbFDLJL16plz900PewDDqzxg+/7jBKdShXIbTMOW/wHmcgPMXERHjdczB8+ym8yC+obsN8KZm7HKRFB1wKRqUUppIbgeKKmZeUoM1pYonOlmovG7t/c3L2xA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wii.dev; spf=pass smtp.mailfrom=wii.dev; dkim=fail (0-bit key) header.d=wii.dev header.i=@wii.dev header.b=i5g15OlF reason="key not found in DNS"; arc=none smtp.client-ip=136.175.108.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wii.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wii.dev
-Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta60.mxroute.com (ZoneMTA) with ESMTPSA id 193971eb1ce0003e01.001
- for <xdp-newbies@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Thu, 05 Dec 2024 13:59:51 +0000
-X-Zone-Loop: c44e9c5decae717761c4251039398d0df01822697e0e
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wii.dev;
-	s=x; h=To:Date:Message-Id:Subject:Mime-Version:Content-Transfer-Encoding:
-	Content-Type:From:Sender:Reply-To:Cc:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=fVjIRRNj6f3WD8yEGu/syh4XhmuZxDWEx557kgBcy44=; b=i5g15OlFp7kThK+QUoOE6b1ACz
-	td9o6telWe5CzPVqrEB+RvEWyz8H7utW7QzKYD+UvEdJQYIAE73aL8G+NZR1dgj9UvtH03At3Pwds
-	Swc1uK6LeXjM3sPoiO1yj0jVPiV6MjvYGK7yFz4cS9bKPBYjqMcX6YKGa1x3RbuyPG5pCTsqseyOi
-	A5f9YCg0tusuzrwO/IxTyWcJSU8O0sDuRib1r8YmbXMmv32+Kf6wL1AQcODFXISjkaN/vEM2X9DBn
-	ypb0NYBhTtEQ0iHf/ZDp49p6pJ6YzBYT7KwFjp93cCzHlvouuZIb6KVvECegBGCgrMu3x4jG0ofbN
-	5tkQ5h1A==;
-From: Richard Patel <ripatel@wii.dev>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1733410522; c=relaxed/simple;
+	bh=RL2dF0HZR5ZzfAZ+lqV4hfSXVPfnB+ZBgFUyzvNb9JE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lHD1+AKB2lzJeFsizmTNZ1f6fENojTI4XIWZf/lUjOFWf33xJQV9wtLSCKbOEM1YvlPeymkwHCSfDl0ry26pgqsLXAhSonWeW3rR0UoWiV6eutwk2vSeGW1RGjGMf7F1tdceXA38T+2fjw95HbfLzmcl0ryJa5yvY0ksmnTX9ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYGhxGTE; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6e9f8dec3daso6070307b3.0
+        for <xdp-newbies@vger.kernel.org>; Thu, 05 Dec 2024 06:55:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733410518; x=1734015318; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RL2dF0HZR5ZzfAZ+lqV4hfSXVPfnB+ZBgFUyzvNb9JE=;
+        b=WYGhxGTEKDWup5TVwGgaMO0pxNnyqA8HCgCUUuxoFTSKVufaY3w5ivxAmNdkHUnHIh
+         AhBT0wpJqcNkmeThHcexNwPy78L/G0X2/zcOwv1iM51wlpEm9aRHMQqPBFyG9ZroPTgV
+         jBKMnNqXs4hTfpWQbsA5sLpEUvKcidv6O6w7bYegRsl+tV1ZTHHeIXkbSWS8SdMgzGly
+         Dsm1aEVWnDXK5w7l7QLfPstf2hPOfZb5sR3WdLKAZiW8zeRC6xQ8IVnK9b9vDRtmIXnX
+         pVos3PbsZg6u+5hdHwOz0mN+Fl6XkRiNCpeetXrOKAj/At9GHl+bNecd7fuBdiWHsQMM
+         YYZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733410518; x=1734015318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RL2dF0HZR5ZzfAZ+lqV4hfSXVPfnB+ZBgFUyzvNb9JE=;
+        b=B86y+m0OcJ8bLikxZHbHQEM8svxB7JF9o8yPqHYBuf+clUGfbEGY/c/y0YRErH/NLC
+         wT8TGQS04RexNf3jqlGHrTQ4rold1MP7J4MIPQoCw4M0tyrU/I5NY3vQPDIZCmNON8y2
+         F+/xgFF9c8I1jL16MC7/BQpJFZlkt1BfxNez3oihNC4YyfjtEZru9XHxJP829YiN8k8x
+         LmTwj4JRvV+4qnOp631eEaXtSfyg/QFO4nKRJ/Tzr0N2ZwL21lWN6o8wdsxQBeie8QCh
+         CeFavV3i+Gdj/2nX/ZJaAyXoiVm8aTqa0q+UBFPKpY4CPuintWC5Jkn6glMYKLhXPA+Y
+         Lslw==
+X-Gm-Message-State: AOJu0YySgqWTCmL6sROFnORbZ24C8utE99Jf5tMT9h36ougPAWedO8eD
+	Ad7qJW20tZhg+SSytA39v1EuoA3ygXcvodjLoRRC+Ec8V2HFqCc+/1GKWzb4/rQj/LWvT57jnRp
+	2x5Y9WFJ66/CWBs4QcD0g5BcAXdhoIe1i
+X-Gm-Gg: ASbGncvZfJ1Nl2jRnlaGiqY3fyyxw32nKeGnMpyqLVH4KVIcf6GVsiU0aI2yfVGGYux
+	4Nn9lTbjxox8FPx3On8cpwcQqzsOrEno=
+X-Google-Smtp-Source: AGHT+IEmvBXH2jt7WQnPz2WBbk3Bfwy4DlE9LQQZ1hQVn8HtscVNT1lYmpVGEuuWSP1O9y4BYl5+53qVB0/2S7VeVmc=
+X-Received: by 2002:a05:690c:690c:b0:6ef:7312:d05c with SMTP id
+ 00721157ae682-6eface06f0emr181597987b3.2.1733410518295; Thu, 05 Dec 2024
+ 06:55:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Sharing UMEM without XDP_SHARED_UMEM
-Message-Id: <B0A503CC-2BE2-420C-A032-EF3966FE0E88@wii.dev>
-Date: Thu, 5 Dec 2024 14:59:38 +0100
-To: xdp-newbies@vger.kernel.org
-X-Authenticated-Id: ripatel@wii.dev
+MIME-Version: 1.0
+References: <B0A503CC-2BE2-420C-A032-EF3966FE0E88@wii.dev>
+In-Reply-To: <B0A503CC-2BE2-420C-A032-EF3966FE0E88@wii.dev>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Thu, 5 Dec 2024 15:55:07 +0100
+Message-ID: <CAJ8uoz2oviM7k1HLuT_Kzk4S0RKKds7gdB6t_poohNmXo8Frgg@mail.gmail.com>
+Subject: Re: Sharing UMEM without XDP_SHARED_UMEM
+To: ripatel@wii.dev
+Cc: xdp-newbies@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, 5 Dec 2024 at 15:00, Richard Patel <ripatel@wii.dev> wrote:
+>
+> Hello,
+>
+> Is it safe to share the same virtual memory region as UMEM between two ze=
+ro-copy XSKs without setting XDP_SHARED_UMEM?
+> The XSKs do not share the same (dev, queue) pair. They are backed by sepa=
+rate receive queues and have separate fill and completion rings.
 
-Is it safe to share the same virtual memory region as UMEM between two =
-zero-copy XSKs without setting XDP_SHARED_UMEM?
-The XSKs do not share the same (dev, queue) pair. They are backed by =
-separate receive queues and have separate fill and completion rings.
+It is safe to share a umem by just registering the same umem region
+for each socket. This was the method before XDP_SHARED_UMEM. The
+drawback is that it consumes more memory as the xsk code in the kernel
+does not understand that it is indeed shared and structures could be
+shared too.
 
-I have an application receiving and sending packets via two such XSKs on =
+> I have an application receiving and sending packets via two such XSKs on =
 the same thread.
-I=E2=80=99d like to reuse buffers across both XSKs while ensuring each =
-chunk is only submitted to one of the fill or TX rings.
-
-In principle, this seems safe but undocumented.
-If queue IDs or devices between two XSKs differ, the only notable =
-difference in behavior when setting XDP_SHARED_UMEM is that =
-xp_assign_dev_shared is called instead of xp_assign_dev. However, =
-xdp_assign_dev_shared only copies XSK flags and then tail calls to =
-xp_assign_dev.
-
-Is there any special behaviour introduced by XDP_SHARED_UMEM in this =
-case that I=E2=80=99m missing?
-(Perhaps something to do with ref counting of memory pinning, or support =
+> I=E2=80=99d like to reuse buffers across both XSKs while ensuring each ch=
+unk is only submitted to one of the fill or TX rings.
+>
+> In principle, this seems safe but undocumented.
+> If queue IDs or devices between two XSKs differ, the only notable differe=
+nce in behavior when setting XDP_SHARED_UMEM is that xp_assign_dev_shared i=
+s called instead of xp_assign_dev. However, xdp_assign_dev_shared only copi=
+es XSK flags and then tail calls to xp_assign_dev.
+>
+> Is there any special behaviour introduced by XDP_SHARED_UMEM in this case=
+ that I=E2=80=99m missing?
+> (Perhaps something to do with ref counting of memory pinning, or support =
 for simultaneous DMAs from different devices into the same page?)
-And is it possible that future changes to the kernel AF_XDP code or =
-kernel drivers might break such operation without XDP_SHARED_UMEM?
-
-Thanks
-Richard=
+> And is it possible that future changes to the kernel AF_XDP code or kerne=
+l drivers might break such operation without XDP_SHARED_UMEM?
+>
+> Thanks
+> Richard
 
