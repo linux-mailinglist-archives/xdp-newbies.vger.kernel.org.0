@@ -1,96 +1,116 @@
-Return-Path: <xdp-newbies+bounces-172-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-173-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6D97A12CFE
-	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2025 21:52:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07589A12E61
+	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2025 23:43:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D78881657DB
-	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2025 20:52:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BA5118876E9
+	for <lists+xdp-newbies@lfdr.de>; Wed, 15 Jan 2025 22:43:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD5B01DA309;
-	Wed, 15 Jan 2025 20:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b="IW54zhrU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02FF91DA62E;
+	Wed, 15 Jan 2025 22:43:28 +0000 (UTC)
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64A81D8DEE
-	for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2025 20:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A721D88BE
+	for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2025 22:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736974325; cv=none; b=ZP+d6VBhjVhl26Hx6oZ+gszXAFjIdoqEiU03tjQomnZ5q4/68O2HyL+Q9S3mBeVumkSzvZgUbY1XHn0dWEe/7d5JhabOiZEXlvLU4nB1I2QEDjaSqXzqjM/JkslIfcnFwxwt20PNZctHOTookbRAKhPso7eZkD+B29+nPxW+A08=
+	t=1736981007; cv=none; b=smfIMmU2LKdarSx3AHItl4zohSJwgg7IhZdnxl6uUGbc0FwjRdROvKUbY7WpbpivETx3Z+Tz37WES5lt0kbXy7F12r++e0mAVzXXA4siajTY3tY5pASoxI2Sel0vj+qVYVntoWa62OrpwqQ4eoMNLtCI5Nt4uq2zVjG/d/Nmhpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736974325; c=relaxed/simple;
-	bh=x0WSW78mTQxVmSBtV3rIpSa8p3QhaLO1ZqXd6gz070Q=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=HUMbddcQJoIkm6QH8tI3uoVSgsw7cleoffPD8vFPTaT5uDnQnOuXYx121e2aAe8FraLFqre07WeBqTqvbedFHkmQ9IBPdBMJ6Jkp7ktlvC0qrrmI7n7GPp9K3uE7vJQKk8IsMk3pSdyhXx4TyVAR2/0VZYXfICmPSY/RZIi5oOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com; spf=pass smtp.mailfrom=riotgames.com; dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b=IW54zhrU; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riotgames.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-85c5a913cffso97205241.0
-        for <xdp-newbies@vger.kernel.org>; Wed, 15 Jan 2025 12:52:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riotgames.com; s=riotgames; t=1736974322; x=1737579122; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=L1Rtvhw2198Uqs95STUbmB4J9+aMMklmbglagz2uVgs=;
-        b=IW54zhrUBDTiQfuhDXt0U4RXmeseBMRHmKBa/ttyGD4VoqK2hnSDTMqlY00gJfuqKO
-         xVldJz5l0CD6UR0mhl+3/fRpzwRGTU0U7LUr+Ylxh7Oj+eyToiLFGNXYqtXvIUsldT8+
-         kwQI9pqRe6qr9Tu22MJChRqRLCN6Omrl3V+U8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736974322; x=1737579122;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L1Rtvhw2198Uqs95STUbmB4J9+aMMklmbglagz2uVgs=;
-        b=aciht/Eo2v1gN2LO1JAAgO/KpeiEyYd//iKd9pD0ZNdtF7AWIKRDFr3o3RMVLSnKng
-         AkhxYcFhgiMDlYexZCHeVBWeS1qjBt+/ygK6tp9ewZGmcp0SH/B2kZqkrl+ZjzYDlY+N
-         3FNKz+NEiaYDK7nMlOO0Bql/5E24AQH5wnhSPoTdW9kMAfJ7ONR4qbPjtS2jXFiHdC40
-         Mn1Dh65jXrX9PHdxz72J8mJgZJ8hWeEPcq3/VCrXQJeaOM6RCqEUrv7T7z3DH/LBfMuj
-         M9ZebPLS6k4J6iv2t2guIxo0RHBEqIyPoIOfVaHj7tHdea2o/Cp/CT3UwMt8Gduodl+O
-         31fw==
-X-Gm-Message-State: AOJu0YxYJSu8E0ekAGFKdWm1hAblbYh7zRnmYVGsynXc8v32d5i75ekY
-	6mNqv4l9jt4rZHfz3HTdIbeOIxbEzP26husnv4oZIQvRbzlMR+pqyRxafifoovPyVy840u6/v9t
-	0Mdj1+2VQdedKc4gYdFquyJ2MFvdB3Q7w6Q5sHrYjtmDFoJ0/1Zc=
-X-Gm-Gg: ASbGncv5WVPYjgW2o+S1iQqnmMac4pEve1DgDlYnuLz8WbwqgM/uAmVgm1Vh2ffKayP
-	dBAJodzegvVx7oPowiQbn3YSHy6taZ3crCCuWA/xr
-X-Google-Smtp-Source: AGHT+IFcQRpTsk8wD5G0FazeuMvLBLmB7oOs/0xv3TUoahrtyhCb+P8V1maZ8u9CXNUwJMn3X0yeA6wA/mKvQIdR9eQ=
-X-Received: by 2002:a05:6102:50a8:b0:4b6:37c5:c3fe with SMTP id
- ada2fe7eead31-4b637c5c61cmr15405747137.17.1736974322534; Wed, 15 Jan 2025
- 12:52:02 -0800 (PST)
+	s=arc-20240116; t=1736981007; c=relaxed/simple;
+	bh=de0hCo+7Lh7zs7P6OZzObCV3SwAuA65E+ZGYhV+5pPU=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DkmuIfa/VQrMZF029SzOntghdXTDsWnPvFQukcaxSK5ZADSfDfIlWEpcUZdYmJ3v7UwHavvJP7NkHmUJwrO5QOvTgvfhf4fci1gGkV5AjSi7PK+THvZddMN+7f4zpdBWNwvJz4Br+EboexKDS5Vi8A201789gVOgbOAKhinqqfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1tYC6U-000Ns9-Lv
+	for xdp-newbies@vger.kernel.org; Wed, 15 Jan 2025 23:43:14 +0100
+Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1tYC6U-000Hww-2N
+	for xdp-newbies@vger.kernel.org;
+	Wed, 15 Jan 2025 23:43:14 +0100
+Message-ID: <60a59404-46ca-4cad-a6c3-ac5a7dc20d1f@hetzner-cloud.de>
+Date: Wed, 15 Jan 2025 23:43:12 +0100
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Cody Haas <chaas@riotgames.com>
-Date: Wed, 15 Jan 2025 12:51:51 -0800
-X-Gm-Features: AbW1kvaf103JRWyw0d0g9PvBfIEjA7Qc5_bRec53KNWciBL09ZYlNnBtxRQdC4Y
-Message-ID: <CAH7f-ULFTwKdoH_t2SFc5rWCVYLEg-14d1fBYWH2eekudsnTRg@mail.gmail.com>
-Subject: Race Condition between BPF_MAP_UPDATE_ELEM and BPF_MAP_LOOKUP_ELEM
- for BPF_MAP_TYPE_HASH_OF_MAPS?
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
 To: xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
+ 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
+ wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
+Subject: No xdp_meta area in tun driver
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27519/Wed Jan 15 10:36:26 2025)
 
-Hey everyone,
-
-I've got a question. I've got an eBPF map that's a
-BPF_MAP_TYPE_HASH_OF_MAPS where user space updates elements in the
-map, user space will create a new inner map to do map-in-map swapping
-in order to update the outer map's values.  My XDP program will then
-read the inner maps by using BPF_MAP_LOOKUP_ELEM on the outer map.
-Does this create a potential race condition between
-BPF_MAP_LOOKUP_ELEM and BPF_MAP_UPDATE_ELEM when one thread is trying
-to lookup an existing element while another thread is trying to update
-the same existing element? I'm expecting to see either the old value
-or the new value, however I'm occasionally seeing the element does not
-exist when looking up the element from the eBPF program. Is this
-expected?
-
-Thanks,
-
-Cody Haas
+SGksDQoNCkkgbm90aWNlZCB0aGF0LCBvdGhlciB0aGFuIG1vc3QgbmV0d29ya2luZyBkcml2
+ZXJzLCB0aGUgYHR1bmAgZHJpdmVyIGhhcyBubyBzdXBwb3J0IGZvciB0aGUNClhEUCBtZXRh
+ZGF0YSBhcmVhIHlldC4gKHhkcC0+ZGF0YV9tZXRhID09IHhkcC0+ZGF0YSArIDEpDQpJcyB0
+aGVyZSBhIHNwZWNpZmljIHJlYXNvbiwgd2h5IGl0IGNhbm5vdCBub3QgYmUgaW1wbGVtZW50
+ZWQgZm9yIHRoZSB0dW4gZHJpdmVyLCBvciBpcyB0aGlzDQpqdXN0IGJlY2F1c2Ugbm9ib2R5
+IGNhbWUgYXJvdW5kIHRvIGltcGxlbWVudCBpdCB5ZXQ/DQoNClRoZSBoZWFkcm9vbSByZXNl
+cnZlZCBpbiB0aGUgdHVuIGRyaXZlciBzZWVtcyBoaWdoIGVub3VnaCAoVFVOX1JYX1BBRCAr
+IFhEUF9QQUNLRVRfSEVBRFJPT00pLA0Kc28gSSB3b3VsZCB0aGluayB0aGF0IGl0IHNob3Vs
+ZCBmaXQuLj8NCg0KVGhhbmtzIQ0KDQpNYXJjdXMgV2ljaGVsbWFubg0KSGV0em5lciBDbG91
+ZCBHbWJIDQo=
 
