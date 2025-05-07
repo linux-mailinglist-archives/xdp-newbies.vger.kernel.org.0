@@ -1,228 +1,144 @@
-Return-Path: <xdp-newbies+bounces-175-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-176-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DE5AA23351
-	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Jan 2025 18:46:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A677DAADDC1
+	for <lists+xdp-newbies@lfdr.de>; Wed,  7 May 2025 13:52:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 085913A50C0
-	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Jan 2025 17:45:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F7064E56DF
+	for <lists+xdp-newbies@lfdr.de>; Wed,  7 May 2025 11:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F5C1F0E2D;
-	Thu, 30 Jan 2025 17:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1D7233145;
+	Wed,  7 May 2025 11:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzCoFM24"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B35C4431
-	for <xdp-newbies@vger.kernel.org>; Thu, 30 Jan 2025 17:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC80257421
+	for <xdp-newbies@vger.kernel.org>; Wed,  7 May 2025 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738259149; cv=none; b=Om5mDZVVqH3O+vf1yliqgp8Bhf7Qclw0nSf7GjRivNB0YQCALZJyugAB+mGx1fRRHNW29oI8r0kKZy5K7rAuZUsI64btj6IzfcofYzXNkNigVaY0R8NMrMeq7+u/9nTqEPzom+T9j4NpocVQkJxvYfuxqk5ptmHGXp36LM9N+ko=
+	t=1746618744; cv=none; b=eWCBoA2aA8VwMAOca+pHyuOeK+KqAjQndGIbLcBeuaCkCSUemUUnmp53PAxftYS3WxXCxO4+5TOL9BL7pfOSiGldmvqMnUsxQTfJMQNyLJNCgp4vdjohXBN4DrljIc8LxMlVoRr+qO2k0IKkkx/y1T/Ho47HYe9p9fAIbJNkdbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738259149; c=relaxed/simple;
-	bh=VhH0VlnF8FRsGdtAlmtLHuXN+CgXc+F5diSdfrdwObU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=gVCQM2awx9GCzaYkAPUsvhKEmUsa5xCjGEahQkve//ONZd9AbESgwvJWe4XVSjG/74AonsEB6WRMyhZ5HyC76as7mtXZki2NaIqlyN+QKi9PiUVYMlGGx4GknaMTuwM778t9pybKg+mtbi0Z5hrCpgXPEgKj4V3l55/yP7JS/UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tdYbp-0000sm-Cg
-	for xdp-newbies@vger.kernel.org; Thu, 30 Jan 2025 18:45:45 +0100
-Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tdYbp-000Ggn-0f
-	for xdp-newbies@vger.kernel.org;
-	Thu, 30 Jan 2025 18:45:45 +0100
-Message-ID: <7c87d6b6-faaf-414a-92a3-614b0a2045d7@hetzner-cloud.de>
-Date: Thu, 30 Jan 2025 18:45:42 +0100
+	s=arc-20240116; t=1746618744; c=relaxed/simple;
+	bh=EhIr96WiezobWn5kYnownzh6VF8bVpCVy/BpQW+riKo=;
+	h=MIME-Version:From:To:Subject:Message-ID:Date:Content-Type; b=ebeu29K9xvU1Ye3yifKxTJQQEaqjtWp0EAy14Gp0kWOlMGCOtpG6sty+uQ169xEDCcSphMBY37GBWRxpi5Tmtj42mYprDncDRutztPCc3FnvDX1iGUaCtlxLXvkHHmMGPhb4MzLYmujYOh5i0RR2DonhUog8KLClkY2gcrTtm5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZzCoFM24; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22e4d235811so21537485ad.2
+        for <xdp-newbies@vger.kernel.org>; Wed, 07 May 2025 04:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746618742; x=1747223542; darn=vger.kernel.org;
+        h=content-transfer-encoding:date:message-id:subject:to:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oSm3LBcjNoChS6G3tbC/vdmSi12kSJKgrGypCnFqb00=;
+        b=ZzCoFM24k6uddxnzR4KWT7q2Vw4512J3eMh5NvheOBxVcczfud6rqIF7XKBOEM1Sld
+         LiiPDNGDUaNKIySwWWEmOyot054g4RAYLQnSsv+MyhOKDQnwuVZj28c4KHdIVIVJ+XZB
+         fVfyySRdH9OOrOlYg+KNNrxO/+6J2imoiBUbcxxSeB+qmMxu04Wkd9nkn53Hv0GxKnoi
+         iWqoh2mj2vs30d1LR0m+KiUaTz86PZglFtcEY0Wo+xEQGUAdckqKhfQmPK8+U7/xkfHK
+         p4PIbj9tCzoudrzGXVKRpKdYJT9/Yhul0gZLt4tZy7GCSO5p9j8pRnBccrhau7rhIY1Q
+         Bp/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746618742; x=1747223542;
+        h=content-transfer-encoding:date:message-id:subject:to:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oSm3LBcjNoChS6G3tbC/vdmSi12kSJKgrGypCnFqb00=;
+        b=hfiRHfz4jjy5y8KRS1biM7wAoGA+fWw77yNwL2pQt0hTr3ifTpXnTRlgRPWi/giS7k
+         hawyaeCYqUUsV5KcOp5A11ZY/jG8/bH2dJhFRVp65J6JUHMK1/4g3rDc5jCbCthcx4U4
+         rvFH9S29kvkQa/gWRusaoxPjTk2JayUPdBswkvUmDKkPWxdvlP25SMkhdiO44o2MuVvN
+         DmrhlfBSfO8hA2lCXgthQNCPHdbnTyODhYBYrVdt5O0koTtKKobJQl40X1srqVdMM1t3
+         zAorlhzFcqt1nqKNWq8/aJyN0qjMd5kvra9aMN/guiupWx4tgnmaeTspq1EttBwAtdkJ
+         b+Zw==
+X-Gm-Message-State: AOJu0Yyom3o3CbufcvXCeDu3myLknjcGq4uSRvktdrl4hzJobVB/dl18
+	EQPnRChcMX2fRJ+09V8pJbAGvi51sy2sfp/eNZjZvZDZGJdoZyedePoD1hZQ1ng=
+X-Gm-Gg: ASbGncvDTBJJx1Vp/uHVuLWCszRn/wnQ+JryaRjyAgInrRxfGCqQChkyDqHqmcHSgSe
+	K34tkFX/pdS5+Rrt+/IwjcdZ9reQKLjxEshxl71IZ+RnQprTQB+FoJx3V7LyadGxiR4AqPT0LcC
+	Ay+Y4iX3u9GA7PjpMQkYF2/6M7Hp0v1/ReZ75ru+Wj+h3dY3W/9y89LoDl9yLCD1EQMfOXbZpnz
+	U7S8Nox2TWW+l/uH/g79Fsg29RBmkdEbQxV9jlO5+byTdwpwCko5skTz/YZ6wismWam/5+yYa30
+	HzIwo6CefGpiPHaPaJLaj974T+ukQnRRyjRqswee6SxInMvF1luVKjlpSwVjHPtFBlU=
+X-Google-Smtp-Source: AGHT+IH3WAMCaFUn54Pju4S6zBXMI8am37DRVyf49F1vMdR9iNvT3HjsuLjrCu3ksgDb50VE8qXboQ==
+X-Received: by 2002:a17:903:18b:b0:224:24d5:f20a with SMTP id d9443c01a7336-22e5edf9b8dmr43935705ad.48.1746618742555;
+        Wed, 07 May 2025 04:52:22 -0700 (PDT)
+Received: from mulp (140.140.5.103.wi-fi.wi2.ne.jp. [103.5.140.140])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aaead24c8sm1795538a91.34.2025.05.07.04.52.21
+        for <xdp-newbies@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:52:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
 List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: No xdp_meta area in tun driver
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-To: xdp-newbies@vger.kernel.org
-References: <60a59404-46ca-4cad-a6c3-ac5a7dc20d1f@hetzner-cloud.de>
-Content-Language: en-US
-Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
- 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
- wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
-In-Reply-To: <60a59404-46ca-4cad-a6c3-ac5a7dc20d1f@hetzner-cloud.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------asCrMDOSkIOWZoVqlqjvyImt"
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27534/Thu Jan 30 10:34:41 2025)
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------asCrMDOSkIOWZoVqlqjvyImt
-Content-Type: multipart/mixed; boundary="------------wsysqY5wigRxAnxp0VFxLY5L";
- protected-headers="v1"
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-To: xdp-newbies@vger.kernel.org
-Message-ID: <7c87d6b6-faaf-414a-92a3-614b0a2045d7@hetzner-cloud.de>
-Subject: Re: No xdp_meta area in tun driver
-References: <60a59404-46ca-4cad-a6c3-ac5a7dc20d1f@hetzner-cloud.de>
-In-Reply-To: <60a59404-46ca-4cad-a6c3-ac5a7dc20d1f@hetzner-cloud.de>
-
---------------wsysqY5wigRxAnxp0VFxLY5L
-Content-Type: multipart/mixed; boundary="------------7eusKXOpct0raQ9xJvW2IK0P"
-
---------------7eusKXOpct0raQ9xJvW2IK0P
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-QW0gMTUuMDEuMjUgdW0gMjM6NDMgc2NocmllYiBNYXJjdXMgV2ljaGVsbWFubjoNCj4gSGks
-DQo+IA0KPiBJIG5vdGljZWQgdGhhdCwgb3RoZXIgdGhhbiBtb3N0IG5ldHdvcmtpbmcgZHJp
-dmVycywgdGhlIGB0dW5gIGRyaXZlciBoYXMgbm8gc3VwcG9ydCBmb3IgdGhlDQo+IFhEUCBt
-ZXRhZGF0YSBhcmVhIHlldC4gKHhkcC0+ZGF0YV9tZXRhID09IHhkcC0+ZGF0YSArIDEpDQo+
-IElzIHRoZXJlIGEgc3BlY2lmaWMgcmVhc29uLCB3aHkgaXQgY2Fubm90IG5vdCBiZSBpbXBs
-ZW1lbnRlZCBmb3IgdGhlIHR1biBkcml2ZXIsIG9yIGlzIHRoaXMNCj4ganVzdCBiZWNhdXNl
-IG5vYm9keSBjYW1lIGFyb3VuZCB0byBpbXBsZW1lbnQgaXQgeWV0Pw0KPiANCj4gVGhlIGhl
-YWRyb29tIHJlc2VydmVkIGluIHRoZSB0dW4gZHJpdmVyIHNlZW1zIGhpZ2ggZW5vdWdoIChU
-VU5fUlhfUEFEICsgWERQX1BBQ0tFVF9IRUFEUk9PTSksDQo+IHNvIEkgd291bGQgdGhpbmsg
-dGhhdCBpdCBzaG91bGQgZml0Li4/DQo+IA0KPiBUaGFua3MhDQo+IA0KPiBNYXJjdXMgV2lj
-aGVsbWFubg0KPiBIZXR6bmVyIENsb3VkIEdtYkgNCg0KRm9yIHRoZSByZWNvcmQsIGhlcmUg
-aXMgYSBwYXRjaCBmb3IgdGhpczoNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2JwZi8yMDI1
-MDEzMDE3MTYxNC4xNjU3MjI0LTEtbWFyY3VzLndpY2hlbG1hbm5AaGV0em5lci1jbG91ZC5k
-ZS9ULyN1DQo=
---------------7eusKXOpct0raQ9xJvW2IK0P
-Content-Type: application/pgp-keys; name="OpenPGP_0x49D307BF9FAC470E.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x49D307BF9FAC470E.asc"
-Content-Description: OpenPGP public key
+From: "Ye Zhengnan" <zhengnan.ye.11@gmail.com>
+To: <xdp-newbies@vger.kernel.org>
+Subject: [RFC] xdp: Multi-Return Value Support For XDP
+Message-ID: <183d3c7dd7e5c1de.576ea80cc02721fa.fe043bcc144c6691@mulp>
+Date: Wed, 7 May 2025 11:52:21 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Hi all,
 
-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3D=3D
-=3Di5X7
------END PGP PUBLIC KEY BLOCK-----
+I'm proposing support for multiple return values in XDP programs to
+enable combined actions like XDP_TX/XDP_REDIRECT with XDP_PASS. Please
+review this design proposal and share your feedback.
 
---------------7eusKXOpct0raQ9xJvW2IK0P--
+=3D=3D Motivation =3D=3D
 
---------------wsysqY5wigRxAnxp0VFxLY5L--
+Current mutually exclusive return values prevent scenarios like:
+- Fast forwarding (XDP_TX/XDP_REDIRECT) and ack by kernel network=20
+stack (XDP_PASS)
+- Traffic balancing while maintaining normal processing
 
---------------asCrMDOSkIOWZoVqlqjvyImt
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+=3D=3D Design Proposal =3D=3D
 
------BEGIN PGP SIGNATURE-----
+Option 1: True Tail Call Implementation
 
-iQIzBAEBCAAdFiEEFajXhmFJ6Ejg51NnSdMHv5+sRw4FAmebuscACgkQSdMHv5+s
-Rw4LxQ//T8AzyDt6uiMsfez3nUIoWUNuoLJGIprd5kDKiN877X0lrV75bF2XsiKj
-jPebSWXxEubK7W4WQ9u7tldifb8X81yuq/ZU37WzXqIN6Yzt3PZd8QndsTSMLS2g
-YdWFX4vqW3bfUSHXr4r7cfLlYgbujE6wG9rob148by5SMDFAM0A34TOmgL/7/5hH
-C9Ny+5kxn0/f4HGhonDIii9t0kLy3qco5y9mEcdx6ygWH6qGU/cYUqajw1xV+nj2
-k03lFqFujBWrX94h8jDEWUQTbQHONNuvTXDKSXT/keNQ1JQgn9M06KKkDUTAKIFe
-mrrF5Bm7NdYdnHzhUTR1hK4+lE93kv/GGZZgOxIAu0RB6AUCVG+BH2k0kreECBWd
-OVHmOaLB6V4evle25JciPwWhhCb5Gk53rN2t3XqngNuqPsV04IvMiOgrB+kLOifk
-m54vKQgz4lkbWWiBd00Rdk/uXc7X9CNSF/0zruVFRLkJpVWm3uWnpd+7qJggVC9K
-/USPINRyAmC9fFe2yET0DNYM21VJT2KHsh1//FNu7zxp9Sl4+vTXUWT/TqlUDl22
-GCXOsStCRh5X3BVfujXzG1k2XtBZhJ6FHgokoxyqDwaIj+pYfWbOO1rpY17Bs1Fr
-BiAzEbsGjv6NP+nUcbYPEKjAHBa2Tkr+afZbbpnAGDmypROKtQw=
-=LSr6
------END PGP SIGNATURE-----
+For Generic XDP:
+  1. Parent XDP program:
+    - Specify child XDP program using new helper functions
+    - Return combined flags such as XDP_CALL | XDP_TX
+  2. In net/core/dev.c:
+    - After XDP_TX or XDP_REDIRECT, check XDP_CALL flag
+      * Get child XDP program via bpf_tail_call
+      * Goto netif_receive_generic_xdp()
+    - Before bpf_net_ctx_set(), two approaches:
+      a. Synchronous: ensure skb not recycled, run child XDP program
+      b. Cloning: copy skb before driver uses it
 
---------------asCrMDOSkIOWZoVqlqjvyImt--
+For Native XDP:
+  - Synchronization cost of TX operation is unclear
+  - Cloning skb may be necessary
+  - Offload XDP support is not considered for now
+
+Challenges:=20
+  - Conflicting packet modifications between parent/child programs
+  - Potential need for packet cloning (performance impact)
+  - Safe skb management when combining actions
+
+Option 2: bpf_clone_redirect() for XDP
+
+- Clone skb before return via bpf_clone_redirect()
+- Send cloned skb to ingress path via backlog
+- Prepare child XDP on target networker
+
+Current Limitations:=20
+- Redirect to ingress path not fully supported
+- Memory copy overhead in XDP fast path
+
+I'm new to Linux kernel development and would greatly appreciate
+any feedback, suggestions, or corrections regarding this proposal or
+the process.
+
+Thank you for your time and consideration.
+
+Best regards
+
 
