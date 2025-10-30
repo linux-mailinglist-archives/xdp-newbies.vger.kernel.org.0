@@ -1,61 +1,47 @@
-Return-Path: <xdp-newbies+bounces-191-lists+xdp-newbies=lfdr.de@vger.kernel.org>
+Return-Path: <xdp-newbies+bounces-192-lists+xdp-newbies=lfdr.de@vger.kernel.org>
 X-Original-To: lists+xdp-newbies@lfdr.de
 Delivered-To: lists+xdp-newbies@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F8CFB929F3
-	for <lists+xdp-newbies@lfdr.de>; Mon, 22 Sep 2025 20:43:10 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70474C1FDC3
+	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Oct 2025 12:42:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03DE82A6D60
-	for <lists+xdp-newbies@lfdr.de>; Mon, 22 Sep 2025 18:43:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 5A06E4E54BA
+	for <lists+xdp-newbies@lfdr.de>; Thu, 30 Oct 2025 11:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B39F31A07B;
-	Mon, 22 Sep 2025 18:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76C3233C53B;
+	Thu, 30 Oct 2025 11:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="Jut3o+ns"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPod6NX1"
 X-Original-To: xdp-newbies@vger.kernel.org
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D582EAB64;
-	Mon, 22 Sep 2025 18:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2800F313E1B;
+	Thu, 30 Oct 2025 11:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758566584; cv=none; b=I2Fue5bFctN30Bsk03lesuTLUIdLO6e4yIpomX7UA8D1tyJuMMPFw4y7wKcox4mCGzZ9A94wI1UsQIox0WJ39g7tDvEm1hufXz9GWu3vzZpt5h8B67QXsEsEEiTKbNjf35kQmCEYpJvr5Cg2WgnjcLJKJrudAbWCkOde5ETp3BE=
+	t=1761824513; cv=none; b=YQ4DLT4km0ftKMePvmPpwQAtZdGsL+25zWihH1ndWRYQGBQLKwoCSXs2TGqh1YDXwnicDPobOT1YaKi0buRW35kdp1cglEh3ADpGM/gbPPXKeG/TfHyZQIjLi2W3ebQ3tR7rr0eRFVjP4Nzd4qogkVJfAF3/Qhk3zO2hs5Bcinw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758566584; c=relaxed/simple;
-	bh=qm3J5mkFrGKfPF1omLK3iztVBBidbUHl6CL2q28/Yos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jQZEloyOCaNvI+3Nghve++kf1WBq9eUREn9OHG55lpo7cbrG5Bhpr5zN1DShm7m660nURy7ufivbh2dF8TsHHZmT0jBU1G3qpf6GJwa0tDJlSRK+7d/AzBealscnv6xWO0ds87mjxum4/JQkdiQK7TkyQEMTP0pNaIrDO+B949c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=Jut3o+ns; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=v3/CPyS+FxMcyL4CLehcp8HdoGb6j7GodguKS7gF+R0=; b=Jut3o+nspldapbWcHfcqpmIfnZ
-	REPhmBncD2z4scTCa2eGuZUddkkan5cz/pVH+v1XquPqN0weQilmBH1inbFYzALPoH5yJ9lsrQ4J0
-	ByiCW/Vk5r+u83RbL+8IKbkOqK6IrKUST0f59eWl3zsQSVZHDAB7HjKrP6mqCzKsUFg34XVoCABVL
-	zKHtOaZgUM4M55ze36saafs7/fIdTQsCVAJcIB+QzVZ3CrbuXj6S5MuiAQiznE6b1KzQHD4E/rJw5
-	aqSDWnmHWRAQpNBei6MT6p0TEuaRmpO9ixuc5nFK+3CdRilHCT7hQ3LjS07I0ALAbsv2UvEWU0cen
-	Wy8mPrEg==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1v0lV4-0007YH-1R;
-	Mon, 22 Sep 2025 20:42:58 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1v0lUP-0009kt-0E;
-	Mon, 22 Sep 2025 20:42:58 +0200
-Message-ID: <6517f080-1753-4466-adf3-e908a4d58a36@iogearbox.net>
-Date: Mon, 22 Sep 2025 20:42:57 +0200
+	s=arc-20240116; t=1761824513; c=relaxed/simple;
+	bh=yVaHA930k5w1URigMaVlTNbgjAfUdrt64rj+JHld+lQ=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=UiKeoDJG8TmvOJe39UCMSd7Q6psmoGa88SL8PyTnW3pPmEPjQ2sNTbYae/2qMommy8ZqXz8NtNxS/g0XApJVEHN5pQa1/ZOAXUcJLasaxVtfqJ4gKZeDiC/b5ZKxd2U5Kz1VpkTf3S0VxVWM56fEUzn1cR2jnm0mp1raBwbzwIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPod6NX1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21DC7C4CEF1;
+	Thu, 30 Oct 2025 11:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761824512;
+	bh=yVaHA930k5w1URigMaVlTNbgjAfUdrt64rj+JHld+lQ=;
+	h=Date:From:To:Subject:From;
+	b=MPod6NX1p+itfu9GL+FMeeCvvvJDZcSaKxdiMwckH7oXhb4NB3+8AZ0uxUIn7pbJK
+	 abDlW1ITw18bD6qDGZlBTnRc0xyeJZkHkHtoVJ73lTzvGF21y9zRnM8jFUjWYLdQQO
+	 9Sa6fEJ2P9e4woFsI9J7D3Wnl3IYT/F47r3AnJP6fkKM2WwkIMxLm1KEOeP+lzvygS
+	 aODMH19eoYwgpCVjiePlKvnvOtwDOh9XHPEPkb4DfVznGg5qKMmnYAg6ocYHud7OA3
+	 4t9MqfomqvEAGtptAdY81di4k2u1klMtr89UBCtUVKKhMS1QLAJpWvVzR2o9q3+vYa
+	 ktg20O1PQW+gg==
+Message-ID: <571ea41f-a6e9-4574-b5c5-737f0a0a9965@kernel.org>
+Date: Thu, 30 Oct 2025 12:41:49 +0100
 Precedence: bulk
 X-Mailing-List: xdp-newbies@vger.kernel.org
 List-Id: <xdp-newbies.vger.kernel.org>
@@ -63,87 +49,112 @@ List-Subscribe: <mailto:xdp-newbies+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:xdp-newbies+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [ANNOUNCEMENT] LPC 2025 BPF Track CFP
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: "open list:BPF [RINGBUF]" <bpf@vger.kernel.org>,
- Xdp <xdp-newbies@vger.kernel.org>
-References: <a37ee461-1df8-4cdb-afea-ac104d81eb4a@iogearbox.net>
- <CAADnVQJuK-Pe0Pt18O+iy-3XawRX_N7AULbo-t85tvk58zeEcA@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <CAADnVQJuK-Pe0Pt18O+iy-3XawRX_N7AULbo-t85tvk58zeEcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+To: bpf <bpf@vger.kernel.org>, xdp-newbies <xdp-newbies@vger.kernel.org>
+Subject: FOSDEM 2026 eBPF Devroom Call for Participation
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: Clear (ClamAV 1.0.9/27770/Mon Sep 22 10:26:19 2025)
 
-On 9/9/25 6:37 PM, Alexei Starovoitov wrote:
-> On Wed, Jul 16, 2025 at 10:59 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
->>
->> We are pleased to announce the Call for Proposals (CFP) for the BPF track at
->> the 2025 edition of the Linux Plumbers Conference (LPC), which is taking place
->> in Tokyo, Japan, from December 11th to 13th, 2025.
->>
->> Note that the conference is planned to be primarily in person. CFP submitters
->> should be able to give their presentation in person to minimize technical issues,
->> although presenting remotely will be possible as a last resort.
->>
->> We are seeking proposals of 30 minutes in length (including Q&A discussion).
->>
->> Please submit your proposals through the official LPC website at:
->>
->>        https://lpc.events/event/19/abstracts/
->>
->> Make sure to select "eBPF Track" in the track pull-down menu.
->>
->> Proposals must be submitted by September 29th, and submitters will be notified of
->> acceptance by October 6th. Final slides (as PDF) are due on the first day of the
->> conference.
-> 
-> A reminder that deadline is approaching fast.
-> Please don't wait till the last day to submit a talk proposal.
+We are delighted to announce the Call for Participation for the second
+eBPF Devroom at FOSDEM!
 
-[ final reminder for the CFP deadline - 1 week left for submissions ]
+Mark the Dates
+--------------
+
+* December 1st, 2025: Submission deadline
+* December 15th, 2025: Announcement of accepted talks and schedule
+* January 31st, 2026: eBPF Devroom at FOSDEM
+
+eBPF at FOSDEM
+--------------
+
+FOSDEM is a free, community-organized event focusing on open source, and
+aiming at gathering open source software developers and communities to
+meet, learn, and share. It takes place annually in Brussels, Belgium.
+After hosting a number of eBPF-related talks in various devrooms over
+the years, FOSDEM 2026 welcomes a devroom dedicated to eBPF for the
+second time! This devroom aims at gathering talks about various aspects
+of eBPF, ideally on multiple platforms.
+
+Topics of Interest
+------------------
+
+If you have something to present about eBPF, we would love for you to
+consider submitting a proposal to the Devroom.
+
+The projects or technologies discussed in the talks MUST be open-source.
+
+Topics of interest for the Devroom include (but are not limited to):
+
+* eBPF development: recent or proposed features (on Linux, on other
+  platforms, or even cross-platform), such as:
+    * eBPF program signing and supply chain security
+    * Profiling eBPF with eBPF
+    * eBPF-based process schedulers
+    * eBPF in storage devices
+    * eBPF verifier improvements or alternative implementations
+    * eBPF for profiling AI workloads
+* Deep-dives on existing eBPF features
+* Working with eBPF: best practices, common mistakes, debugging, etc.
+* eBPF toolchain, for compiling, managing, debugging, packaging, and
+  deploying eBPF programs and related objects
+* eBPF libraries, in C/C++, Go, Rust, or other languages
+* eBPF in the real world, production use cases and their impact
+* eBPF community efforts (documentation, standardization, cross-platform
+  initiatives)
+
+The list is not exhaustive, don’t hesitate to submit your proposal!
+
+Format
+------
+
+FOSDEM 2026 will be an in-person event in Brussels, Belgium.
+We do not accept remote presentations.
+
+We’re looking for 20- to 30-minute presentations. The duration should
+include time for questions: allow at least 5 to 10 minutes to answer
+questions from the public.
+
+Note that due to time constraints, we may end up offering a slot
+duration different than the one requested when submitting. If you have
+specific duration requirements, we encourage you to mention them in your
+proposal.
+
+You can look at last year's schedule for inspiration, at
+https://archive.fosdem.org/2025/schedule/track/ebpf/
+
+How to Submit
+-------------
+
+Please submit your proposals on Pretalx, FOSDEM’s submissions tool, at
+https://pretalx.fosdem.org/fosdem-2026/cfp
+
+Make sure to select “eBPF” as the track.
+
+Code of Conduct
+---------------
+
+All participants at FOSDEM are expected to abide by the FOSDEM’s Code of
+Conduct. If your proposal is accepted, you will be required to confirm
+that you accept this Code of Conduct. You can find this code at
+https://fosdem.org/2026/practical/conduct/
+
+Devroom Organisers
+------------------
+
+* Alexei Starovoitov
+* Andrii Nakryiko
+* Bill Mulligan
+* Daniel Borkmann
+* Dimitar Kanaliev
+* Quentin Monnet
+* Yusheng Zheng
+
+If you have questions about any aspects of this Call for Participation,
+please email us at ebpf-devroom-manager@fosdem.org, and we will do our
+best to assist you.
+
+We keep an up-to-date version of this Call for Participation at
+https://ebpf.io/fosdem-2026.html
 
